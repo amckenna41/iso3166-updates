@@ -1,15 +1,17 @@
 # Automated scripts for receiving updates to ISO3166 country codes
 
+[![iso3166_updates](https://img.shields.io/pypi/v/iso3166-updates)](https://pypi.org/project/iso3166-updates/)
+[![Platforms](https://img.shields.io/badge/platforms-linux%2C%20macOS%2C%20Windows-green)](https://pypi.org/project/iso3166-updates/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
 [![Issues](https://img.shields.io/github/issues/amckenna41/iso3166-flag-icons)](https://github.com/amckenna41/iso3166-updates/issues)
 [![Size](https://img.shields.io/github/repo-size/amckenna41/iso3166-updates)](https://github.com/amckenna41/iso3166-updates)
 [![Commits](https://img.shields.io/github/commit-activity/w/amckenna41/iso3166-updates)](https://github.com/iso3166-updates)
 
 <p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/ISO_Logo_%28Red_square%29.svg" alt="iso" height="400" width="700"/>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/ISO_Logo_%28Red_square%29.svg" alt="iso" height="300" width="500"/>
 </p>
 
->> Automated scripts that check for any updates/changes to the ISO3166-1 and ISO3166-2 country codes and naming conventions, as per the ISO3166 newsletter (https://www.iso.org/iso-3166-country-codes.html).
+> Automated scripts that check for any updates/changes to the ISO3166-1 and ISO3166-2 country codes and naming conventions, as per the ISO3166 newsletter (https://www.iso.org/iso-3166-country-codes.html).
 
 Table of Contents
 -----------------
@@ -38,6 +40,17 @@ The <b>ISO 3166-2</b> icons are those of the names of countries and their subdiv
 Problem Statement
 -----------------
 
+Format 
+------
+The output for the updates/changes to a ISO3166-2 country has 4 columns: Edition/Newsletter, Date Issued, 
+Description of change in newsletter and Code/Subdivision change. E.g the output csv format for AD (Andorra) is:
+
+| Edition/Newsletter | Date Issued | Description of change in newsletter | Code/Subdivision change |   
+|:-------------------|:------------|------------------------------------:|------------------------:|
+| Newsletter I-8     | 2007-04-17  | Addition of the administrative subdivisions...   | Subdivisions added: 7 parishes...                 | 
+| Online Browsing Platform (OBP) | 2014-11-03 | Update List Source | No subdivision changes listed |
+| Online Browsing Platform (OBP) | 2015-11-27 | Update List Source | No subdivision changes listed | 
+
 Requirements
 ------------
 * [python][python] >= 3.6
@@ -63,6 +76,17 @@ cd iso3166_updates
 
 Usage 
 -----
+
+```python
+import iso3166_updates as iso3166_updates
+
+#get all listed changes/updated for Brazil from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:BR)
+iso3166_updates.get_updates("BR")
+
+#get any listed changes/updated for Ireland from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:IE),
+#between years of 2012 and 2021
+iso3166_updates.get_updates("IE", year="2012-2021")
+```
 
 Issues
 ------

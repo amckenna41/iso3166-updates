@@ -46,7 +46,11 @@ jobs:
   test:
     needs: build
     name: Test iso3166-updates
-
+    runs-on: ubuntu-latest         # platform: [ubuntu-latest, macos-latest, windows-latest]
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9]   #testing on multiple python versions
+        
     #package vulnerability check
     - name: Package safety check
       run: |

@@ -18,3 +18,5 @@
 - [ ] Change "Newsletter" column to "Edition/Newsletter"
 - [ ] All countries should have 4 columns: "Edition/Newsletter", "Date issued", "Description of change in newsletter", "Code/Subdivision change"
 - [ ] href of newsletter not exporting to json
+- [ ] Add build passing to readme
+- [ ] Add format section to README and demo.
