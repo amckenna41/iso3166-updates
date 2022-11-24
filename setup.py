@@ -25,8 +25,8 @@ setup(name='iso3166-updates',
       maintainer=iso3166_updates.__maintainer__,
       license=iso3166_updates.__license__,
       url=iso3166_updates.__url__,
-      keywords=["iso", "iso3166", "beautifulsoup", "python", "pypi", "countries", "country codes", "csv"
-        "iso3166-2", "iso3166-1", "SAR", "aaindex", "protein descriptors"],
+      keywords=["iso", "iso3166", "beautifulsoup", "python", "pypi", "countries", "country codes", "csv" \
+            "iso3166-2", "iso3166-1"],
       classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
@@ -50,7 +50,8 @@ setup(name='iso3166-updates',
       install_requires=[
           'beautifulsoup4>=4.11.1',
           'pandas',
-          'requests>=2.28.1'
+          'requests>=2.28.1',
+          'iso3166'
       ],
      test_suite='tests',
      packages=find_packages(),

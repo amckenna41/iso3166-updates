@@ -57,7 +57,7 @@ Requirements
 * [pandas][pandas] >= 1.4.3
 * [requests][requests] >= 2.28.1
 * [beautifulsoup4][beautifulsoup4] >= 4.11.1
-
+* [iso3166][iso3166] >= 2.1.1
 
 Installation
 ------------
@@ -110,4 +110,4 @@ References
 [pandas]: https://pandas.pydata.org/
 [requests]: https://requests.readthedocs.io/
 [beautifulsoup4]: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
-
+[iso3166]: https://github.com/deactivated/python-iso3166
