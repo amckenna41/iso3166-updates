@@ -14,8 +14,9 @@ on:
 #build and test iso3166-updates
 jobs:
   #build job
-  build:
-    name: Build iso3166-updates
+  build_iso3166:
+
+    # name: Build iso3166-updates
     runs-on: ubuntu-latest         # platform: [ubuntu-latest, macos-latest, windows-latest]
     strategy:
       matrix:
@@ -43,28 +44,29 @@ jobs:
         python3 setup.py install
 
   #test job, waits for build job to complete
-  test:
-    needs: build
+  test_iso3166:
     name: Test iso3166-updates
+    needs: build
     runs-on: ubuntu-latest         # platform: [ubuntu-latest, macos-latest, windows-latest]
     strategy:
       matrix:
         python-version: [3.7, 3.8, 3.9]   #testing on multiple python versions
-        
+    
+    steps:
     #package vulnerability check
     - name: Package safety check
       run: |
-       echo "Running package safety check"
-       python3 -m safety check > package_safety_output.txt
-       cat package_safety_output.txt
+        echo "Running package safety check"
+        python3 -m safety check > package_safety_output.txt
+        cat package_safety_output.txt
       continue-on-error: true
 
     #run Bandit security check for any known vulnerabilities in code
     - name: Bandit
       run: |
-       echo "Running Bandit"
-       python3 -m bandit -r iso3166-updates > bandit_output.txt
-       cat bandit_output.txt
+        echo "Running Bandit"
+        python3 -m bandit -r iso3166-updates > bandit_output.txt
+        cat bandit_output.txt
       continue-on-error: true
 
   # linting with flake8
@@ -89,11 +91,11 @@ jobs:
         python3 -m pytest tests/
         
     #generate coverage report
-     - name: Generate Report
-       run: pytest --cov .
+    - name: Generate Report
+      run: pytest --cov .
 
     #upload to Code Coverage
-     - name: Upload Coverage Report to Codecov
-       uses: codecov/codecov-action@v3
-       with:
-         flags: iso3166_updates_workflow
+    - name: Upload Coverage Report to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        flags: iso3166_updates_workflow
