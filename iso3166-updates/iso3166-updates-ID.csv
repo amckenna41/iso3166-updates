@@ -1,0 +1,7 @@
+Newsletter,Date issued,Description of change in newsletter,Code/Subdivision change
+Newsletter I-2,2002-05-21,"Addition of four new provinces and deletion of one (ID-TT). Inclusion of one alternative name form and one changed province name (ID-PA, formerly ID-IJ)",Subdivisions added: ID-BB Bangka Belitung ID-BT Banten ID-GO Gorontalo ID-MU Maluku Utara Subdivisions deleted: ID-TT Timor Timur (see ISO 3166-2:TL) Codes: (to correct duplicate use) ID-IJ Irian Jaya (province) → ID-PA Papua
+Newsletter I-4,2002-12-10,Change of name of one geographical unit,
+Newsletter I-6,2004-03-08,"Move ""Aceh"" to a new category of ""autonomous province"". Addition of a new province ""Kepulauan Riau""",Subdivisions added: ID-KR Kepulauan Riau
+Newsletter I-7,2005-09-13,"Addition of a new province ""Sulawesi Barat""",Subdivisions added: ID-SR Sulawesi Barat
+Newsletter II-1,2010-02-19,"Addition of the country code prefix as the first code element, alphabetical re-ordering, administrative update",Subdivisions added: ID-PB Papua Barat
+Newsletter II-3,2011-12-15,Removal of duplicate code,Codes: Maluku (geographical unit) ID-MA → ID-ML

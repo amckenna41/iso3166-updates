@@ -1,0 +1,2860 @@
+{
+    "AD": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 7 parishes"
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2014-11-03",
+            "Description of change in newsletter": "Update List Source",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Update List Source",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "AE": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Spelling correction in AE-RK"
+        },
+        {
+            "Newsletter": "Newsletter I-3",
+            "Date issued": "2002-08-20",
+            "Description of change in newsletter": "Error correction: Spelling correction in AE-AZ"
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Change of spelling of AE-AJ, AE-RK; addition of local variation of AE-FK, AE-RK, AE-UQ; update List Source"
+        }
+    ],
+    "AF": [
+        {
+            "Newsletter": "Newsletter I-6",
+            "Date issued": "2004-03-08",
+            "Description of change in newsletter": "Addition of 2 provinces. Update of list source",
+            "Code/Subdivision change": "Subdivisions added: AF-KHO Khowst AF-NUR N\u016brest\u0101n"
+        },
+        {
+            "Newsletter": "Newsletter I-7",
+            "Date issued": "2005-09-13",
+            "Description of change in newsletter": "Addition of 2 provinces. Update of list source",
+            "Code/Subdivision change": "Subdivisions added: AF-DAY D\u0101ykond\u012b AF-PAN Panjsh\u012br"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Language corrections, administrative name corrections, alphabetical re-ordering and source list update",
+            "Code/Subdivision change": "Codes: AF-LOW Lowgar \u2192 AF-LOG L\u014dgar AF-ORU Or\u016bzg\u0101n \u2192 AF-URU Uruzg\u0101n"
+        }
+    ],
+    "AG": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 6 parishes, 1 dependency"
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: AG-11 Redonda"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and of the list source",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-10-29",
+            "Description of change in newsletter": "Change spelling of AG-04",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "AI": {},
+    "AL": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Introduction of 12 prefectures with their code elements. One district name and its code element changed. One district name corrected. Attribution of the prefecture code element to each district",
+            "Code/Subdivision change": "Subdivisions added: 12 prefectures (now called counties) Codes: AL-LA La\u00e7 \u2192 AL-KB Kurbin"
+        },
+        {
+            "Newsletter": "Newsletter I-6",
+            "Date issued": "2004-03-08",
+            "Description of change in newsletter": "Change of generic term for administrative divisions. New list source",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element",
+            "Code/Subdivision change": "Codes: format changed (leading digit 0 added)"
+        }
+    ],
+    "AM": [
+        {
+            "Effective date of change": "2018-11-26",
+            "Short description of change (en)": "Correction of the romanization system label"
+        }
+    ],
+    "AO": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Spelling correction in AO-ZAI"
+        }
+    ],
+    "AQ": {},
+    "AR": [
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Typographical correction of a name and update of the list and code sources"
+        }
+    ],
+    "AS": {},
+    "AT": [
+        {
+            "Effective date of change": "2014-11-03",
+            "Short description of change (en)": "Update List Source"
+        },
+        {
+            "Effective date of change": "2015-11-27",
+            "Short description of change (en)": "Change of subdivision category from federal L\u00e4nder to state; update List Source"
+        }
+    ],
+    "AU": [
+        {
+            "Newsletter": "Newsletter I-6",
+            "Date issued": "2004-03-08",
+            "Description of change in newsletter": "Change of subdivision code in accordance with Australian Standard AS 4212-1994",
+            "Code/Subdivision change": "Codes: New South Wales: AU-NS \u2192 AU-NSW Queensland: AU-QL \u2192 AU-QLD Tasmania: AU-TS \u2192 AU-TAS Victoria: AU-VI \u2192 AU-VIC Australian Capital Territory: AU-CT \u2192 AU-ACT"
+        }
+    ],
+    "AW": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Addition of code to align ISO 3166-1 and ISO 3166-2"
+        }
+    ],
+    "AX": {},
+    "AZ": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Correction of one code and four spelling errors. Notification of the rayons belonging to the autonomous republic",
+            "Code/Subdivision change": "Codes: Nax\u00e7\u0131van: AZ-MM \u2192 AZ-NX"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Alphabetical re-ordering, name change of administrative places, first level prefix addition and source list update",
+            "Code/Subdivision change": "Subdivisions added: AZ-KAN K\u01ddng\u01ddrli AZ-NV Nax\u00e7\u0131van (municipality) Subdivisions deleted: AZ-SS \u015eu\u015fa Codes: AZ-AB \u018fli Bayraml\u0131 \u2192 AZ-SR \u015eirvan AZ-DAV D\u0259v\u0259\u00e7i \u2192 AZ-SBN \u015eabran AZ-XAN Xanlar \u2192 AZ-GYG G\u00f6yg\u00f6l"
+        }
+    ],
+    "BA": [
+        {
+            "Edition/Newsletter": "ISO 3166-2:2007",
+            "Date issued": "2007-12-13",
+            "Description of change in newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1]",
+            "Code/Subdivision change": "Subdivisions added: 10 cantons"
+        },
+        {
+            "Edition/Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element, addition of names in administrative languages, update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: BA-BRC Br\u010dko distrikt"
+        }
+    ],
+    "BB": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 11 parishes"
+        }
+    ],
+    "BD": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "New list source. One division added. 31 regions cancelled. Allocation of districts to divisions instead of regions. Correction of one spelling error",
+            "Code/Subdivision change": "Subdivisions added: BD-6 Sylhet bibhag Subdivisions deleted: 21 regions (see below)"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Country name romanization adjustment, first level prefix addition, deletion of generic terms, addition of administrative division and source list update",
+            "Code/Subdivision change": "Subdivisions added: BD-F Rangpur (division) Codes: Barisal (division)\u00a0: BD-1 \u2192 BD-A Chittagong (division)\u00a0: BD-2 \u2192 BD-B Dhaka (division)\u00a0: BD-3 \u2192 BD-C Khulna (division)\u00a0: BD-4 \u2192 BD-D Rajshahi (division)\u00a0: BD-5 \u2192 BD-E Sylhet (division)\u00a0: BD-6 \u2192 BD-G"
+        }
+    ],
+    "BE": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "First level prefix addition, change of administrative languages and list source update."
+        }
+    ],
+    "BF": [
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: 13 regions"
+        }
+    ],
+    "BG": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "New subdivision layout: Nine regions with former names (two remaining with former code). Ten regions with new names. New references for list source, code source and romanization system",
+            "Code/Subdivision change": "Subdivision layout: 9 regions (see below) \u2192 28 regions"
+        },
+        {
+            "Newsletter": "Newsletter I-9",
+            "Date issued": "2007-11-28",
+            "Description of change in newsletter": "Application of the romanization system 26 October 2006",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Local country name romanization system adjustment and source list update.",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2013-02-06",
+            "Description of change in newsletter": "Alignment with ISO 3166-2 of the local short name Alignment with ISO 3166-2 of the local short name",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Addition of romanization system",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-04-20",
+            "Description of change in newsletter": "Change of subdivision category from region to district in eng and fra; update List Source",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Correction of the romanization system label",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "BH": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Modification of the administrative structure",
+            "Code/Subdivision change": "Subdivision layout: 12 regions (see below) \u2192 5 governorates"
+        }
+    ],
+    "BI": [
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Addition of one province",
+            "Code/Subdivision change": "Subdivisions added: BI-MW Mwaro"
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: BI-BM Bujumbura Mairie BI-BL Bujumbura Rural Subdivisions deleted: BI-BJ Bujumbura"
+        }
+    ],
+    "BJ": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "New subdivision layout: 12 departments. Six with previous names and six with new names",
+            "Code/Subdivision change": "Subdivisions added: BJ-AL Alibori BJ-CO Collines BJ-DO Donga BJ-KO Kouffo BJ-LI Littoral BJ-PL Plateau"
+        }
+    ],
+    "BL": [
+        {
+            "Newsletter": "Newsletter I-9",
+            "Date issued": "2007-11-28",
+            "Description of change in newsletter": "Addition of new entry (in accordance with ISO 3166-1 Newsletter VI-1)"
+        }
+    ],
+    "BM": {},
+    "BN": [
+        {
+            "Effective date of change": "2019-11-22",
+            "Short description of change (en)": "Change of subdivision name of BN-BM; Update List Source",
+            "Code/Subdivision change": "Spelling\u00a0change:BN-BM Brunei-Muara \u2192 Brunei dan Muara (ms)"
+        }
+    ],
+    "BO": [
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Change of short form country name in accordance with ISO 3166-1, NL VI-6 (2009-05-08)"
+        }
+    ],
+    "BQ": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Addition of code to align ISO 3166-1 and ISO 3166-2, addition of two divisions and update of the number of divisions."
+        }
+    ],
+    "BR": {},
+    "BS": [
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivision layout: 21 districts (see below) \u2192 32 districts (mistakenly listed as 31 districts in newsletter)"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Correction of NL II-2 for toponyms and typographical errors, one deletion and source list update.",
+            "Code/Subdivision change": "Subdivisions deleted: BS-GT Green Turtle Cay"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Addition of island BS-NP; Addition of Remark; Update List Source",
+            "Code/Subdivision change": "Subdivision added: BS-NP New Providence"
+        }
+    ],
+    "BT": [
+        {
+            "Effective date of change": "2014-11-03",
+            "Short description of change (en)": "Update List Source"
+        },
+        {
+            "Effective date of change": "2015-11-27",
+            "Short description of change (en)": "Update List Source"
+        },
+        {
+            "Effective date of change": "2016-11-15",
+            "Short description of change (en)": "Change of spelling of BT-13, BT-45; update list source"
+        },
+        {
+            "Effective date of change": "2018-11-26",
+            "Short description of change (en)": "Correction of the romanization system label"
+        },
+        {
+            "Effective date of change": "2020-11-24",
+            "Short description of change (en)": "Change of spelling of BT-43; Update List Source"
+        }
+    ],
+    "BV": {},
+    "BW": [
+        {
+            "Newsletter": "Newsletter I-5",
+            "Date issued": "2003-09-05",
+            "Description of change in newsletter": "Deletion of Chobe district which is incorporated into (new) BW-NW. Change of code element of North-West District to BW-NW. Deletion of alternative names. Update of list source",
+            "Code/Subdivision change": "Subdivisions deleted: BW-CH Chobe Codes: BW-NG Ngamiland \u2192 BW-NW North-West"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-10-29",
+            "Description of change in newsletter": "Add 1 district BW-CH, 2 cities BW-FR and BW-GA, 4 towns BW-JW, BW-LO, BW-SP, BW-ST; remove hyphens from BW-NE, BW-NW, and BW-SE; update List Source",
+            "Code/Subdivision change": "Subdivisions added:BW-CH ChobeBW-FR FrancistownBW-GA  \tGaboroneBW-JW JwanengBW-LO LobatseBW-SP Selibe PhikweBW-ST Sowa TownSpelling changes:BW-NE North-East \u2192 North EastBW-NW North-West \u2192 North WestBW-SE South-East \u2192 South East"
+        }
+    ],
+    "BY": [
+        {
+            "Newsletter": "Newsletter I-1",
+            "Date issued": "2000-06-21",
+            "Description of change in newsletter": "Correction of spelling mistakes and language code elements",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: BY-HM Horad Minsk"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Change romanization system from \"GOST 1983\" to \"Belarusian Lacinka\" of bel; change romanization system of BY-HM* of bel and rus",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Correction of the romanization system label",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Correction of spelling for BY-HR of BGN/PCGN 1979",
+            "Code/Subdivision change": null
+        }
+    ],
+    "BZ": {},
+    "CA": [
+        {
+            "Newsletter": "Newsletter I-1",
+            "Date issued": "2000-06-21",
+            "Description of change in newsletter": "Addition of 1 new territory",
+            "Code/Subdivision change": "Subdivisions added: CA-NU Nunavut"
+        },
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Correction of name form of CA-NF",
+            "Code/Subdivision change": "Codes: CA-NF Newfoundland \u2192 CA-NL Newfoundland and Labrador"
+        },
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Change of code element of Newfoundland and Labrador",
+            "Code/Subdivision change": "Codes: CA-NF Newfoundland \u2192 CA-NL Newfoundland and Labrador"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-10-29",
+            "Description of change in newsletter": "Change spelling of CA-YT; update List Source",
+            "Code/Subdivision change": "Name change:CA-YT Yukon Territory \u2192 Yukon"
+        }
+    ],
+    "CC": {},
+    "CD": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "One subdivision name changed. Generic name of subdivisions changed. New reference in the list source",
+            "Code/Subdivision change": "Codes: CD-HC Haut-Congo \u2192 CD-OR Orientale"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2016-11-15",
+            "Description of change in newsletter": "Change of subdivision name of CD-BC, CD-KE; deletion of provinces CD-BN, CD-KA, CD-KW, CD-OR; addition of provinces CD-BU, CD-HK, CD-HL, CD-HU, CD-IT, CD-KC, CD-KG, CD-KL, CD-KS, CD-LO, CD-LU, CD-MN, CD-MO, CD-NU, CD-SA, CD-SU, CD-TA, CD-TO, CD-TU; update List Source",
+            "Code/Subdivision change": "Names changed:CD-BC, CD-KESubdivisions deleted:CD-BN, CD-KA, CD-KW, CD-ORSubdivisions added:CD-BU, CD-HK, CD-HL, CD-HU, CD-IT, CD-KC, CD-KG, CD-KL, CD-KS, CD-LO, CD-LU, CD-MN, CD-MO, CD-NU, CD-SA, CD-SU, CD-TA, CD-TO, CD-TU"
+        }
+    ],
+    "CF": [
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Consistency between ISO 3166-1 and ISO 3166-2, addition of names in administrative languages, and update of the administrative structure and of the list source"
+        }
+    ],
+    "CG": [
+        {
+            "Effective date of change": "2014-10-29",
+            "Short description of change (en)": "Change Subdivision category \u2018region\u2019 to \u2018department\u2019; change \u2018capital\u2019 to \u2018department\u2019; update List Source"
+        },
+        {
+            "Effective date of change": "2014-12-18",
+            "Short description of change (en)": "Alignment of the English short name lower case with UNTERM"
+        },
+        {
+            "Effective date of change": "2015-02-12",
+            "Short description of change (en)": "Add 1 department CG-16"
+        },
+        {
+            "Effective date of change": "2015-02-26",
+            "Short description of change (en)": "Correction of the OBP entry error as follows: change of the font character from a dash to a hyphen in the name for Pointe-Noire"
+        }
+    ],
+    "CH": [
+        {
+            "Newsletter": "Newsletter I-5",
+            "Date issued": "2003-09-05",
+            "Description of change in newsletter": "Spelling correction of CH-AI and CH-AR. New list source"
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Deletion of canton CH-GR in fra; Update List Source"
+        }
+    ],
+    "CI": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Modification of the administrative structure",
+            "Code/Subdivision change": "Subdivisions added: CI-17 Bafing CI-18 Fromager CI-19 Moyen-Cavally"
+        }
+    ],
+    "CK": {},
+    "CL": [
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: CL-AP Arica y Parinacota CL-LR Los R\u00edos"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-10-29",
+            "Description of change in newsletter": "Change spelling of CL-AI and CL-BI; update List Source",
+            "Code/Subdivision change": "Spelling changes:CL-AI, CL-BI"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2016-11-15",
+            "Description of change in newsletter": "Change of spelling of CL-AR, CL-AI; addition of local variation of CL-AI, CL-LI; update list source",
+            "Code/Subdivision change": "Spelling changes:CL-AI, CL-AR"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Addition of region CL-NB; Update List Source",
+            "Code/Subdivision change": "Subdivisions added:CL-NB \u00d1uble"
+        }
+    ],
+    "CM": {},
+    "CN": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Addition of one new entity. Precise specification and correction of Pinyin names. List source updated",
+            "Code/Subdivision change": "Subdivisions added: CN-92 Macau"
+        },
+        {
+            "Newsletter": "Newsletter I-6",
+            "Date issued": "2004-03-08",
+            "Description of change in newsletter": "Deletion of one name form in CN-15",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "CO": [
+        {
+            "Newsletter": "Newsletter I-6",
+            "Date issued": "2004-03-08",
+            "Description of change in newsletter": "Change of name of CO-DC"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2016-11-15",
+            "Description of change in newsletter": "Addition of local variation of CO-DC, CO-SAP, CO-VAC; update list source"
+        }
+    ],
+    "CR": {},
+    "CU": [
+        {
+            "Effective date of change": "2014-10-29",
+            "Short description of change (en)": "Add 2 provinces CU-15 and CU-16; delete CU-02; change name of CU-03; update List Source"
+        },
+        {
+            "Effective date of change": "2015-11-27",
+            "Short description of change (en)": "Update List Source"
+        }
+    ],
+    "CV": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Subdivision layout partially revised: Three new municipalities. New reference for list source",
+            "Code/Subdivision change": "Subdivisions added: CV-CS Calheta de S\u00e3o Miguel CV-MO Mosteiros CV-SF S\u00e3o Filipe"
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element, update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: CV-RB Ribeira Brava CV-RS Ribeira Grande de Santiago CV-CF Santa Catarina do Fogo CV-SL S\u00e3o Louren\u00e7o dos \u00d3rg\u00e3os CV-SS S\u00e3o Salvador do Mundo CV-TS Tarrafal de S\u00e3o Nicolau Subdivisions deleted: CV-SN S\u00e3o Nicolau Codes: CV-CS Calheta de S\u00e3o Miguel \u2192 CV-SM S\u00e3o Miguel"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Correction of NL II-2 for toponyms and typographical errors and source list update.",
+            "Code/Subdivision change": "Codes: S\u00e3o Louren\u00e7o dos \u00d3rg\u00e3os CV-SL \u2192 CV-SO"
+        }
+    ],
+    "CW": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Addition of code to align ISO 3166-1 and ISO 3166-2."
+        }
+    ],
+    "CX": {},
+    "CY": [
+        {
+            "Effective date of change": "2014-11-03",
+            "Short description of change (en)": "Update List Source"
+        },
+        {
+            "Effective date of change": "2015-11-27",
+            "Short description of change (en)": "Update List Source"
+        },
+        {
+            "Effective date of change": "2017-11-23",
+            "Short description of change (en)": "Update List Source; change of spelling of CY-02, CY-04 (tur)"
+        },
+        {
+            "Effective date of change": "2018-04-20",
+            "Short description of change (en)": "Update Code Source; update List Source"
+        },
+        {
+            "Effective date of change": "2018-11-26",
+            "Short description of change (en)": "Correction of the romanization system label"
+        }
+    ],
+    "CZ": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Completely new subdivision layout. New reference for the list source",
+            "Code/Subdivision change": "Subdivision layout: 1 city, 7 regions (see below) \u2192 14 regions"
+        },
+        {
+            "Newsletter": "Newsletter I-3",
+            "Date issued": "2002-08-20",
+            "Description of change in newsletter": "Error correction: Spelling correction and correction of word order in CZ-VY. List of subdivision names resorted",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter I-5",
+            "Date issued": "2003-09-05",
+            "Description of change in newsletter": "Spelling correction in CZ-PR and adjustment of name form in CZ-VY",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter I-9",
+            "Date issued": "2007-11-28",
+            "Description of change in newsletter": "Addition of administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 91 districts"
+        },
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element, alphabetical re-ordering",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "DE": {},
+    "DJ": [
+        {
+            "Newsletter": "Newsletter I-7",
+            "Date issued": "2005-09-13",
+            "Description of change in newsletter": "Change of generic term for administrative divisions. Addition of new region \"Arta\". New list source and code source",
+            "Code/Subdivision change": "Subdivisions added: DJ-AR Arta"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Language adjustment and source list update.",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-11-03",
+            "Description of change in newsletter": "Update List Source",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Add romanization system for Arabic; typographical correction of DJ-AS; update List Source",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2016-11-15",
+            "Description of change in newsletter": "Change of spelling of DJ-OB in ara",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "DK": {},
+    "DM": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 10 parishes"
+        }
+    ],
+    "DO": [
+        {
+            "Edition/Newsletter": "Newsletter I-1",
+            "Date issued": "2000-06-21",
+            "Description of change in newsletter": "Introduction of new subdivision code elements taken from the Dominican Statistics Code. Correction of alphabetic sorting of subdivision names. Addition of 1 alternative name form",
+            "Code/Subdivision change": "Codes: format changed (see below)"
+        },
+        {
+            "Edition/Newsletter": "ISO 3166-2:2007",
+            "Date issued": "2007-12-13",
+            "Description of change in newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1]",
+            "Code/Subdivision change": "Subdivisions added: DO-31 San Jos\u00e9 de Ocoa DO-32 Santo Domingo"
+        }
+    ],
+    "DZ": {},
+    "EC": [
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Addition of one province",
+            "Code/Subdivision change": "Subdivisions added: EC-D Orellana"
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: EC-SE Santa Elena EC-SD Santo Domingo de los Ts\u00e1chilas"
+        }
+    ],
+    "EE": [
+        {
+            "Effective date of change": "2020-11-24",
+            "Short description of change (en)": "Addition of category urban municipality, rural municipality; Addition of urban municipality EE-184, EE-296, EE-321, EE-424, EE-446, EE-511, EE-514, EE-567, EE-624, EE-663, EE-735, EE-784, EE-793, EE-897, EE-919; Addition of rural municipality EE-130, EE-141, EE-142, EE-171, EE-191, EE-198, EE-205, EE-214, EE-245, EE-247, EE-251, EE-255, EE-272, EE-283, EE-284, EE-291, EE-293, EE-303, EE-305, EE-317, EE-338, EE-353, EE-430, EE-431, EE-432, EE-441, EE-442, EE-478, EE-480, EE-486, EE-503, EE-528, EE-557, EE-586, EE-615, EE-618, EE-622, EE-638, EE-651, EE-653, EE-661, EE-668, EE-689, EE-698, EE-708, EE-712, EE-714, EE-719, EE-726, EE-732, EE-792, EE-796, EE-803, EE-809, EE-824, EE-834, EE-855, EE-890, EE-899, EE-901, EE-903, EE-907, EE-917, EE-928; Change of subdivision code from EE-44 to EE-45, EE-49 to EE-50, EE-51 to EE-52, EE-57 to EE-56, EE-59 to EE-60, EE-65 to EE-64, EE-67 to EE-68, EE-70 to EE-71, EE-78 to EE-79, EE-82 to EE-81, EE-86 to EE-87; Update List Source"
+        }
+    ],
+    "EG": [
+        {
+            "Edition/Newsletter": "ISO 3166-2:2007",
+            "Date issued": "2007-12-13",
+            "Description of change": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1]",
+            "Code/Subdivision change": "Subdivision added: EG-LX Al Uq\u015fur"
+        },
+        {
+            "Edition/Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change": "Update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: EG-SU As S\u0101dis min Ukt\u016bbar EG-HU \u1e28ulw\u0101n"
+        }
+    ],
+    "EH": {},
+    "ER": [
+        {
+            "Newsletter": "Newsletter I-1",
+            "Date issued": "2000-06-21",
+            "Description of change in newsletter": "Introduction of a completely new subdivision layout",
+            "Code/Subdivision change": "Subdivision layout: 10 provinces (see below) \u2192 6 provinces"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Country name romanization adjustment, language adjustment, alphabetical re-ordering and source list update.",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "ES": [
+        {
+            "Newsletter": "Newsletter I-1",
+            "Date issued": "2000-06-21",
+            "Description of change in newsletter": "Code elements for autonomous communities withdrawn to correct the erroneous duplicate coding of the whole Spanish territory (see 4.1.1 of ISO 3166-2). Introduction of a third column stating a regional level of subdivision which is not coded (see 4.4. c) of ISO 3166-2). Introduction of 2 alternative name forms. Correction of 1 spelling error",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Spelling correction and update in header information. Four corrections in spellings of subdivisions",
+            "Code/Subdivision change": "Codes: Illes Balears: ES-PM \u2192 ES-IB (to correct duplicate use) ES-GE Gerona \u2192 ES-GI Girona"
+        },
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Error correction: Regional subdivision indicator corrected in ES-PM",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element, reallocation of 3166-2 alpha-2 codes to avoid duplication, update of the administrative structure, addition of names in administrative languages",
+            "Code/Subdivision change": "Codes: (to correct duplicate use) Asturias, Principado de: ES-O \u2192 ES-AS Cantabria (autonomous community): ES-S \u2192 ES-CB La Rioja: (autonomous community): ES-LO \u2192 ES-RI Madrid, Comunidad de: ES-M \u2192 ES-MD Murcia, Regi\u00f3n de: ES-MU \u2192 ES-MC Navarra, Comunidad Foral de: ES-NA \u2192 ES-NC"
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Change of subdivision name of ES-PM; Update List Source; Correction of the Code Source",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "ET": [
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Change of generic name of one subdivision category to administration. Addition of an administration. Update of list sources",
+            "Code/Subdivision change": "Subdivisions added: ET-DD Dire Dawa"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-11-03",
+            "Description of change in newsletter": "Update List Source",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Deletion of the romanization system for subdivisions in eng; update List Source",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2019-04-09",
+            "Description of change in newsletter": "Change of eng subdivision category from state to regional state; Update List Source",
+            "Code/Subdivision change": "Category change:state \u2192 regional state"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2021-11-25",
+            "Description of change in newsletter": "Addition of regional state ET-SI; Update List Source",
+            "Code/Subdivision change": "Subdivisions added: ET-SI Sidama"
+        }
+    ],
+    "FI": [
+        {
+            "Newsletter": "Newsletter II-3[1]",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Administrative re-organization, deletion of useless information and the region names in English and French, source list and source code update.",
+            "Code/Subdivision change": "Subdivision layout: 6 provinces (see below) \u2192 19 regions"
+        }
+    ],
+    "FJ": {},
+    "FK": {},
+    "FM": [
+        {
+            "Effective date of change": "2014-12-18",
+            "Short description of change (en)": "Alignment of the English and French short names upper and lower case with UNTERM"
+        },
+        {
+            "Effective date of change": "2014-11-03",
+            "Short description of change (en)": "Update List Source"
+        }
+    ],
+    "FO": {},
+    "FR": [
+        {
+            "Source": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change": "Correction of the Metropolitan region code in FR-79",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Source": "Newsletter I-9",
+            "Date issued": "2007-11-28",
+            "Description of change": "Addition of administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: FR-CP Clipperton FR-BL Saint-Barth\u00e9lemy FR-MF Saint-Martin"
+        },
+        {
+            "Source": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change": "Addition of the country code prefix as the first code element, alphabetical re-ordering",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Source": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change": "NL II-2 correction for ultramarine administrative organisation change and alphabetical re-ordering.",
+            "Code/Subdivision change": "Category change: FR-YT Mayotte overseas territorial collectivity \u2192 overseas department"
+        },
+        {
+            "Source": "Online Browsing Platform (OBP)",
+            "Date issued": "2016-11-15",
+            "Description of change": "Change of the delimitation of the regions, reducing their number from 22 to 13 in metropolitan France, change of parent subdivision of metropolitan departments; addition of overseas regions FR-GUA, FR-LRE, FR-MAY; change of subdivision category from overseas department to overseas territorial collectivity for FR-GR, FR-MQ; update List Source.",
+            "Code/Subdivision change": "Subdivisions added: FR-GUA Guadeloupe FR-LRE La R\u00e9union FR-MAY MayotteCategory change: FR-GR overseas department \u2192 overseas territorial collectivity FR-MQ overseas department \u2192 overseas territorial collectivity"
+        },
+        {
+            "Source": "Online Browsing Platform (OBP)",
+            "Date issued": "2016-11-15",
+            "Description of change": "Correction of the OBP entry error as follows: deletion of Clipperton Island, France, Metropolitan in the name field for Territory.",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Source": "Online Browsing Platform (OBP)",
+            "Date issued": "2016-12-07",
+            "Description of change": "Correction of parent subdivision of FR-02, FR-60, FR-80 from FR-PDL to FR-HDF",
+            "Code/Subdivision change": "Parent changes: FR-02 FR-PDL \u2192 FR-HDF FR-60 FR-PDL \u2192 FR-HDF FR-80 FR-PDL \u2192 FR-HDF"
+        },
+        {
+            "Source": "Online Browsing Platform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change": "Addition of category name \"collectivity\" in eng/fra; Change of category name from metropolitan region to collectivity for FR-COR; Update List Source",
+            "Code/Subdivision change": "Category change: FR-COR metropolitan region \u2192 collectivity"
+        },
+        {
+            "Source": "Online Browsing Platform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change": "Change of category name from collectivity to metropolitan collectivity with special status for FR-COR; Change of category name from overseas department to overseas region for FR-GP, FR-RE, FR-YT; Deletion of parent subdivision of FR-GP, FR-RE, FR-YT; Change of category name from overseas region to overseas department for FR-GUA, FR-LRE, FR-MAY; Change of subdivision code from FR-COR to FR-20R, FR-GUA to FR-971, FR-LRE to FR-974, FR-MAY to FR-976; Assign parent subdivision to FR-971, FR-974, FR-976; Change of parent subdivision of FR-972, FR-973; Change of category name from overseas territorial collectivity to overseas collectivity for FR-BL, FR-MF, FR-PF, FR-PM, FR-WF; Addition of category overseas territory with specific status, overseas territory; Change of category name from overseas territorial collectivity to overseas collectivity with special status for FR-NC; Change of category name from overseas territorial collectivity to overseas territory for FR-TF; Update List Source and Code Source",
+            "Code/Subdivision change": "Category changes: FR-COR collectivity \u2192 metropolitan collectivity with special statusFR-GP overseas department \u2192 overseas regionFR-RE overseas department \u2192 overseas regionFR-YT overseas department \u2192 overseas regionFR-GUA overseas region \u2192 overseas departmentFR-LRE overseas region \u2192 overseas departmentFR-MAY overseas region \u2192 overseas departmentFR-BL overseas territorial collectivity \u2192 overseas collectivityFR-MF overseas territorial collectivity \u2192 overseas collectivityFR-PF overseas territorial collectivity \u2192 overseas collectivityFR-PM overseas territorial collectivity \u2192 overseas collectivityFR-WF overseas territorial collectivity \u2192 overseas collectivityFR-NC overseas territorial collectivity \u2192 overseas collectivity with special statusFR-TF overseas territorial collectivity \u2192 overseas territoryCode changes:FR-COR \u2192 FR-20RFR-GUA \u2192 FR-971FR-LRE \u2192 FR-974FR-MAY \u2192 FR-976Subdivisions added:FR-972 Martinique (parent FR-MQ)FR-973 Guyane (fran\u00e7aise) (parent FR-GF)"
+        },
+        {
+            "Source": "Online Browsing Platform (OBP)",
+            "Date issued": "2021-11-25",
+            "Description of change": "Addition of category European collectivity in eng & fra; Addition of European collectivity FR-6AE; Addition of metropolitan collectivity with special status FR-69M; Change of category name from metropolitan department to metropolitan collectivity with special status for FR-75; Change of subdivision code from FR-75 to FR-75C; Addition of category overseas departmental collectivity in English & French; Change of category name from overseas department to overseas departmental collectivity for FR-971, FR-974, FR-976; Addition of category overseas unique territorial collectivity in eng & fra; Change of category name from overseas department to overseas unique territorial collectivity for FR-972, FR-973; Deletion of category name overseas department; Deletion of overseas region FR-GF, FR-GP, FR-MQ, FR-RE, FR-YT; Deletion of category name overseas region; Change of parent subdivision of FR-67, FR-68; Deletion of parent subdivision of FR-971, FR-972, FR-973, FR-974, FR-976; Modification of Remark part 2; Update List Source and Code Source",
+            "Code/Subdivision change": "Codes added:FR-6AE AlsaceFR-69M M\u00e9tropole de LyonCodes changed:FR-75 Paris (metropolitan department) \u2192 FR-75C Paris (metropolitan collectivity with special status)Codes removed:FR-GF Guyane (fran\u00e7aise)FR-GP GuadeloupeFR-MQ MartiniqueFR-RE La R\u00e9unionFR-YT MayotteCategory changes:FR-971 overseas department \u2192 overseas departmental collectivityFR-972 overseas department \u2192 overseas unique territorial collectivityFR-973 overseas department \u2192 overseas unique territorial collectivityFR-974 overseas department \u2192 overseas departmental collectivityFR-976 overseas department \u2192 overseas departmental collectivityParent changes:FR-67 FR-GES \u2192 FR-6AEFR-68 FR-GES \u2192 FR-6AE"
+        }
+    ],
+    "GA": {},
+    "GB": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Various corrections of name forms i.e. deletion of name adjuncts",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Modification of the administrative structure",
+            "Code/Subdivision change": "Subdivisions deleted: GB-CHA Channel Islands GB-IOM Isle of Man (see ISO 3166-2:IM) GB-GSY Guernsey (see ISO 3166-2:GG) GB-JSY Jersey (see ISO 3166-2:JE)"
+        },
+        {
+            "Newsletter": "Newsletter I-9",
+            "Date issued": "2007-11-28",
+            "Description of change in newsletter": "Modification of administrative structure",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update and reorganization of the subdivision data and update of the list source",
+            "Code/Subdivision change": "Subdivisions added: GB-BDF Bedford GB-CBF Central Bedfordshire GB-CHE Cheshire East GB-CHW Cheshire West and Chester Subdivisions deleted: GB-BDF Bedfordshire GB-CHS Cheshire GB-IOS Isles of Scilly"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "NL II-2 correction for administrative name changes.",
+            "Code/Subdivision change": "Status change: WLS Wales principality \u2192 country"
+        }
+    ],
+    "GD": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 6 parishes, 1 dependency"
+        }
+    ],
+    "GE": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "New subdivision layout. City level cancelled. Spelling of autonomous republics' names changed. One generic subdivision name changed",
+            "Code/Subdivision change": "Subdivision layout: 2 autonomous republics, 13 cities, 63 rayons (see below) \u2192 2 autonomous republics, 10 regions"
+        },
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Introduction of third subdivision category",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter I-9",
+            "Date issued": "2007-11-28",
+            "Description of change in newsletter": "Addition of diacritical signs",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "GF": {},
+    "GG": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of a new entry (in accordance with ISO 3166-1 Newsletter V-11)"
+        }
+    ],
+    "GH": [
+        {
+            "Effective date of change": "2019-11-22",
+            "Short description of change (en)": "Deletion of region GH-BA; Addition of regions GH-AF, GH-BE, GH-BO, GH-NE, GH-OT, GH-SV, GH-WN; Update List Source"
+        },
+        {
+            "Effective date of change": "2015-11-27",
+            "Short description of change (en)": "Update List Source"
+        },
+        {
+            "Effective date of change": "2014-11-03",
+            "Short description of change (en)": "Update List Source"
+        }
+    ],
+    "GI": {},
+    "GL": [
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Addition and update of the administrative structure and of the list and code sources",
+            "Code/Subdivision change": "Subdivisions added:GL-KU Kommune KujalleqGL-QA Qaasuitsup KommuniaGL-QE Qeqqata KommuniaGL-SM Kommuneqarfik Sermersooq"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Deletion of municipality GL-QA; Addition of municipality GL-AV, GL-QT; Update List Source",
+            "Code/Subdivision change": "Subdivision deleted:GL-QA Qaasuitsup KommuniaSubdivisions added:GL-AV Avannaata KommuniaGL-QT Kommune Qeqertalik"
+        }
+    ],
+    "GM": [
+        {
+            "Effective date of change": "2014-12-18",
+            "Short description of change (en)": "Alignment of the English short name lower case and the English full name with UNTERM"
+        },
+        {
+            "Effective date of change": "2014-11-03",
+            "Short description of change (en)": "Update List Source"
+        }
+    ],
+    "GN": [
+        {
+            "Edition/Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "One governorate changed into a city (new subdivision level). One code corrected",
+            "Code/Subdivision change": "Codes: (to correct duplicate use) Koundara: GN-KD \u2192 GN-KN"
+        },
+        {
+            "Edition/Newsletter": "ISO 3166-2:2007",
+            "Date issued": "2007-12-13",
+            "Description of change in newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1]",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Edition/Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element, deletion of the generic term in subdivision names",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "GP": {},
+    "GQ": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Language adjustment, typo correction, first level prefix addition and source list update."
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Addition of province GQ-DJ; Update List Source"
+        }
+    ],
+    "GR": [
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element, reallocation of 3166-2 alpha-2 codes to avoid duplication, addition of names in administrative languages",
+            "Code/Subdivision change": "Codes: format changed (see below)"
+        }
+    ],
+    "GS": {},
+    "GT": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Spelling correction in GT-QZ"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2021-11-25",
+            "Description of change in newsletter": "Change of subdivision code from GT-AV to GT-16, GT-BV to GT-15, GT-CM to GT-04, GT-CQ to GT-20, GT-ES to GT-05, GT-GU to GT-01, GT-HU to GT-13, GT-IZ to GT-18, GT-JA to GT-21, GT-JU to GT-22, GT-PE to GT-17, GT-PR to GT-02, GT-QC to GT-14, GT-QZ to GT-09, GT-RE to GT-11, GT-SA to GT-03, GT-SM to GT-12, GT-SO to GT-07, GT-SR to GT-06, GT-SU to GT-10, GT-TO to GT-08, GT-ZA to GT-19; Update Code Source"
+        }
+    ],
+    "GU": {},
+    "GW": [
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element"
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Change of subdivision name of GW-BL; Addition of local variation of GW-BS; Update List Source"
+        }
+    ],
+    "GY": {},
+    "HK": {},
+    "HM": {},
+    "HN": [
+        {
+            "Effective date of change": "2011-12-13",
+            "Short description of change": "Comment taken into account and source list update."
+        }
+    ],
+    "HR": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Addition of one city subdivision. Three spelling corrections",
+            "Code/Subdivision change": "Subdivisions added: HR-21 Grad Zagreb"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Alphabetical re-ordering.",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "HT": [
+        {
+            "Edition/Newsletter": "ISO 3166-2:2007",
+            "Date issued": "2007-12-13",
+            "Description of change in newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1]",
+            "Code/Subdivision change": "Subdivisions added: HT-NI Nippes"
+        },
+        {
+            "Edition/Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Language adjustment.",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "HU": [
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: HU-ER \u00c9rd"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2021-11-25",
+            "Description of change in newsletter": "Change of name of HU-CS; Update List Source",
+            "Code/Subdivision change": "Subdivision renamed: HU-CS Csongr\u00e1d \u2192 Csongr\u00e1d-Csan\u00e1d"
+        }
+    ],
+    "ID": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Addition of four new provinces and deletion of one (ID-TT). Inclusion of one alternative name form and one changed province name (ID-PA, formerly ID-IJ)",
+            "Code/Subdivision change": "Subdivisions added: ID-BB Bangka Belitung ID-BT Banten ID-GO Gorontalo ID-MU Maluku Utara Subdivisions deleted: ID-TT Timor Timur (see ISO 3166-2:TL) Codes: (to correct duplicate use) ID-IJ Irian Jaya (province) \u2192 ID-PA Papua"
+        },
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Change of name of one geographical unit",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter I-6",
+            "Date issued": "2004-03-08",
+            "Description of change in newsletter": "Move \"Aceh\" to a new category of \"autonomous province\". Addition of a new province \"Kepulauan Riau\"",
+            "Code/Subdivision change": "Subdivisions added: ID-KR Kepulauan Riau"
+        },
+        {
+            "Newsletter": "Newsletter I-7",
+            "Date issued": "2005-09-13",
+            "Description of change in newsletter": "Addition of a new province \"Sulawesi Barat\"",
+            "Code/Subdivision change": "Subdivisions added: ID-SR Sulawesi Barat"
+        },
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element, alphabetical re-ordering, administrative update",
+            "Code/Subdivision change": "Subdivisions added: ID-PB Papua Barat"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Removal of duplicate code",
+            "Code/Subdivision change": "Codes: Maluku (geographical unit) ID-MA \u2192 ID-ML"
+        }
+    ],
+    "IE": [
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Removal of duplicate code",
+            "Code/Subdivision change": "Codes: Cork IE-C \u2192 IE-CO"
+        }
+    ],
+    "IL": {},
+    "IM": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of a new entry (in accordance with ISO 3166-1 Newsletter V-11)"
+        }
+    ],
+    "IN": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Partial reorganization of subdivision layout: Three new states. Addition of an alternative name for one state. New list source",
+            "Code/Subdivision change": "Subdivisions added: IN-CH Chhattisgarh IN-JH Jharkhand IN-UL Uttaranchal"
+        },
+        {
+            "Newsletter": "Newsletter I-3",
+            "Date issued": "2002-08-20",
+            "Description of change in newsletter": "Error correction: Duplicate use of IN-CH corrected. Spelling correction",
+            "Code/Subdivision change": "Codes: (to correct duplicate use) Chhattisgarh: IN-CH \u2192 IN-CT"
+        },
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Error correction: Reintroduction of old name form in IN-WB",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Addition of local generic administrative terms, update of the official languages according to ISO 3166-2, addition of a comment and source list update.",
+            "Code/Subdivision change": "Codes: IN-UL Uttaranchal \u2192 IN-UT Uttarakhand"
+        }
+    ],
+    "IO": {},
+    "IQ": [
+        {
+            "Effective date of change": "2022-03-03",
+            "Short description of change (en)": "Addition of category region in eng, fra, ara, kur; Addition of region IQ-KR; Assign parent subdivision to IQ-AR, IQ-DA, IQ-SU; Update List and Code Source"
+        }
+    ],
+    "IR": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Partial reorganization of subdivision layout. Two new provinces. Two name corrections (IR-17 and IR-18). New reference for the list source",
+            "Code/Subdivision change": "Subdivisions added: IR-27 Golest\u0101n IR-28 Qazv\u012bn"
+        },
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Modification of the administrative structure",
+            "Code/Subdivision change": "Subdivisions added: IR-29 Khor\u0101s\u0101n-e Jan\u016bb\u012b IR-30 Khor\u0101s\u0101n-e Razav\u012b IR-31 Khor\u0101s\u0101n-e Shem\u0101l\u012b Subdivisions deleted: IR-09 Khor\u0101s\u0101n"
+        }
+    ],
+    "IS": [
+        {
+            "Effective date of change": "2015-11-27",
+            "Short description of change (en)": "Deletion of region IS-0"
+        },
+        {
+            "Effective date of change": "2020-11-24",
+            "Short description of change (en)": "Addition of category municipality; Addition of municipality IS-AKH, IS-AKN, IS-AKU, IS-ARN, IS-ASA, IS-BFJ, IS-BLA, IS-BLO, IS-BOG, IS-BOL, IS-DAB, IS-DAV, IS-DJU, IS-EOM, IS-EYF, IS-FJD, IS-FJL, IS-FLA, IS-FLD, IS-FLR, IS-GAR, IS-GOG, IS-GRN, IS-GRU, IS-GRY, IS-HAF, IS-HEL, IS-HRG, IS-HRU, IS-HUT, IS-HUV, IS-HVA, IS-HVE, IS-ISA, IS-KAL, IS-KJO, IS-KOP, IS-LAN, IS-MOS, IS-MYR, IS-NOR, IS-RGE, IS-RGY, IS-RHH, IS-RHN, IS-RKV, IS-SBH, IS-SBT, IS-SDN, IS-SDV, IS-SEL, IS-SEY, IS-SFA, IS-SHF, IS-SKF, IS-SKG, IS-SKO, IS-SKU, IS-SNF, IS-SOG, IS-SOL, IS-SSF, IS-SSS, IS-STR, IS-STY, IS-SVG, IS-TAL, IS-THG, IS-TJO, IS-VEM, IS-VER, IS-VOP; Update List Source; Update Code Source"
+        },
+        {
+            "Effective date of change": "2021-11-25",
+            "Short description of change (en)": "Deletion of municipality IS-BFJ, IS-DJU, IS-FLD, IS-SEY; Addition of municipality IS-MUL; Update List Source"
+        }
+    ],
+    "IT": [
+        {
+            "Newsletter": "Newsletter I-1",
+            "Date issued": "2000-06-21",
+            "Description of change in newsletter": "Correction of spelling mistakes of names of 2 provinces",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Modification of the administrative structure",
+            "Code/Subdivision change": "Subdivisions added: IT-CI Carbonia-Iglesias IT-VS Medio Campidano IT-OG Ogliastra IT-OT Olbia-Tempio"
+        },
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element, administrative update",
+            "Code/Subdivision change": "Subdivisions added: IT-BT Barletta-Andria-Trani IT-FM Fermo IT-MB Monza e Brianza Codes: IT-FO Forl\u00ec \u2192 IT-FC Forl\u00ec-Cesena"
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Corrections from Newsletters I-1 and I-8",
+            "Code/Subdivision change": "Codes: (to correct inconsistencies between newsletters) Medio Campidano: IT-MA \u2192 IT-VS Olbia-Tempio IT-OL \u2192 IT-OT Pesaro e Urbino IT-PS \u2192 IT-PU"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2019-04-09",
+            "Description of change in newsletter": "Addition of province IT-SD; Addition of category names free communal consortia and metropolitan cities in eng,fra and ita; Change of category name from province to free communal consortia for IT-AG, IT-CL, IT-EN, IT-RG, IT-SR, IT-TP; Change of category name from province to metropolitan city for IT-BA, IT-BO, IT-CA, IT-CT, IT-FI, IT-GE, IT-ME, IT-MI, IT-NA, IT-PA, IT-RC, IT-RM, IT-TO, IT-VE; Deletion of provinces IT-CI, IT-GO, IT-OG, IT-OT, IT-PN, IT-TS, IT-UD, IT-VS; Update List Source",
+            "Code/Subdivision change": "Subdivisions deleted:8 provinces (see below)Subdivisions added:IT-SD Sud SardegnaCategory changes:IT-AG, IT-CL, IT-EN, IT-RG, IT-SR, IT-TP:province \u2192 free communal consortiaIT-BA, IT-BO, IT-CA, IT-CT, IT-FI, IT-GE, IT-ME, IT-MI, IT-NA, IT-PA, IT-RC, IT-RM, IT-TO, IT-VE:province \u2192 metropolitan city"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2019-11-22",
+            "Description of change in newsletter": "Change of spelling of IT-36; Deletion of province IT-AO; Change of spelling of category name in eng from free communal consortia to free municipal consortium; Change of spelling of category name in ita from libero consorzion communale to libero consorzio comunale\u00a0; Change of spelling of category name in ita from citt\u00e0 metropolitan to citt\u00e0 metropolitana; Addition of category name autonomous region and autonomous province; Change of category name from region to autonomous region for IT-23, IT-32, IT-36, IT-82, IT-88; Change of category name from province to autonomous province for IT-BZ, IT-TN; Update List Source",
+            "Code/Subdivision change": "Name changes:IT-36 Friuli-Venezia Giulia \u2192 Friuli Venezia Giuliafree communal consortia \u2192 free municipal consortiumSubdivisions deleted:IT-AO AostaCategory changes:IT-23, IT-32, IT-36, IT-82, IT-88:region \u2192 autonomous regionIT-BZ, IT-TN:province \u2192 autonomous province"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Correction of subdivision code from IT-SD to IT-SU; Addition of category decentralized regional entity; addition of decentralized regional entity IT-GO, IT-PN, IT-TS, IT-UD; Update List Source",
+            "Code/Subdivision change": "Code changes:IT-SD \u2192 IT-SU Sud SardegnaSubdivisions added: IT-GO Gorizia IT-PN Pordenone IT-TS TriesteIT-UD Udine"
+        }
+    ],
+    "JE": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of a new entry (in accordance with ISO 3166-1 Newsletter V-11)"
+        }
+    ],
+    "JM": {},
+    "JO": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Alphabetical re-ordering, administrative names precision and evolution and source list update."
+        }
+    ],
+    "JP": {},
+    "KE": [
+        {
+            "Edition/Newsletter": "ISO 3166-2:2007",
+            "Date issued": "2007-12-13",
+            "Description of change in newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1]",
+            "Code/Subdivision change": "Codes: Western: KE-900 \u2192 KE-800"
+        },
+        {
+            "Edition/Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the list source",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Edition/Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-10-30",
+            "Description of change in newsletter": "Delete provinces; add 47 counties; update List Source",
+            "Code/Subdivision change": "Deleted codes:KE-110, KE-200, KE-300, KE-400, KE-500, KE-600, KE-700, KE-800Added codes:KE-01 through KE-47"
+        },
+        {
+            "Edition/Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2016-11-15",
+            "Description of change in newsletter": "Update Code Source",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "KG": [
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Addition of one region and one city. One spelling correction",
+            "Code/Subdivision change": "Subdivisions added: KG-GB Bishkek KG-B Batken"
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Correction of subdivision category in kir replacing oblast with oblus; Correction of subdivision names KG-GB, KG-GO in kir; Update List Source",
+            "Code/Subdivision change": null
+        }
+    ],
+    "KH": [
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Addition of one autonomous municipality",
+            "Code/Subdivision change": "Subdivisions added: KH-24 Krong Pailin"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-11-03",
+            "Description of change in newsletter": "Update List Source",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Change of subdivision category from autonomous municipalities to provinces for KH-18, KH-23, KH-24; addition of province KH-25, update List Source",
+            "Code/Subdivision change": "Category changes:KH-18, KH-23, KH-24autonomous municipality \u2192 provinceSubdivision added:KH-25"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2016-11-15",
+            "Description of change in newsletter": "Change of spelling of KH-25",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Change of subdivision name of KH-18, KH-23, KH24; Correction of the romanization system label; Addition of local variation of KH-01, KH-02, KH-03, KH-05, KH-06, KH-08, KH-09, KH-10, KH-11, KH-14, KH-15, KH-16, KH-17, KH-18, KH-19, KH-20, KH-21, KH-22, KH-23",
+            "Code/Subdivision change": "Name changes:KH-18, KH-23, KH-24Local variations added:KH-01, KH-02, KH-03, KH-05, KH-06, KH-08, KH-09, KH-10, KH-11, KH-14, KH-15, KH-16, KH-17, KH-18, KH-19, KH-20, KH-21, KH-22, KH-23"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Correction of spelling of KH-22, KH-1, KH-18",
+            "Code/Subdivision change": "Name changes:KH-1, KH-18, KH-22"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2021-11-25",
+            "Description of change in newsletter": "Change of spelling of KH-1",
+            "Code/Subdivision change": "Name changes:KH-1"
+        }
+    ],
+    "KI": [
+        {
+            "Effective date of change": "2014-12-18",
+            "Short description of change (en)": "Alignment of the French short name lower case with UNTERM; update of the remarks in French"
+        },
+        {
+            "Effective date of change": "2014-11-03",
+            "Short description of change (en)": "Update List Source"
+        }
+    ],
+    "KM": [
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Consistency between ISO 3166-1 and ISO 3166-2, addition of names in administrative languages, and update of the administrative structure and of the list source"
+        }
+    ],
+    "KN": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 2 states, 14 parishes"
+        },
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "KP": [
+        {
+            "Effective date of change": "2017-11-23",
+            "Short description of change (en)": "Change of spelling of KP-10, KP-13 (McCune-Reischauer, 1939); addition of metropolitan city KP-14; update List Source."
+        },
+        {
+            "Effective date of change": "2014-12-18",
+            "Short description of change (en)": "Deletion of the space between \"de\" and the parenthesis in the short French name lower case."
+        },
+        {
+            "Effective date of change": "2010-02-19",
+            "Short description of change (en)": "Administrative update, replacement of alphabetical characters with numeric characters in second code element"
+        }
+    ],
+    "KR": [
+        {
+            "Newsletter": "Newsletter I-1",
+            "Date issued": "2000-06-21",
+            "Description of change in newsletter": "Correction of 1 spelling mistake. Update of the source information"
+        }
+    ],
+    "KW": [
+        {
+            "Edition/Newsletter": "ISO 3166-2:2007",
+            "Date issued": "2007-12-13",
+            "Description of change in newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1]",
+            "Code/Subdivision change": "Subdivisions added: KW-MU Mub\u0101rak al Kab\u012br"
+        },
+        {
+            "Edition/Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Administrative name update and list source update.",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "KY": {},
+    "KZ": [
+        {
+            "Effective date of change": "2016-11-15",
+            "Short description of change": "Addition of city KZ-BAY; update List Source.",
+            "Code/Subdivision change": "Subdivisions added: KZ-BAY"
+        },
+        {
+            "Effective date of change": "2018-11-26",
+            "Short description of change": "Correction of the romanization system label; Addition of city KZ-SHY; Change of subdivision name of KZ-YUZ; Update List Source",
+            "Code/Subdivision change": "Subdivision added: KZ-SHYName change:KZ-YUZ Ongt\u00fcstik Qazaqstan oblysy (kk), Yuzhno-Kazakhstankaya oblast' (ru BGN/PCGN), Ju\u017eno-Kazahstankaja oblast' (ru GOST) \u2192 T\u00fcrkistan oblysy (kk), Turkestankaya oblast' (ru BGN/PCGN), Turkestanskaja oblast' (ru GOST)"
+        },
+        {
+            "Effective date of change": "2020-11-24",
+            "Short description of change": "Deletion of city KZ-BAY; Change of subdivision name of KZ\u2010AST; Correction of the Code Source; Update List Source",
+            "Code/Subdivision change": "Subdivision deleted: KZ-BAY BayqongyrName change:KZ-AST Astana \u2192 Nur-Sultan"
+        }
+    ],
+    "LA": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "One new province added. One new reference for the list source. One code source cancelled. Information on romanization system updated. Origin of names in brackets given",
+            "Code/Subdivision change": "Subdivisions added: LA-XN Xais\u00f4mboun"
+        },
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Error correction: Generic name of one subdivision changed to \"special zone\"",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "LB": [
+        {
+            "Newsletter": "Newsletter I-9",
+            "Date issued": "2007-11-28",
+            "Description of change in newsletter": "Addition of administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: LB-AK Aakk\u00e2r LB-BH Baalbek-Hermel"
+        }
+    ],
+    "LC": [
+        {
+            "Edition/Newsletter": "ISO 3166-2:2007",
+            "Date issued": "2007-12-13",
+            "Description of change in newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1]",
+            "Code/Subdivision change": "Subdivisions added: 11 quarters"
+        }
+    ],
+    "LI": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 11 communes"
+        }
+    ],
+    "LK": [
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element, addition of names in administrative languages"
+        }
+    ],
+    "LR": [
+        {
+            "Edition/Newsletter": "ISO 3166-2:2007",
+            "Date issued": "2007-12-13",
+            "Description of change in newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1]",
+            "Code/Subdivision change": "Subdivisions added: LR-GP Gbarpolu LR-RG River Gee"
+        }
+    ],
+    "LS": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Addition of local generic administrative term, update of the official languages according to ISO 3166-2 and source list update."
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Change of spelling of LS-B; Addition of local variation of LS-B; Update List Source"
+        }
+    ],
+    "LT": [
+        {
+            "Date issued": "2014-10-31",
+            "Description of change in newsletter": "Addition of 7 city municipalities, 44 district municipalities, and 9 municipalities",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Date issued": "2021-11-25",
+            "Description of change in newsletter": "Change of spelling of LT-05, LT-14, LT-39; Assign parent subdivision to LT-01 through LT-60; Update List Source",
+            "Code/Subdivision change": "Subdivisions renamed:  LT-05 Bir\u0161tono \u2192 Bir\u0161tonas LT-14 Kalvarijos \u2192 Kalvarija LT-39 Rietavo \u2192 Rietavas"
+        }
+    ],
+    "LU": {},
+    "LV": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Administrative re-organization and source list update.",
+            "Code/Subdivision change": "Subdivision layout: 26 districts (see below) \u2192 110 municipalities Subdivisions added: (republican cities) LV-JKB J\u0113kabpils LV-VMR Valmiera"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2021-11-25",
+            "Description of change in newsletter": "Deletion of republican city LV-JKB, LV-VMR; Deletion of municipality LV-001, LV-003, LV-004, LV-005, LV-006, LV-008, LV-009, LV-010, LV-012, LV-013, LV-014, LV-017, LV-018, LV-019, LV-020, LV-021, LV-023, LV-024, LV-025, LV-027, LV-028, LV-029, LV-030, LV-031, LV-032, LV-034, LV-035, LV-036, LV-037, LV-038, LV-039, LV-040, LV-043, LV-044, LV-045, LV-046, LV-048, LV-049, LV-051, LV-053, LV-055, LV-057, LV-060, LV-061, LV-063, LV-064, LV-065, LV-066, LV-069, LV-070, LV-071, LV-072, LV-074, LV-075, LV-076, LV-078, LV-079, LV-081, LV-082, LV-083, LV-084, LV-085, LV-086, LV-090, LV-092, LV-093, LV-095, LV-096, LV-098, LV-100, LV-103, LV-104, LV-105, LV-107, LV-108, LV-109, LV-110; Change of category name from republican city to state city for LV-DGV, LV-JEL, LV-JUR, LV-LPX, LV-REZ, LV-RIX, LV-VEN; Addition of municipality LV-111, LV-112, LV-113; Update List Source",
+            "Code/Subdivision change": "Subdivisions added:  LV-111 Aug\u0161daugavas novads LV-112 Dienvidkurzemes Novads LV-113 Valmieras NovadsSubdivisions deleted:  LV-JKB J\u0113kabpils LV-VMR Valmiera LV-001 Aglonas novads LV-003 Aizputes novads LV-004 Akn\u012bstes novads LV-005 Alojas novads LV-006 Alsungas novads LV-008 Amatas novads LV-009 Apes novads LV-010 Auces novads LV-012 Bab\u012btes novads LV-013 Baldones novads LV-014 Baltinavas novads LV-017 Bever\u012bnas novads LV-018 Broc\u0113nu novads LV-019 Burtnieku novads LV-020 Carnikavas novads LV-021 Cesvaines novads LV-023 Ciblas novads LV-024 Dagdas novads LV-025 Daugavpils novads LV-027 Dundagas novads LV-028 Durbes novads LV-029 Engures novads LV-030 \u0112rg\u013cu novads LV-031 Garkalnes novads LV-032 Grobi\u0146as novads LV-034 Iecavas novads LV-035 Ik\u0161\u0137iles novads LV-036 Il\u016bkstes novads LV-037 In\u010dukalna novads LV-038 Jaunjelgavas novads LV-039 Jaunpiebalgas novads LV-040 Jaunpils novads LV-043 Kandavas novads LV-044 K\u0101rsavas novads LV-045 Koc\u0113nu novads LV-046 Kokneses novads LV-048 Krimuldas novads LV-049 Krustpils novads LV-051 \u0136eguma novads LV-053 Lielv\u0101rdes novads LV-055 L\u012bgatnes novads LV-057 Lub\u0101nas novads LV-060 Mazsalacas novads LV-061 M\u0101lpils novads LV-063 M\u0113rsraga novads LV-064 Nauk\u0161\u0113nu novads LV-065 Neretas novads LV-066 N\u012bcas novads LV-069 Ozolnieku novads LV-070 P\u0101rgaujas novads LV-071 P\u0101vilostas novads LV-072 P\u013cavi\u0146u novads LV-074 Priekules novads LV-075 Prieku\u013cu novads LV-076 Raunas novads LV-078 Riebi\u0146u novads LV-079 Rojas novads LV-081 Rucavas novads LV-082 Rug\u0101ju novads LV-083 Rund\u0101les novads LV-084 R\u016bjienas novads LV-085 Salas novads LV-086 Salacgr\u012bvas novads LV-090 S\u0113jas novads LV-092 Skr\u012bveru novads LV-093 Skrundas novads LV-095 Stopi\u0146u novads LV-096 Stren\u010du novads LV-098 T\u0113rvetes novads LV-100 Vai\u0146odes novads LV-103 V\u0101rkavas novads LV-104 Vecpiebalgas novads LV-105 Vecumnieku novads LV-107 Vies\u012btes novads LV-108 Vi\u013cakas novads LV-109 Vi\u013c\u0101nu novads LV-110 Zilupes novads"
+        }
+    ],
+    "LY": [
+        {
+            "Newsletter": "Newsletter I-5",
+            "Date issued": "2003-09-05",
+            "Description of change in newsletter": "Revision of subdivision layout. Revision of header information",
+            "Code/Subdivision change": "Subdivision layout: 13 municipalities (see below) \u2192 34 municipalities"
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivision layout: 34 municipalities (see below) \u2192 22 popularates"
+        }
+    ],
+    "MA": [
+        {
+            "Source": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change": "New subdivision layout at economic region level. List source updated. Addition of one reference in the code source. Two name spellings corrected. One code corrected",
+            "Code/Subdivision change": "Subdivision layout: 7 economic regions (see below) \u2192 16 economic regions (now called regions) Code changes: Jerada: MA-IRA \u2192 MA-JRA"
+        },
+        {
+            "Source": "Newsletter I-6",
+            "Date issued": "2004-03-08",
+            "Description of change": "Change of spelling for La\u00e2youne",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Source": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change": "Addition of the country code prefix as the first code element, addition of names in administrative languages",
+            "Code/Subdivision change": "Subdivisions added:MA-AOU AousserdMA-FAH Fahs-AnjraMA-MED M\u00e9diounaMA-MMD Marrakech-MedinaMA-MMN Marrakech-MenaraMA-MOH MohammadiaMA-MOU Moulay YacoubMA-NOU NouaceurMA-RAB RabatMA-SAL Sal\u00e9MA-SKH Skhirate-T\u00e9maraMA-SYB Sidi Youssef Ben AliMA-TAI Taourirt MA-ZAG ZagoraSubdivisions deleted: MA-MAR Marrakech MA-RBA Rabat-Sal\u00e9 Code changes: MA-BAH A\u00eft Baha \u2192 MA-CHT Chtouka-Ait Baha MA-MEL A\u00eft Melloul \u2192 MA-INE Inezgane-Ait Melloul"
+        },
+        {
+            "Source": "Online Browsing Platform (OBP)",
+            "Date issued": "2014-11-03",
+            "Description of change": "Change spelling of MA-14; update List Source",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Source": "Online Browsing Platform (OBP)",
+            "Date issued": "2018-04-20",
+            "Description of change": "Modification of remark part 2; deletion of regions MA-01 to MA-16; addition of new regions MA-01 to MA-12; change of spelling of MA-AGD, MA-BES, MA-ESM, MA-FAH, MA-FES, MA-JRA, MA-KES, MA-OUD; change of category name from prefecture to province for MA-AOU, MA-FAH, MA-TET; addition of prefectures MA-MAR, MA-MDF; deletion of prefectures, MA-MMD, MA-MMN, MA-SYB; addition of provinces MA-BRR, MA-DRI, MA-FQH, MA-GUF, MA-MID, MA-OUZ, MA-REH, MA-SIF, MA-SIL, MA-SIB, MA-TAF, MA-TIN, MA-YUS; change of parent subdivision for MA-AGD, MA-AOU, MA-FES, MA-INE, MA-MEK, MA-MOH, MA-OUJ, MA-RAB, MA-SAL, MA-SKH, MA-ASZ, MA-AZI, MA-BEM, MA-BER, MA-BES, MA-BOD, MA-BOM, MA-CHI, MA-CHT, MA-ERR, MA-ESI, MA-ESM, MA-FIG, MA-GUE, MA-HAJ, MA-HAO, MA-HOC, MA-IFR, MA-JDI, MA-JRA, MA-KEN, MA-KES, MA-KHE, MA-KHN, MA-KHO, MA-LAA, MA-MED, MA-MOU, MA-NAD, MA-NOU, MA-OUA, MA-OUD, MA-SAF, MA-SEF, MA-SET, MA-SIK, MA-TAI, MA-TAR, MA-TAT, MA-TIZ, MA-TNT, MA-ZAG; addition of (EH) to MA-LAA; addition of (EH-partial) to MA-ASZ, MA-TNT; update List Source",
+            "Code/Subdivision change": "Subdivisions deleted:MA-01 - MA-16MA-MDFMA-MMDMA-MMNMA-SYBSubdivisions added:MA-01 - MA-12MA-BRRMA-DRIMA-FQHMA-GUFMA-MARMA-MIDMA-OUZMA-REHMA-SIBMA-SIFMA-SILMA-TAFMA-TINMA-YUSCategory changes:MA-AOU prefecture \u2192 provinceMA-FAH prefecture \u2192 provinceMA-TET prefecture \u2192 provinceParent changes:MA-AGD MA-13 \u2192 MA-09MA-AOU MA-16 \u2192 MA-12MA-ASZ MA-14 \u2192 MA-10MA-AZI MA-12 \u2192 MA-05MA-BEM MA-12 \u2192 MA-05MA-BER MA-04 \u2192 MA-02MA-BES MA-09 \u2192 MA-06MA-BOD MA-15 \u2192 MA-11MA-BOM MA-05 \u2192 MA-03MA-CHI MA-11 \u2192 MA-07MA-CHT MA-13 \u2192 MA-06MA-ERR MA-06 \u2192 MA-08MA-ESI MA-11 \u2192 MA-07MA-ESM MA-14 \u2192 MA-11MA-FES MA-05 \u2192 MA-03MA-FIG MA-04 \u2192 MA-02MA-GUE MA-14 \u2192 MA-10MA-HAJ MA-06 \u2192 MA-03MA-HAO MA-11 \u2192 MA-07MA-HOC MA-03 \u2192 MA-01MA-IFR MA-06 \u2192 MA-03MA-INE MA-13 \u2192 MA-09MA-JDI MA-10 \u2192 MA-06MA-JRA MA-04 \u2192 MA-02MA-KEN MA-02 \u2192 MA-04MA-KES MA-11 \u2192 MA-07MA-KHE MA-07 \u2192 MA-04MA-KHN MA-06 \u2192 MA-05MA-KHO MA-09 \u2192 MA-05MA-LAA MA-15 \u2192 MA-11MA-MED MA-08 \u2192 MA-06MA-MEK MA-06 \u2192 MA-03MA-MOH MA-08 \u2192 MA-06MA-MOU MA-05 \u2192 MA-03MA-NAD MA-04 \u2192 MA-02MA-NOU MA-08 \u2192 MA-04MA-OUA MA-13 \u2192 MA-08MA-OUD MA-16 \u2192 MA-12MA-OUJ MA-04 \u2192 MA-02MA-RAB MA-07 \u2192 MA-04MA-SAF MA-10 \u2192 MA-07MA-SAL MA-07 \u2192 MA-04MA-SEF MA-05 \u2192 MA-03MA-SET MA-09 \u2192 MA-08MA-SIK MA-02 \u2192 MA-06MA-SKH MA-07 \u2192 MA-04MA-TAI MA-04 \u2192 MA-02MA-TAR MA-13 \u2192 MA-09MA-TAT MA-14 \u2192 MA-09MA-TIZ MA-13 \u2192 MA-09MA-TNT MA-14 \u2192 MA-10MA-ZAG MA-13 \u2192 MA-08"
+        },
+        {
+            "Source": "Online Browsing Platform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change": "Change of spelling of MA-05; Change of (EH) to (EH-partial) for MA-ESM; Correction of the romanization system label",
+            "Code/Subdivision change": "Spelling change:MA-05 B\u00e9ni-Mellal-Kh\u00e9nifra \u2192 B\u00e9ni Mellal-Kh\u00e9nifraLocation change:MA-ESM Es-Semara (EH) \u2192 Es-Semara (EH-partial)"
+        },
+        {
+            "Source": "Online Browsing Platform (OBP)",
+            "Date issued": "2019-04-09",
+            "Description of change": "Correction of parent subdivision of MA-CAS, MA-SET, MA-SIK; Typographical correction of MA-03",
+            "Code/Subdivision change": "Parent changes:MA-CAS MA-08 \u2192 MA-06MA-SET MA-08 \u2192 MA-06MA-SIK MA-06 \u2192 MA-04Spelling change:MA-03 F\u00e8s- Mekn\u00e8s \u2192 F\u00e8s-Mekn\u00e8s"
+        },
+        {
+            "Source": "Online Browsing Platform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change": "Change of spelling of MA-KHE, MA-KHN, MA-TAR; Deletion of an asterisk of the local variation of MA-CAS; Update List Source",
+            "Code/Subdivision change": "Spelling change:MA-KHE Khemisset \u2192 Kh\u00e9missetMA-KHN Khenifra \u2192 Kh\u00e9nifraMA-TAR Taroudant \u2192 Taroudannt"
+        }
+    ],
+    "MC": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Administrative subdivisions addition."
+        }
+    ],
+    "MD": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Completely new subdivision layout",
+            "Code/Subdivision change": "Subdivision layout: 10 cities, 40 districts (see below) \u2192 1 autonomous territory, 1 city, 1 territorial unit, 9 districts"
+        },
+        {
+            "Newsletter": "Newsletter I-3",
+            "Date issued": "2002-08-20",
+            "Description of change in newsletter": "Error correction: Header information on number of districts corrected",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Addition of one district. Subdivision categories in header re-sorted",
+            "Code/Subdivision change": "Subdivisions added: MD-TA Taraclia"
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Consistency between ISO 3166-1 and ISO 3166-2, addition of names in administrative languages, and update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivision layout: 1 autonomous territory, 1 city, 10 districts, 1 territorial unit (see below) \u2192 1 autonomous territorial unit, 3 cities, 32 districts, 1 territorial unit"
+        }
+    ],
+    "ME": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of a new country (in accordance with ISO 3166-1 Newsletter V-12)",
+            "Code/Subdivision change": "Subdivisions added: 21 municipalities"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Local generic administrative term addition and suppression of the comment.",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "MF": [
+        {
+            "Newsletter": "Newsletter I-9",
+            "Date issued": "2007-11-28",
+            "Description of change in newsletter": "Addition of new entry (in accordance with ISO 3166-1 Newsletter VI-1)"
+        }
+    ],
+    "MG": {},
+    "MH": [
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element, addition of names in administrative languages",
+            "Code/Subdivision change": "Subdivisions added: MH-JAB Jabat Subdivisions deleted: MH-UJL Ujelang"
+        }
+    ],
+    "MK": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 84 municipalities"
+        },
+        {
+            "Newsletter": "Newsletter I-9",
+            "Date issued": "2007-11-28",
+            "Description of change in newsletter": "Addition of numeric code elements",
+            "Code/Subdivision change": "Codes: format changed (see below)"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Alphabetical re-ordering.",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "ML": {},
+    "MM": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Addition of local generic administrative terms, source list update and addition of a comment."
+        }
+    ],
+    "MN": {},
+    "MO": [
+        {
+            "Newsletter": "Newsletter I-3",
+            "Date issued": "2002-05-20",
+            "Description of change in newsletter": "Change of the English country name. In accordance with ISO 3166-1 Newsletter V-4"
+        }
+    ],
+    "MP": {},
+    "MQ": {},
+    "MR": {},
+    "MS": {},
+    "MT": [
+        {
+            "Newsletter": "Newsletter I-9",
+            "Date issued": "2007-11-28",
+            "Description of change in newsletter": "Addition of administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 68 local councils"
+        }
+    ],
+    "MU": [
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Error correction: Duplicate use of one code element corrected. Subdivision categories in header re-sorted",
+            "Code/Subdivision change": "Codes: (to correct duplicate use) Port Louis (city): MU-PL \u2192 MU-PU"
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Deletion of city MU-BR, MU-CU, MU-PU, MU-QB, MU-VP; Update List Source; Correction of the Code Source",
+            "Code/Subdivision change": "Deleted:MU-BR (Beau Bassin-Rose Hill),MU-CU (Curepipe),MU-PU (Port Louis),MU-QB (Quatre Bornes),MU-VP (Vacoas-Phoenix)"
+        }
+    ],
+    "MV": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Administrative re-organization, addition of local generic administrative terms, language adjustment and source list update.",
+            "Code/Subdivision change": "Subdivisions added: 7 provinces MV-00 Alifu Dhaalu"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2016-11-15",
+            "Description of change in newsletter": "Change of spelling of MV-05",
+            "Code/Subdivision change": "Spelling change:MV-05"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Change of spelling in div of MV-00, MV-02, MV-04, MV-14, MV-17, MV-26, MV-27, MV-28; Change of spelling in eng of MV-00, MV-01, MV-02, MV-03, MV-04, MV-05, MV-07, MV-08, MV-12, MV-13, MV-14, MV-17, MV-20, MV-23, MV-24, MV-25, MV-26, MV-27, MV-28, MV-29; Addition of local variation of MV-00, MV-01, MV-02, MV-03, MV-04, MV-05, MV-07, MV-08, MV-12, MV-13, MV-14, MV-17, MV-20, MV-23, MV-24, MV-25, MV-26, MV-27, MV-28, MV-29; Change of category name from capital to city for MV-MLE; Change of category name from administrative atoll to city for MV-01; Removal of parent subdivision of MV-MLE, MV-00, MV-01, MV-02, MV-03, MV-04, MV-05, MV-07, MV-08, MV-12, MV-13, MV-14, MV-17, MV-20, MV-23, MV-24, MV-25, MV-26, MV-27, MV-28, MV-29; Deletion of provinces MV-CE, MV-NC, MV-NO, MV-SC, MV-SU, MV-UN and MV-US; Update List Source",
+            "Code/Subdivision change": "Subdivisions deleted:MV-CE CentralMV-NC North CentralMV-NO NorthMV-SC South CentralMV-SU SouthMV-UN Upper NorthMV-US Upper SouthCategory changes:MV-MLE capital \u2192 cityMV-01 administrative atoll \u2192 citySpelling changes (dv):MV-00 Ari Atholhu Dhekunuburi \u2192 Ariatholhu DhekunuburiMV-02 Ari Atholhu Uthuruburi \u2192 Ariatholhu UthuruburiMV-04 Ari Atholhu Uthuruburi \u2192 FelidheatholhuMV-14 Ari Atholhu Uthuruburi \u2192 Nilandheatholhu UthuruburiMV-17 Nilandhe Atholhu Dhekunuburi \u2192 Nilandheatholhu DhekunuburiMV-26 Maale Atholhu \u2192 MV-27 \u2192 MaaleatholhuMV-28 Huvadhu Atholhu Dhekunuburi \u2192 Huvadhuatholhu DhekunuburiSpelling changes (en):MV-00 Alifu Dhaalu \u2192 South Ari AtollMV-01 Seenu \u2192 Addu CityMV-02 Alifu Alifu \u2192 North Ari AtollMV-03 Lhaviyani \u2192 FaadhippolhuMV-04 Vaavu \u2192 Felidhu AtollMV-05 Laamu \u2192 Felidhu AtollMV-07 Haa Alifu \u2192 North ThiladhunmathiMV-08 Thaa \u2192 KolhumaduluMV-12 Meemu \u2192 Mulaku AtollMV-13 Raa \u2192 Mulaku AtollMV-14 Faafu \u2192 North Nilandhe AtollMV-17 Dhaalu \u2192 South Nilandhe AtollMV-20 Baa \u2192 South Nilandhe AtollMV-23 Haa Dhaalu \u2192 South ThiladhunmathiMV-24 Shaviyani \u2192 North MiladhunmaduluMV-25 Noonu \u2192 South MiladhunmaduluMV-26 Kaafu \u2192 South MiladhunmaduluMV-27 Gaafu Alifu \u2192 North Huvadhu AtollMV-28 Gaafu Dhaalu \u2192 North Huvadhu AtollMV-29 Gnaviyani \u2192 FuvammulahLocal variants added:all subdivisions"
+        }
+    ],
+    "MW": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Addition of three districts. List source updated",
+            "Code/Subdivision change": "Subdivisions added: MW-BA Balaka MW-LK Likoma Island MW-PH Phalombe"
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element, addition of names in administrative languages, typographical error correction, update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: MW-NE Neno"
+        }
+    ],
+    "MX": {},
+    "MY": [
+        {
+            "Newsletter": "Newsletter I-5",
+            "Date issued": "2003-09-05",
+            "Description of change in newsletter": "Addition of one federal territory. Inclusion of new codes. List source updated. Code source updated",
+            "Code/Subdivision change": "Subdivisions added: MY-16 Wilayah Persekutuan Putrajaya Codes: format changed (see below)"
+        }
+    ],
+    "MZ": {},
+    "NA": [
+        {
+            "Effective date of change": "2020-11-24",
+            "Short description of change (en)": "Change of subdivision name of NA-KA; Change of local variation of NA-KA; Addition of local variation of NA-KA; Update List Source"
+        },
+        {
+            "Effective date of change": "2016-11-15",
+            "Short description of change (en)": "Addition of local variation of NA-KA; update list source"
+        },
+        {
+            "Effective date of change": "2014-11-03",
+            "Short description of change (en)": "Delete 1 region NA-OK; add two regions NA-KE and NA-KW; change subdivision name of NA-CA"
+        }
+    ],
+    "NC": {},
+    "NE": {},
+    "NF": {},
+    "NG": [
+        {
+            "Newsletter": "Newsletter I-1",
+            "Date issued": "2000-06-21",
+            "Description of change in newsletter": "Addition of 6 new states",
+            "Code/Subdivision change": "Subdivisions added: NG-BY Bayelsa NG-EB Ebonyi NG-EK Ekiti NG-GO Gombe NG-NA Nassarawa NG-ZA Zamfara"
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Consistency between ISO 3166-1 and ISO 3166-2, addition of names in administrative languages",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "NI": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Deletion of one department. Addition of two autonomous regions. New list source",
+            "Code/Subdivision change": "Subdivisions added: NI-AN Atl\u00e1ntico Norte NI-AS Atl\u00e1ntico Sur Subdivisions deleted: NI-ZE Zelaya"
+        }
+    ],
+    "NL": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Update resulting from the addition of the administrative readjustment and source list update.",
+            "Code/Subdivision change": "Subdivisions added: 3 countries 3 special municipalities"
+        }
+    ],
+    "NO": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Alphabetical re-ordering.",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Deletion of counties NO-16 and NO-17; Addition of county NO-23; Update List Source",
+            "Code/Subdivision change": "Subdivisions deleted:NO-16 S\u00f8r-Tr\u00f8ndelagNO-17 Nord-Tr\u00f8ndelagSubdivisions added:NO-23 Tr\u00f8ndelag"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2019-04-09",
+            "Description of change in newsletter": "Change of subdivision code from NO-23 to NO-50",
+            "Code/Subdivision change": "Codes:Tr\u00f8ndelag: NO-23 \u2192 NO-50"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Deletion of county NO-01, NO-02, NO-04, NO-05, NO-06, NO-07, NO-08, NO-09, NO-10, NO-12, NO-14, NO-19, NO-20; Addition of county NO-30, NO-34, NO-38, NO-42, NO-46, NO-54; Addition of county NO-50 in sma; Update List Source",
+            "Code/Subdivision change": "Subdivisions deleted:NO-01 \u00d8stfoldNO-02 AkershusNO-04 HedmarkNO-05 OpplandNO-06 BuskerudNO-07 VestfoldNO-08 TelemarkNO-09 Aust-AgderNO-10 Vest-AgderNO-12 HordalandNO-14 Sogn og FjordaneNO-19 TromsNO-20 FinnmarkSubdivisions added:NO-30 VikenNO-34 InnlandetNO-38 Vestfold og TelemarkNO-42 AgderNO-46 VestlandNO-54 Troms og Finnmark"
+        }
+    ],
+    "NP": [
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "First level prefix addition, language adjustment, comment addition, deletion of the romanization system and source list update."
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Correction of the romanization system label; Addition of provinces NP-P1, NP-P2, NP-P3, NP-P4, NP-P5, NP-P6, NP-P7; Addition of local variation for NP-P4 and NP-P6; Update List Source; Addition of remark"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2019-11-22",
+            "Description of change in newsletter": "Update Code Source"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Change of subdivision name of NP-P3, NP-P7; Addition of local variation of NP-P3, NP-P7; Update List Source"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2021-11-25",
+            "Description of change in newsletter": "Change of spelling of NP-P5; Modification of remark part 2; Update List Source"
+        }
+    ],
+    "NR": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 14 districts"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Local generic administrative term addition.",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2017-11-23",
+            "Description of change in newsletter": "Change of subdivision name of NR-05; addition of local variation of NR-05, update List Source",
+            "Code/Subdivision change": "Name changed:NR-05 Baiti \u2192 Baitsi"
+        }
+    ],
+    "NU": {},
+    "NZ": [
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element, addition of names in administrative languages, update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: NZ-CIT Chatham Islands Territory"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-11-03",
+            "Description of change in newsletter": "Change subdivision category of NZ-AUK",
+            "Code/Subdivision change": "(TBD)"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Deletion of all unitary authorities; deletion of islands NZ-N, NZ-S; Change of subdivision name of NZ-GIS, NZ-MBH, NZ-NSN, NZ-TAS, change of subdivision category from regional council to region; update List Source",
+            "Code/Subdivision change": "(TBD)"
+        }
+    ],
+    "OM": [
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: OM-BU Al Buraym\u012b Codes: OM-JA Al Jan\u016bb\u012byah \u2192 OM-ZU Z\u0327uf\u0101r"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Change of subdivision category from region to governate for OM-BA, OM-DA, OM-SH, OM-WU, OM-ZA; change of subdivision code from OM-BA to OM-BJ, from OM-SH to OM-SJ; change of spelling of OM-BJ, OM-SJ; addition of governorates OM-BS, OM-SS; addition of local variations of OM-MA, OM-ZU; update List Source",
+            "Code/Subdivision change": "(TBD)"
+        }
+    ],
+    "PA": [
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: PA-EM Ember\u00e1 PA-NB Ng\u00f6be-Bugl\u00e9 Codes: PA-0 Comarca de San Blas \u2192 PA-KY Kuna Yala"
+        }
+    ],
+    "PE": [
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and languages and update of the list source",
+            "Code/Subdivision change": "Subdivisions added: PE-LMA Municipalidad Metropolitana de Lima"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-11-03",
+            "Description of change in newsletter": "Change Subdivision categories from department and constitutional province to region; update List Source",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "PF": {},
+    "PG": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Administrative readjustment, local generic administrative term addition and source list and source code update.",
+            "Code/Subdivision change": "Codes: PG-NSA North Solomons (province) \u2192 PG-NSB Bougainville (autonomous region)"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2013-05-10",
+            "Description of change in newsletter": "UN notification of full name",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-03-03",
+            "Description of change in newsletter": "Add \"the\" before the English full name",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-11-03",
+            "Description of change in newsletter": "Add two provinces PG-HLA and PG-JWK; change subdivision name of PG-SAN; update List Source",
+            "Code/Subdivision change": "Subdivisions added: PG-HLA HelaPG-JWK JiwakaName changed: PG-SAN Sandaun [West Sepik] \u2192 West Sepik"
+        }
+    ],
+    "PH": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Addition of one region and six provinces. New list source and code source. Precise specification of and minor corrections to the spelling of names",
+            "Code/Subdivision change": "Subdivisions added: PH-13 Caraga PH-APA Apayao PH-BIL Biliran PH-COM Compostela Valley PH-GUI Guimaras PH-SAR Sarangani PH-ZSI Zamboanga Sibugay Codes: Cordillera Administrative Region: PH-13 \u2192 PH-15"
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element, addition of names in administrative languages, update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: PH-40 Calabarzon PH-41 Mimaropa PH-DIN Dinagat Islands Subdivisions deleted: PH-04 Southern Tagalog"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Addition of province PH-DVO",
+            "Code/Subdivision change": "Subdivisions added: PH-DVO Davao Occidental"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Change of subdivision name of PH-COM in eng; Deletion of subdivision name of PH-COM in tgl; Update List Source\u00a0; Correction of the Code Source",
+            "Code/Subdivision change": "Subdivisions renamed: PH-COM Compostela Valley \u2192 Davao de Oro"
+        }
+    ],
+    "PK": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Name change, language readjustment and source list update.",
+            "Code/Subdivision change": "Codes: PK-NW North-West Frontier \u2192 PK-KP Khyber Pakhtunkhwa PK-NA Northern Areas \u2192 PK-GB Gilgit-Baltistan"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Addition of romanization system for urd",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2017-11-23",
+            "Description of change in newsletter": "Change of spelling of category name from ilaqa to \u2018al\u0101qahilaqa, from suba to s\u016bbah, from wafaqi dar-ul-hakumat ka ilaqa to waf\u0101q\u012b d\u0101r al \u1e29ik\u016bmat \u2018al\u0101qah; change of subdivision name of PK-JK (eng & urd); addition of local variation of PK-JK in eng; update List Source",
+            "Code/Subdivision change": "(TBD)"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2019-11-22",
+            "Description of change in newsletter": "Deletion of territory PK-TA; Update List Source",
+            "Code/Subdivision change": "(TBD)"
+        }
+    ],
+    "PL": [
+        {
+            "Newsletter": "Newsletter I-1",
+            "Date issued": "2000-06-21",
+            "Description of change in newsletter": "Introduction of a completely new subdivision layout",
+            "Code/Subdivision change": "Subdivision layout: 49 provinces (see below) \u2192 16 provinces"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Alphabetical re-ordering and source list update.",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Change of category name from province to voivodship in eng and from r\u00e9gion to vo\u00efvodie in fra; Change of subdivision code from PL-DS to PL-02, PL-KP to PL-04, PL-LB to PL-08, PL-LD to PL-10, PL-LU to PL-06, PL-MA to PL-12, PL-MZ to PL-14, PL-OP to PL-16, PL-PD to PL-20, PL-PK to PL-18, PL-PM to PL-22, PL-SK to PL-26, PL-SL to PL-24, PL-WN to PL-28, PL-WP to PL-30 and PL-ZP to PL-32; Update List Source; Update Code Source",
+            "Code/Subdivision change": "Category change:province  \u2192 voivodshipCode changes:DS \u2192 02KP \u2192 04LB \u2192 08LD \u2192 10LU \u2192 06MA \u2192 12MZ \u2192 14OP \u2192 16PD \u2192 20PK \u2192 18PM \u2192 22SK \u2192 26SL \u2192 24WN \u2192 28WP \u2192 30ZP \u2192 32"
+        }
+    ],
+    "PM": {},
+    "PN": {},
+    "PR": {},
+    "PS": [
+        {
+            "Newsletter": "Newsletter I-3",
+            "Date issued": "2002-08-20",
+            "Description of change in newsletter": "Insertion of a new entry between PUERTO RICO and PORTUGAL; in accordance with ISO 3166-1 Newsletter V-2",
+            "Code/Subdivision change": "New entry (no codes)"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Administrative division taken into account.",
+            "Code/Subdivision change": "Subdivisions added: 16 governorates"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2013-02-06",
+            "Description of change in newsletter": "UN notification of full name[1][2]",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Addition of romanization system for ara; change of spelling of category name in ara; change of spelling of PS-QQA, PS-JRH, PS-RBH; update List Source",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "PT": {},
+    "PW": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 16 states"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2016-11-15",
+            "Description of change in newsletter": "Change of spelling of PW-050 in eng, pau; update list source",
+            "Code/Subdivision change": "Name changed:PW-050 Hatobohei \u2192 Hatohobei"
+        }
+    ],
+    "PY": {},
+    "QA": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Update resulting from the addition of names in administrative languages, and update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: QA-ZA Az\u0327 Za\u0327`\u0101yin Subdivisions deleted: QA-GH Al Ghuwayr\u012byah QA-JU Al Jumayl\u012byah QA-JB Jar\u012by\u0101n al B\u0101\u0163nah"
+        }
+    ],
+    "RE": {},
+    "RO": [
+        {
+            "Newsletter": "Newsletter I-1",
+            "Date issued": "2000-06-21",
+            "Description of change in newsletter": "Correction of spelling mistake of subdivision category in header",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Addition of one department. Subdivision categories in header re-sorted",
+            "Code/Subdivision change": "Subdivisions added: RO-IF Ilfov"
+        }
+    ],
+    "RS": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of a new country (in accordance with ISO 3166-1 Newsletter V-12)",
+            "Code/Subdivision change": "Subdivisions added: 1 city, 2 autonomous republics, 29 districts"
+        },
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element, administrative update",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "RU": [
+        {
+            "Newsletter": "Newsletter I-1",
+            "Date issued": "2000-06-21",
+            "Description of change in newsletter": "Introduction of alternative name forms for 2 republics. Correction of a spelling mistake in the name of 1 autonomous district",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter I-7",
+            "Date issued": "2005-09-13",
+            "Description of change in newsletter": "Add local language name to the title Khanty-Mansiyskiy avtonomnyy okrug. Update of list source",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Modification of the administrative structure",
+            "Code/Subdivision change": "Subdivisions added: RU-PER Permskiy kray Subdivisions deleted: RU-PER Permskaya oblast' RU-KOP Komi-Permyatskiy avtonomnyy okrug"
+        },
+        {
+            "Newsletter": "Newsletter I-9",
+            "Date issued": "2007-11-28",
+            "Description of change in newsletter": "Update and use of long forms of country names as given in Draft NL I-8 538, 22-02-2007 and formation of Permskiy kray after amalgamation",
+            "Code/Subdivision change": "Subdivisions added: RU-KAM Kamchatskiy kray Subdivisions deleted: RU-KAM Kamchatskaya oblast' RU-EVE Evenkiyskiy avtonomnyy okrug RU-KOR Koryakskiy avtonomnyy okrug RU-TAY Taymyrskiy avtonomnyy okrug"
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and of the list source",
+            "Code/Subdivision change": "Subdivisions added: RU-ZAB Zabaykal'skiy kray Subdivisions deleted: RU-CHI Chitinskaya oblast' RU-AGB Aginskiy Buryatskiy avtonomnyy okrug RU-UOB Ust'-Ordynskiy Buryatskiy avtonomnyy okrug"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Correction of the romanization system label",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2021-11-25",
+            "Description of change in newsletter": "Correction of language from 'urd' to 'rus' for RU-PSK, RU-ROS, RU-PRI",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "RW": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Modification of the administrative structure",
+            "Code/Subdivision change": "Subdivision layout: 12 prefectures (see below) \u2192 1 town council, 4 provinces"
+        }
+    ],
+    "SA": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Alphabetical re-ordering."
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-11-03",
+            "Description of change in newsletter": "Change subdivision names of SA-02, SA-03 and SA-09; update List Source"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Change of subdivision category from province to region"
+        }
+    ],
+    "SB": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Modification of the administrative structure",
+            "Code/Subdivision change": "Subdivisions added: SB-CH Choiseul SB-RB Rennell and Bellona"
+        }
+    ],
+    "SC": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 23 districts"
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and languages and update of the list source",
+            "Code/Subdivision change": "Subdivisions added: SC-24 Les Mamelles SC-25 Roche Caiman"
+        }
+    ],
+    "SD": [
+        {
+            "Newsletter": "Newsletter I-9",
+            "Date issued": "2007-11-28",
+            "Description of change in newsletter": "Modification of administrative structure",
+            "Code/Subdivision change": "Subdivisions deleted: SD-10 Gharb Kurduf\u0101n"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Administrative adjustment and update",
+            "Code/Subdivision change": "Subdivision layout: 25 states (see below) \u2192 17 states Subdivisions deleted: 10 states (SD-14 \u2013 SD-23) seceded to create South Sudan (SS) Subdivisions added: SD-DE Sharq D\u0101rf\u016br SD-DC Zalingei"
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Additions of state SD-GK; change spelling of SD-NR, SD-NO, SD-DN, SD-KN, SD-DC; update List Source",
+            "Code/Subdivision change": "Subdivision added:SD-GK Gharb Kurduf\u0101n (ar), West Kordofan (en)Spelling changes:SD-DC Zalingei \u2192 Wasa\u0163 D\u0101rf\u016br Z\u0101linjaySD-DN ?  \u2192 Sham\u0101l D\u0101rf\u016brSD-KN Sham\u0101l Kurduf\u0101n \u2192 Shiam\u0101l Kurduf\u0101nSD-NO ? \u2192 Ash Sham\u0101l\u012byahSD-NR An N\u012bl \u2192 Nahr an N\u012bl"
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Correction of the romanization system label",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Typographical correction of subdivision name of SD-KN, SD-DC; Addition of local variation of SD-DC",
+            "Code/Subdivision change": "Spelling changes:SD-DC Wasa\u0163 D\u0101rf\u016br Z\u0101linjay \u2192 Wasa\u0163 D\u0101rf\u016brSD-KN Shiam\u0101l Kurduf\u0101n \u2192 Sham\u0101l Kurduf\u0101n"
+        }
+    ],
+    "SE": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Name precision of the administrative division, Alphabetical re-ordering and source list update."
+        }
+    ],
+    "SG": [
+        {
+            "Newsletter": "Newsletter I-9",
+            "Date issued": "2007-11-28",
+            "Description of change in newsletter": "Addition of administrative divisions and their codes",
+            "Code/Subdivision change": "Subdivisions added: 5 districts"
+        }
+    ],
+    "SH": [
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Consistency between ISO 3166-1 and ISO 3166-2 for change of name (in accordance with ISO 3166-1 Newsletter VI-7)",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Administrative subdivisions addition.",
+            "Code/Subdivision change": "Subdivisions added: 3 geographical entities"
+        }
+    ],
+    "SI": [
+        {
+            "Effective date of change": "2020-11-24",
+            "Short description of change (en)": "Correction of spelling for SI-065, SI-116, SI-169, SI-182, SI-204, SI-210; Deletion of asterisk from SI-212; Update List Source"
+        },
+        {
+            "Effective date of change": "2016-11-15",
+            "Short description of change (en)": "Change of subdivision category from commune to municipality; addition of municipality SI-213"
+        },
+        {
+            "Effective date of change": "2010-06-30",
+            "Short description of change (en)": "Update of the administrative structure and languages and update of the list source"
+        },
+        {
+            "Effective date of change": "2014-11-03",
+            "Short description of change (en)": "Add 1 commune SI-212; update List Source"
+        }
+    ],
+    "SJ": {},
+    "SK": {},
+    "SL": [
+        {
+            "Effective date of change": "2019-11-22",
+            "Short description of change (en)": "Addition of an asterisk to SL-NW; Update Code Source"
+        },
+        {
+            "Effective date of change": "2018-11-26",
+            "Short description of change (en)": "Addition of province SL-NW; Update List Source"
+        }
+    ],
+    "SM": [
+        {
+            "Effective date of change": "2020-11-24",
+            "Short description of change (en)": "Change of spelling of SM-07; Addition of local variation for SM-07; Update List Source",
+            "Code/Subdivision change": "Subdivisions renamed: SM-07 San Marino \u2192 Citt\u00e0 di San Marino"
+        }
+    ],
+    "SN": [
+        {
+            "Newsletter": "Newsletter I-5",
+            "Date issued": "2003-09-05",
+            "Description of change in newsletter": "Addition of one new region. List source updated",
+            "Code/Subdivision change": "Subdivisions added: SN-MT Matam"
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and languages and update of the list source",
+            "Code/Subdivision change": "Subdivisions added: SN-KA Kaffrine SN-KE K\u00e9dougou SN-SE S\u00e9dhiou"
+        }
+    ],
+    "SO": {},
+    "SR": {},
+    "SS": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Administrative subdivisions addition.",
+            "Code/Subdivision change": "Subdivisions added: 10 states"
+        }
+    ],
+    "ST": [
+        {
+            "Effective date": "2020-11-24",
+            "Short description of change": "Deletion of province ST-S; Change of subdivision category from province to autonomous region for ST-P; Addition of district ST-01, ST-02, ST-03, ST-04, ST-05, ST-06; Update List Source"
+        }
+    ],
+    "SV": {},
+    "SX": [
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Addition of code to align ISO 3166-1 and ISO 3166-2"
+        }
+    ],
+    "SY": {},
+    "SZ": [
+        {
+            "Effective date of change": "2018-07-16",
+            "Short description of change (en)": "Change of the short name, full name and local short name in eng"
+        },
+        {
+            "Effective date of change": "2018-11-26",
+            "Short description of change (en)": "Change of subdivision category from district to region; Update List Source"
+        }
+    ],
+    "TC": {},
+    "TD": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Modification of the administrative structure",
+            "Code/Subdivision change": "Subdivision layout: 14 prefectures (see below) \u2192 18 regions"
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and languages and update of the list source",
+            "Code/Subdivision change": "Subdivisions added: TD-BG Bahr el Gazel TD-BO Borkou TD-EN Ennedi TD-SI Sila TD-TI Tibesti Subdivisions deleted: TD-BET Borkou-Ennedi-Tibesti"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-11-03",
+            "Description of change in newsletter": "Add two regions TD-EE and TD-EO; correct spelling of TD-BA; delete TD-EN; update List Source",
+            "Code/Subdivision change": "Subdivisions added:TD-EE Ennedi-Est (fr)TD-EO Ennedi-Ouest (fr)Subdivision deleted:TD-EN Inn\u012bd\u012b (ar), Ennedi (fr)Spelling change:TD-BA Al Ba\u1e6d\u1e29ah (ar) \u2192 Al Ba\u0163\u1e29ah"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Change of subdivision category region to province; Modification of spelling for TD-BA, TD-LO, TD-LR, TD-TA, TD-WF in ara; Addition of local variation for TD-BG in fra; Addition of subdivision name of TD-EE, TD-OE in ara; Update List Source",
+            "Code/Subdivision change": "Spelling changes:TD-BA Al Ba\u0163\u1e29ah (ar) \u2192 Al Ba\u0163\u1e29\u0101\u2019TD-LO L\u016bq\u016bn al Gharb\u012b (ar) \u2192 L\u016bgh\u016bn al Gharb\u012bTD-LR L\u016bq\u016bn ash Sharq\u012b (ar) \u2192 L\u016bgh\u016bn ash Sharq\u012bTD-TA T\u0101njil\u012b (ar) \u2192 T\u0101nj\u012bl\u012bTD-WF W\u0101d\u012b F\u012br\u0101 (ar) \u2192 W\u0101d\u012b F\u012br\u0101\u2019"
+        }
+    ],
+    "TF": {},
+    "TG": {},
+    "TH": {},
+    "TJ": [
+        {
+            "Effective date of change": "2017-11-23",
+            "Short description of change": "Change of subdivision name of TJ-RA; change of spelling of category name in eng, tgk; update List Source; modification of the English remark part 2",
+            "Code/Subdivision change": "Spelling change:TJ-RA Nohiyahoi Tobei Jumhur\u00ed \u2192 nohiyahoi tobei jumhur\u00ed"
+        },
+        {
+            "Effective date of change": "2016-11-15",
+            "Short description of change": "Modification of the remark part 2; addition of category name Districts Under Republic Administration in eng, fra, tgk; addition of Districts Under Republic Administration TJ-RA; update list source",
+            "Code/Subdivision change": "Subdivision added:TJ-RA Nohiyahoi Tobei Jumhur\u00ed"
+        },
+        {
+            "Effective date of change": "2015-02-12",
+            "Short description of change": "Removed the reference to Dushanbe in remark part 2; correct spelling of DU",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Effective date of change": "2014-11-03",
+            "Short description of change": "Add 1 capital territory TJ-DU",
+            "Code/Subdivision change": "Subdivision added: TJ-DU"
+        }
+    ],
+    "TK": {},
+    "TL": [
+        {
+            "Newsletter": "Newsletter I-3",
+            "Date issued": "2002-08-20",
+            "Description of change in newsletter": "Change of the ISO 3166-1 alpha-2 code element to TL. Insertion of 13 districts. In accordance with ISO 3166-1 Newsletter V-5",
+            "Code/Subdivision change": "Subdivisions added: 13 districts"
+        },
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Change of country name in accordance with ISO 3166-1 Newsletter V-6 (East Timor renamed Timor-Leste in English and French). Spelling correction in TL-LI",
+            "Code/Subdivision change": "(TBD)"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Update of the language adjustment and source list update.",
+            "Code/Subdivision change": "Spelling changeTL-DI Dili \u2192 D\u00edli"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Change of subdivision category name from district to municipality; Addition of category name in tet; Change of category name from district to special administrative region for TL-OE; Change of spelling in por of TL-OE; Change of spelling of TL-LA; Addition of local variation of TL-OE; Update List Source",
+            "Code/Subdivision change": "(TBD)"
+        }
+    ],
+    "TM": [
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "One spelling correction. Correction of header information",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and update of the list source",
+            "Code/Subdivision change": "Subdivisions added: TM-S A\u015fgabat"
+        }
+    ],
+    "TN": [
+        {
+            "Newsletter": "Newsletter I-5",
+            "Date issued": "2003-09-05",
+            "Description of change in newsletter": "Addition of one new governorate. List source updated. Code source updated",
+            "Code/Subdivision change": "Subdivisions added: TN-14 Manouba"
+        },
+        {
+            "Newsletter": "Newsletter I-6",
+            "Date issued": "2004-03-08",
+            "Description of change in newsletter": "Adjustment of name form in TN-14. List source updated",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Toponym evolution, alphabetical re-ordering and source list update.",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "TO": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 5 divisions"
+        }
+    ],
+    "TR": [
+        {
+            "Newsletter": "Newsletter I-1",
+            "Date issued": "2000-06-21",
+            "Description of change in newsletter": "Addition of 1 new province. Correction of 2 spelling errors",
+            "Code/Subdivision change": "Subdivisions added: TR-80 Osmaniye"
+        },
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Addition of one province. Update of list source information",
+            "Code/Subdivision change": "Subdivisions added: TR-81 D\u00fczce"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Toponym evolution and source list update.",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "TT": [
+        {
+            "Effective date of change": "2020-11-24",
+            "Short description of change (en)": "Change of category name from municipality to borough for TT-ARI, TT-CHA, TT-PTF; Change of subdivision category name from municipality to city for TT-POS, TT-SFO; Update List Source"
+        },
+        {
+            "Effective date of change": "2015-11-27",
+            "Short description of change (en)": "Deletion of regions TT-ETO, TT-RCM, TT-WTO; addition of region TT-MRC; addition of one ward TT-TOB; update List Source"
+        }
+    ],
+    "TV": [
+        {
+            "Edition/Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 1 town council, 7 island councils"
+        },
+        {
+            "Edition/Newsletter": "ISO 3166-2:2007",
+            "Date issued": "2007-12-13",
+            "Description of change in newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1]",
+            "Code/Subdivision change": "Codes: Nui: TV-NIU \u2192 TV-NUI"
+        }
+    ],
+    "TW": [
+        {
+            "Newsletter/OBP": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Error correction: Duplicate use of six code elements corrected. Subdivision categories in header re-sorted",
+            "Code/Subdivision change": "Codes: (to correct duplicate use)Chiayi (district): TW-CYI \u2192 TW-CYQHsinchu (district): TW-HSZ \u2192 TW-HSQKaohsiung (district): TW-KHH \u2192 TW-KHQTaichung (district): TW-TXG \u2192 TW-TXQTainan (district): TW-TNN \u2192 TW-TNQTaipei (district): TW-TPE \u2192 TW-TPQ"
+        },
+        {
+            "Newsletter/OBP": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Addition of category name for special municipality in zho; change of spelling of TW-ILA; deletion of districts TW-KHQ, TW-TNQ, TW-TPQ, TW-TXQ; addition of districts TW-KIN, TW-LIE and special municipality TW-NWT; change of subdivision category from municipalities to special municipalities for TW-TXG, TW-TNN; change of subdivision category from district to special municipality for TW-TAO; update List Source.",
+            "Code/Subdivision change": "Subdivision added:Kinmen (district): TW-KINLienchiang (district): TW-LIENew Taipei (special municipality): TW-NWTSubdivision deleted:Kaohsiung (district): TW-KHQTainan (district): TW-TNQTaipei (district): TW-TPQTaichung (district): TW-TXQSubdivision category changed:Taoyuan (TW-TAO): district \u2192 special municipalityTainan (TW-TNN): municipality \u2192 special municipalityTaichung (TW-TXG): municipality \u2192 special municipality"
+        },
+        {
+            "Newsletter/OBP": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2016-11-15",
+            "Description of change in newsletter": "Change of subdivision category from municipality to city and district to county; update List Source",
+            "Code/Subdivision change": "(each) district \u2192 county(each) municipality \u2192 city"
+        }
+    ],
+    "TZ": [
+        {
+            "Newsletter": "Newsletter I-5",
+            "Date issued": "2003-09-05",
+            "Description of change in newsletter": "Addition of one new region. One spelling correction. List source updated. Code source updated",
+            "Code/Subdivision change": "Subdivision added: TZ-26 Manyara (sw)"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-11-03",
+            "Description of change in newsletter": "Add 4 regions TZ-27 to TZ-30; update List Source",
+            "Code/Subdivision change": "Subdivisions added: TZ-27 Geita (sw)TZ-28 Katavi (sw)TZ-29 Njombe (sw)TZ-30 Simiyu (sw)"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Addition of region TZ-31; Update List Source",
+            "Code/Subdivision change": "Subdivision added: TZ-31 Songwe (sw), Songwe (en)"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2019-02-14",
+            "Description of change in newsletter": "Modification of the English and French short name lower case",
+            "Code/Subdivision change": ""
+        }
+    ],
+    "UA": {},
+    "UG": [
+        {
+            "Newsletter": "Newsletter I-3",
+            "Date issued": "2002-08-20",
+            "Description of change in newsletter": "Addition of 6 new districts",
+            "Code/Subdivision change": "Subdivisions added: UG-AJM Adjumani UG-BUG Bugiri UG-BUA Busia UG-KAT Katakwi UG-NAK Nakasongola UG-SEM Sembabule"
+        },
+        {
+            "Newsletter": "Newsletter I-5",
+            "Date issued": "2003-09-05",
+            "Description of change in newsletter": "Addition of 11 new districts. List source updated. Code source updated",
+            "Code/Subdivision change": "Subdivisions added: UG-213 Kaberamaido UG-413 Kamwenge UG-414 Kanungu UG-112 Kayunga UG-415 Kyenjojo UG-214 Mayuge UG-311 Nakapiripirit UG-312 Pader UG-215 Sironko UG-113 Wakiso UG-313 Yumbe Codes: format changed (see below)"
+        },
+        {
+            "Newsletter": "Newsletter I-9",
+            "Date issued": "2007-11-28",
+            "Description of change in newsletter": "Addition of administrative divisions and their codes",
+            "Code/Subdivision change": "Subdivisions added: UG-317 Abim UG-314 Amolatar UG-216 Amuria UG-319 Amuru UG-217 Budaka UG-218 Bukwa UG-419 Bulisa UG-219 Butaleja UG-318 Dokolo UG-416 Ibanda UG-417 Isingiro UG-315 Kaabong UG-220 Kaliro UG-418 Kiruhura UG-316 Koboko UG-221 Manafwa UG-320 Maracha UG-114 Mityana UG-115 Nakaseke UG-222 Namutumba UG-321 Oyam"
+        },
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Addition of the country code prefix as the first code element, administrative update, alphabetical re-ordering",
+            "Code/Subdivision change": "Subdivisions added: UG-223 Bududa UG-224 Bukedea UG-116 Lyantonde"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-11-03",
+            "Description of change in newsletter": "Add 32 districts UG-117 to UG- 124, UG-225 to UG-232 , UG-322 to UG-331 and UG-420 to UG-425; change subdivision category from district to city for UG-102",
+            "Code/Subdivision change": "(TBD)"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2016-11-15",
+            "Description of change in newsletter": "Update Code Source; update List Source; change of parent subdivision of UG-325; deletion of asterisks from districts; change of subdivision code from UG-114 to UG-115, UG-115 to UG-116, UG-116 to UG-114, UG-218 to UG-220, UG-219 to UG-221, UG-220 to UG-222, UG-221 to UG-223, UG-222 to UG-224, UG-223 to UG-218, UG-224 to UG-219, UG-314 to UG-315, UG-315 to UG-318, UG-316 to UG-319, UG-317 to UG-314, UG-318 to UG-317, UG-319 to UG-316, UG-325 to UG-420, UG-326 to UG-325, UG-327 to UG-326, UG-328 to UG-327, UG-329 to UG-328, UG-330 to UG-329, UG-331 to UG-330, UG-416 to UG-417, UG-417 to UG-418, UG-418 to UG-419, UG-419 to UG-416, UG-420 to UG-421, UG-421 to UG-422, UG-422 to UG-423, UG-423 to UG-424, UG-424 to UG-425, UG-425 to UG-426",
+            "Code/Subdivision change": "(TBD)"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2017-11-23",
+            "Description of change in newsletter": "Addition of districts UG-125, UG-233, UG-234, UG-331, UG-332, UG-427, UG-428, UG-429, UG-430, UG-431; update List Source",
+            "Code/Subdivision change": "(TBD)"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2018-11-26",
+            "Description of change in newsletter": "Addition of districts UG-126, UG-235, UG-236, UG-333, UG-334, UG-432; Update List Source",
+            "Code/Subdivision change": "(TBD)"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Addition of district UG-237, UG-335, UG-336, UG-337, UG-433, UG-434, UG-435; Change of spelling of UG-220; Removal of an asterisk from UG-125, UG-126, UG-233, UG-234, UG-235, UG-236, UG-331, UG-332, UG-333, UG-334, UG-427, UG-428, UG-429, UG-430, UG-431, UG-432",
+            "Code/Subdivision change": "(TBD)"
+        }
+    ],
+    "UM": {},
+    "US": {},
+    "UY": {},
+    "UZ": [
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Spelling corrections in accordance with the newly adopted Roman alphabet",
+            "Code/Subdivision change": "Codes: UZ-KH Khorazm \u2192 UZ-XO Xorazm"
+        },
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Introduction of third subdivision category. Addition of one city. Subdivision categories in header re-sorted",
+            "Code/Subdivision change": "Subdivisions added: UZ-TK Toshkent (city)"
+        }
+    ],
+    "VA": {},
+    "VC": [
+        {
+            "Newsletter": "Newsletter I-8",
+            "Date issued": "2007-04-17",
+            "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements",
+            "Code/Subdivision change": "Subdivisions added: 6 parishes"
+        }
+    ],
+    "VE": [
+        {
+            "Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Addition of one state. Subdivision categories in header re-sorted",
+            "Code/Subdivision change": "Subdivisions added: VE-X Vargas"
+        },
+        {
+            "Newsletter": "Newsletter I-5",
+            "Date issued": "2003-09-05",
+            "Description of change in newsletter": "Change of subdivision category of two Federal territories to States. List source updated",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2009-03-03",
+            "Description of change in newsletter": "Change of short name",
+            "Code/Subdivision change": null
+        },
+        {
+            "Newsletter": "Newsletter II-1",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Change of short form country name in accordance with ISO 3166-1 NL VI-5 (2009-03-03)",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2010-02-19",
+            "Description of change in newsletter": "Change of short form country name in accordance with ISO 3166-1 NL VI-5 (2009-03-03)",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2014-12-18",
+            "Description of change in newsletter": "Alignment of the English and French short names upper and lower case with UNTERM; update of the remarks in French",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Change of spelling of category name in fra and spa",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online Browsing Platform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Change of subdivision name of VE-X; Update List Source; Correction of the Code Source",
+            "Code/Subdivision change": "Subdivisions renamed: VE-X Vargas \u2192 La Guaira"
+        }
+    ],
+    "VG": {},
+    "VI": {},
+    "VN": [
+        {
+            "Newsletter": "Newsletter I-1",
+            "Date issued": "2000-06-21",
+            "Description of change in newsletter": "Duplicate assignment of VN-24 corrected. Correction of 1 subdivision name. Correction of alphabetic sorting of subdivision names",
+            "Code/Subdivision change": "Codes: (to correct duplicate use) Qu\u1ea3ng Ninh: VN-24 \u2192 VN-13"
+        },
+        {
+            "Newsletter": "Newsletter I-2",
+            "Date issued": "2002-05-21",
+            "Description of change in newsletter": "Spelling correction in VN-65",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Newsletter I-7",
+            "Date issued": "2005-09-13",
+            "Description of change in newsletter": "Addition of 3 provinces. Update of list source",
+            "Code/Subdivision change": "Subdivisions added: VN-72 \u0110\u1eafk N\u00f4ng VN-71 \u0110i\u1ec7n Bi\u00ean VN-73 H\u1eadu Giang"
+        },
+        {
+            "Newsletter": "Newsletter II-3",
+            "Date issued": "2011-12-15",
+            "Description of change in newsletter": "Administrative adjustment update, typo corrections and source list update.",
+            "Code/Subdivision change": "Subdivision layout: 5 provinces \u2192 5 municipalities"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2013-02-06",
+            "Description of change in newsletter": "Correct spelling error in French long name",
+            "Code/Subdivision change": ""
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-11-03",
+            "Description of change in newsletter": "Delete subdivision VN-15; change spelling for all the provinces except for VN-28, VN-30, VN-41 and VN-44; update List Source",
+            "Code/Subdivision change": "Subdivision deleted:VN-15 Ha Tay(Merged into VN-HN in 2008)"
+        },
+        {
+            "Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2020-11-24",
+            "Description of change in newsletter": "Change of spelling of VN-CT, VN-DN, VN-HN, VN-HP, VN-SG; Update List Source",
+            "Code/Subdivision change": "Subdivision renamed:VN-CT Can Tho \u2192 C\u1ea7n Th\u01a1VN-DN Da Nang \u2192 \u0110\u00e0 N\u1eb5ngVN-HN Ha Noi \u2192 H\u00e0 N\u1ed9iVN-HP Hai Phong \u2192 H\u1ea3i Ph\u00f2ngVN-SG Ho Chi Minh \u2192 H\u1ed3 Ch\u00ed Minh"
+        }
+    ],
+    "VU": {},
+    "WF": {},
+    "WS": {},
+    "XK": {},
+    "YE": [
+        {
+            "Edition/Newsletter": "Newsletter I-4",
+            "Date issued": "2002-12-10",
+            "Description of change in newsletter": "Addition of two governorates",
+            "Code/Subdivision change": "Subdivisions added: YE-DA A\u1e11 \u1e10\u0101li' YE-AM 'Amr\u0101n"
+        },
+        {
+            "Edition/Newsletter": "ISO 3166-2:2007",
+            "Date issued": "2007-12-13",
+            "Description of change in newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1]",
+            "Code/Subdivision change": "Subdivisions added: YE-SA \u015ean\u2018\u0101' [city]"
+        },
+        {
+            "Edition/Newsletter": "Newsletter II-2",
+            "Date issued": "2010-06-30",
+            "Description of change in newsletter": "Update of the administrative structure and its alphabetical order and update of the list source",
+            "Code/Subdivision change": "Subdivisions added: YE-RA Raymah"
+        },
+        {
+            "Edition/Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2014-11-17",
+            "Description of change in newsletter": "Change spelling for YE-SA; update List Source",
+            "Code/Subdivision change": "Spelling change:YE-SA \u015ean\u2018\u0101\u2019 [city] \u2192 Am\u0101nat al \u2018\u0100\u015fimah [city]"
+        },
+        {
+            "Edition/Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2015-11-27",
+            "Description of change in newsletter": "Change of subdivision name of YE-DA, YE-AD, YE-BA, YE-AM, YE-MA; addition of governorate YE-SU; addition of romanisation system of YE-RA; update List Source",
+            "Code/Subdivision change": "Subdivision added:YE-SU Arkhab\u012bl Suqu\u0163r\u00e1Name changes:YE-ADYE-AMYE-BAYE-DAYE-MA"
+        },
+        {
+            "Edition/Newsletter": "Online BrowsingPlatform (OBP)",
+            "Date issued": "2016-11-15",
+            "Description of change in newsletter": "Change of spelling of YE-AB; update list source",
+            "Code/Subdivision change": "Spelling change:YE-AB Aby\u0101n \u2192 Abyan"
+        }
+    ],
+    "YT": {},
+    "ZA": [
+        {
+            "Edition/Newsletter": "Newsletter I-6",
+            "Date issued": "2004-03-08",
+            "Description of change in newsletter": "Change of name of Northern Province to Limpopo",
+            "Code/Subdivision change": "Codes: ZA-NP Northern Province \u2192 ZA-LP Limpopo"
+        },
+        {
+            "Edition/Newsletter": "Newsletter I-9",
+            "Date issued": "2007-11-28",
+            "Description of change in newsletter": "Addition of administrative divisions and their codes",
+            "Code/Subdivision change": "Codes: (not marked with red colour in newsletter) Gauteng: ZA-GT \u2192 ZA-GP KwaZulu-Natal: ZA-NL \u2192 ZA-ZN"
+        },
+        {
+            "Edition/Newsletter": "ISO 3166-2:2007",
+            "Date issued": "2007-12-13",
+            "Description of change in newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)",
+            "Code/Subdivision change": "Codes: Gauteng: ZA-GP \u2192 ZA-GT KwaZulu-Natal: ZA-ZN \u2192 ZA-NL"
+        }
+    ],
+    "ZM": [
+        {
+            "Effective date of change": "2014-11-03",
+            "Short description of change (en)": "Add 1 province ZM-10; update List Source and Code Source"
+        }
+    ],
+    "ZW": {}
+}
