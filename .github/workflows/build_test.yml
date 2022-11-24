@@ -46,7 +46,7 @@ jobs:
   #test job, waits for build job to complete
   test_iso3166:
     name: Test iso3166-updates
-    needs: build
+    needs: build_iso3166
     runs-on: ubuntu-latest         # platform: [ubuntu-latest, macos-latest, windows-latest]
     strategy:
       matrix:
