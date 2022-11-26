@@ -4,7 +4,7 @@
 - [ ] Check variable naming conventions.
 - [ ] Check output of bandit and flake8 check.
 - [X] Export updates to csv, dataframe.
-- [ ] Create API so each ISO3166-2 update info can be retrieved as json format.
+- [ ] Create API so each ISO3166-2 update info can be retrieved as json format, using GCP.
 - [ ] Create demo using python notebook.
 - [ ] Generate updated for a particular year. 
 - [ ] Change all instances of iso3166-updates to iso3166_updates except for pypi name.
@@ -20,3 +20,8 @@
 - [ ] href of newsletter not exporting to json
 - [ ] Add build passing to readme
 - [ ] Add format section to README and demo.
+- [ ] Remove .DS_Store or pycache from repo.
+- [ ] Add API/Google Cloud code to its own folder in repo.
+- [ ] Make Source repo on GCP, use as import to Cloud Function (https://www.youtube.com/watch?v=LAcErtGU-VU). Creat Cloud Build that builds on push to branch, using repo as source.
+- [ ] Add diagram of cloud arch & pipeline in API fodler. 
+- [ ] Add API tests for tests folder.

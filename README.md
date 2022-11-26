@@ -1,6 +1,7 @@
 # Automated scripts for receiving updates to ISO3166 country codes
 
 [![iso3166_updates](https://img.shields.io/pypi/v/iso3166-updates)](https://pypi.org/project/iso3166-updates/)
+[![Build](https://img.shields.io/github/workflow/status/amckenna41/iso3166-updates/Deploy%20and%20Testing)](https://github.com/amckenna41/iso3166-updates/actions)
 [![Platforms](https://img.shields.io/badge/platforms-linux%2C%20macOS%2C%20Windows-green)](https://pypi.org/project/iso3166-updates/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
 [![Issues](https://img.shields.io/github/issues/amckenna41/iso3166-flag-icons)](https://github.com/amckenna41/iso3166-updates/issues)
@@ -8,7 +9,7 @@
 [![Commits](https://img.shields.io/github/commit-activity/w/amckenna41/iso3166-updates)](https://github.com/iso3166-updates)
 
 <p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/ISO_Logo_%28Red_square%29.svg" alt="iso" height="300" width="500"/>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/ISO_Logo_%28Red_square%29.svg" alt="iso" height="200" width="400"/>
 </p>
 
 > Automated scripts that check for any updates/changes to the ISO3166-1 and ISO3166-2 country codes and naming conventions, as per the ISO3166 newsletter (https://www.iso.org/iso-3166-country-codes.html).
@@ -39,6 +40,10 @@ The <b>ISO 3166-2</b> icons are those of the names of countries and their subdiv
 
 Problem Statement
 -----------------
+
+API
+---
+
 
 Format 
 ------

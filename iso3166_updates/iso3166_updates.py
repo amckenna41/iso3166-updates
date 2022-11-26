@@ -119,6 +119,10 @@ def get_updates(iso_code, year="", export_filename="iso3166-updates",
 
     print("All ISO3166 changes exported to folder {}".format(export_folder))
 
+
+def print_updates(updated_df, iso):
+    pass
+
 def get_updates_df(iso3166_updates_table):
     """
 

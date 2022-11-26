@@ -6,7 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+*.gcloudignore
+
 old/
+iso3166-updates-api/
 
 # Distribution / packaging
 .Python
