@@ -15,6 +15,9 @@ jobs:
   #test job, waits for build job to complete
   test_iso3166:
     name: Test iso3166-updates
+    env:
+      GCS_BUCKET: ${{ secrets.GCS_BUCKET }}
+      GCP_FUNCTION: ${{ secrets.GCP_FUNCTION }}
     runs-on: ubuntu-latest         # platform: [ubuntu-latest, macos-latest, windows-latest]
     strategy:
       matrix:
@@ -88,3 +91,30 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         flags: iso3166_updates_workflow
+
+    #upload to GCP Storage
+    - name: Upload iso3166-updates.json
+      with:
+        flags: iso3166_updates__json_workflow
+
+    #upload artifacts, logs and outputs to GCP storage bucket
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup - gcloud / gsutil
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        service_account_key: ${{ secrets.GCS_SA_KEY }}
+        project_id: ${{ secrets.GCS_PROJECT }}
+        export_default_credentials: true
+
+    - name: Upload to GCS
+      run: |
+        echo "NOW::$(date +'%Y-%m-%dT%H')" >> $GITHUB_ENV
+        gsutil -m rsync -R package_safety_output gs://$NOW/$GCS_BUCKET
+        gsutil -m rsync -R bandit_output gs://$NOW/$GCS_BUCKET
+        gsutil -m rsync -R flake8_output.txt gs://$NOW/$GCS_BUCKET
+
+    # update gcloud function
+    - name: Update gcloud function
+        gcloud functions deploy $GCP_FUNCTION --source=iso3166-updates-api/ --runtime=python310 --trigger-http --allow-unauthenticated --region=us-central1 --entry-point=iso3166_updates --memory=256

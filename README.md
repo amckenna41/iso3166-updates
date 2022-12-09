@@ -43,22 +43,14 @@ Problem Statement
 
 API
 ---
+> In Development
+An API is available that can be used to extract any applicable updates for a country via URL. The API is in alpha stage so is just available via a Google Function at URL: https://
 
-
-Format 
-------
-The output for the updates/changes to a ISO3166-2 country has 4 columns: Edition/Newsletter, Date Issued, 
-Description of change in newsletter and Code/Subdivision change. E.g the output csv format for AD (Andorra) is:
-
-| Edition/Newsletter | Date Issued | Description of change in newsletter | Code/Subdivision change |   
-|:-------------------|:------------|------------------------------------:|------------------------:|
-| Newsletter I-8     | 2007-04-17  | Addition of the administrative subdivisions...   | Subdivisions added: 7 parishes...                 | 
-| Online Browsing Platform (OBP) | 2014-11-03 | Update List Source | No subdivision changes listed |
-| Online Browsing Platform (OBP) | 2015-11-27 | Update List Source | No subdivision changes listed | 
+The API documentation is with all useful commands and inputs to the API is available on the README of the iso3166-updates-api folder.  
 
 Requirements
 ------------
-* [python][python] >= 3.6
+* [python][python] >= 3.7
 * [pandas][pandas] >= 1.4.3
 * [requests][requests] >= 2.28.1
 * [beautifulsoup4][beautifulsoup4] >= 4.11.1
@@ -85,13 +77,26 @@ Usage
 ```python
 import iso3166_updates as iso3166_updates
 
-#get all listed changes/updated for Brazil from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:BR)
-iso3166_updates.get_updates("BR")
+#get all listed changes/updated for Andorra from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:AD)
+iso3166_updates.get_updates("AD")
+
+#get all listed changes/updated for BA, DE, FR, HU, PY
+iso3166_updates.get_updates(["BA","DE","FR","HU","PY"])
 
 #get any listed changes/updated for Ireland from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:IE),
 #between years of 2012 and 2021
 iso3166_updates.get_updates("IE", year="2012-2021")
 ```
+
+The output to the above functions for the updates/changes to a ISO3166-2 country returns 4 columns: 
+Edition/Newsletter, Date Issued, Description of change in newsletter and Code/Subdivision change. 
+E.g the output csv format for AD (Andorra) is:
+
+| Edition/Newsletter | Date Issued | Description of change in newsletter | Code/Subdivision change |   
+|:-------------------|:------------|------------------------------------:|------------------------:|
+| Newsletter I-8     | 2007-04-17  | Addition of the administrative subdivisions...   | Subdivisions added: 7 parishes...                 | 
+| Online Browsing Platform (OBP) | 2014-11-03 | Update List Source | No subdivision changes listed |
+| Online Browsing Platform (OBP) | 2015-11-27 | Update List Source | No subdivision changes listed | 
 
 Issues
 ------

@@ -9,7 +9,6 @@ __pycache__/
 *.gcloudignore
 
 old/
-iso3166-updates-api/
 
 # Distribution / packaging
 .Python

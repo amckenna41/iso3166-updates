@@ -10,18 +10,41 @@
 - [ ] Change all instances of iso3166-updates to iso3166_updates except for pypi name.
 - [ ] Add GCP upload to workflow.
 - [ ] Upload all iso3166-updates for all countries in seperate folder of main repo dir.
-- [ ] If single ISO code put in then print, if mutliple then output to files.
+- [X] If single ISO code put in then print, if mutliple then output to files.
 - [X] Append date to update filenames.
 - [X] Add maintainer and keywords to setup.py & cfg.
 - [X] When using Year var, if DF empty then don't export it.
-- [ ] Change "Effective date of change" column to "Date issued"
-- [ ] Change "Newsletter" column to "Edition/Newsletter"
-- [ ] All countries should have 4 columns: "Edition/Newsletter", "Date issued", "Description of change in newsletter", "Code/Subdivision change"
-- [ ] href of newsletter not exporting to json
+- [X] Change "Effective date of change" column to "Date issued"
+- [X] Change "Newsletter" column to "Edition/Newsletter"
+- [X] All countries should have 4 columns: "Edition/Newsletter", "Date issued", "Description of change in newsletter", "Code/Subdivision change"
+- [X] href of newsletter not exporting to json
 - [ ] Add build passing to readme
 - [ ] Add format section to README and demo.
 - [ ] Remove .DS_Store or pycache from repo.
-- [ ] Add API/Google Cloud code to its own folder in repo.
+- [X] Add API/Google Cloud code to its own folder in repo.
 - [ ] Make Source repo on GCP, use as import to Cloud Function (https://www.youtube.com/watch?v=LAcErtGU-VU). Creat Cloud Build that builds on push to branch, using repo as source.
-- [ ] Add diagram of cloud arch & pipeline in API fodler. 
-- [ ] Add API tests for tests folder.
+- [ ] Add diagram of cloud arch & pipeline in API fodler: https://medium.com/google-cloud/use-multiple-paths-in-cloud-functions-python-and-flask-fc6780e560d3
+- [ ] Add API tests for tests folder - iterate through all iso codes confirming that successful response code returned.
+- [ ] Update/upload iso3166-updates.json to GCP Stroage in github workflow (https://sha.ws/automatic-upload-to-google-cloud-storage-with-github-actions.html).
+- [ ] Update Google Cloud Function on push to repo in workflow.
+- [ ] Add in readme/demo how to use API with requests library.
+- [ ] Return multiple updates if array of iso_codes applied.
+- [X] Replace any null columns with empty string.
+- [ ] Go through each country and respective ISO3166-2 wiki URL to verify if it's all correct in json.
+- [X] Change iso_code to alpha2_code
+- [ ] Implement GCP in workflow - https://sha.ws/automatic-upload-to-google-cloud-storage-with-github-actions.html
+- [ ] Dict keys in API output not ordered in correct way.
+- [X] Change "Date issued" to "Date Issued"
+- [ ] Convert Cloud Func into flask app.
+- [ ] Accept list of iso codes or string seperated by comma for main python script - use regex to check correct format.
+- [ ] Several instances where "Online Browsing Platform" wrriten as "Online BrowsingPlatform"
+- [ ] Validation in get_updates_df func, if input table is not type list & >1 then raise exception.
+- [ ] Update get_updates comments.
+- [X] In code & comments change any var refereneces to "iso" to "iso3166" for clarification.
+- [X] API can accept year input with greater or less than symbol.
+- [ ] Main software can accept year input with greater or less than symbol.
+- [X] Date missing from some elements of json in API.
+- [X] Incorporate fix that takes into account multiple changes tables: e.g https://en.wikipedia.org/wiki/ISO_3166-2:PA
+- [X] Some files saving as e.g "iso3166-updates-AD-[].csv" or "iso3166-updates-AD-.csv"
+- [X] For secondary tables, add Edition/Newsletter as Online Browsing Platform - "The following changes to the entry are listed on ISO's online catalogue, the Online Browsing Platform:"
+- [ ] Add year range to iso3166_updates.py, allows user to input year range and relevant updates are returned.
