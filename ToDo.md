@@ -4,10 +4,10 @@
 - [ ] Check variable naming conventions.
 - [ ] Check output of bandit and flake8 check.
 - [X] Export updates to csv, dataframe.
-- [ ] Create API so each ISO3166-2 update info can be retrieved as json format, using GCP.
+- [X] Create API so each ISO3166-2 update info can be retrieved as json format, using GCP.
 - [ ] Create demo using python notebook.
-- [ ] Generate updated for a particular year. 
-- [ ] Change all instances of iso3166-updates to iso3166_updates except for pypi name.
+- [X] Generate updated for a particular year. 
+- [X] Change all instances of iso3166-updates to iso3166_updates except for pypi name.
 - [ ] Add GCP upload to workflow.
 - [ ] Upload all iso3166-updates for all countries in seperate folder of main repo dir.
 - [X] If single ISO code put in then print, if mutliple then output to files.
@@ -28,7 +28,7 @@
 - [ ] Update/upload iso3166-updates.json to GCP Stroage in github workflow (https://sha.ws/automatic-upload-to-google-cloud-storage-with-github-actions.html).
 - [ ] Update Google Cloud Function on push to repo in workflow.
 - [ ] Add in readme/demo how to use API with requests library.
-- [ ] Return multiple updates if array of iso_codes applied.
+- [X] Return multiple updates if array of iso_codes applied.
 - [X] Replace any null columns with empty string.
 - [ ] Go through each country and respective ISO3166-2 wiki URL to verify if it's all correct in json.
 - [X] Change iso_code to alpha2_code
@@ -36,8 +36,8 @@
 - [ ] Dict keys in API output not ordered in correct way.
 - [X] Change "Date issued" to "Date Issued"
 - [ ] Convert Cloud Func into flask app.
-- [ ] Accept list of iso codes or string seperated by comma for main python script - use regex to check correct format.
-- [ ] Several instances where "Online Browsing Platform" wrriten as "Online BrowsingPlatform"
+- [X] Accept list of iso codes or string seperated by comma for main python script - use regex to check correct format.
+- [ ] Several instances where "Online Browsing Platform" wrriten as "Online BrowsingPlatform" e.g BG, BY
 - [ ] Validation in get_updates_df func, if input table is not type list & >1 then raise exception.
 - [ ] Update get_updates comments.
 - [X] In code & comments change any var refereneces to "iso" to "iso3166" for clarification.
@@ -48,3 +48,14 @@
 - [X] Some files saving as e.g "iso3166-updates-AD-[].csv" or "iso3166-updates-AD-.csv"
 - [X] For secondary tables, add Edition/Newsletter as Online Browsing Platform - "The following changes to the entry are listed on ISO's online catalogue, the Online Browsing Platform:"
 - [ ] Add year range to iso3166_updates.py, allows user to input year range and relevant updates are returned.
+- [ ] Incorporate changes to ISO3166-1: https://en.wikipedia.org/wiki/ISO_3166-1
+- [X] Search by alpha3 code in API.
+- [X] Instead of seperate alpha2 and alpha3 codes, if alpha2 empty then use alpha3 vice versa, only one set of alpha codes passed in.
+- [X] Remove alpha3, would have to convert to alpha2.
+- [X] Double check countries with no updates are empty like {} not {''} e.g BM, AX.
+- [X] Remove any wiki references/links for regions within "Code/Subdivison Change" column, e.g AF
+- [X] AM, GM, GH, ZM, AT, BN, BT, CG, CU, CY, DZ, EE, FM, IQ, IS, KI, KP, KZ, LT, NA, SI, SM, ST, SZ, TJ, TT missing Edition/Newsletter - should be OBP.
+- [ ] AF, BW, CZ - ensure that newlines in a column are not being concatted into one.
+- [ ] If single/multiple alpha2's input, append to json filename. 
+- [ ] Add demo link to Colab to readme
+- [ ] Remove info about ISO3166-1 from intro on readme

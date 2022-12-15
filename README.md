@@ -1,7 +1,7 @@
-# Automated scripts for receiving updates to ISO3166 country codes
+# iso3166-updates
 
 [![iso3166_updates](https://img.shields.io/pypi/v/iso3166-updates)](https://pypi.org/project/iso3166-updates/)
-[![Build](https://img.shields.io/github/workflow/status/amckenna41/iso3166-updates/Deploy%20and%20Testing)](https://github.com/amckenna41/iso3166-updates/actions)
+[![Build](https://img.shields.io/github/workflow/status/amckenna41/iso3166-updates/Deploy%20to%20PyPI%20📦)](https://github.com/amckenna41/iso3166-updates/actions)
 [![Platforms](https://img.shields.io/badge/platforms-linux%2C%20macOS%2C%20Windows-green)](https://pypi.org/project/iso3166-updates/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
 [![Issues](https://img.shields.io/github/issues/amckenna41/iso3166-flag-icons)](https://github.com/amckenna41/iso3166-updates/issues)
@@ -12,15 +12,16 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/ISO_Logo_%28Red_square%29.svg" alt="iso" height="200" width="400"/>
 </p>
 
-> Automated scripts that check for any updates/changes to the ISO3166-1 and ISO3166-2 country codes and naming conventions, as per the ISO3166 newsletter (https://www.iso.org/iso-3166-country-codes.html).
+> Automated scripts that check for any updates/changes to the ISO3166-1 and ISO3166-2 country codes and naming conventions, as per the ISO3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui).
 
 Table of Contents
 -----------------
 
   * [Introduction](#introduction)
-  * [Usage](#usage)
+  * [Problem Statement](#problem-statement)
   * [Requirements](#requirements)
   * [Installation](#installation)
+  * [Usage](#usage)
   * [Issues](#Issues)
   * [Contact](#contact)
   * [License](#license)
@@ -40,13 +41,21 @@ The <b>ISO 3166-2</b> icons are those of the names of countries and their subdiv
 
 Problem Statement
 -----------------
+The ISO is a very dynamic organisation and regularly change/update/remove entries within its library of standards, this includes the ISO3166. It is rare for additions/changes/deletions for the ISO3166-1 but they do occur 
 
+e.g Somalia -> Federal Republic of Somalia (2013), Creation of South Sudan 2011, 
+
+https://en.wikipedia.org/wiki/ISO_3166-1
+
+ISO costs money, Wiki is free and seems very up to date 
 API
 ---
 > In Development
-An API is available that can be used to extract any applicable updates for a country via URL. The API is in alpha stage so is just available via a Google Function at URL: https://
+An API is available that can be used to extract any applicable updates for a country via URL. The API is in alpha stage so is just available via a Google Function at URL: 
 
-The API documentation is with all useful commands and inputs to the API is available on the README of the iso3166-updates-api folder.  
+> https://
+
+The API documentation and usage with all useful commands and inputs to the API is available on the [README]() of the iso3166-updates-api folder. The API was built using GCP utilsing a Cloud Function backed by an API Gateway that can be called via a http trigger at the above url, the Function calls GCP Storage to access the back-end JSON with all ISO3166 updates. This JSON is updated regularly using a CRON job that is called every X months. 
 
 Requirements
 ------------
@@ -67,8 +76,8 @@ pip3 install iso3166-updates
 Installation from source:
 ```bash
 git clone -b master https://github.com/amckenna41/iso3166-updates.git
-python3 setup.py install
 cd iso3166_updates
+python3 setup.py install
 ```
 
 Usage 
@@ -77,15 +86,26 @@ Usage
 ```python
 import iso3166_updates as iso3166_updates
 
-#get all listed changes/updated for Andorra from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:AD)
+#get all listed changes/updates for Andorra from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:AD)
 iso3166_updates.get_updates("AD")
 
-#get all listed changes/updated for BA, DE, FR, HU, PY
+#get all listed changes/updates for BA, DE, FR, HU, PY
 iso3166_updates.get_updates(["BA","DE","FR","HU","PY"])
 
-#get any listed changes/updated for Ireland from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:IE),
+#get any listed changes/updates for HU, IT, JA, KE from wiki, in the year 2018
+iso3166_updates.get_updates("HU, IT, JA, KE", year="2018")
+
+#get any listed changes/updates for Ireland from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:IE),
 #between years of 2012 and 2021
 iso3166_updates.get_updates("IE", year="2012-2021")
+
+#get any listed changes/updates for Tanzania from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:TZ),
+#with updates years > 2015 
+iso3166_updates.get_updates("TA", year=">2015")
+
+#get any listed changes/updates for Yemen from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:YE),
+#with updates years < 2010
+iso3166_updates.get_updates("YE", year=">2010")
 ```
 
 The output to the above functions for the updates/changes to a ISO3166-2 country returns 4 columns: 

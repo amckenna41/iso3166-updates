@@ -4,7 +4,7 @@ import iso3166
 import re
 import datetime
 
-def iso3166_updates(request):
+def iso3166_updates_main(request):
     """
     Google Cloud Function for iso3166-updates API. This function can take
     country, alpha2 code and year as input parameters and return the relevant 
@@ -17,8 +17,8 @@ def iso3166_updates(request):
     
     Returns
     -------
-    : iso_updates : json
-        jsonified response of iso3166 updates for selected country/ISO code.
+    : iso3166_updates : json
+        jsonified response of iso3166 updates for selected country/alpha2 ISO code.
     """
     # Initialise a client
     storage_client = storage.Client()
@@ -38,7 +38,7 @@ def iso3166_updates(request):
     updates_data = json.loads(blob.download_as_string(client=None))
 
     #initialise vars
-    iso_updates = {}
+    iso3166_updates = {}
     alpha2_code = []
     year_range = False
     greater_than = False
@@ -58,7 +58,6 @@ def iso3166_updates(request):
         year = [request_json['year'].upper()]
 
     #validate multiple alpha2 codes input, remove any invalid ones
-    # if (alpha2_code != []):
     if (alpha2_code != []):
         if (',' in alpha2_code[0]):
             alpha2_code = alpha2_code[0].split(',')
@@ -107,7 +106,7 @@ def iso3166_updates(request):
         #skip to next iteration if < or > symbol
         if (year_ == '<' or year_ == '>'):
             continue
-        #validate year format using regex
+        #validate each year format using regex
         if not (bool(re.match(r"^1|^2[0-9][0-9][0-9]", year_))):
             year = []
             year_range = False 
@@ -126,50 +125,51 @@ def iso3166_updates(request):
 
     #get updates from updates_data object per country using alpha2 code
     if (alpha2_code == [] and year == []):
-        iso_updates = {alpha2_code[0]: updates_data[alpha2_code[0]]}
+        iso3166_updates = {alpha2_code[0]: updates_data[alpha2_code[0]]}
     else:
         for code in alpha2_code:
-            iso_updates[code] = updates_data[code]
+            iso3166_updates[code] = updates_data[code]
     
     #temporary updates object
-    temp_iso_updates = {}
+    temp_iso3166_updates = {}
 
     #**
     if (year != [] and alpha2_code == []):
         input_alpha2_codes  = list(iso3166.countries_by_alpha2.keys())
         input_data = updates_data
-    elif (year != [] and alpha2_code != []): 
+    # elif (year != [] and alpha2_code != []): 
+    else:
         input_alpha2_codes = alpha2_code
-        input_data = iso_updates
-
+        input_data = iso3166_updates
+# File "/workspace/main.py", line 146, in iso3166_updates_main for code in input_alpha2_codes: UnboundLocalError: local variable 'input_alpha2_codes' referenced before assignment
     #use temp object to get updates data either for specific country/alpha2 code or for all
     # countries, dependant on input_alpha2_codes and input_data vars above
     for code in input_alpha2_codes:
-        temp_iso_updates[code] = []
+        temp_iso3166_updates[code] = []
         for update in range(0, len(input_data[code])):
             #if year range true then get country updates within specified range
             if (year_range):
-                temp_year = str(datetime.datetime.strptime(updates_data[code][update]["Date issued"].replace('\n', ''), '%Y-%m-%d').year)
+                temp_year = str(datetime.datetime.strptime(updates_data[code][update]["Date Issued"].replace('\n', ''), '%Y-%m-%d').year)
                 if (temp_year >= year[0] and temp_year <= year[1]):
-                    temp_iso_updates[code].append(updates_data[code][update])
+                    temp_iso3166_updates[code].append(updates_data[code][update])
             else:
                 #iterate through all years, if year of country updates matches then append to temp object
                 for year_ in year:
-                    temp_year = str(datetime.datetime.strptime(updates_data[code][update]["Date issued"].replace('\n', ''), '%Y-%m-%d').year)
+                    temp_year = str(datetime.datetime.strptime(updates_data[code][update]["Date Issued"].replace('\n', ''), '%Y-%m-%d').year)
                     #add to object if current year is >= user input year
                     if (greater_than):
                         if (temp_year >= year_):
-                            temp_iso_updates[code].append(updates_data[code][update])
+                            temp_iso3166_updates[code].append(updates_data[code][update])
                     #add to object if current year is < user input year
                     elif (less_than):
                         if (temp_year < year_):
-                            temp_iso_updates[code].append(updates_data[code][update])
+                            temp_iso3166_updates[code].append(updates_data[code][update])
                     #if no < or > symbol passed in then add to object if current year = user input year
                     elif not (greater_than and less_than):
                         if (temp_year == year_):
-                            temp_iso_updates[code].append(updates_data[code][update])
+                            temp_iso3166_updates[code].append(updates_data[code][update])
 
     #set main updates dict to temp one
-    iso_updates = temp_iso_updates
+    iso3166_updates = temp_iso3166_updates
 
-    return iso_updates
+    return iso3166_updates

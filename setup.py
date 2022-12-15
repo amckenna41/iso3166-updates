@@ -26,7 +26,7 @@ setup(name='iso3166-updates',
       license=iso3166_updates.__license__,
       url=iso3166_updates.__url__,
       keywords=["iso", "iso3166", "beautifulsoup", "python", "pypi", "countries", "country codes", "csv" \
-            "iso3166-2", "iso3166-1"],
+            "iso3166-2", "iso3166-1", "alpha2", "alpha3"],
       classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',

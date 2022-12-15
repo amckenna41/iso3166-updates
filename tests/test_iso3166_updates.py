@@ -1,4 +1,5 @@
 import iso3166_updates
+import iso3166
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 
@@ -8,7 +9,7 @@ class ISO3166_Updates(unittest.TestCase):
     def setUp(self):
         """ """
         #initalise User-agent header for requests library 
-        self.USER_AGENT_HEADER = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(__version__,
+        self.user_agent_header = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(__version__,
                                             'https://github.com/amckenna41/iso3166-updates', getpass.getuser())}
         #base URL for ISO3166-2 wiki
         self.wiki_base_url = "https://en.wikipedia.org/wiki/ISO_3166-2:"
@@ -24,13 +25,18 @@ class ISO3166_Updates(unittest.TestCase):
         self.assertEqual(iso3166_updates.__license__, "MIT", "iso3166-updates license type is not correct, got: {}".format(iso3166_updates.__license__))
         self.assertEqual(iso3166_updates.__maintainer__, "AJ McKenna", "iso3166-updates maintainer is not correct, got: {}".format(iso3166_updates.__license__))
 
+    # @unittest.skip("Skipping to not overload Wiki servers on test suite run.")
     def test_wiki_url(self):
-        """ """
-        #test each wiki URL endpoint works 
-        pass
+        """ Test each ISO3166-2 wiki URL endpoint to check valid status code 200 is returned. """
+        alpha2_codes = list(iso3166.countries_by_alpha2.keys())
+
+        #iterate over each ISO3166 alpha2 code, testing response code using request library
+        for code in alpha2_codes:
+            request = requests.get(self.wiki_base_url, headers=self.user_agent_header)
+            self.assertEqual(request.status_code, 200, "")   
     
     def test_table_to_array(self):
-        """ """
+        """ Test func that parses html table into 2D array of headers & rows. """
         test_alpha2_1 = "BA"
         test_alpha2_2 = "EE"
         test_alpha2_3 = "QA"
@@ -75,7 +81,7 @@ class ISO3166_Updates(unittest.TestCase):
         rw_table = table_to_array(changesSection)
 
     def test_get_updates_df(self):
-        """ """
+        """ Test func that converts 2D parsed html table into dataframe. """
         test_alpha2_1 = "AZ"
         test_alpha2_2 = ""
         test_alpha2_3 = ""
