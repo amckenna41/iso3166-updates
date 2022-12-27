@@ -13,7 +13,7 @@ import datetime
 from pprint import pprint
 
 #initialise logging library 
-__version__ = "0.0.3"
+__version__ = "1.0.0"
 log = logging.getLogger(__name__)
 
 #initalise User-agent header for requests library 
@@ -23,8 +23,9 @@ USER_AGENT_HEADER = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(__versio
 #base URL for ISO3166-2 wiki
 wiki_base_url = "https://en.wikipedia.org/wiki/ISO_3166-2:"
 
-def get_updates(alpha2_codes, year=[], export_filename="iso3166-updates", 
-        export_folder="../test-iso3166-updates", export_json=True):
+def get_updates(alpha2_codes, year=[''], export_filename="iso3166-updates",
+        export_json_filename="iso3166-updates", export_folder="../test-iso3166-updates", 
+        export_json=True):
     """
     Get all listed updates to a country's ISO3166-2 subdivision codes via 
     the "Changes" section on its wiki. The "Changes" section lists updates 
@@ -42,13 +43,15 @@ def get_updates(alpha2_codes, year=[], export_filename="iso3166-updates",
     : alpha2_codes : str / list
         single string or list of alpha-2 ISO3166 codes to get the latest ISO3166-2 updates from. If
         single alpha2 code passed in then it is converted to an iterable list.
-    : year : list
+    : year : list (default = [''])
         list of 1 or more years to get the specific ISO3166-2 updates from per country.
-    : export_filename : str 
-        filename for csv output of country's ISO3166-2 updates. 
-    :export_folder : str
+    : export_filename : str (default = "iso3166-updates")
+        filename for csv output of inputted country's ISO3166-2 updates. 
+    : export_json_filename : str (default = "iso3166-updates")
+        filename for json output of all country's ISO3166-2 updates. 
+    :export_folder : str (default = "../iso3166-updates")
         folder name to store all csv outputs for country's ISO3166-2 updates. 
-    : export_json : bool
+    : export_json : bool (default = True)
         export all ISO3166 updates for inputted country's into json format. 
 
     Returns
@@ -60,14 +63,12 @@ def get_updates(alpha2_codes, year=[], export_filename="iso3166-updates",
     less_than = False
 
     #a '-' seperating 2 years implies a year range of sought country updates, validate format of years in range
-    if (year != []):
+    if (year != ['']):
         if ('-' in year[0]):
             year_range = True
             year = year[0].split('-')
-            print('year after split', year)
             #only 2 years should be included in input parameter
             if (len(year) > 2):
-                print('year shouldnt be here')
                 year = []
                 year_range = False
         elif (',' in year[0]):
@@ -99,16 +100,13 @@ def get_updates(alpha2_codes, year=[], export_filename="iso3166-updates",
             year_range = False 
             break 
 
-    #convert year parameter string to datetime object
-    # if (isinstance(year, str) and year != ""):
-    #     year = str(datetime.datetime.strptime(str(year), "%Y").year)
-
+    #object to store all country updates/changes
     all_changes = {}
 
     #iterate over all input ISO country codes
     for alpha2 in alpha2_codes:
 
-        export_fname = export_filename + '-' + alpha2 
+        export_fname = export_filename + '-' + alpha2  
 
         #skip to next iteration if alpha2 not valid
         if (alpha2 not in list(iso3166.countries_by_alpha2.keys())):
@@ -128,18 +126,16 @@ def get_updates(alpha2_codes, year=[], export_filename="iso3166-updates",
 
         #skip to next iteration if no changes for ISO code found
         if (changesSection is None):
-            # print("No changes section found for {} ({})".format(alpha2, wiki_base_url + alpha2))
             continue
 
         #get table element in Changes Section 
         table = changesSection.findNext('table')
-        #do findNext again to check for another changes table e.g. PA, UK
         
         #convert html to 2D array 
         iso3166_table = table_to_array(table)
-
+        
         #convert updates html table/2D array to dataframe 
-        iso3166_df = get_updates_df(iso3166_table, year)
+        iso3166_df = get_updates_df(iso3166_table, year, year_range, less_than, greater_than)
 
         #some wiki's have two updates tables  
         iso3166_table_2 = table.findNext('table', {"class": "wikitable"})
@@ -156,9 +152,13 @@ def get_updates(alpha2_codes, year=[], export_filename="iso3166-updates",
                 #concat two dataframes
                 iso3166_df = pd.concat([iso3166_df, temp_iso3166_df], axis=0)
 
-        #set Edition/Newsletter to OBP if no value 
-        if ((iso3166_df["Edition/Newsletter"] == "").all()):
-          iso3166_df["Edition/Newsletter"] = "Online Browsing Platform (OBP)"
+        #set Edition/Newsletter to OBP if no value/empty string
+        if ((iso3166_df["Edition/Newsletter"] == "").any()):
+          iso3166_df["Edition/Newsletter"] = iso3166_df["Edition/Newsletter"].replace('', 
+            "Online Browsing Platform (OBP)", regex=True)
+
+        #seperate 'Browsing' and 'Platform' string if they are concatenated in column
+        iso3166_df["Edition/Newsletter"] = iso3166_df["Edition/Newsletter"].str.replace('BrowsingPlatform', "Browsing Platform")
 
         #append year onto filename, if not empty
         export_fname = export_fname + (("-" + str(year)) if year != [] else '')  #potentially need to add strip to export_fname
@@ -170,11 +170,11 @@ def get_updates(alpha2_codes, year=[], export_filename="iso3166-updates",
         #only export non-empty dataframes         
         if not (iso3166_df.empty):
             
-            #sort by date
+            #sort and order by date
             iso3166_df = iso3166_df.sort_values(by=['Date Issued'], ascending=False)
 
-            #order by Date Issued,
-            iso3166_df.to_csv(os.path.join(export_folder, export_fname + '.csv'), index=False)
+            #export to csv 
+            # iso3166_df.to_csv(os.path.join(export_folder, export_fname + '.csv'), index=False)
         
             #add ISO updates to object of all ISO3166 updates, convert to json 
             all_changes[alpha2] = json.loads(iso3166_df.to_json(orient='records'))
@@ -183,6 +183,7 @@ def get_updates(alpha2_codes, year=[], export_filename="iso3166-updates",
             if len(alpha2_codes) < 10:
                 pprint(all_changes[alpha2], depth=2, sort_dicts=False)
                 print('\n')
+                # export_json_filename += '-' + alpha2
 
         #reset export filename var 
         export_fname = export_filename
@@ -190,11 +191,12 @@ def get_updates(alpha2_codes, year=[], export_filename="iso3166-updates",
     #export all ISO3166 updates to json, store in main dir
     if (export_json):
         if (all_changes):
-            with open(os.path.join("../", "iso3166-updates.json"), "w") as write_file:
+            # with open(os.path.join("../", "iso3166-updates.json"), "w") as write_file:
+            with open(os.path.join("../", export_json_filename + ".json"), "w") as write_file:
                 json.dump(all_changes, write_file, indent=4, ensure_ascii=False)
             print("All ISO3166 changes exported to folder {}".format(export_folder))
     
-def get_updates_df(iso3166_updates_table, year=[]):
+def get_updates_df(iso3166_updates_table, year=[], year_range=False, less_than=False, greater_than=False):
     """
     Convert parsed html table, from Changes Section in the respective ISO3166-2 wiki
     page, into a pandas dataframe. Convert columns/headers using correct naming 
@@ -240,11 +242,18 @@ def get_updates_df(iso3166_updates_table, year=[]):
 
     #parse date column to get corrected & most recent date, if applicable 
     iso3166_df[dateColName] = iso3166_df[dateColName].apply(correct_date)
-
+    
     #only include rows of dataframe where date updated is same as year parameter, drop year col
     if (year != []): 
+        print('year_range', year_range)
         iso3166_df['Year'] = iso3166_df[dateColName].apply(convert_date)         #create temp new column to get year of updates from date column 
-        iso3166_df = iso3166_df.drop(iso3166_df[iso3166_df['Year'] != year].index)
+        temp_iso3166_df_array = []
+        for year_ in year:
+            # temp_year = str(datetime.datetime.strptime(input_data[code][update]["Date Issued"].replace('\n', ''), '%Y-%m-%d').year)
+            temp_iso3166_df = iso3166_df[iso3166_df.Year == int(year_)]
+            temp_iso3166_df_array.append(temp_iso3166_df)
+
+        iso3166_df = pd.concat(temp_iso3166_df_array)
         iso3166_df = iso3166_df.drop('Year', axis=1)
 
     #add below columns if not present so all DF's follow same format
@@ -255,7 +264,7 @@ def get_updates_df(iso3166_updates_table, year=[]):
         iso3166_df["Code/Subdivision change"] = ""
 
     #reindex/reorder columns in df
-    iso3166_df = iso3166_df.reindex(columns=['Edition/Newsletter', 'Date Issued', 'Description of change in newsletter', 'Code/Subdivision change'])
+    iso3166_df = iso3166_df.reindex(columns=['Date Issued', 'Edition/Newsletter', 'Description of change in newsletter', 'Code/Subdivision change'])
 
     #replace all null/nan with empty string
     iso3166_df.fillna("", inplace = True)
@@ -311,6 +320,10 @@ def table_to_array(table_tag):
     [1]: https://stackoverflow.com/questions/48393253/how-to-parse-table-with-rowspan-and-colspan
 
     """
+    #if invalid table tag input return empty array
+    if (table_tag is None):
+        return []
+
     rowspans = []  # track pending rowspans
     rows = table_tag.find_all('tr') #all table rows
 
@@ -358,8 +371,11 @@ def table_to_array(table_tag):
             # if table cell is a newline character set to empty string
             if (cell.get_text() == "\n"):
                 value = ""
+            #if text has breakpoint (<br>), replace with space
+            # elif ("<br/>" in str(cell)):
+            #     value = cell.get_text(separator=" ").strip()
             else:
-                value = cell.get_text()
+                value = cell.get_text().strip()
 
             #add href link to newsletter rows if applicable - ignore any wiki links            
             if not (cell.find('a') is None):
@@ -390,31 +406,34 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Get latest changes/updates of ISO3166-2 country codes.')
     parser.add_argument('-alpha2', '--alpha2', type=str, required=False, default="", help='Alpha2 code/s of ISO3166 countries to check for updates.')
-    parser.add_argument('-export_filename', '--export_filename', type=str, required=False, default='', help='Filename for exported ISO updates file.')
-    parser.add_argument('-export_folder', '--export_folder', type=str, required=False, default='', help='Folder where to store exported ISO files.')
+    parser.add_argument('-export_filename', '--export_filename', type=str, required=False, default="iso3166-updates", help='Filename for exported ISO3166 updates csv file.')
+    parser.add_argument('-export_json_filename', '--export_json_filename', type=str, required=False, default="iso3166-updates", help='Filename for exported ISO3166 updates json file.')
+    parser.add_argument('-export_folder', '--export_folder', type=str, required=False, default="../test-iso3166-updates", help='Folder where to store exported ISO files.')
+    parser.add_argument('-export_json', '--export_json', type=bool, required=False, default=1, help='Whether to export all found updates to json.')
     parser.add_argument('-year', '--year', type=str, required=False, default="", help='Selected year to check for updates.')
 
     #parse input args
     args = parser.parse_args()
-    alpha2_codes = args.alpha2.split(',')
+    alpha2_codes = [args.alpha2]
+    if (',' in alpha2_codes[0]):
+        alpha2_codes = alpha2_codes[0].split(',')
     export_filename = args.export_filename
+    export_json_filename = args.export_json_filename
     export_folder = args.export_folder
-    year = args.year.split(',')
+    export_json = args.export_json
+    year = [args.year]
+    if (',' in year[0]):
+        year = year[0].split(',')
     alpha_codes = []
 
     #use all ISO3166 codes if invalid alpha2 code input, otherwise convert alpha2 to array
     if (alpha2_codes == [''] or not isinstance(alpha2_codes, list)):
         alpha2_codes = sorted(list(iso3166.countries_by_alpha2.keys()))
 
-    #validate year input parameter 
-    # year = [""]
-
     #sort codes in alphabetical order
     alpha2_codes.sort()
     alpha2_codes = [code.upper() for code in alpha2_codes]
 
     #output ISO3166 updates/changes for selected alpha2 code/s
-    # get_updates(alpha2, year=year)
-    get_updates(alpha2_codes, year)
-
-
+    get_updates(alpha2_codes, year, export_filename, export_json_filename,
+        export_folder, export_json)

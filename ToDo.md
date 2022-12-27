@@ -5,7 +5,7 @@
 - [ ] Check output of bandit and flake8 check.
 - [X] Export updates to csv, dataframe.
 - [X] Create API so each ISO3166-2 update info can be retrieved as json format, using GCP.
-- [ ] Create demo using python notebook.
+- [X] Create demo using python notebook.
 - [X] Generate updated for a particular year. 
 - [X] Change all instances of iso3166-updates to iso3166_updates except for pypi name.
 - [ ] Add GCP upload to workflow.
@@ -20,26 +20,26 @@
 - [X] href of newsletter not exporting to json
 - [ ] Add build passing to readme
 - [ ] Add format section to README and demo.
-- [ ] Remove .DS_Store or pycache from repo.
+- [ ] Remove .DS_Store and pycache from repo.
 - [X] Add API/Google Cloud code to its own folder in repo.
 - [ ] Make Source repo on GCP, use as import to Cloud Function (https://www.youtube.com/watch?v=LAcErtGU-VU). Creat Cloud Build that builds on push to branch, using repo as source.
-- [ ] Add diagram of cloud arch & pipeline in API fodler: https://medium.com/google-cloud/use-multiple-paths-in-cloud-functions-python-and-flask-fc6780e560d3
-- [ ] Add API tests for tests folder - iterate through all iso codes confirming that successful response code returned.
+- [X] Add diagram of cloud arch & pipeline in API fodler: https://medium.com/google-cloud/use-multiple-paths-in-cloud-functions-python-and-flask-fc6780e560d3
+- [X] Add API tests for tests folder - iterate through all iso codes confirming that successful response code returned.
 - [ ] Update/upload iso3166-updates.json to GCP Stroage in github workflow (https://sha.ws/automatic-upload-to-google-cloud-storage-with-github-actions.html).
 - [ ] Update Google Cloud Function on push to repo in workflow.
-- [ ] Add in readme/demo how to use API with requests library.
+- [X] Add in readme/demo how to use API with requests library.
 - [X] Return multiple updates if array of iso_codes applied.
 - [X] Replace any null columns with empty string.
 - [ ] Go through each country and respective ISO3166-2 wiki URL to verify if it's all correct in json.
 - [X] Change iso_code to alpha2_code
 - [ ] Implement GCP in workflow - https://sha.ws/automatic-upload-to-google-cloud-storage-with-github-actions.html
-- [ ] Dict keys in API output not ordered in correct way.
+- [X] Dict keys in API output not ordered in correct way - reindex
 - [X] Change "Date issued" to "Date Issued"
 - [ ] Convert Cloud Func into flask app.
 - [X] Accept list of iso codes or string seperated by comma for main python script - use regex to check correct format.
-- [ ] Several instances where "Online Browsing Platform" wrriten as "Online BrowsingPlatform" e.g BG, BY
+- [X] Several instances where "Online Browsing Platform" wrriten as "Online BrowsingPlatform" e.g BG, BY
 - [ ] Validation in get_updates_df func, if input table is not type list & >1 then raise exception.
-- [ ] Update get_updates comments.
+- [X] Update get_updates comments.
 - [X] In code & comments change any var refereneces to "iso" to "iso3166" for clarification.
 - [X] API can accept year input with greater or less than symbol.
 - [ ] Main software can accept year input with greater or less than symbol.
@@ -47,15 +47,32 @@
 - [X] Incorporate fix that takes into account multiple changes tables: e.g https://en.wikipedia.org/wiki/ISO_3166-2:PA
 - [X] Some files saving as e.g "iso3166-updates-AD-[].csv" or "iso3166-updates-AD-.csv"
 - [X] For secondary tables, add Edition/Newsletter as Online Browsing Platform - "The following changes to the entry are listed on ISO's online catalogue, the Online Browsing Platform:"
-- [ ] Add year range to iso3166_updates.py, allows user to input year range and relevant updates are returned.
-- [ ] Incorporate changes to ISO3166-1: https://en.wikipedia.org/wiki/ISO_3166-1
+- [X] Add year range to iso3166_updates.py, allows user to input year range and relevant updates are returned.
 - [X] Search by alpha3 code in API.
 - [X] Instead of seperate alpha2 and alpha3 codes, if alpha2 empty then use alpha3 vice versa, only one set of alpha codes passed in.
 - [X] Remove alpha3, would have to convert to alpha2.
 - [X] Double check countries with no updates are empty like {} not {''} e.g BM, AX.
 - [X] Remove any wiki references/links for regions within "Code/Subdivison Change" column, e.g AF
-- [X] AM, GM, GH, ZM, AT, BN, BT, CG, CU, CY, DZ, EE, FM, IQ, IS, KI, KP, KZ, LT, NA, SI, SM, ST, SZ, TJ, TT missing Edition/Newsletter - should be OBP.
+- [X] AM, GM, GH, ZM, AT, BN, BT, CG, CU, CY, DZ, EE, FM, IQ, IS, KI, KP, KZ, LT, NA, SI, SM, ST, SZ, TJ, TT missing 
+Edition/Newsletter - should be OBP.
+- [X] QA missing Edition/Newsletter - should be OBP.
 - [ ] AF, BW, CZ - ensure that newlines in a column are not being concatted into one.
-- [ ] If single/multiple alpha2's input, append to json filename. 
-- [ ] Add demo link to Colab to readme
-- [ ] Remove info about ISO3166-1 from intro on readme
+- [X] Add demo link to Colab to readme
+- [X] Remove info about ISO3166-1 from intro on readme
+- [ ] Go over year input parameter in software. 
+- [ ] Before web scraping for a country's updates, check if available in json output.
+- [ ] https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates?alpha2=FR&year=2018,201 - remove invalid years from year input and just use 2018 in this example.
+- [ ] If invalid year/type input to python script, return all updates for inputted alpha2/s
+- [ ] If invalid alpha2 input then export all updates data (python3 iso3166_updates.py --alpha2=adkad)
+- [X] Unit tests that test if Edition/Newsletter columns are not empty.
+- [X] Unit tests that test some alpha2 codes that have no Updates/Changes Section.
+- [X] For all unit tests add country name beside alpha2 code & change e.g test_alpha1_code -> test_ad_code
+- [X] Add how to use API using Python requests in ReadMe of api folder.
+- [X] In API, for year param, if country has rows for selected year/year range, remove from output, rather than having [ ].
+- [ ] Add space between colon and next char, e.g KE - "Deleted codes:KE-110, KE-200, KE-3" (has negative effect on some other update entries, destructive action)
+- [X] For unit tests: output single row of expected dataframe to array (e.g sn_updates_df.iloc[1].to_numpy()).
+- [ ] Add Code Coverage.
+- [X] Add green MIT logo to Readme (https://shields.io/category/license).
+- [ ] Documentation on readthedocs.
+- [ ] Create logo for API.
+- [ ] If invalid input param put into URL then return empty dict instead.

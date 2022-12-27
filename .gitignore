@@ -6,8 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+#gcp ignore file
 *.gcloudignore
 
+#dev directory for storing old stuff
 old/
 
 # Distribution / packaging
