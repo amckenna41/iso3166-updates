@@ -92,11 +92,6 @@ jobs:
       with:
         flags: iso3166_updates_workflow
 
-    #upload to GCP Storage
-    - name: Upload iso3166-updates.json
-      with:
-        flags: iso3166_updates__json_workflow
-
     #upload artifacts, logs and outputs to GCP storage bucket
     - name: Checkout
       uses: actions/checkout@v2
@@ -117,4 +112,5 @@ jobs:
 
     # update gcloud function
     - name: Update gcloud function
+      run : |
         gcloud functions deploy $GCP_FUNCTION --source=iso3166-updates-api/ --runtime=python310 --trigger-http --allow-unauthenticated --region=us-central1 --entry-point=iso3166_updates --memory=256

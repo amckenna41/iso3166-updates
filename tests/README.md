@@ -14,6 +14,12 @@ python -m unittest discover tests -v
 #-v produces a more verbose and useful output
 ```
 
+To run a specific unit test, make sure you are in the main iso3166-updates directory and from a terminal/cmd-line run:
+```python
+python -m unittest discover tests.test_iso3166_updates -v
+#-v produces a more verbose and useful output
+```
+
 [unittest]: https://docs.python.org/3/library/unittest.html
 
 

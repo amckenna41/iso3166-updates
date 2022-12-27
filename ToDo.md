@@ -1,6 +1,6 @@
 # To Do 
 
-- [ ] Create CRON job that runs the script every few months, checking for updates on all the Wikis and exporting and updating the neccessary files (https://www.youtube.com/watch?v=2OwLb-aaiBQ).
+- [ ] Create CRON job that runs the script every few months using second cloud func, checking for updates on all the Wikis and exporting and updating the neccessary files (https://www.youtube.com/watch?v=2OwLb-aaiBQ). 
 - [ ] Check variable naming conventions.
 - [ ] Check output of bandit and flake8 check.
 - [X] Export updates to csv, dataframe.
@@ -72,7 +72,7 @@ Edition/Newsletter - should be OBP.
 - [ ] Add space between colon and next char, e.g KE - "Deleted codes:KE-110, KE-200, KE-3" (has negative effect on some other update entries, destructive action)
 - [X] For unit tests: output single row of expected dataframe to array (e.g sn_updates_df.iloc[1].to_numpy()).
 - [ ] Add Code Coverage.
-- [X] Add green MIT logo to Readme (https://shields.io/category/license).
+- [ ] Add green MIT logo to Readme (https://shields.io/category/license).
 - [ ] Documentation on readthedocs.
 - [ ] Create logo for API.
 - [ ] If invalid input param put into URL then return empty dict instead.

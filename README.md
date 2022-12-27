@@ -18,13 +18,11 @@ Table of Contents
 -----------------
 
   * [Introduction](#introduction)
-  * [Problem Statement](#problem-statement)
   * [Requirements](#requirements)
   * [Installation](#installation)
   * [Usage](#usage)
   * [Issues](#Issues)
   * [Contact](#contact)
-  * [License](#license)
   * [References](#references)
 
 Introduction
@@ -131,6 +129,8 @@ References
 \[3\]: ISO Country Codes Collection: https://www.iso.org/publication/PUB500001 <br>
 \[4\]: https://github.com/lipis/flag-icons <br>
 
+Support
+-------
 <a href="https://www.buymeacoffee.com/amckenna41" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 [Back to top](#TOP)
