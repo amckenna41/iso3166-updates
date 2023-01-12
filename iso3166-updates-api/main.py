@@ -2,7 +2,8 @@ from google.cloud import storage
 import json 
 import iso3166
 import re
-import datetime
+from datetime import datetime
+from dateutil import relativedelta
 
 def iso3166_updates_main(request):
     """
@@ -33,6 +34,9 @@ def iso3166_updates_main(request):
     #download iso3166-updates.json file from storage bucket 
     updates_data = json.loads(blob.download_as_string(client=None))
 
+    #get current datetime object
+    current_datetime = datetime.strptime(datetime.today().strftime('%Y-%m-%d'), "%Y-%m-%d")
+
     #initialise vars
     iso3166_updates = {}
     alpha2_code = []
@@ -40,6 +44,7 @@ def iso3166_updates_main(request):
     greater_than = False
     less_than = False
     year = []
+    months = []
 
     #parse alpha2 code 
     if request.args and 'alpha2' in request.args:
@@ -53,6 +58,22 @@ def iso3166_updates_main(request):
     elif request_json and 'year' in request_json:
         year = [request_json['year'].upper()]
 
+    #parse months parameter
+    if request.args and 'months' in request.args:
+        try:
+            months = int(request.args.get('months'))
+        except:
+            raise TypeError("Invalid data type for months parameter, cannot cast to int")
+    elif request_json and 'months' in request_json:
+        try:
+            months = int(request_json['months'])
+        except:
+            raise TypeError("Invalid data type for months parameter, cannot cast to int")
+
+    #if no input parameters set then return all country update updates_data
+    if (year == [] and alpha2_code == [] and months == []):
+        return updates_data
+        
     #validate multiple alpha2 codes input, remove any invalid ones
     if (alpha2_code != []):
         if (',' in alpha2_code[0]):
@@ -67,8 +88,10 @@ def iso3166_updates_main(request):
             if not (bool(re.match(r"^[A-Z]{2}$", alpha2_code[0]))) or (alpha2_code[0] not in list(iso3166.countries_by_alpha2.keys())):
                 alpha2_code.remove(alpha2_code[0])
 
+    print("months", months)
+    print("months==", months == [])
     #a '-' seperating 2 years implies a year range of sought country updates, validate format of years in range
-    if (year != []):
+    if (year != [] and months == []):
         if ('-' in year[0]):
             year_range = True
             year = year[0].split('-')
@@ -109,12 +132,8 @@ def iso3166_updates_main(request):
             year_range = False 
             break 
 
-    #if no input parameters set then return all country update updates_data
-    if (year == [] and alpha2_code == []):
-        return updates_data
-
     #get updates from updates_data object per country using alpha2 code
-    if (alpha2_code == [] and year == []):
+    if (alpha2_code == [] and year == [] and months == []):
         iso3166_updates = {alpha2_code[0]: updates_data[alpha2_code[0]]}
     else:
         for code in alpha2_code:
@@ -124,7 +143,7 @@ def iso3166_updates_main(request):
     temp_iso3166_updates = {}
 
     #if no valid alpha2 codes input use all alpha2 codes from iso3166 and all updates data
-    if (year != [] and alpha2_code == []):
+    if ((year != [] and alpha2_code == [] and months == []) or ((year == [] or year != []) and alpha2_code == [] and months != [])): #problem here
         input_alpha2_codes  = list(iso3166.countries_by_alpha2.keys())
         input_data = updates_data
     #else set input alpha2 codes to inputted and use corresponding updates data
@@ -137,7 +156,7 @@ def iso3166_updates_main(request):
 
     #use temp object to get updates data either for specific country/alpha2 code or for all
     # countries, dependant on input_alpha2_codes and input_data vars above
-    if (year != []):
+    if (year != [] and months == []):
         for code in input_alpha2_codes:
             temp_iso3166_updates[code] = []
             for update in range(0, len(input_data[code])):
@@ -145,7 +164,7 @@ def iso3166_updates_main(request):
                 #reorder dict columns
                 input_data[code][update] = {col: input_data[code][update][col] for col in reordered_columns}
                 #convert year in Date Issued column to string of year
-                temp_year = str(datetime.datetime.strptime(input_data[code][update]["Date Issued"].replace('\n', ''), '%Y-%m-%d').year)
+                temp_year = str(datetime.strptime(input_data[code][update]["Date Issued"].replace('\n', ''), '%Y-%m-%d').year)
 
                 #if year range true then get country updates within specified range inclusive
                 if (year_range):
@@ -172,7 +191,30 @@ def iso3166_updates_main(request):
             if (temp_iso3166_updates[code] == []):
                 temp_iso3166_updates.pop(code, None)
 
-    #if no year parameter input then set temp data to original data
+    #if months parameter input then get updates within this months range
+    elif (months != []):
+        print('getting here')
+        for code in input_alpha2_codes:
+            temp_iso3166_updates[code] = []
+            for update in range(0, len(input_data[code])):
+                #reorder dict columns
+                input_data[code][update] = {col: input_data[code][update][col] for col in reordered_columns}
+                #convert date in Date Issued column to date object
+                row_date = (datetime.strptime(input_data[code][update]["Date Issued"], "%Y-%m-%d"))
+                #calculate difference in dates
+                date_diff = relativedelta.relativedelta(current_datetime, row_date)
+                #calculate months difference
+                diff_months = date_diff.months + (date_diff.years * 12)
+                
+                print('diff months type', type(diff_months))
+                print('diff months', (diff_months))
+                #if current updates row is <= month input param then add to temp object
+                if (diff_months <= months):
+                    temp_iso3166_updates[code].append(input_data[code][update])
+   
+            #if current alpha2 has no rows for selected month range, remove from temp object
+            if (temp_iso3166_updates[code] == []):
+                temp_iso3166_updates.pop(code, None)
     else:
         temp_iso3166_updates = input_data
     

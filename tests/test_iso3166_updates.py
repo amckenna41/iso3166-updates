@@ -3,9 +3,11 @@ import iso3166
 import getpass
 import requests
 import json
+import shutil
 import os
 import pandas as pd
 from bs4 import BeautifulSoup
+from importlib import metadata
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 
@@ -14,27 +16,40 @@ class ISO3166_Updates(unittest.TestCase):
     def setUp(self):
         """ Initialise test variables, import json. """
         #initalise User-agent header for requests library 
-        self.user_agent_header = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(iso3166_updates.__version__,
+        self.__version__ = metadata.metadata('iso3166_updates')['version']
+
+        self.user_agent_header = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(self.__version__,
                                             'https://github.com/amckenna41/iso3166-updates', getpass.getuser())}
+        
         #base URL for ISO3166-2 wiki
         self.wiki_base_url = "https://en.wikipedia.org/wiki/ISO_3166-2:"
+        
         #updates json
         with open("iso3166-updates.json") as input_json:
             self.iso3166_json = json.load(input_json)
         
-        if not (os.path.isdir("temp_test_dir")):
-            os.mkdir("temp_test_dir")
+        #temp filename & dir exports
+        self.export_json_filename = "test_iso3166_updates"
+        self.export_filename = "test_iso3166"
+        self.export_folder = "temp_test_dir"
         
-    def test_iso3166_updates_metadata(self):
-        """ Testing correct iso3166-updates version and metadata. """
-        self.assertEqual(iso3166_updates.__version__, "1.0.0", "iso3166-updates version is not correct, got: {}".format(iso3166_updates.__version__))
-        self.assertEqual(iso3166_updates.__name__, "iso3166-updates", "iso3166-updates software name is not correct, got: {}".format(iso3166_updates.__name__))
-        self.assertEqual(iso3166_updates.__author__, "AJ McKenna, https://github.com/amckenna41", "iso3166-updates author is not correct, got: {}".format(iso3166_updates.__author__))
-        self.assertEqual(iso3166_updates.__authorEmail__, "amckenna41@qub.ac.uk", "iso3166-updates author email is not correct, got: {}".format(iso3166_updates.__authorEmail__))
-        self.assertEqual(iso3166_updates.__url__, "https://github.com/amckenna41/iso3166-updates", "iso3166-updates repo URL is not correct, got: {}".format(iso3166_updates.__url__))
-        self.assertEqual(iso3166_updates.__credits__, ['AJ McKenna'], "iso3166-updates credits is not correct, got: {}".format(iso3166_updates.__credits__))
-        self.assertEqual(iso3166_updates.__license__, "MIT", "iso3166-updates license type is not correct, got: {}".format(iso3166_updates.__license__))
-        self.assertEqual(iso3166_updates.__maintainer__, "AJ McKenna", "iso3166-updates maintainer is not correct, got: {}".format(iso3166_updates.__license__))
+        #create temp dir to store any function outputs
+        if not (os.path.isdir(self.export_folder)):
+            os.mkdir(self.export_folder)
+
+    def test_iso3166_updates_metadata(self): 
+        """ Testing correct iso3166-updates software version and metadata. """
+        self.assertEqual(metadata.metadata('iso3166_updates')['version'], "0.0.6", "iso3166-updates version is not correct, got: {}".format(metadata.metadata('iso3166_updates')['version']))
+        self.assertEqual(metadata.metadata('iso3166_updates')['name'], "iso3166-updates", "iso3166-updates software name is not correct, got: {}".format(metadata.metadata('iso3166_updates')['name']))
+        self.assertEqual(metadata.metadata('iso3166_updates')['author'], "AJ McKenna, https://github.com/amckenna41", "iso3166-updates author is not correct, got: {}".format(metadata.metadata('iso3166_updates')['author']))
+        self.assertEqual(metadata.metadata('iso3166_updates')['author-email'], "amckenna41@qub.ac.uk", "iso3166-updates author email is not correct, got: {}".format(metadata.metadata('iso3166_updates')['author-email']))
+        self.assertEqual(metadata.metadata('iso3166_updates')['summary'], "A Python package that pulls the latest updates & changes to all ISO3166 listed countries.", 
+            "iso3166-updates package summary is not correct, got: {}".format(metadata.metadata('iso3166_updates')['summary']))
+        self.assertEqual(metadata.metadata('iso3166_updates')['keywords'], "iso,iso3166,beautifulsoup,python,pypi,countries,country codes,csviso3166-2,iso3166-1,alpha2,alpha3", 
+            "iso3166-updates keywords are not correct, got: {}".format(metadata.metadata('iso3166_updates')['keywords']))
+        self.assertEqual(metadata.metadata('iso3166_updates')['home-page'], "https://github.com/amckenna41/iso3166-updates", "iso3166-updates home page url is not correct, got: {}".format(metadata.metadata('iso3166_updates')['home-page']))
+        self.assertEqual(metadata.metadata('iso3166_updates')['maintainer'], "AJ McKenna", "iso3166-updates maintainer is not correct, got: {}".format(metadata.metadata('iso3166_updates')['maintainer']))
+        self.assertEqual(metadata.metadata('iso3166_updates')['license'], "MIT", "iso3166-updates license type is not correct, got: {}".format(metadata.metadata('iso3166_updates')['license']))
 
     @unittest.skip("Skipping to not overload Wiki servers on test suite run.")
     def test_wiki_url(self):
@@ -85,7 +100,6 @@ class ISO3166_Updates(unittest.TestCase):
             "Expected columns/headers in observed and expected output to match.")
         self.assertEqual(ba_test_output1, ba_expected_output1, "Expected observed and expected outputs to match.")
         self.assertEqual(ba_test_output2, ba_expected_output2, "Expected observed and expected outputs to match.")
-
 #2.)
         soup = BeautifulSoup(requests.get(self.wiki_base_url + test_alpha2_eg).content, "html.parser")
         table_html = soup.find("span", {"id": "Changes"}).findNext('table')
@@ -109,7 +123,6 @@ class ISO3166_Updates(unittest.TestCase):
             "Expected columns/headers in observed and expected output to match.")
         self.assertEqual(eg_test_output1, eg_expected_output1, "Expected observed and expected outputs to match.")
         self.assertEqual(eg_test_output2, eg_expected_output2, "Expected observed and expected outputs to match.")
-
 #3.)
         soup = BeautifulSoup(requests.get(self.wiki_base_url + test_alpha2_qa).content, "html.parser")
         table_html = soup.find("span", {"id": "Changes"}).findNext('table')
@@ -151,7 +164,6 @@ class ISO3166_Updates(unittest.TestCase):
             "Expected columns/headers in observed and expected output to match.")
         self.assertEqual(rs_test_output1, rs_expected_output1, "Expected observed and expected outputs to match.")
         self.assertEqual(rs_test_output2, rs_expected_output2, "Expected observed and expected outputs to match.")
-
 #5.)
         soup = BeautifulSoup(requests.get(self.wiki_base_url + test_alpha2_td).content, "html.parser")
         table_html = soup.find("span", {"id": "Changes"}).findNext('table')
@@ -175,7 +187,6 @@ class ISO3166_Updates(unittest.TestCase):
             "Expected columns/headers in observed and expected output to match.")
         self.assertEqual(td_test_output1, td_expected_output1, "Expected observed and expected outputs to match.")
         self.assertEqual(td_test_output2, td_expected_output2, "Expected observed and expected outputs to match.")
-
 #6.)    
         soup = BeautifulSoup(requests.get(self.wiki_base_url + test_alpha2_br).content, "html.parser")
         table_html = soup.find("span", {"id": "Changes"})
@@ -184,7 +195,6 @@ class ISO3166_Updates(unittest.TestCase):
 
         self.assertIsNone(table_html, "Table should be none as no listed changes/updates on wiki.")
         self.assertEqual(br_table, [], "Output from function should be empty array when input param is None.")
-
 #7.)
         soup = BeautifulSoup(requests.get(self.wiki_base_url + test_alpha2_1).content, "html.parser")
         table_html = soup.find("span", {"id": "Changes"})
@@ -198,7 +208,349 @@ class ISO3166_Updates(unittest.TestCase):
 
         test_table = iso3166_updates.table_to_array(table_html)
         self.assertIsNone(table_html, "Table should be none as invalid alpha2 code input.")
+    
+    def test_updates_alpha2(self):
+        """ Testing main updates function that gets the updates and exports to json/csv. """
+        test_alpha2_au = "AU" #Australia
+        test_alpha2_cv = "CV" #Cabo Verde
+        test_alpha2_id = "ID" #Indonesia
+        test_alpha2_pt = "PT" #Portugal ({})
+        test_alpha2_bf_ca_gu_ie_je_str = "BF, CA, GU, IE, JE" #concat_updates=False
+        test_alpha2_1 = "ABCDEF"
+        test_alpha2_2 = 12345
+        test_alpha2_3 = False
 
+        #correct column/key names for dict returned from function
+        expected_output_columns = ["Date Issued", "Edition/Newsletter", "Description of change in newsletter", "Code/Subdivision change"]
+#1.)
+        iso3166_updates.get_updates(test_alpha2_au, export_filename=self.export_filename,
+            export_json_filename=self.export_json_filename + "-AU", export_folder=self.export_folder, 
+                concat_updates=True, export_json=True, export_csv=True)
+        
+        #change export_json & export_csv
+        test_au_expected = {
+            "Date Issued": "2016-11-15",
+            "Edition/Newsletter": "Online Browsing Platform (OBP)",
+            "Description of change in newsletter": "Update List Source; update Code Source",
+            "Code/Subdivision change": ""
+            }
+
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-AU.json")) as output_json:
+            test_au_iso3166_json = json.load(output_json)
+
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-AU.csv")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-AU.json")), "")
+        self.assertEqual(list(test_au_iso3166_json), ['AU'], "")
+        self.assertEqual(len(list(test_au_iso3166_json["AU"])), 3, "Expected there to be 3 output objects in json, got {}.".format(len(list(test_au_iso3166_json))))
+        for row in test_au_iso3166_json["AU"]:
+            self.assertEqual(list(row.keys()), expected_output_columns, "Columns from output do not match expected.")
+            self.assertIsInstance(row, dict, "Ouput object of json should be of type dict, got {}".format(type(row)))
+        self.assertEqual(test_au_iso3166_json['AU'][0], test_au_expected, "Expected observed and expected outputs to match.")
+
+        test_au_iso3166_csv = pd.read_csv(os.path.join(self.export_folder, self.export_filename + "-AU.csv")).fillna("")
+        
+        self.assertEqual(list(test_au_iso3166_csv.columns), expected_output_columns, "")
+        self.assertEqual(len(test_au_iso3166_csv), 3, "Expected there to be 3 output objects in csv, got {}.".format(len(list(test_au_iso3166_csv))))
+        self.assertEqual(test_au_iso3166_csv.head(1).to_dict(orient='records')[0], test_au_expected, "")
+#2.)
+        iso3166_updates.get_updates(test_alpha2_cv, export_filename=self.export_filename,
+            export_json_filename=self.export_json_filename + "-CV", export_folder=self.export_folder, 
+                concat_updates=True, export_json=True, export_csv=True)
+        
+        test_cv_expected = {
+            "Date Issued": "2011-12-15",
+            "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
+            "Description of change in newsletter": "Correction of NL II-2 for toponyms and typographical errors and source list update.",
+            "Code/Subdivision change": "Codes: São Lourenço dos Órgãos CV-SL → CV-SO"
+            }
+
+        #open exported CV json
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-CV.json")) as output_json:
+            test_cv_iso3166_json = json.load(output_json)
+        
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-CV.csv")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-CV.json")), "")
+        self.assertEqual(list(test_cv_iso3166_json), ['CV'], "")
+        self.assertEqual(len(list(test_cv_iso3166_json["CV"])), 3, "Expected there to be 3 output objects in json, got {}.".format(len(list(test_cv_iso3166_json))))
+        for row in test_cv_iso3166_json["CV"]:
+            self.assertEqual(list(row.keys()), expected_output_columns, "Columns from output do not match expected.")
+            self.assertIsInstance(row, dict, "Ouput object of json should be of type dict, got {}".format(type(row)))
+        self.assertEqual(test_cv_iso3166_json['CV'][0], test_cv_expected, "Expected observed and expected outputs to match.")
+
+        test_cv_iso3166_csv = pd.read_csv(os.path.join(self.export_folder, self.export_filename + "-CV.csv")).fillna("")
+        
+        self.assertEqual(list(test_cv_iso3166_csv.columns), expected_output_columns, "")
+        self.assertEqual(len(test_cv_iso3166_csv), 3, "Expected there to be 3 output objects in csv, got {}.".format(len(list(test_cv_iso3166_csv))))
+        self.assertEqual(test_cv_iso3166_csv.head(1).to_dict(orient='records')[0], test_cv_expected, "")
+#3.)
+        iso3166_updates.get_updates(test_alpha2_id, export_filename=self.export_filename,
+            export_json_filename=self.export_json_filename + "-ID", export_folder=self.export_folder, 
+                export_json=True, export_csv=True)
+        
+        test_id_expected = {
+            "Date Issued": "2022-11-29",
+            "Edition/Newsletter": "Online Browsing Platform (OBP)",
+            "Description of change in newsletter": "Addition of provinces ID-PE, ID-PS and ID-PT; Update List Source",
+            "Code/Subdivision change": ""
+            }
+
+        #open exported ID json
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-ID.json")) as output_json:
+            test_id_iso3166_json = json.load(output_json)
+        
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-ID.csv")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-ID.json")), "")
+        self.assertEqual(list(test_id_iso3166_json), ['ID'], "")
+        self.assertEqual(len(list(test_id_iso3166_json["ID"])), 13, "Expected there to be 13 output objects in json, got {}.".format(len(list(test_id_iso3166_json))))
+        for row in test_id_iso3166_json["ID"]:
+            self.assertEqual(list(row.keys()), expected_output_columns, "Columns from output do not match expected.")
+            self.assertIsInstance(row, dict, "Ouput object of json should be of type dict, got {}".format(type(row)))
+        self.assertEqual(test_id_iso3166_json['ID'][0], test_id_expected, "Expected observed and expected outputs to match.")
+
+        test_id_iso3166_csv = pd.read_csv(os.path.join(self.export_folder, self.export_filename + "-ID.csv")).fillna("")
+        
+        self.assertEqual(list(test_id_iso3166_csv.columns), expected_output_columns, "")
+        self.assertEqual(len(test_id_iso3166_csv), 13, "Expected there to be 13 output objects in csv, got {}.".format(len(list(test_id_iso3166_csv))))
+        self.assertEqual(test_id_iso3166_csv.head(1).to_dict(orient='records')[0], test_id_expected, "")
+
+#4.)
+        iso3166_updates.get_updates(test_alpha2_pt, export_filename=self.export_filename,
+            export_json_filename=self.export_json_filename + "-PT", export_folder=self.export_folder, 
+                export_json=True, export_csv=True)
+        
+        test_pt_expected = {}
+
+        #open exported PT json
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-PT.json")) as output_json:
+            test_pt_iso3166_json = json.load(output_json)
+        
+        self.assertFalse(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-PT.csv")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-PT.json")), "")
+        self.assertEqual(list(test_pt_iso3166_json), ['PT'], "")
+        self.assertEqual(len(list(test_pt_iso3166_json["PT"])), 0, "Expected there to be 0 output objects in json, got {}.".format(len(list(test_pt_iso3166_json))))
+        self.assertEqual(test_pt_iso3166_json['PT'], test_pt_expected, "Expected observed and expected outputs to match.")
+#5.) 
+        iso3166_updates.get_updates(test_alpha2_bf_ca_gu_ie_je_str, export_filename=self.export_filename,
+            export_json_filename=self.export_json_filename, export_folder=self.export_folder, 
+                concat_updates=False, export_json=True, export_csv=True)
+        
+        test_alpha2_bf_ca_gu_ie_je_str_expected = {}
+        
+        # self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-BF,CA,GU,IE,JE.csv")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-BF.json")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-CA.json")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-GU.json")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-IE.json")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-JE.json")), "")
+
+        #open exported BF json
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-BF.json")) as output_json:
+                test_bf_iso3166_json = json.load(output_json)
+        self.assertEqual(len(list(test_bf_iso3166_json)), 3, "Expected there to be 3 output objects in json, got {}.".format(len(list(test_bf_iso3166_json))))
+
+        #open exported CA json
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-CA.json")) as output_json:
+                test_ca_iso3166_json = json.load(output_json)
+        self.assertEqual(len(list(test_ca_iso3166_json)), 4, "Expected there to be 4 output objects in json, got {}.".format(len(list(test_ca_iso3166_json))))
+        
+        #open exported GU json
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-GU.json")) as output_json:
+                test_gu_iso3166_json = json.load(output_json)
+        self.assertEqual(len(list(test_gu_iso3166_json)), 0, "Expected there to be 0 output objects in json, got {}.".format(len(list(test_gu_iso3166_json))))
+
+        #open exported IE json
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-IE.json")) as output_json:
+                test_ie_iso3166_json = json.load(output_json)
+        self.assertEqual(len(list(test_ie_iso3166_json)), 2, "Expected there to be 2 output objects in json, got {}.".format(len(list(test_ie_iso3166_json))))
+
+        #open exported JE json
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-JE.json")) as output_json:
+                test_je_iso3166_json = json.load(output_json)
+        self.assertEqual(len(list(test_je_iso3166_json)), 1, "Expected there to be 1 output objects in json, got {}.".format(len(list(test_je_iso3166_json))))
+#6.)    
+        iso3166_updates.get_updates(test_alpha2_1, export_filename=self.export_filename,
+            export_json_filename=self.export_json_filename, export_folder=self.export_folder, 
+                concat_updates=True, export_json=True, export_csv=True)
+#7.)
+        with self.assertRaises(TypeError):
+            iso3166_updates.get_updates(test_alpha2_2, export_filename=self.export_filename,
+                export_json_filename=self.export_json_filename, export_folder=self.export_folder, 
+                    concat_updates=True, export_json=True, export_csv=True)
+#8.)
+        with self.assertRaises(TypeError):
+            iso3166_updates.get_updates(test_alpha2_3, export_filename=self.export_filename,
+                export_json_filename=self.export_json_filename, export_folder=self.export_folder, 
+                    concat_updates=True, export_json=True, export_csv=True)
+
+    def test_updates(self):
+        """ Testing main updates function that gets the updates and exports to json/csv. """
+        test_alpha2_au = "AU" #Australia
+        test_alpha2_cv = "CV" #Cabo Verde
+        test_alpha2_id = "ID" #Indonesia
+        test_alpha2_pt = "PT" #Portugal ({})
+        test_alpha2_bf_ca_gu_ie_je_str = "BF, CA, GU, IE, JE" #concat_updates=False
+        test_alpha2_1 = "ABCDEF"
+        test_alpha2_2 = 12345
+        test_alpha2_3 = False
+
+        #correct column/key names for dict returned from function
+        expected_output_columns = ["Date Issued", "Edition/Newsletter", "Description of change in newsletter", "Code/Subdivision change"]
+#1.)
+        iso3166_updates.get_updates(test_alpha2_au, export_filename=self.export_filename,
+            export_json_filename=self.export_json_filename + "-AU", export_folder=self.export_folder, 
+                concat_updates=True, export_json=True, export_csv=True)
+        
+        #change export_json & export_csv
+        test_au_expected = {
+            "Date Issued": "2016-11-15",
+            "Edition/Newsletter": "Online Browsing Platform (OBP)",
+            "Description of change in newsletter": "Update List Source; update Code Source",
+            "Code/Subdivision change": ""
+            }
+
+        #open exported AU json
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-AU.json")) as output_json:
+            test_au_iso3166_json = json.load(output_json)
+
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-AU.csv")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-AU.json")), "")
+        self.assertEqual(list(test_au_iso3166_json), ['AU'], "")
+        self.assertEqual(len(list(test_au_iso3166_json["AU"])), 3, "Expected there to be 3 output objects in json, got {}.".format(len(list(test_au_iso3166_json))))
+        for row in test_au_iso3166_json["AU"]:
+            self.assertEqual(list(row.keys()), expected_output_columns, "Columns from output do not match expected.")
+            self.assertIsInstance(row, dict, "Ouput object of json should be of type dict, got {}".format(type(row)))
+        self.assertEqual(test_au_iso3166_json['AU'][0], test_au_expected, "Expected observed and expected outputs to match.")
+
+        test_au_iso3166_csv = pd.read_csv(os.path.join(self.export_folder, self.export_filename + "-AU.csv")).fillna("")
+        
+        self.assertEqual(list(test_au_iso3166_csv.columns), expected_output_columns, "")
+        self.assertEqual(len(test_au_iso3166_csv), 3, "Expected there to be 3 output objects in csv, got {}.".format(len(list(test_au_iso3166_csv))))
+        self.assertEqual(test_au_iso3166_csv.head(1).to_dict(orient='records')[0], test_au_expected, "")
+#2.)
+        iso3166_updates.get_updates(test_alpha2_cv, export_filename=self.export_filename,
+            export_json_filename=self.export_json_filename + "-CV", export_folder=self.export_folder, 
+                concat_updates=True, export_json=True, export_csv=True)
+        
+        test_cv_expected = {
+            "Date Issued": "2011-12-15",
+            "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
+            "Description of change in newsletter": "Correction of NL II-2 for toponyms and typographical errors and source list update.",
+            "Code/Subdivision change": "Codes: São Lourenço dos Órgãos CV-SL → CV-SO"
+            }
+
+        #open exported CV json
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-CV.json")) as output_json:
+            test_cv_iso3166_json = json.load(output_json)
+        
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-CV.csv")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-CV.json")), "")
+        self.assertEqual(list(test_cv_iso3166_json), ['CV'], "")
+        self.assertEqual(len(list(test_cv_iso3166_json["CV"])), 3, "Expected there to be 3 output objects in json, got {}.".format(len(list(test_cv_iso3166_json))))
+        for row in test_cv_iso3166_json["CV"]:
+            self.assertEqual(list(row.keys()), expected_output_columns, "Columns from output do not match expected.")
+            self.assertIsInstance(row, dict, "Ouput object of json should be of type dict, got {}".format(type(row)))
+        self.assertEqual(test_cv_iso3166_json['CV'][0], test_cv_expected, "Expected observed and expected outputs to match.")
+
+        test_cv_iso3166_csv = pd.read_csv(os.path.join(self.export_folder, self.export_filename + "-CV.csv")).fillna("")
+        
+        self.assertEqual(list(test_cv_iso3166_csv.columns), expected_output_columns, "")
+        self.assertEqual(len(test_cv_iso3166_csv), 3, "Expected there to be 3 output objects in csv, got {}.".format(len(list(test_cv_iso3166_csv))))
+        self.assertEqual(test_cv_iso3166_csv.head(1).to_dict(orient='records')[0], test_cv_expected, "")
+#3.)
+        iso3166_updates.get_updates(test_alpha2_id, export_filename=self.export_filename,
+            export_json_filename=self.export_json_filename + "-ID", export_folder=self.export_folder, 
+                export_json=True, export_csv=True)
+        
+        test_id_expected = {
+            "Date Issued": "2022-11-29",
+            "Edition/Newsletter": "Online Browsing Platform (OBP)",
+            "Description of change in newsletter": "Addition of provinces ID-PE, ID-PS and ID-PT; Update List Source",
+            "Code/Subdivision change": ""
+            }
+
+        #open exported ID json
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-ID.json")) as output_json:
+            test_id_iso3166_json = json.load(output_json)
+        
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-ID.csv")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-ID.json")), "")
+        self.assertEqual(list(test_id_iso3166_json), ['ID'], "")
+        self.assertEqual(len(list(test_id_iso3166_json["ID"])), 13, "Expected there to be 13 output objects in json, got {}.".format(len(list(test_id_iso3166_json))))
+        for row in test_id_iso3166_json["ID"]:
+            self.assertEqual(list(row.keys()), expected_output_columns, "Columns from output do not match expected.")
+            self.assertIsInstance(row, dict, "Ouput object of json should be of type dict, got {}".format(type(row)))
+        self.assertEqual(test_id_iso3166_json['ID'][0], test_id_expected, "Expected observed and expected outputs to match.")
+
+        test_id_iso3166_csv = pd.read_csv(os.path.join(self.export_folder, self.export_filename + "-ID.csv")).fillna("")
+        
+        self.assertEqual(list(test_id_iso3166_csv.columns), expected_output_columns, "")
+        self.assertEqual(len(test_id_iso3166_csv), 13, "Expected there to be 13 output objects in csv, got {}.".format(len(list(test_id_iso3166_csv))))
+        self.assertEqual(test_id_iso3166_csv.head(1).to_dict(orient='records')[0], test_id_expected, "")
+
+#4.)
+        iso3166_updates.get_updates(test_alpha2_pt, export_filename=self.export_filename,
+            export_json_filename=self.export_json_filename + "-PT", export_folder=self.export_folder, 
+                export_json=True, export_csv=True)
+        
+        test_pt_expected = {}
+
+        #open exported PT json
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-PT.json")) as output_json:
+            test_pt_iso3166_json = json.load(output_json)
+        
+        self.assertFalse(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-PT.csv")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-PT.json")), "")
+        self.assertEqual(list(test_pt_iso3166_json), ['PT'], "")
+        self.assertEqual(len(list(test_pt_iso3166_json["PT"])), 0, "Expected there to be 0 output objects in json, got {}.".format(len(list(test_pt_iso3166_json))))
+        self.assertEqual(test_pt_iso3166_json['PT'], test_pt_expected, "Expected observed and expected outputs to match.")
+#5.) 
+        iso3166_updates.get_updates(test_alpha2_bf_ca_gu_ie_je_str, export_filename=self.export_filename,
+            export_json_filename=self.export_json_filename, export_folder=self.export_folder, 
+                concat_updates=False, export_json=True, export_csv=True)
+        
+        test_alpha2_bf_ca_gu_ie_je_str_expected = {}
+        
+        # self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-BF,CA,GU,IE,JE.csv")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-BF.json")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-CA.json")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-GU.json")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-IE.json")), "")
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-JE.json")), "")
+
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-BF.json")) as output_json:
+                test_bf_iso3166_json = json.load(output_json)
+        self.assertEqual(len(list(test_bf_iso3166_json)), 3, "Expected there to be 3 output objects in json, got {}.".format(len(list(test_bf_iso3166_json))))
+        
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-CA.json")) as output_json:
+                test_ca_iso3166_json = json.load(output_json)
+        self.assertEqual(len(list(test_ca_iso3166_json)), 4, "Expected there to be 4 output objects in json, got {}.".format(len(list(test_ca_iso3166_json))))
+        
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-GU.json")) as output_json:
+                test_gu_iso3166_json = json.load(output_json)
+        self.assertEqual(len(list(test_gu_iso3166_json)), 0, "Expected there to be 0 output objects in json, got {}.".format(len(list(test_gu_iso3166_json))))
+        
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-IE.json")) as output_json:
+                test_ie_iso3166_json = json.load(output_json)
+        self.assertEqual(len(list(test_ie_iso3166_json)), 2, "Expected there to be 2 output objects in json, got {}.".format(len(list(test_ie_iso3166_json))))
+        
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-JE.json")) as output_json:
+                test_je_iso3166_json = json.load(output_json)
+        self.assertEqual(len(list(test_je_iso3166_json)), 1, "Expected there to be 1 output objects in json, got {}.".format(len(list(test_je_iso3166_json))))
+#6.)    
+        iso3166_updates.get_updates(test_alpha2_1, export_filename=self.export_filename,
+            export_json_filename=self.export_json_filename, export_folder=self.export_folder, 
+                concat_updates=True, export_json=True, export_csv=True)
+#7.)
+        with self.assertRaises(TypeError):
+            iso3166_updates.get_updates(test_alpha2_2, export_filename=self.export_filename,
+                export_json_filename=self.export_json_filename, export_folder=self.export_folder, 
+                    concat_updates=True, export_json=True, export_csv=True)
+#8.)
+        with self.assertRaises(TypeError):
+            iso3166_updates.get_updates(test_alpha2_3, export_filename=self.export_filename,
+                export_json_filename=self.export_json_filename, export_folder=self.export_folder, 
+                    concat_updates=True, export_json=True, export_csv=True)
+                    
     def test_get_updates_df(self):
         """ Test func that converts 2D parsed html table into dataframe. """
         test_alpha2_az = "AZ" #Azerbaijan
@@ -207,6 +559,9 @@ class ISO3166_Updates(unittest.TestCase):
         test_alpha2_ke = "KE" #Kenya
         test_alpha2_sn = "SN" #Senegal
         test_alpha2_1 = ""
+
+        #correct column/key names for dict returned from function
+        expected_output_columns = ["Date Issued", "Edition/Newsletter", "Description of change in newsletter", "Code/Subdivision change"]
 #1.)
         soup = BeautifulSoup(requests.get(self.wiki_base_url + test_alpha2_az).content, "html.parser")
         table_html = soup.find("span", {"id": "Changes"}).findNext('table')
@@ -230,8 +585,7 @@ class ISO3166_Updates(unittest.TestCase):
         
         self.assertIsInstance(az_updates_df, pd.DataFrame, "Ouput of function should be a dataframe, got {}.".format(type(az_updates_df)))
         self.assertEqual(len(az_updates_df), 2, "Expected there to be 2 elements in output table, got {}".format(len(az_updates_df)))
-        self.assertEqual(['Date Issued', 'Edition/Newsletter', 'Description of change in newsletter', 'Code/Subdivision change'],
-            list(az_updates_df.columns), "Columns/Headers of dataframe do not match.")
+        self.assertEqual(expected_output_columns, list(az_updates_df.columns), "Columns/Headers of dataframe do not match.")
         self.assertEqual(az_updates_df_output1, az_expected_output1, "Row value for column does not match expected output.")
         self.assertEqual(az_updates_df_output2, az_expected_output2, "Row value for column does not match expected output.")
 #2.)
@@ -257,8 +611,7 @@ class ISO3166_Updates(unittest.TestCase):
 
         self.assertIsInstance(fi_updates_df, pd.DataFrame, "Ouput of function should be a dataframe, got {}.".format(type(fi_updates_df)))
         self.assertEqual(len(fi_updates_df), 2, "Expected there to be 2 elements in output table, got {}".format(len(fi_updates_df)))
-        self.assertEqual(['Date Issued', 'Edition/Newsletter', 'Description of change in newsletter', 'Code/Subdivision change'],
-            list(fi_updates_df.columns), "Columns/Headers of dataframe do not match.")
+        self.assertEqual(expected_output_columns, list(fi_updates_df.columns), "Columns/Headers of dataframe do not match.")
         self.assertEqual(fi_updates_df_output1, fi_expected_output1, "Row value for column does not match expected output.")
         self.assertEqual(fi_updates_df_output2, fi_expected_output2, "Row value for column does not match expected output.")
 #3.)
@@ -284,8 +637,7 @@ class ISO3166_Updates(unittest.TestCase):
 
         self.assertIsInstance(gh_updates_df, pd.DataFrame, "Ouput of function should be a dataframe, got {}.".format(type(gh_updates_df)))
         self.assertEqual(len(gh_updates_df), 3, "Expected there to be 3 elements in output table, got {}".format(len(gh_updates_df)))
-        self.assertEqual(['Date Issued', 'Edition/Newsletter', 'Description of change in newsletter', 'Code/Subdivision change'],
-            list(gh_updates_df.columns), "Columns/Headers of dataframe do not match.")
+        self.assertEqual(expected_output_columns, list(gh_updates_df.columns), "Columns/Headers of dataframe do not match.")
         self.assertEqual(gh_updates_df_output1, gh_expected_output1, "Row value for column does not match expected output.")
         self.assertEqual(gh_updates_df_output2, gh_expected_output2, "Row value for column does not match expected output.")
         self.assertEqual(gh_updates_df_output3, gh_expected_output3, "Row value for column does not match expected output.")
@@ -314,8 +666,7 @@ class ISO3166_Updates(unittest.TestCase):
         
         self.assertIsInstance(ke_updates_df, pd.DataFrame, "Ouput of function should be a dataframe, got {}.".format(type(ke_updates_df)))
         self.assertEqual(len(ke_updates_df), 4, "Expected there to be 4 elements in output table, got {}".format(len(ke_updates_df)))
-        self.assertEqual(['Date Issued', 'Edition/Newsletter', 'Description of change in newsletter', 'Code/Subdivision change'],
-            list(ke_updates_df.columns), "Columns/Headers of dataframe do not match.")
+        self.assertEqual(expected_output_columns, list(ke_updates_df.columns), "Columns/Headers of dataframe do not match.")
         self.assertEqual(ke_updates_df_output1, ke_expected_output1, "Row value for column does not match expected output.")
         self.assertEqual(ke_updates_df_output2, ke_expected_output2, "Row value for column does not match expected output.")
         self.assertEqual(ke_updates_df_output3, ke_expected_output3, "Row value for column does not match expected output.")
@@ -340,10 +691,11 @@ class ISO3166_Updates(unittest.TestCase):
 
         self.assertIsInstance(sn_updates_df, pd.DataFrame, "Ouput of function should be a dataframe, got {}.".format(type(sn_updates_df)))
         self.assertEqual(len(sn_updates_df), 2, "Expected there to be 2 elements in output table, got {}".format(len(sn_updates_df)))
-        self.assertEqual(['Date Issued', 'Edition/Newsletter', 'Description of change in newsletter', 'Code/Subdivision change'],
-            list(sn_updates_df.columns), "Columns/Headers of dataframe do not match.")
+        self.assertEqual(expected_output_columns, list(sn_updates_df.columns), "Columns/Headers of dataframe do not match.")
         self.assertEqual(sn_updates_df_output1, sn_expected_output1, "Row value for column does not match expected output.")
         self.assertEqual(sn_updates_df_output2, sn_expected_output2, "Row value for column does not match expected output.")
+
+
 
     def test_iso3166_alpha2_json(self):
         """ Testing all ISO3166-2 updates created in JSON generated from software package. """
@@ -429,13 +781,10 @@ class ISO3166_Updates(unittest.TestCase):
                 self.assertNotEqual(self.iso3166_json[alpha2][row]["Edition/Newsletter"], "", 
                     "For all entries in json the Edition/Newsletter column should not be empty, {}".format(self.iso3166_json[alpha2][row]))
 
-    def test_iso366_json_year(self):
-        pass
-
     def tearDown(self):
         """ Delete imported json from memory. """
         del self.iso3166_json
-        os.rmdir("temp_test_dir")
+        shutil.rmtree(self.export_folder)
     
 if __name__ == '__main__':
     #run all unit tests

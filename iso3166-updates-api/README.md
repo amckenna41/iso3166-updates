@@ -2,32 +2,70 @@
 
 As well as the Python software package, an API is also available to access any updates to a country's ISO3166-2 codes. You can search for a particular country via it's name or its 2 letter alpha 2 code (e.g EG, FR, DE) via the 'name' and 'alpha2' query parameters appended to the API URL. Additionally, the 'year' query parameter allows you to search for updates to 1 or more countries via the updates for a selected year, multiple years or a year range. If no query parameters are included then the whole dataset with all updates for all countries will be returned. The API endpoint is:
 
-> https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates
+> https://www.iso3166-updates.com
 
-# GCP Cloud Architecture 
+GCP Cloud Architecture 
 ------------------------
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166-updates-api/gcp_cloud_arch.png" alt="gcp_arch" height="200" width="400"/>
+  <img src="https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/gcp_cloud_arch.png" alt="gcp_arch" height="200" width="400"/>
 </p>
 
 
-Using Python Requests Library and curl command
-----------------------------------------------
+Python
+------
 
-# Using Python Requests Library and curl command
-
-## Get All ISO3166-2 updates for all countries
-
+# Python Requests Library 
 python
 ```
 import requests
 
-base_url = "https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates"
+base_url = "https://www.iso3166-updates.com"
 
 all_request = requests.get(base_url)
 all_request.json() 
+
+algeria_request = requests.get(base_url + "/alpha2/" + "DZ").json()
+jamaica_request = requests.get(base_url + "/alpha2/" + "JM").json()
+libya_request = requests.get(base_url + "/alpha2/" + "LY").json()
 ```
+## Get All ISO3166-2 updates for all countries
+
+
+
+Javascript
+----------
+```javascript
+// Create a request variable and assign a new XMLHttpRequest object to it.
+var request = new XMLHttpRequest()
+
+// Open a new connection, using the GET request on the URL endpoint
+request.open('GET', 'https://www.iso3166-updates.com', true)
+
+request.onload = function () {
+  // Begin accessing JSON data here
+}
+
+// Send request
+request.send()
+
+function getData() {
+  const response = await fetch('https://www.iso3166-updates.com')
+  const data = await response.json()
+}
+
+// Begin accessing JSON data here
+var data = JSON.parse(this.response)
+
+data.forEach(alpha2 => {
+  // Log each countrys updates
+  console.log(alpha2)
+})
+```
+
+
+curl command
+------------------
 
 ### Request
 

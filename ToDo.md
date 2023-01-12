@@ -1,14 +1,14 @@
 # To Do 
 
 - [ ] Create CRON job that runs the script every few months using second cloud func, checking for updates on all the Wikis and exporting and updating the neccessary files (https://www.youtube.com/watch?v=2OwLb-aaiBQ). 
-- [ ] Check variable naming conventions.
+- [ ] Check variable naming conventions (https://visualgit.readthedocs.io/en/latest/pages/naming_convention.html).
 - [ ] Check output of bandit and flake8 check.
 - [X] Export updates to csv, dataframe.
 - [X] Create API so each ISO3166-2 update info can be retrieved as json format, using GCP.
 - [X] Create demo using python notebook.
 - [X] Generate updated for a particular year. 
 - [X] Change all instances of iso3166-updates to iso3166_updates except for pypi name.
-- [ ] Add GCP upload to workflow.
+- [X] Add GCP upload to workflow.
 - [ ] Upload all iso3166-updates for all countries in seperate folder of main repo dir.
 - [X] If single ISO code put in then print, if mutliple then output to files.
 - [X] Append date to update filenames.
@@ -26,16 +26,15 @@
 - [X] Add diagram of cloud arch & pipeline in API fodler: https://medium.com/google-cloud/use-multiple-paths-in-cloud-functions-python-and-flask-fc6780e560d3
 - [X] Add API tests for tests folder - iterate through all iso codes confirming that successful response code returned.
 - [ ] Update/upload iso3166-updates.json to GCP Stroage in github workflow (https://sha.ws/automatic-upload-to-google-cloud-storage-with-github-actions.html).
-- [ ] Update Google Cloud Function on push to repo in workflow.
+- [X] Update Google Cloud Function on push to repo in workflow - if changes made to its folder.
 - [X] Add in readme/demo how to use API with requests library.
 - [X] Return multiple updates if array of iso_codes applied.
 - [X] Replace any null columns with empty string.
 - [ ] Go through each country and respective ISO3166-2 wiki URL to verify if it's all correct in json.
 - [X] Change iso_code to alpha2_code
-- [ ] Implement GCP in workflow - https://sha.ws/automatic-upload-to-google-cloud-storage-with-github-actions.html
+- [X] Implement GCP in workflow - https://sha.ws/automatic-upload-to-google-cloud-storage-with-github-actions.html
 - [X] Dict keys in API output not ordered in correct way - reindex
 - [X] Change "Date issued" to "Date Issued"
-- [ ] Convert Cloud Func into flask app.
 - [X] Accept list of iso codes or string seperated by comma for main python script - use regex to check correct format.
 - [X] Several instances where "Online Browsing Platform" wrriten as "Online BrowsingPlatform" e.g BG, BY
 - [ ] Validation in get_updates_df func, if input table is not type list & >1 then raise exception.
@@ -60,8 +59,7 @@ Edition/Newsletter - should be OBP.
 - [X] Add demo link to Colab to readme
 - [X] Remove info about ISO3166-1 from intro on readme
 - [ ] Go over year input parameter in software. 
-- [ ] Before web scraping for a country's updates, check if available in json output.
-- [ ] https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates?alpha2=FR&year=2018,201 - remove invalid years from year input and just use 2018 in this example.
+- [X] https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates?alpha2=FR&year=2018,201 - remove invalid years from year input and just use 2018 in this example.
 - [ ] If invalid year/type input to python script, return all updates for inputted alpha2/s
 - [ ] If invalid alpha2 input then export all updates data (python3 iso3166_updates.py --alpha2=adkad)
 - [X] Unit tests that test if Edition/Newsletter columns are not empty.
@@ -76,3 +74,51 @@ Edition/Newsletter - should be OBP.
 - [ ] Documentation on readthedocs.
 - [ ] Create logo for API.
 - [ ] If invalid input param put into URL then return empty dict instead.
+- [X] Example on reamde and demo of how to use API using JS axios library (https://www.taniarascia.com/how-to-connect-to-an-api-with-javascript/).
+- [X] Add diagram of CRON job workflow to worklfow dir on repo, including Email Cloud Func.
+- [X] If json file is different in repo, upload to Cloud Storage.
+- [X] Passing in single string as alpha2_codes to get_updates func returns None.
+- [ ] Remove if __name__ == "main" from software script. 
+- [X] Software can accept list of alpha2 codes e.g "GY, HI, LU, MD"
+- [X] Add try, except to Python requests.get in software, don't do it in unit tests.
+- [ ] For 3rd test in test_get_updates_df tests, add array/list of correct column headers, use this array instead of list.
+- [ ] Finalise unit tests for get_updates() func.
+- [X] Fix CSV file naming conventions when multiple alpha2 codes input to get_updates() func.
+- [X] concat_csv param in get_updates() that determines whether to seperate inputted alpha2 updates into seperate or the same json file.
+- [X] Create notification function that emails me when an update is found from CRON job workflow (https://documentation.matillion.com/docs/2434849). Add to workflows folder.
+- [X] Upload any found updates from check_for_updates function to GCP bucket, download same object in email_updates func.
+- [ ] Add month unit tests to api tests.
+- [ ] Add month param to software.
+- [ ] What about incorporating a "from" and "to" date parameters in api, user inputted start and end date to which they want updates.
+- [X] Mention the earliest Date Issued was 2000-06-21.
+- [ ] Add readthedocs badge - [![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](http://ansicolortags.readthedocs.io/?badge=latest)
+- [ ] Implemenet API gateway and endpoints for Cloud Func - update cloud arch image to include gateway, endpoints, load balancer, instance group, template etc.
+- [ ] https://cloud.google.com/api-gateway/docs/passing-data
+- [ ] Test concat_updates param in unit tests.
+- [X] Add path-ignore keywords to GitHub Action.
+- [ ] Update api/readme to incorporate new api gateway.
+- [X] Update api config / gateway if api config file changed. Documentation requires new one to be created. Create new one (iso3166-updates-config-2), delete old one (iso3166-updates), then create new one (iso3166-updates), delete old new one (iso3166-updates-config-2) 
+- [ ] Add api gateway permission to SA.
+- [ ] Add terraform script for cloud arch.
+- [X] Mention intended audience in readme.
+- [ ] Add api landing page with documentation, similar to restcountries.
+- [ ] Add years to input param of get_updates func, use tupele of (alpha2, year)
+- [ ] Reorder software metadata in setup.py to be in order of main func, create __description__ var.
+- [X] Add download_url to setup.py - url of zipped package.
+- [ ] Update api tests to reflect updated url. 
+- [ ] Mention schedule that check-for-updates is run and that it is appropriate to the general release of updates by the ISO3166.
+
+<!-- 
+Create new config, update config file
+gcloud api-gateway api-configs create NEW_CONFIG_ID --api=MY_API --openapi-spec=openapi2-functions.yaml 
+Update gateway with config
+gcloud api-gateway gateways update MY-GATEWAY --api=MY-API --api-config=NEW_CONFIG_ID --location=YOUR_LOCATION 
+Update existing config
+gcloud api-gateway api-configs update my-config --api=my-api --display-name="New Display Name"
+Delete config
+gcloud api-gateway api-configs delete CONFIG_ID --api=API_ID --project=PROJECT_ID
+Need to enable Cloud Engine & Cloud Domains API to access LB services:
+gcloud services enable ""
+Connect LB to api gateway:
+https://cloud.google.com/api-gateway/docs/gateway-serverless-neg
+-->

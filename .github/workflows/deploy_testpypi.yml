@@ -3,7 +3,7 @@ name: Deploy to TestPyPI 📦
 # trigger deploy workflow once build and test workflow has successfully completed
 on:
   workflow_run:
-    workflows: ["Building and Testing 🐍"]
+    workflows: ["Building and Testing"]
     types:
       - completed
 

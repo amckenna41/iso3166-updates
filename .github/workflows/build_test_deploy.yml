@@ -1,0 +1,246 @@
+name: Building and Testing
+
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+    paths-ignore: 
+      - '**/README.md'
+      - 'docs/**/*'
+  pull_request:
+    branches: [ master ]
+
+  # allow for workflow to be manually initiated from the Actions tab
+  workflow_dispatch:
+
+#build and test iso3166-updates
+jobs:
+  # test job, waits for build job to complete
+  test:
+    name: Setup environment
+    runs-on: ubuntu-latest        
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]   #testing on multiple python versions
+        # os: [ubuntu-latest, macos-latest] #testing on ubuntu and mac os's
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    #create artifacts dir
+    - name: Artifacts mkdir
+      run: mkdir artifacts
+
+    # install all required modules and dependancies using pip and setup.py installation
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python3 -m pip install setuptools wheel twine
+        pip install flake8 pytest
+        pip3 install codecov
+        pip3 install coverage
+        pip3 install pytest
+        pip3 install pytest-cov
+        pip3 install bandit
+        pip3 install safety
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        python3 setup.py install    
+
+    #package vulnerability check
+    - name: Package safety check
+      run: |
+        echo "Running package safety check"
+        python3 -m safety check > artifacts/package_safety_output.txt
+        cat artifacts/package_safety_output.txt
+      continue-on-error: true
+
+    #run Bandit security check for any known vulnerabilities in code
+    - name: Bandit
+      run: |
+        echo "Running Bandit"
+        python3 -m bandit -r iso3166-updates > artifacts/bandit_output.txt
+        cat artifacts/bandit_output.txt
+      continue-on-error: true
+
+    #unit tests using unittest and pytest
+    - name: Testing with unittest
+      run: |
+        echo "Testing using unittest..."
+        python3 -m unittest discover tests
+
+    - name: Test with pytest
+      run: |
+        echo "Testing using pytest..."
+        python3 -m pytest tests/
+        
+    #generate coverage report, output to file 
+    - name: Generate Report
+      run: python3 -m pytest --cov tests/ > artifacts/coverage.txt
+      # pytest --cov tests/ > coverage.txt
+
+    #upload to Code Coverage
+    - name: Upload Coverage Report to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        flags: iso3166_updates_workflow
+    
+    #upload test artifacts to workflow
+    - name: Upload Test Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: test_artifacts
+        path: |
+          artifacts/package_safety_output.txt
+          artifacts/bandit_output.txt
+          artifacts/coverage.txt
+  
+  #linter check on repo
+  linter:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]   #testing on multiple python versions
+
+    steps:
+
+      #checkout repo
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      # install all required modules and dependancies using pip installation
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+      
+      #create temp artifacts repo
+      - name: Artifacts mkdir
+        run: mkdir flake8_artifacts
+
+      #linting with flake8
+      - name: Lint with flake8
+        run: |
+          echo "Testing using flake8..."
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics > flake8_artifacts/flake8_output.txt
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics >> flake8_artifacts/flake8_output.txt
+        continue-on-error: true
+      
+      #upload artifacts to repo
+      - name: Upload flake8 Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: flake8_artifact
+          path: flake8_artifacts/flake8_output.txt
+
+  #upload all artifacts to GCP
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [test, linter] #previous jobs must complete first
+    steps:  
+      - uses: actions/checkout@v3 #checkout repo 
+      
+      #only deploy GCP function if changes made to its dir, using path filters action
+      #only upload iso3166-updates.json to GCP Storage if changes made to it
+      #only 
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            api:
+              - 'iso3166-updates-api/**'
+            json:
+              - 'iso3166-updates.json'
+            config:
+              - 'iso3166-updates-api/api-config.yml'
+            updates:
+              - 'iso3166-check-for-updates/**'
+
+      #get datetime env var
+      - name: Get current datetime
+        run: |
+          echo "NOW=$(date +'%Y-%m-%d_%H:%M')" >> $GITHUB_ENV
+      
+      #setup python env for 
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      #download test artifacts from previous job 
+      - name: Download Test Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: test_artifacts
+          path: artifacts
+
+      #download flake8 artifacts from previous job 
+      - name: Download flake8 Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: flake8_artifact
+          path: flake8_artifacts
+      
+      #export gcloud related Python environment variable
+      - name: Export CLOUDSDK_PYTHON
+        run: export CLOUDSDK_PYTHON="/usr/bin/python3"
+
+      #setup gcloud SDK with env vars
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+            version: "318.0.0"
+            project_id: ${{ secrets.GCP_PROJECT }}
+            # service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+            service_account_key: ${{ secrets.GCP_SA_KEY }}
+            # export_default_credentials: true
+      
+      #upload test and flake8 artifacts to GCP bucket
+      - name: Upload artifacts to GCP Bucket
+        run: |
+          cp flake8_artifacts/flake8_output.txt artifacts
+          yes | gcloud components update
+          gsutil cp -r artifacts/*.txt gs://${{ secrets.GCP_BUCKET }}/workflow_artifacts/$NOW
+
+      #deploy updated api Google Cloud function only if change made to its dir, using paths filter action
+      - name: Deploy API Google Cloud Func
+        if: steps.filter.outputs.api == 'true'
+        run: |
+          gcloud functions deploy ${{ secrets.GCP_FUNCTION }} --source="iso3166-updates-api" \
+            --runtime=python310 --trigger-http --allow-unauthenticated --region=us-central1 \
+            --entry-point=iso3166_updates_main --timeout=60s --memory=256 \
+            --service-account="iso3166-updates@iso3166-updates.iam.gserviceaccount.com" 
+          gcloud functions describe ${{ secrets.GCP_FUNCTION }}
+
+      #deploy updated check-for-updates Google Cloud function only if change made to its dir, using paths filter action
+      - name: Deploy check-for-updates Google Cloud Func
+        if: steps.filter.outputs.updates == 'true'
+        run: |
+          gcloud functions deploy ${{ secrets.GCP_FUNCTION_UPDATES }} --source="iso3166-check-for-updates" \
+            --runtime=python310 --trigger-http --allow-unauthenticated --region=us-central1 \
+            --entry-point=check_for_updates_main --timeout=300s --memory=256 \
+            --service-account="iso3166-updates@iso3166-updates.iam.gserviceaccount.com" 
+          gcloud functions describe ${{ secrets.GCP_FUNCTION_UPDATES }}
+
+      #deploy updated Google Cloud function only if change made to its dir, using paths filter action
+      - name: Upload updates json
+        if: steps.filter.outputs.json == 'true'
+        run: |
+          gsutil cp iso3166-updates.json gs://${{ secrets.GCP_BUCKET }}
+
+      #update api config file of gateway if file has changed locally, using paths filter action
+      #How to update a API gateway config file using gcloud:
+      # https://stackoverflow.com/questions/70992129/gcp-how-to-update-api-specification-in-api-gateway/75018757#75018757
+      - name:
+        if: steps.filter.outputs.config == 'true'
+        run: |
+          gcloud api-gateway api-configs create iso3166-updates-2 --api=${{ secrets.GCP_API }} --openapi-spec=iso3166-updates-api/api-config.yml 
+          gcloud api-gateway gateways update ${{ secrets.GCP_API_GATEWAY }} --api=${{ secrets.GCP_API }} --api-config=iso3166-updates-2  --location=us-central1
+          gcloud api-gateway api-configs delete iso3166-updates --api=${{ secrets.GCP_API }}
+          gcloud api-gateway api-configs create iso3166-updates --api=${{ secrets.GCP_API }} --openapi-spec=iso3166-updates-api/api-config.yml 
+          gcloud api-gateway gateways update ${{ secrets.GCP_API_GATEWAY }} --api=${{ secrets.GCP_API }} --api-config=iso3166-updates  --location=us-central1
+          gcloud api-gateway api-configs delete iso3166-updates-2 --api=${{ secrets.GCP_API }}

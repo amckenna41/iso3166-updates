@@ -9,11 +9,13 @@ import json
 import logging
 import re
 from bs4 import BeautifulSoup
+from importlib import metadata
 import datetime
 from pprint import pprint
 
 #initialise logging library 
-__version__ = "1.0.0"
+__version__ = metadata.metadata('iso3166_updates')['version']
+
 log = logging.getLogger(__name__)
 
 #initalise User-agent header for requests library 
@@ -24,8 +26,8 @@ USER_AGENT_HEADER = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(__versio
 wiki_base_url = "https://en.wikipedia.org/wiki/ISO_3166-2:"
 
 def get_updates(alpha2_codes, year=[''], export_filename="iso3166-updates",
-        export_json_filename="iso3166-updates", export_folder="../test-iso3166-updates", 
-        export_json=True):
+        export_json_filename="iso3166-updates", export_folder="../test/iso3166-updates", 
+        concat_updates=True, export_json=True, export_csv=False):
     """
     Get all listed updates to a country's ISO3166-2 subdivision codes via 
     the "Changes" section on its wiki. The "Changes" section lists updates 
@@ -51,8 +53,13 @@ def get_updates(alpha2_codes, year=[''], export_filename="iso3166-updates",
         filename for json output of all country's ISO3166-2 updates. 
     :export_folder : str (default = "../iso3166-updates")
         folder name to store all csv outputs for country's ISO3166-2 updates. 
+    :concat_updates : bool (default = True)
+        if multiple alpha2 codes input, concatenate updates into one json file or into seperately
+        named files in export folder. Not available for csv output.
     : export_json : bool (default = True)
         export all ISO3166 updates for inputted country's into json format. 
+    : export_csv : bool (default = False)
+        export all ISO3166 updates for inputted country's to csv files in export folder.
 
     Returns
     -------
@@ -61,6 +68,16 @@ def get_updates(alpha2_codes, year=[''], export_filename="iso3166-updates",
     year_range = False
     greater_than = False
     less_than = False
+    
+    #if alpha2 codes input param isn't str or list raise type error
+    if not isinstance(alpha2_codes, str) and not isinstance(alpha2_codes, list):
+        raise TypeError('alpha2_codes input param should be a 2 letter '
+            'ISO3166 alpha2 code or a list of the same, got type {}.'.format(type(alpha2_codes)))
+
+    #if single str input then convert to array, remove whitespace
+    if isinstance(alpha2_codes, str):
+        # alpha2_codes = [alpha2_codes]
+        alpha2_codes = alpha2_codes.replace(' ', '').split(',')
 
     #a '-' seperating 2 years implies a year range of sought country updates, validate format of years in range
     if (year != ['']):
@@ -103,11 +120,18 @@ def get_updates(alpha2_codes, year=[''], export_filename="iso3166-updates",
     #object to store all country updates/changes
     all_changes = {}
 
+    export_fname = export_filename + '-'
+
     #iterate over all input ISO country codes
     for alpha2 in alpha2_codes:
 
+        # if len(alpha2_codes) == 1: 
+        #     export_fname = export_filename + alpha2  
+        # else:
+        #     export_fname += "," + alpha2
         export_fname = export_filename + '-' + alpha2  
 
+        print(export_fname)
         #skip to next iteration if alpha2 not valid
         if (alpha2 not in list(iso3166.countries_by_alpha2.keys())):
             continue
@@ -116,8 +140,13 @@ def get_updates(alpha2_codes, year=[''], export_filename="iso3166-updates",
 
         all_changes[alpha2] = {}
 
-        #get html content from wiki of ISO3166 page 
-        page = requests.get(wiki_base_url + alpha2, headers=USER_AGENT_HEADER)
+        #get html content from wiki of ISO3166 page, raise exception if status code != 200
+        try:
+            page = requests.get(wiki_base_url + alpha2, headers=USER_AGENT_HEADER)
+            page.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            raise SystemExit(err)
+
         #convert html content into BS4 object
         soup = BeautifulSoup(page.content, "html.parser")
 
@@ -162,9 +191,10 @@ def get_updates(alpha2_codes, year=[''], export_filename="iso3166-updates",
 
         #append year onto filename, if not empty
         export_fname = export_fname + (("-" + str(year)) if year != [] else '')  #potentially need to add strip to export_fname
-            
-        #create output folder if doesn't exist
-        if not (os.path.isdir(export_folder)):
+        
+        #create output folder if doesn't exist and files are set to be exported
+        if (export_csv or export_json) and not (os.path.isdir(export_folder)):
+            print('here')
             os.mkdir(export_folder)
 
         #only export non-empty dataframes         
@@ -173,27 +203,39 @@ def get_updates(alpha2_codes, year=[''], export_filename="iso3166-updates",
             #sort and order by date
             iso3166_df = iso3166_df.sort_values(by=['Date Issued'], ascending=False)
 
-            #export to csv 
-            # iso3166_df.to_csv(os.path.join(export_folder, export_fname + '.csv'), index=False)
+            #export to csv
+            if (export_csv): 
+                iso3166_df.to_csv(os.path.join(export_folder, export_fname + '.csv'), index=False)
         
             #add ISO updates to object of all ISO3166 updates, convert to json 
             all_changes[alpha2] = json.loads(iso3166_df.to_json(orient='records'))
 
             #print output to terminal if less than 10 ISO3166 codes input
-            if len(alpha2_codes) < 10:
-                pprint(all_changes[alpha2], depth=2, sort_dicts=False)
-                print('\n')
+            # if len(alpha2_codes) < 10:
+            #     pprint(all_changes[alpha2], depth=2, sort_dicts=False)
+            #     print('\n')
                 # export_json_filename += '-' + alpha2
 
         #reset export filename var 
         export_fname = export_filename
 
-    #export all ISO3166 updates to json, store in main dir
+    #append extension to json filename, if applicable 
+    if (os.path.splitext(export_json_filename)[1] != "json"):
+        export_json_filename = export_json_filename + ".json"
+
+    #export all ISO3166 updates to json, store in export folder dir
     if (export_json):
-        if (all_changes):
-            # with open(os.path.join("../", "iso3166-updates.json"), "w") as write_file:
-            with open(os.path.join("../", export_json_filename + ".json"), "w") as write_file:
-                json.dump(all_changes, write_file, indent=4, ensure_ascii=False)
+        if (all_changes):   #checking if all_changes obj isn't empty
+            if (concat_updates):
+                #concatenate updates into the same json
+                with open(os.path.join(export_folder, export_json_filename), "w") as write_file:
+                    json.dump(all_changes, write_file, indent=4, ensure_ascii=False)
+            else:
+                #seperate country updates into individual json files
+                for update in all_changes:
+                    with open(os.path.join(export_folder, os.path.splitext(export_json_filename)[0] + "-" + update + ".json"), "w") as write_file:
+                        json.dump(all_changes[update], write_file, indent=4, ensure_ascii=False)
+            
             print("All ISO3166 changes exported to folder {}".format(export_folder))
     
 def get_updates_df(iso3166_updates_table, year=[], year_range=False, less_than=False, greater_than=False):
@@ -406,11 +448,13 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Get latest changes/updates of ISO3166-2 country codes.')
     parser.add_argument('-alpha2', '--alpha2', type=str, required=False, default="", help='Alpha2 code/s of ISO3166 countries to check for updates.')
+    parser.add_argument('-year', '--year', type=str, required=False, default="", help='Selected year to check for updates.')
     parser.add_argument('-export_filename', '--export_filename', type=str, required=False, default="iso3166-updates", help='Filename for exported ISO3166 updates csv file.')
     parser.add_argument('-export_json_filename', '--export_json_filename', type=str, required=False, default="iso3166-updates", help='Filename for exported ISO3166 updates json file.')
     parser.add_argument('-export_folder', '--export_folder', type=str, required=False, default="../test-iso3166-updates", help='Folder where to store exported ISO files.')
-    parser.add_argument('-export_json', '--export_json', type=bool, required=False, default=1, help='Whether to export all found updates to json.')
-    parser.add_argument('-year', '--year', type=str, required=False, default="", help='Selected year to check for updates.')
+    parser.add_argument('-export_json', '--export_json', action="store_false", required=False, help='Whether to export all found updates to json.')
+    parser.add_argument('-export_csv', '--export_csv', required=False, action="store_true", help='Whether to export all found updates to csv files in export folder.')
+    parser.add_argument('-concat_updates', '--concat_updates', action="store_true", required=False, help='Whether to concatenate updates of individual countrys into the same json file or seperate.')
 
     #parse input args
     args = parser.parse_args()
@@ -420,12 +464,15 @@ if __name__ == '__main__':
     export_filename = args.export_filename
     export_json_filename = args.export_json_filename
     export_folder = args.export_folder
+    concat_updates = args.concat_updates
     export_json = args.export_json
+    export_csv = args.export_csv
     year = [args.year]
     if (',' in year[0]):
         year = year[0].split(',')
     alpha_codes = []
 
+    print(args)
     #use all ISO3166 codes if invalid alpha2 code input, otherwise convert alpha2 to array
     if (alpha2_codes == [''] or not isinstance(alpha2_codes, list)):
         alpha2_codes = sorted(list(iso3166.countries_by_alpha2.keys()))
@@ -433,7 +480,7 @@ if __name__ == '__main__':
     #sort codes in alphabetical order
     alpha2_codes.sort()
     alpha2_codes = [code.upper() for code in alpha2_codes]
-
+    
     #output ISO3166 updates/changes for selected alpha2 code/s
     get_updates(alpha2_codes, year, export_filename, export_json_filename,
-        export_folder, export_json)
+        export_folder, concat_updates, export_json, export_csv)

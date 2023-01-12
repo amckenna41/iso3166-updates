@@ -4,6 +4,7 @@ import iso3166
 import requests
 import datetime
 import getpass
+from importlib import metadata
 unittest.TestLoader.sortTestMethodsUsing = None
 
 class ISO3166_Updates(unittest.TestCase):
@@ -12,21 +13,28 @@ class ISO3166_Updates(unittest.TestCase):
     def setUp(self):
         """ Initialise test variables including base urls for API. """
         self.base_url = "https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates"
+        # self.base_url = "https://www.iso3166-updates.com"
+
+        self.__version__ = metadata.metadata('iso3166_updates')['version']
+
+        self.alpha2_base_url_1 = self.base_url + "/alpha2/"
         self.alpha2_base_url = self.base_url + '?alpha2='
+        self.year_base_url_1 = self.base_url + '/year/'
         self.year_base_url = self.base_url + '?year='
-        self.user_agent_header = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(iso3166_updates.__version__,
+        self.user_agent_header = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(self.__version__,
                                        'https://github.com/amckenna41/iso3166-updates', getpass.getuser())}
     
     @unittest.skip("Skipping to not overload API endpoint on test suite run.")
-    def test_api_endpoint(self):
-        """ Testing endpoint is valid and returns correct 200 status code for all alpha2 codes."""
+    def test_api_endpoints(self):
+        """ Testing API endpoints are valid and return expected 200 status code for all alpha2 codes. """
         main_request = requests.get(self.base_url, headers=self.user_agent_header)
         self.assertEqual(main_request.status_code, 200, 
             "Should receive 200 status code from request, got {}".format(main_request.status_code))
+            
 
         #for each alpha2, test API returns valid response to it and correct json content type
         for alpha2 in sorted(list(iso3166.countries_by_alpha2.keys())):
-            test_request = requests.get(self.base_url + '?=' + alpha2, headers=self.user_agent_header)
+            test_request = requests.get(self.alpha2_base_url + '?=' + alpha2, headers=self.user_agent_header)
             self.assertEqual(test_request.status_code, 200, 
                 "Should receive 200 status code from request, got {}".format(test_request.status_code))
             self.assertEqual(test_request.headers["content-type"], "application/json", 
@@ -496,6 +504,10 @@ class ISO3166_Updates(unittest.TestCase):
         self.assertIsInstance(test_request, dict, "Ouput object of API should be of type dict, got {}.".format(type(test_request)))
         # self.assertEqual(test_request, {}, "Ouput object of API should be an empty dict, got {}.".format(test_request)) #Should return nothing
         # self.assertEqual(len(list(test_request)), 0, "Expected there to be 0 output objects from API call, got {}.".format(len(list(test_request))))
+
+
+    def test_month(self):
+        """ Testing months input parameter which returns the updates in a specified month range. """
 
     def test_alpha2_year(self):
         """ Testing varying combinations of alpha2 codes with years/year ranges. """

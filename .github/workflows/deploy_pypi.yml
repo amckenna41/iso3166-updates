@@ -18,9 +18,9 @@ jobs:
       matrix:
         python-version: [3.8]  #deploying using one Python version on 1 runner
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -50,5 +50,5 @@ jobs:
     - name: Install iso3166_updates from PyPI
       run: |
         pip install iso3166_updates --upgrade
-        echo -e "import iso3166_updates as iso3166_updates\nprint(iso3166_updates.__version__)" | python3
+        echo -e "import iso3166_updates as iso3166_updates" | python3
         echo "iso3166-updates successfully installed"

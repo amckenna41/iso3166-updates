@@ -1,0 +1,154 @@
+# openapi2 config file for iso3166-updates api
+swagger: '2.0'
+info:
+  title: iso3166-updates 
+  description: API for iso3166-updates backend Google Cloud function
+  version: 1.0.2
+  license:
+    name: MIT
+  contact: 
+    email: amckenna41@qub.ac.uk
+schemes:
+  - https
+produces:
+  - application/json
+
+paths:
+  #default path which will return all iso3166 updates
+  /:
+    get:
+      summary: Get updates per alpha2
+      operationId: getAll
+      x-google-backend:
+        address: https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: string
+        '400':
+          description: Invalid alpha2 country code
+        '404': 
+          description: Not found.
+        '5XX':
+          description: Unexpected error
+
+  #default alpha2 path which returns all iso3166 updates
+  /alpha2:
+    get:
+      summary: Get updates per alpha2
+      operationId: getAllAlpha2
+      x-google-backend:
+        address: https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            type: string
+        '400':
+          description: Bad request. Invalid alpha2 country code input.
+        '404': 
+          description: Not found.
+        '5XX':
+          description: Unexpected error.
+
+  #path for passing in 2 letter alpha2 country code
+  /alpha2/{alpha2}:
+    get:
+      summary: Get updates per alpha2
+      operationId: getAlpha2
+      x-google-backend:
+        address: https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates
+        path_translation: [ CONSTANT_ADDRESS ] 
+      
+      produces:
+        - application/json
+      parameters:
+        - name: alpha2
+          in: path
+          required: true
+          type: string
+          description: The 2 letter alpha2 country code
+
+      responses:
+        '200':
+          description: Ok
+          schema:
+            type: object
+        '400':
+          description: Bad request. Invalid alpha2 country code input.
+        '404': 
+          description: Not found.
+        '5XX':
+          description: Unexpected error.
+
+  #path for passing in a year of sought updates
+  /year/{year}:
+    get:
+      summary: Get updates per year
+      operationId: getYear
+      x-google-backend:
+        address: https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates
+        path_translation: [ CONSTANT_ADDRESS ] 
+      produces:
+        - application/json
+      parameters:
+        - name: year
+          in: path
+          required: true
+          description: The calander year to retrieve updates for
+          type: string
+
+      responses:
+        '200':
+          description: Ok
+          schema:
+            type: object
+        '400':
+          description: Bad request. Invalid year param input.
+        '404': 
+          description: Not found.
+        '5XX':
+          description: Unexpected error.
+
+  #path for passing in a 2 letter alpha2 country code and year of sought updates
+  /alpha2/{alpha2}/year/{year}:
+    get:
+      summary: Get updates for specific alpha2 for specific year
+      operationId: getAlpha2Year
+      x-google-backend:
+        address: https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates
+        path_translation: [ CONSTANT_ADDRESS ] 
+      produces:
+        - application/json
+      parameters:
+        - name: year
+          in: path
+          required: true
+          description: The calander year to retrieve updates for
+          type: string
+
+        - name: alpha2
+          in: path
+          required: true
+          type: string
+          description: The 2 letter alpha2 country code
+
+      responses:
+        '200':
+          description: Ok
+          schema:
+            type: object
+        '400':
+          description: Invalid alpha2 and or year parameters input.
+        '404': 
+          description: Not found.
+        '5XX':
+          description: Unexpected error.
+
+#https://cloud.google.com/api-gateway/docs/passing-data
+#https://cloud.google.com/api-gateway/docs/using-custom-domains

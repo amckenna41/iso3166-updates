@@ -11,6 +11,7 @@ __pycache__/
 
 #dev directory for storing old stuff
 old/
+temp_test_dir/
 
 # Distribution / packaging
 .Python
