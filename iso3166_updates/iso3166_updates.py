@@ -15,7 +15,6 @@ from pprint import pprint
 
 #initialise logging library 
 __version__ = metadata.metadata('iso3166_updates')['version']
-
 log = logging.getLogger(__name__)
 
 #initalise User-agent header for requests library 
@@ -447,14 +446,22 @@ def table_to_array(table_tag):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Get latest changes/updates of ISO3166-2 country codes.')
-    parser.add_argument('-alpha2', '--alpha2', type=str, required=False, default="", help='Alpha2 code/s of ISO3166 countries to check for updates.')
-    parser.add_argument('-year', '--year', type=str, required=False, default="", help='Selected year to check for updates.')
-    parser.add_argument('-export_filename', '--export_filename', type=str, required=False, default="iso3166-updates", help='Filename for exported ISO3166 updates csv file.')
-    parser.add_argument('-export_json_filename', '--export_json_filename', type=str, required=False, default="iso3166-updates", help='Filename for exported ISO3166 updates json file.')
-    parser.add_argument('-export_folder', '--export_folder', type=str, required=False, default="../test-iso3166-updates", help='Folder where to store exported ISO files.')
-    parser.add_argument('-export_json', '--export_json', action="store_false", required=False, help='Whether to export all found updates to json.')
-    parser.add_argument('-export_csv', '--export_csv', required=False, action="store_true", help='Whether to export all found updates to csv files in export folder.')
-    parser.add_argument('-concat_updates', '--concat_updates', action="store_true", required=False, help='Whether to concatenate updates of individual countrys into the same json file or seperate.')
+    parser.add_argument('-alpha2', '--alpha2', type=str, required=False, default="", 
+        help='Alpha2 code/s of ISO3166 countries to check for updates.')
+    parser.add_argument('-year', '--year', type=str, required=False, default="", 
+        help='Selected year to check for updates.')
+    parser.add_argument('-export_filename', '--export_filename', type=str, required=False, default="iso3166-updates", 
+        help='Filename for exported ISO3166 updates csv file.')
+    parser.add_argument('-export_json_filename', '--export_json_filename', type=str, required=False, default="iso3166-updates", 
+        help='Filename for exported ISO3166 updates json file.')
+    parser.add_argument('-export_folder', '--export_folder', type=str, required=False, default="../test-iso3166-updates", 
+        help='Folder where to store exported ISO files.')
+    parser.add_argument('-export_json', '--export_json', action="store_false", required=False, 
+        help='Whether to export all found updates to json.')
+    parser.add_argument('-export_csv', '--export_csv', required=False, action="store_true", 
+        help='Whether to export all found updates to csv files in export folder.')
+    parser.add_argument('-concat_updates', '--concat_updates', action="store_true", required=False, 
+        help='Whether to concatenate updates of individual countrys into the same json file or seperate.')
 
     #parse input args
     args = parser.parse_args()
@@ -472,7 +479,6 @@ if __name__ == '__main__':
         year = year[0].split(',')
     alpha_codes = []
 
-    print(args)
     #use all ISO3166 codes if invalid alpha2 code input, otherwise convert alpha2 to array
     if (alpha2_codes == [''] or not isinstance(alpha2_codes, list)):
         alpha2_codes = sorted(list(iso3166.countries_by_alpha2.keys()))

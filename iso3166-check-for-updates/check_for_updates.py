@@ -4,7 +4,6 @@ import os
 import json
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from email.message import EmailMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import ssl

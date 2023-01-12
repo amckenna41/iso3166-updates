@@ -39,7 +39,7 @@ class ISO3166_Updates(unittest.TestCase):
 
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        self.assertEqual(metadata.metadata('iso3166_updates')['version'], "0.0.6", "iso3166-updates version is not correct, got: {}".format(metadata.metadata('iso3166_updates')['version']))
+        self.assertEqual(metadata.metadata('iso3166_updates')['version'], "0.0.7", "iso3166-updates version is not correct, got: {}".format(metadata.metadata('iso3166_updates')['version']))
         self.assertEqual(metadata.metadata('iso3166_updates')['name'], "iso3166-updates", "iso3166-updates software name is not correct, got: {}".format(metadata.metadata('iso3166_updates')['name']))
         self.assertEqual(metadata.metadata('iso3166_updates')['author'], "AJ McKenna, https://github.com/amckenna41", "iso3166-updates author is not correct, got: {}".format(metadata.metadata('iso3166_updates')['author']))
         self.assertEqual(metadata.metadata('iso3166_updates')['author-email'], "amckenna41@qub.ac.uk", "iso3166-updates author email is not correct, got: {}".format(metadata.metadata('iso3166_updates')['author-email']))
