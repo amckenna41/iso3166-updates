@@ -13,19 +13,19 @@ def iso3166_updates_main(request):
 
     Parameters
     ----------
-    : request : (flask.Request)
-        HTTP request object.
+    :request : (flask.Request)
+       HTTP request object.
     
     Returns
     -------
-    : iso3166_updates : json
-        jsonified response of iso3166 updates for selected country/alpha2 ISO code.
+    :iso3166_updates : json
+      jsonified response of iso3166 updates for selected country/alpha2 ISO code.
     """
-    # Initialise a client
+    #initialise storage client
     storage_client = storage.Client()
-    # Create a bucket object for our bucket
+    #create a bucket object for the bucket
     bucket = storage_client.get_bucket("iso3166-updates")
-    # Create a blob object from the filepath
+    #create a blob object from the filepath
     blob = bucket.blob("iso3166-updates.json")       
 
     #get input arguments as json
@@ -46,29 +46,29 @@ def iso3166_updates_main(request):
     year = []
     months = []
 
-    #parse alpha2 code 
-    if request.args and 'alpha2' in request.args:
+    #parse alpha2 code parameter
+    if (request.args and 'alpha2' in request.args):
         alpha2_code = sorted([request.args.get('alpha2').upper()])
-    elif request_json and 'alpha2' in request_json:
+    elif (request_json and 'alpha2' in request_json):
         alpha2_code = sorted([request_json['alpha2'].upper()])
 
     #parse year parameter
-    if request.args and 'year' in request.args:
+    if (request.args and 'year' in request.args):
         year = [request.args.get('year').upper()]
-    elif request_json and 'year' in request_json:
+    elif (request_json and 'year' in request_json):
         year = [request_json['year'].upper()]
 
     #parse months parameter
-    if request.args and 'months' in request.args:
+    if (request.args and 'months' in request.args):
         try:
             months = int(request.args.get('months'))
         except:
-            raise TypeError("Invalid data type for months parameter, cannot cast to int")
+            raise TypeError("Invalid data type for months parameter, cannot cast to int.")
     elif request_json and 'months' in request_json:
         try:
             months = int(request_json['months'])
         except:
-            raise TypeError("Invalid data type for months parameter, cannot cast to int")
+            raise TypeError("Invalid data type for months parameter, cannot cast to int.")
 
     #if no input parameters set then return all country update updates_data
     if (year == [] and alpha2_code == [] and months == []):
@@ -88,8 +88,6 @@ def iso3166_updates_main(request):
             if not (bool(re.match(r"^[A-Z]{2}$", alpha2_code[0]))) or (alpha2_code[0] not in list(iso3166.countries_by_alpha2.keys())):
                 alpha2_code.remove(alpha2_code[0])
 
-    print("months", months)
-    print("months==", months == [])
     #a '-' seperating 2 years implies a year range of sought country updates, validate format of years in range
     if (year != [] and months == []):
         if ('-' in year[0]):
@@ -143,7 +141,8 @@ def iso3166_updates_main(request):
     temp_iso3166_updates = {}
 
     #if no valid alpha2 codes input use all alpha2 codes from iso3166 and all updates data
-    if ((year != [] and alpha2_code == [] and months == []) or ((year == [] or year != []) and alpha2_code == [] and months != [])): #problem here
+    if ((year != [] and alpha2_code == [] and months == []) or \
+        ((year == [] or year != []) and alpha2_code == [] and months != [])): #**
         input_alpha2_codes  = list(iso3166.countries_by_alpha2.keys())
         input_data = updates_data
     #else set input alpha2 codes to inputted and use corresponding updates data
@@ -155,14 +154,14 @@ def iso3166_updates_main(request):
     reordered_columns = ['Date Issued', 'Edition/Newsletter', 'Description of change in newsletter', 'Code/Subdivision change']
 
     #use temp object to get updates data either for specific country/alpha2 code or for all
-    # countries, dependant on input_alpha2_codes and input_data vars above
+    #countries, dependant on input_alpha2_codes and input_data vars above
     if (year != [] and months == []):
         for code in input_alpha2_codes:
             temp_iso3166_updates[code] = []
             for update in range(0, len(input_data[code])):
-                
                 #reorder dict columns
                 input_data[code][update] = {col: input_data[code][update][col] for col in reordered_columns}
+               
                 #convert year in Date Issued column to string of year
                 temp_year = str(datetime.strptime(input_data[code][update]["Date Issued"].replace('\n', ''), '%Y-%m-%d').year)
 
@@ -171,7 +170,7 @@ def iso3166_updates_main(request):
                     if (temp_year != "" and (temp_year >= year[0] and temp_year <= year[1])):
                         temp_iso3166_updates[code].append(input_data[code][update])
                 
-                #if greater than true then get country updates greater than specified year inclusive
+                #if greater than true then get country updates greater than specified year, inclusive
                 elif (greater_than):
                     if (temp_year != "" and (temp_year >= year[0])):
                         temp_iso3166_updates[code].append(input_data[code][update])    
@@ -193,21 +192,21 @@ def iso3166_updates_main(request):
 
     #if months parameter input then get updates within this months range
     elif (months != []):
-        print('getting here')
         for code in input_alpha2_codes:
-            temp_iso3166_updates[code] = []
+            temp_iso3166_updates[code] = [] 
             for update in range(0, len(input_data[code])):
                 #reorder dict columns
                 input_data[code][update] = {col: input_data[code][update][col] for col in reordered_columns}
+                
                 #convert date in Date Issued column to date object
                 row_date = (datetime.strptime(input_data[code][update]["Date Issued"], "%Y-%m-%d"))
+                
                 #calculate difference in dates
                 date_diff = relativedelta.relativedelta(current_datetime, row_date)
+                
                 #calculate months difference
                 diff_months = date_diff.months + (date_diff.years * 12)
                 
-                print('diff months type', type(diff_months))
-                print('diff months', (diff_months))
                 #if current updates row is <= month input param then add to temp object
                 if (diff_months <= months):
                     temp_iso3166_updates[code].append(input_data[code][update])
@@ -216,7 +215,7 @@ def iso3166_updates_main(request):
             if (temp_iso3166_updates[code] == []):
                 temp_iso3166_updates.pop(code, None)
     else:
-        temp_iso3166_updates = input_data
+        temp_iso3166_updates = input_data #return updates data when Years and Month params are empty
     
     #set main updates dict to temp one
     iso3166_updates = temp_iso3166_updates

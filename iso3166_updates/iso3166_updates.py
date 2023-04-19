@@ -24,40 +24,44 @@ USER_AGENT_HEADER = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(__versio
 #base URL for ISO3166-2 wiki
 wiki_base_url = "https://en.wikipedia.org/wiki/ISO_3166-2:"
 
+
 def get_updates(alpha2_codes, year=[''], export_filename="iso3166-updates",
         export_json_filename="iso3166-updates", export_folder="../test/iso3166-updates", 
         concat_updates=True, export_json=True, export_csv=False):
     """
-    Get all listed updates to a country's ISO3166-2 subdivision codes via 
-    the "Changes" section on its wiki. The "Changes" section lists updates 
-    or changes to any ISO3166-2 codes according to the ISO newsletter which
-    is realeased peridically by the ISO.
-    The ISO newsletters are not easily discoverable online and may require
-    a subscription to the ISO3166-2 database (https://www.iso.org/iso/updating_information.pdf).
+    Get all listed updates to a country/country's ISO3166-2 subdivision codes/names 
+    via the "Changes" section on its wiki page - all wiki pages follow the convention
+    https://en.wikipedia.org/wiki/ISO_3166-2:XX where XX is the 2 letter alpha2 code
+    for a country. The "Changes" section lists updates or changes to any ISO3166-2 codes 
+    according to the ISO newsletter which is realeased peridically by the ISO as well as 
+    its Online Browsing Platform (OBP). The ISO newsletters are not easily discoverable 
+    and accessinle online and may require a subscription to the ISO3166-2 database 
+    (https://www.iso.org/iso/updating_information.pdf).
 
     The changes/updates table is converted to a DataFrame and then exported to a 
-    CSV for further analysis. You can also get the updates from a particular year
-    by using the Year parameter. 
+    CSV for further analysis. You can also get the updates from a particular year, 
+    list of years, year range or updates greater than or less than specified year, 
+    using the Year parameter. 
 
     Parameters
     ----------
-    : alpha2_codes : str / list
+    :alpha2_codes : str / list
         single string or list of alpha-2 ISO3166 codes to get the latest ISO3166-2 updates from. If
         single alpha2 code passed in then it is converted to an iterable list.
-    : year : list (default = [''])
+    :year : list (default = [''])
         list of 1 or more years to get the specific ISO3166-2 updates from per country.
-    : export_filename : str (default = "iso3166-updates")
+    :export_filename : str (default = "iso3166-updates")
         filename for csv output of inputted country's ISO3166-2 updates. 
-    : export_json_filename : str (default = "iso3166-updates")
+    :export_json_filename : str (default = "iso3166-updates")
         filename for json output of all country's ISO3166-2 updates. 
     :export_folder : str (default = "../iso3166-updates")
         folder name to store all csv outputs for country's ISO3166-2 updates. 
     :concat_updates : bool (default = True)
         if multiple alpha2 codes input, concatenate updates into one json file or into seperately
         named files in export folder. Not available for csv output.
-    : export_json : bool (default = True)
+    :export_json : bool (default = True)
         export all ISO3166 updates for inputted country's into json format. 
-    : export_csv : bool (default = False)
+    :export_csv : bool (default = False)
         export all ISO3166 updates for inputted country's to csv files in export folder.
 
     Returns
@@ -75,10 +79,11 @@ def get_updates(alpha2_codes, year=[''], export_filename="iso3166-updates",
 
     #if single str input then convert to array, remove whitespace
     if isinstance(alpha2_codes, str):
-        # alpha2_codes = [alpha2_codes]
         alpha2_codes = alpha2_codes.replace(' ', '').split(',')
 
-    #a '-' seperating 2 years implies a year range of sought country updates, validate format of years in range
+    #'-' seperating 2 years implies a year range of sought country updates, validate format of years in range
+    #'>' before year means get all country updates greater than or equal to specified year
+    #'<' before year means get all country updates less than to specified year
     if (year != ['']):
         if ('-' in year[0]):
             year_range = True
@@ -193,7 +198,6 @@ def get_updates(alpha2_codes, year=[''], export_filename="iso3166-updates",
         
         #create output folder if doesn't exist and files are set to be exported
         if (export_csv or export_json) and not (os.path.isdir(export_folder)):
-            print('here')
             os.mkdir(export_folder)
 
         #only export non-empty dataframes         
@@ -247,7 +251,7 @@ def get_updates_df(iso3166_updates_table, year=[], year_range=False, less_than=F
     Parameters
     ----------
     :iso3166_updates_table : array
-        2D array of ISO3166-2 updates from Changes section in wiki
+        2D array of ISO3166-2 updates from Changes section in wiki.
     :year : array
         array/list of year(s), if not empty only the ISO3166 updates for the selected
         year for a particular country will be returned. If empty then all years of 
@@ -256,7 +260,7 @@ def get_updates_df(iso3166_updates_table, year=[], year_range=False, less_than=F
     Returns
     -------
     :iso3166_df : pd.DataFrame
-        comverted pandas dataframe of all ISO3166-2 changes for particular country
+        converted pandas dataframe of all ISO3166-2 changes for particular country
         from 2D input array.
     """
     #update column names to correct naming conventions
@@ -286,14 +290,15 @@ def get_updates_df(iso3166_updates_table, year=[], year_range=False, less_than=F
     
     #only include rows of dataframe where date updated is same as year parameter, drop year col
     if (year != []): 
-        print('year_range', year_range)
-        iso3166_df['Year'] = iso3166_df[dateColName].apply(convert_date)         #create temp new column to get year of updates from date column 
+        #create temp year column to get year of updates from date column 
+        iso3166_df['Year'] = iso3166_df[dateColName].apply(convert_date)         
         temp_iso3166_df_array = []
         for year_ in year:
             # temp_year = str(datetime.datetime.strptime(input_data[code][update]["Date Issued"].replace('\n', ''), '%Y-%m-%d').year)
             temp_iso3166_df = iso3166_df[iso3166_df.Year == int(year_)]
             temp_iso3166_df_array.append(temp_iso3166_df)
 
+        #concatenate list of correct rows, drop temp year column from dataframe
         iso3166_df = pd.concat(temp_iso3166_df_array)
         iso3166_df = iso3166_df.drop('Year', axis=1)
 
@@ -315,17 +320,17 @@ def get_updates_df(iso3166_updates_table, year=[], year_range=False, less_than=F
 def correct_columns(cols):
     """ 
     Update column names so all dataframes follow the column format of:
-    ["Edition/Newsletter", "Date Issued", "Description of change in newsletter", 
+    ["Date Issued", "Edition/Newsletter", "Description of change in newsletter", 
     "Code/Subdivision change"]. 
 
     Parameters
     ----------
-    : cols : list
+    :cols : list
         list of column names from header of parsed Changes table on wiki.
     
     Returns
     -------
-    : cols : list
+    :cols : list
         list of columns updated to correct naming conventions. 
     """
     if ("Newsletter" in cols):
@@ -348,37 +353,35 @@ def table_to_array(table_tag):
 
     Parameters
     ----------
-    : table_tag : bs4.element.Tag
-        bs4 object of table element.
+    :table_tag : bs4.element.Tag
+      bs4 object of table element.
     
     Returns
     -------
-    : table : tuple
-        tuple of parsed data from html table in Changes section of ISO3166 wiki.
+    :table : tuple
+      tuple of parsed data from html table in Changes section of ISO3166 wiki.
     
     Reference
     ---------
     [1]: https://stackoverflow.com/questions/48393253/how-to-parse-table-with-rowspan-and-colspan
-
     """
     #if invalid table tag input return empty array
     if (table_tag is None):
         return []
 
-    rowspans = []  # track pending rowspans
+    rowspans = []  #track pending rowspans
     rows = table_tag.find_all('tr') #all table rows
 
-    # first scan, see how many columns we need
+    #count columns (including spanned).
+    #add active rowspans from preceding rows
+    #we *ignore* the colspan value on the last cell, to prevent
+    #creating 'phantom' columns with no actual cells, only extended
+    #colspans. This is achieved by hardcoding the last cell width as 1. 
+    #a colspan of 0 means “fill until the end” but can really only apply
+    #to the last cell; ignore it elsewhere. 
     colcount = 0
     for r, row in enumerate(rows):
         cells = row.find_all(['td', 'th'], recursive=False)
-        # count columns (including spanned).
-        # add active rowspans from preceding rows
-        # we *ignore* the colspan value on the last cell, to prevent
-        # creating 'phantom' columns with no actual cells, only extended
-        # colspans. This is achieved by hardcoding the last cell width as 1. 
-        # a colspan of 0 means “fill until the end” but can really only apply
-        # to the last cell; ignore it elsewhere. 
         colcount = max(
             colcount,
             sum(int(c.get('colspan', 1)) or 1 for c in cells[:-1]) + len(cells[-1:]) + len(rowspans))
@@ -386,27 +389,27 @@ def table_to_array(table_tag):
         rowspans += [int(c.get('rowspan', 1)) or len(rows) - r for c in cells]
         rowspans = [s - 1 for s in rowspans if s > 1]
 
-    # it doesn't matter if there are still rowspan numbers 'active'; no extra
-    # rows to show in the table means the larger than 1 rowspan numbers in the
-    # last table row are ignored.
+    #it doesn't matter if there are still rowspan numbers 'active'; no extra
+    #rows to show in the table means the larger than 1 rowspan numbers in the
+    #last table row are ignored.
 
-    # build an empty matrix for all possible cells
+    #build an empty matrix for all possible cells
     table = [[None] * colcount for row in rows]
-    # fill matrix from row data
-    rowspans = {}  # track pending rowspans, column number mapping to count
+    #fill matrix from row data
+    rowspans = {}  #track pending rowspans, column number mapping to count
     for row, row_elem in enumerate(rows):
-        span_offset = 0  # how many columns are skipped due to row and colspans 
+        span_offset = 0  #how many columns are skipped due to row and colspans 
         for col, cell in enumerate(row_elem.find_all(['td', 'th'], recursive=False)):
-            # adjust for preceding row and colspans
+            #adjust for preceding row and colspans
             col += span_offset
             while rowspans.get(col, 0):
                 span_offset += 1
                 col += 1
 
-            # fill table data
+            #fill table data
             rowspan = rowspans[col] = int(cell.get('rowspan', 1)) or len(rows) - row
             colspan = int(cell.get('colspan', 1)) or colcount - col
-            # next column is offset by the colspan
+            #next column is offset by the colspan
             span_offset += colspan - 1
 
             # if table cell is a newline character set to empty string
@@ -426,13 +429,12 @@ def table_to_array(table_tag):
             for drow, dcol in product(range(rowspan), range(colspan)):
                 try:
                     table[row + drow][col + dcol] = value
-                    # print(table[row + drow][col + dcol])
                     rowspans[col + dcol] = rowspan
                 except IndexError:
-                    # rowspan or colspan outside the confines of the table
+                    #rowspan or colspan outside the confines of the table
                     pass
           
-        # update rowspan bookkeeping
+        #update rowspan bookkeeping
         rowspans = {c: s - 1 for c, s in rowspans.items() if s > 1}
 
     #iterate through converted table, removing any newline characters

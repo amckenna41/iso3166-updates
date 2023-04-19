@@ -13,30 +13,34 @@ from google.cloud import storage
 def check_iso3166_updates_main(request):
     """
     Google Cloud Function that checks for any updates within specified date range
-    for the iso3166-updates API. It uses the accompnnying iso3166-updates Python
+    for the iso3166-updates API. It uses the accompanying iso3166-updates Python
     software package to web scrape all country's ISO3166-2 wiki's checking for 
     any updates in a date range. 
+
     If any updates are found then an email is sent to a user/list of users using
     the smtplib library conveyiny these updates. The user can then use these
-    updates to make any changes to their applications that use the ISO3166-2. 
+    updates to make any changes to their applications that use the ISO3166-2. If
+    any changes are found then the JSON in the storage bucket which the API uses
+    will be replaced with the up-to-date one.
 
     Parameters
     ----------
-    : request : (flask.Request)
-        HTTP request object.
+    :request : (flask.Request)
+       HTTP request object.
     
     Returns
     -------
-    : current_iso3166_updates : json
-        json containing any iso3166 updates for selected country/alpha2 ISO code
-        within specified date range.
+    :current_iso3166_updates : json
+       json containing any iso3166 updates for selected country/alpha2 ISO code
+       within specified date range.
     """
     #default month cutoff to check for updates
     months = 12
 
-    #parse months var from input params, if applicable
+    #get list of any input parameters to function
     request_json = request.get_json()
 
+    #parse months var from input params, if applicable
     if request.args and 'months' in request.args:
         if (not(request.args.get('months') is None) or (request.args.get('months') != "")):
             months = request.args.get('months')
@@ -53,16 +57,16 @@ def check_iso3166_updates_main(request):
     #get list of all country's 2 letter alpha2 codes
     alpha2_codes = sorted(list(iso3166.countries_by_alpha2.keys()))
 
-    #sort codes in alphabetical order
+    #sort codes in alphabetical order and uppercase
     alpha2_codes.sort()
     alpha2_codes = [code.upper() for code in alpha2_codes]
 
     #call iso3166_updates get_updates function to scrape all updates from country wikis
-    iso3166_updates.get_updates(alpha2_codes, export_json_filename="test-iso3166-updates", 
+    iso3166_updates.get_updates(alpha2_codes, export_json_filename="new-iso3166-updates", 
         export_folder="/tmp", export_json=True, export_csv=False)
 
     #load exported updates json
-    with open(os.path.join("/tmp", "test-iso3166-updates.json")) as input_json:
+    with open(os.path.join("/tmp", "new-iso3166-updates.json")) as input_json:
         iso3166_json = json.load(input_json)
 
     #iterate over all alpha2 codes, check for any updates in specified months range in updates json 
@@ -87,14 +91,14 @@ def check_iso3166_updates_main(request):
     
     def send_email(iso3166_updates_json):
         """
-        Send email with parsed updates from the iso3166-2 updates json to 
-        and from emails specified in env vars of Cloud Function. 
+        Send email with parsed updates from the iso3166-2 updates json to the
+        sender and recepient specified in env vars of Cloud Function. 
 
         Parameters
         ----------
-        : iso3166_updates_json : json
-            json object with all listed iso3166-2 updates in specified month 
-            range. 
+        :iso3166_updates_json : json
+           json object with all listed iso3166-2 updates in specified month 
+           range. 
 
         Returns
         -------
@@ -128,10 +132,10 @@ def check_iso3166_updates_main(request):
         #iterate over updates in json, append to email body
         for code in list(iso3166_updates_json.keys()):
             
-            # flag_icon_attr = '<span class="flag-icon flag-icon-' + code.lower() + '" style="width: 100%;" </span>'
             #header displaying current country name and code
             body += "<h2><u>" + "Country - " + iso3166.countries_by_alpha2[code].name + " (" + code + ")" + ":</u></h2>"
-            # body += "<span>" + "Country - " + iso3166.countries_by_alpha2[code].name + " (" + code + ")" + flag_icon_attr + "</span>"  
+            #flag_icon_attr = '<span class="flag-icon flag-icon-' + code.lower() + '" style="width: 100%;" </span>'
+            #body += "<span>" + "Country - " + iso3166.countries_by_alpha2[code].name + " (" + code + ")" + flag_icon_attr + "</span>"  
 
             #get plaintext of country name and code
             plain_text += "Country - " + iso3166.countries_by_alpha2[code].name + code + "\n"
@@ -162,20 +166,19 @@ def check_iso3166_updates_main(request):
         body += "</body></html>"
 
         #create instance of MIME (Multipurpose Internet Mail Extensions (MIME)) object,
-        #   an Internet standard that extends the format of email to support: Text in 
-        #   character sets other than ASCII, initilaise subject and to and from 
+        # an Internet standard that extends the format of email to support: Text in 
+        #  character sets other than ASCII, initilaise subject and to and from 
         msg = MIMEMultipart('alternative')
         msg['Subject'] = subject
         msg['From'] = _from_email
         msg['To'] = _to_email
 
-        # Record the MIME types of both parts - text/plain and text/html.
+        #record the MIME types of both parts - text/plain and text/html.
         part1 = MIMEText(plain_text, 'plain')
         part2 = MIMEText(body, 'html')
 
-        # Attach parts into message container.
-        # According to RFC 2046, the last part of a multipart message, in this case
-        # the HTML message, is best and preferred.
+        #attach parts into message container, according to RFC 2046, the last part 
+        #of a multipart message, in this case the HTML message, is best and preferred.
         msg.attach(part1)
         msg.attach(part2)
 
@@ -185,26 +188,29 @@ def check_iso3166_updates_main(request):
         #send email using gmail server (port 465) and smtp library 
         with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
             smtp.login(_from_email, _password)
-            # smtp.sendmail(_from_email, _to_email, em.as_string())
             smtp.sendmail(_from_email, _to_email, msg.as_string())
 
     def update_json(iso3166_updates_json):
         """
+        If changes have been found for any countrys in the ISO3166-2 using the
+        check_iso3166_updates_main function then the JSON in the storage bucket 
+        is updated with the new JSON.
+
         Parameters
         ----------
-        : iso3166_updates_json : json
-            json object with all listed iso3166-2 updates in specified month 
-            range. 
+        :iso3166_updates_json : json
+           json object with all listed iso3166-2 updates in specified month 
+           range. 
 
         Returns
         -------
         None
         """
-        # Initialise a client
+        #initialise storage client
         storage_client = storage.Client()
-        # Create a bucket object for our bucket
+        #create a bucket object for the bucket
         bucket = storage_client.get_bucket("iso3166-updates")
-        # Create a blob object from the filepath
+        #create a blob object from the filepath
         blob = bucket.blob("iso3166-updates.json")    
 
         #download iso3166-updates.json file from storage bucket 
@@ -214,7 +220,7 @@ def check_iso3166_updates_main(request):
         updated_json = previous_updates_data
 
         #iterate over all updates in json, if update/row not found in original json
-        #...pulled from GCP storage, append to new updated_json object
+        #pulled from GCP storage, append to new updated_json object
         for code in iso3166_updates_json:   
             for update in iso3166_updates_json[code]:
                 if not (update in previous_updates_data[code]):
@@ -224,23 +230,25 @@ def check_iso3166_updates_main(request):
         previous_updates_data_str = json.dumps(previous_updates_data, sort_keys=True)
         updated_json_str = json.dumps(updated_json, sort_keys=True)
 
-        #if new updates json 
+        #if updates found in JSON
         if (previous_updates_data_str != updated_json_str):
 
             #temp path for exported json
-            tmp_updated_json_path = os.path.join("/tmp", 'iso3166-3.json')
+            tmp_updated_json_path = os.path.join("/tmp", 'iso3166-updates.json')
             
             #export updated json to temp folder
             with open(tmp_updated_json_path, 'w', encoding='utf-8') as output_json:
                 json.dump(updated_json, output_json, ensure_ascii=False, indent=4)
-
-            blob = bucket.blob('iso3166-3.json')
+            
+            #create blob for updates JSON
+            blob = bucket.blob('iso3166-updates.json')
             #upload new updated json using gcp sdk 
             blob.upload_from_filename(tmp_updated_json_path)
-
+    
+    #all GCP cloud funcs need to return something
     return_message = ""
 
-    #if update object not empty - there are updates - then call send email function
+    #if update object not empty - there are updates call send_email and update_json function
     if (current_iso3166_updates != {}):
         send_email(current_iso3166_updates)
         update_json(current_iso3166_updates)
@@ -249,6 +257,8 @@ def check_iso3166_updates_main(request):
         return_message = "No ISO3166-2 updates found."
 
     return return_message
+
+#Steps for calling an authenticated Cloud Function
 #1.) https://cloud.google.com/functions/docs/securing/authenticating#functions-bearer-token-example-python
 #2.) curl -H "Authorization: bearer $(gcloud auth print-identity-token)" https://us-central1-iso3166-updates.cloudfunctions.net/check-for-iso3166-updates
 #3.)curl -m 460 -X POST https://us-central1-iso3166-updates.cloudfunctions.net/check-for-iso3166-updates \

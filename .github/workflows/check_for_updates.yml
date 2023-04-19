@@ -41,7 +41,6 @@ jobs:
           gcloud functions add-iam-policy-binding iso3166-updates --member=serviceAccount:iso3166-updates@iso3166-updates.iam.gserviceaccount.com --role=roles/cloudfunctions.invoker
           curl -H "Authorization: bearer $(gcloud auth print-identity-token)" https://us-central1-iso3166-updates.cloudfunctions.net/check-for-iso3166-updates
 
-
 # curl -m 460 -X POST https://us-central1-iso3166-updates.cloudfunctions.net/check-for-iso3166-updates \
 # -H "Authorization: bearer $(gcloud auth print-identity-token)" \
 # -H "Content-Type: application/json" \

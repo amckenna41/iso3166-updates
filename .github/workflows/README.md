@@ -1,8 +1,8 @@
 # Workflows used in iso3166-updates
 
 * `build_test_deploy.yml` - build and test the iso3166-updates application, running all unit tests.
-* `deploy_testpypi.yml` - after test workflow successful, deploy to test pypi server.
-* `deploy_ypi.yml` - after deployment to test pypi server successful, deploy to pypi server.
+* `deploy_test_pypi.yml` - after test workflow successful, deploy to test pypi server.
+* `deploy_pypi.yml` - after deployment to test pypi server successful, deploy to pypi server.
 * `check_for_updates.yml` - workflow run using a CRON schedule every 6 months to check for the latest ISO3166 updates. 
 
 GCP Cloud Architecture 

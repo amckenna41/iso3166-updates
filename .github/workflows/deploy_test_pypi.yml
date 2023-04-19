@@ -20,9 +20,9 @@ jobs:
       matrix:
         python-version: [3.8]  #deploying using one Python version on 1 runner
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -39,8 +39,7 @@ jobs:
       run: |
         python3 setup.py sdist bdist_wheel
         twine check dist/*
-        python3 -m twine upload --repository testpypi dist/*
-      # python3 setup.py sdist bdist_wheel
+        twine upload --repository testpypi dist/*
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_TEST }}
@@ -48,7 +47,9 @@ jobs:
 
      # sleep for 30 seconds to ensure that distribution package has successfully been uploaded to Test PyPI
     - name: Wait / Sleep
-      uses: jakejarvis/wait-action@v0.1.0
+      uses: jakejarvis/wait-action@master
+      with:
+        time: '30s'
 
     # download package of iso3166_updates from Test PYPI server to ensure it uploaded correctly
     - name: Install iso3166_updates from Test PyPI

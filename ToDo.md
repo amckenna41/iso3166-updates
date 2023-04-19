@@ -107,7 +107,9 @@ Edition/Newsletter - should be OBP.
 - [X] Add download_url to setup.py - url of zipped package.
 - [ ] Update api tests to reflect updated url. 
 - [ ] Mention schedule that check-for-updates is run and that it is appropriate to the general release of updates by the ISO3166.
-
+- [ ] Remove all camel casing function names/vars, change to underscores and lowercase (https://peps.python.org/pep-0008/#function-and-variable-names).
+- [ ] Move from GCP to vercel.
+- [ ] Add example img of email to iso3166-check-for-updates dir.
 <!-- 
 Create new config, update config file
 gcloud api-gateway api-configs create NEW_CONFIG_ID --api=MY_API --openapi-spec=openapi2-functions.yaml 

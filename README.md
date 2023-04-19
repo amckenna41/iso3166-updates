@@ -4,7 +4,8 @@
 [![Build](https://img.shields.io/github/workflow/status/amckenna41/iso3166-updates/Deploy%20to%20PyPI%20📦)](https://github.com/amckenna41/iso3166-updates/actions)
 [![Platforms](https://img.shields.io/badge/platforms-linux%2C%20macOS%2C%20Windows-green)](https://pypi.org/project/iso3166-updates/)
 [![License: MIT](https://img.shields.io/github/license/amckenna41/iso3166-updates)](https://opensource.org/licenses/MIT)
-[![Issues](https://img.shields.io/github/issues/amckenna41/iso3166-flag-icons)](https://github.com/amckenna41/iso3166-updates/issues)
+<!-- [![CircleCI](https://circleci.com/gh/amckenna41/iso3166-updates.svg?style=svg&circle-token=d860bb64668be19d44f106841b80eb47a8b7e7e8)](https://app.circleci.com/pipelines/github/amckenna41/iso3166-updates) -->
+[![Issues](https://img.shields.io/github/issues/amckenna41/iso3166-updates)](https://github.com/amckenna41/iso3166-updates/issues)
 [![Size](https://img.shields.io/github/repo-size/amckenna41/iso3166-updates)](https://github.com/amckenna41/iso3166-updates)
 [![Commits](https://img.shields.io/github/commit-activity/w/amckenna41/iso3166-updates)](https://github.com/iso3166-updates)
 
@@ -17,7 +18,6 @@
 
 Table of Contents
 -----------------
-
   * [Introduction](#introduction)
   * [Requirements](#requirements)
   * [Installation](#installation)
@@ -50,12 +50,11 @@ Updates
 **Last Updated:**
 The list of ISO 3166-2 updates was last updated on <strong>Nov 2022</strong>. The object storing all updates both locally (iso3166-updates.json) and on the API are consistenly checked for the latest updates using a Cloud Function (iso3166-check-for-updates). This function  
 
-
 API
 ---
 An API is available that can be used to extract any applicable updates for a country via a URL. The API is available at the URL:
 
->                               https://www.iso3166-updates.com
+>https://www.iso3166-updates.com
 <!-- > https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates -->
 
 Two query string parameters / paths are available in the API. The 2 letter alpha2 country code can be appeneded to the url as a query string parameter - "?alpha2=JP" - or appended to the base url - "/alpha2/YE. A single alpha2 or list of them can be passed to the API (e.g "FR", "DE", "GY, HU, ID"). The year parameter can be a specific year, year range, or a cut-off year to get updates less than/more than a year (e.g "2017", "2010-2015", "<2009", ">2002"). The API is hosted and built using GCP, with a Cloud Function being used in the backend which is fronted by an api gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON with all ISO3166 updates. A complete diagram of the architecture is available in the iso3166-updates-api/README. This JSON is updated regularly using a CRON GithHub Action workflow that is called every 6 months (.github/workflows/check_for_updates.yml) that also utilises a Cloud Func and the Python software to check for the most latest ISO3166 updates (<=6 months) - <i>in development</i>.
@@ -66,7 +65,6 @@ The API documentation and usage with all useful commands and examples to the API
 <p align="center">
   <img src="https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/gcp_cloud_arch.png" alt="gcp_arch" height="200" width="400"/>
 </p>
-
 
 Requirements
 ------------
@@ -164,7 +162,7 @@ E.g. The output format of the exported CSV for AD (Andorra) is:
 | Online Browsing Platform (OBP) | 2015-11-27 | Update List Source | No subdivision changes listed | 
 
 E.g. The output format of the exported JSON for AD (Andorra) is:
-```json
+```javascript
 {
   AD: [
       {
@@ -227,3 +225,4 @@ Support
 [beautifulsoup4]: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 [iso3166]: https://github.com/deactivated/python-iso3166
 [PyPi]: https://pypi.org/project/pysar/
+[Issues]: https://github.com/amckenna41/iso3166-updates/issues

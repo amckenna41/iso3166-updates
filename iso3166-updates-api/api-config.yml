@@ -64,7 +64,6 @@ paths:
       x-google-backend:
         address: https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates
         path_translation: [ CONSTANT_ADDRESS ] 
-      
       produces:
         - application/json
       parameters:
@@ -73,7 +72,6 @@ paths:
           required: true
           type: string
           description: The 2 letter alpha2 country code
-
       responses:
         '200':
           description: Ok
@@ -102,7 +100,6 @@ paths:
           required: true
           description: The calander year to retrieve updates for
           type: string
-
       responses:
         '200':
           description: Ok
@@ -131,13 +128,11 @@ paths:
           required: true
           description: The calander year to retrieve updates for
           type: string
-
         - name: alpha2
           in: path
           required: true
           type: string
           description: The 2 letter alpha2 country code
-
       responses:
         '200':
           description: Ok
