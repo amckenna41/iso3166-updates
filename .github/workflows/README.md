@@ -9,5 +9,5 @@ GCP Cloud Architecture
 ------------------------
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/amckenna41/iso3166-updates-api/main/gcp_cloud_arch.png" alt="gcp_arch" height="200" width="400"/>
+  <img src="https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166-updates-api/gcp_arch.png" alt="gcp_arch" height="200" width="400"/>
 </p>

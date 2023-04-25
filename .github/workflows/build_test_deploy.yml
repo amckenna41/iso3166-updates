@@ -74,11 +74,6 @@ jobs:
         echo "Testing using pytest..."
         python3 -m pytest tests/
         
-    #generate coverage report, output to file 
-    - name: Generate Report
-      run: python3 -m pytest --cov tests/ > artifacts/coverage.txt
-      # pytest --cov tests/ > coverage.txt
-
     #upload to Code Coverage
     - name: Upload Coverage Report to Codecov
       uses: codecov/codecov-action@v3
@@ -93,7 +88,6 @@ jobs:
         path: |
           artifacts/package_safety_output.txt
           artifacts/bandit_output.txt
-          artifacts/coverage.txt
   
   #linter check on repo
   linter:
@@ -133,7 +127,8 @@ jobs:
         with:
           name: flake8_artifact
           path: flake8_artifacts/flake8_output.txt
-
+          if-no-files-found: error 
+          
 ### GCP pipeline stopped due to cost ###
 
   #upload all artifacts to GCP

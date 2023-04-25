@@ -78,11 +78,11 @@ Edition/Newsletter - should be OBP.
 - [X] Add diagram of CRON job workflow to worklfow dir on repo, including Email Cloud Func.
 - [X] If json file is different in repo, upload to Cloud Storage.
 - [X] Passing in single string as alpha2_codes to get_updates func returns None.
-- [ ] Remove if __name__ == "main" from software script. 
+- [X] Remove if __name__ == "main" from software script. 
 - [X] Software can accept list of alpha2 codes e.g "GY, HI, LU, MD"
 - [X] Add try, except to Python requests.get in software, don't do it in unit tests.
 - [ ] For 3rd test in test_get_updates_df tests, add array/list of correct column headers, use this array instead of list.
-- [ ] Finalise unit tests for get_updates() func.
+- [X] Finalise unit tests for get_updates() func.
 - [X] Fix CSV file naming conventions when multiple alpha2 codes input to get_updates() func.
 - [X] concat_csv param in get_updates() that determines whether to seperate inputted alpha2 updates into seperate or the same json file.
 - [X] Create notification function that emails me when an update is found from CRON job workflow (https://documentation.matillion.com/docs/2434849). Add to workflows folder.
@@ -103,13 +103,14 @@ Edition/Newsletter - should be OBP.
 - [X] Mention intended audience in readme.
 - [ ] Add api landing page with documentation, similar to restcountries.
 - [ ] Add years to input param of get_updates func, use tupele of (alpha2, year)
-- [ ] Reorder software metadata in setup.py to be in order of main func, create __description__ var.
+- [X] Reorder software metadata in setup.py to be in order of main func, create __description__ var.
 - [X] Add download_url to setup.py - url of zipped package.
-- [ ] Update api tests to reflect updated url. 
+- [X] Update api tests to reflect updated url. 
 - [ ] Mention schedule that check-for-updates is run and that it is appropriate to the general release of updates by the ISO3166.
 - [ ] Remove all camel casing function names/vars, change to underscores and lowercase (https://peps.python.org/pep-0008/#function-and-variable-names).
 - [ ] Move from GCP to vercel.
 - [ ] Add example img of email to iso3166-check-for-updates dir.
+- [ ] Remove generate report from workflow
 <!-- 
 Create new config, update config file
 gcloud api-gateway api-configs create NEW_CONFIG_ID --api=MY_API --openapi-spec=openapi2-functions.yaml 
