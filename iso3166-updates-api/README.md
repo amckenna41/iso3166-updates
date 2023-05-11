@@ -4,7 +4,7 @@ As well as the Python software package, an API is also available to access any u
 
 The main API endpoint is:
 
-> https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates (https://www.iso3166-updates.com endpoint temporarily offline) 
+> https://www.iso3166-updates.com/api
 
 GCP Cloud Architecture 
 ------------------------
@@ -13,64 +13,19 @@ GCP Cloud Architecture
   <img src="https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166-updates-api/gcp_cloud_arch.png" alt="gcp_arch" height="200" width="400"/>
 </p>
 
-<!-- Python
-------
-
-**Python Requests Library**
-
-```python
-import requests
-
-base_url = "https://www.iso3166-updates.com"
-
-all_request = requests.get(base_url)
-all_request.json() 
-
-#get all updates for each country using its alpha2 code
-algeria_request = requests.get(base_url + "/alpha2/" + "DZ").json()
-jamaica_request = requests.get(base_url + "/alpha2/" + "JM").json()
-libya_request = requests.get(base_url + "/alpha2/" + "LY").json()
-
-#get all updates for particular year
-_2011_request = requests.get(base_url + "/year/" + "2011").json()
-``` -->
-
-<!-- Javascript
-----------
-```javascript
-// Create a request variable and assign a new XMLHttpRequest object to it.
-var request = new XMLHttpRequest()
-
-// Open a new connection, using the GET request on the URL endpoint
-request.open('GET', 'https://www.iso3166-updates.com', true)
-
-request.onload = function () {
-  // Begin accessing JSON data here
-}
-
-// Send request
-request.send()
-
-function getData() {
-  const response = await fetch('https://www.iso3166-updates.com')
-  const data = await response.json()
-}
-
-// Begin accessing JSON data here
-var data = JSON.parse(this.response)
-
-data.forEach(alpha2 => {
-  // Log each countrys updates
-  console.log(alpha2)
-})
-``` -->
+Requirements
+------------
+* [python][python] >= 3.7
+* [iso3166][iso3166] >= 2.1.1
+* [google-cloud-storage][google-cloud-storage] >= 2.8.0
+* [python-dateutil][python-dateutil] >= 2.8.2
 
 Get All ISO 3166-2 updates for all countries
 -------------------------------------------
 ### Request
 `GET /`
 
-    curl -i https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates
+    curl -i https://www.iso3166-updates.com/api
 
 ### Response
     HTTP/2 200 
@@ -85,7 +40,7 @@ Get All ISO 3166-2 updates for all countries
 ```python
 import requests
 
-base_url = "https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates"
+base_url = "https://www.iso3166-updates.com/api"
 
 all_request = requests.get(base_url)
 all_request.json() 
@@ -94,7 +49,7 @@ all_request.json()
 ### Javascript
 ```javascript
 function getData() {
-  const response = await fetch('https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates')
+  const response = await fetch('https://www.iso3166-updates.com/api')
   const data = await response.json()
 }
 
@@ -108,7 +63,7 @@ Get updates for a specific country e.g France, Germany, Hondurus
 ### Request
 `GET /alpha2/FR`
 
-    curl -i https://iso3166-updates/alpha2/FR
+    curl -i https://iso3166-updates.com/api?=alpha2=FR
 
 ### Response
     HTTP/2 200 
@@ -122,7 +77,7 @@ Get updates for a specific country e.g France, Germany, Hondurus
 ### Request
 `GET /alpha2/DE`
 
-    curl -i https://iso3166-updates/alpha2/DE
+    curl -i https://iso3166-updates.com/api?=alpha2=DE
 
 ### Response
     HTTP/2 200 
@@ -136,7 +91,7 @@ Get updates for a specific country e.g France, Germany, Hondurus
 ### Request
 `GET /alpha2/HN`
 
-    curl -i https://iso3166-updates/alpha2/HN
+    curl -i https://iso3166-updates.com/api?alpha2=HN
 
 ### Response
     HTTP/2 200 
@@ -151,7 +106,7 @@ Get updates for a specific country e.g France, Germany, Hondurus
 ```python
 import requests
 
-base_url = "https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates"
+base_url = "https://iso3166-updates/api"
 
 all_request = requests.get(base_url, params={"alpha2": "FR"})
 # all_request = requests.get(base_url, params={"alpha2": "DE"})
@@ -163,7 +118,7 @@ all_request.json()
 ```javascript
 function getData() {
   const response = 
-    await fetch('https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates?' + 
+    await fetch('https://iso3166-updates/api' + 
         new URLSearchParams({
             alpha2: 'FR'
   }));
@@ -180,7 +135,7 @@ Get all updates for a specified year e.g 2004, 2007
 ### Request
 `GET /year/2004`
 
-    curl -i https://iso3166-updates/year/2004
+    curl -i https://iso3166-updates/api?year=2004
 
 ### Response
     HTTP/2 200 
@@ -194,7 +149,7 @@ Get all updates for a specified year e.g 2004, 2007
 ### Request
 `GET /year/2007`
 
-    curl -i https://iso3166-updates/year/2007
+    curl -i https://iso3166-updates/api?year=2007
 
 ### Response
     HTTP/2 200 
@@ -209,7 +164,7 @@ Get all updates for a specified year e.g 2004, 2007
 ```python
 import requests
 
-base_url = "https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates"
+base_url = "https://iso3166-updates/api"
 
 all_request = requests.get(base_url, params={"year": "2004"})
 # all_request = requests.get(base_url, params={"year": "2007"})
@@ -220,7 +175,7 @@ all_request.json()
 ```javascript
 function getData() {
   const response = 
-    await fetch('https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates?' + 
+    await fetch('https://iso3166-updates/api' + 
         new URLSearchParams({
             year: '2004'
   }));
@@ -237,7 +192,7 @@ Get updates for a specific country for specified year e.g Andorra, Dominica for 
 ### Request
 `GET /alpha2/AD/year/2014`
 
-    curl -i https://iso3166-updates/alpha2/AD/year/2007
+    curl -i https://iso3166-updates.com/api?alpha2=AD&year=2007
 
 ### Response
     HTTP/2 200 
@@ -251,7 +206,7 @@ Get updates for a specific country for specified year e.g Andorra, Dominica for 
 ### Request
 `GET /alpha2/DM/year/2007`
 
-    curl -i https://iso3166-updates/alpha2/DM/year/2007
+    curl -i https://iso3166-updates.com?alpha2=DM&year=2007
 
 ### Response
     HTTP/2 200 
@@ -266,7 +221,7 @@ Get updates for a specific country for specified year e.g Andorra, Dominica for 
 ```python
 import requests
 
-base_url = "https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates"
+base_url = "https://iso3166-updates.com/api"
 
 all_request = requests.get(base_url, params={"alpha2": "AD", "year": "2007"}) 
 # all_request = requests.get(base_url, params={"alpha2": "DM", "year": "2007"}) 
@@ -277,7 +232,7 @@ all_request.json()
 ```javascript
 function getData() {
   const response = 
-    await fetch('https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates?' + 
+    await fetch('https://iso3166-updates.com/api' + 
         new URLSearchParams({
             alpha2: 'AD',
             year: '2007'
@@ -295,7 +250,7 @@ Get updates for a specific country for specified year range e.g Bosnia, Haiti fo
 ### Request
 `GET /alpha2/BA/year/2009-2015`
 
-    curl -i https://iso3166-updates/alpha2/BA/year/2009-2015
+    curl -i https://iso3166-updates.com/api?alpha2=BA&year=2009-2015
 
 ### Response
     HTTP/2 200 
@@ -309,7 +264,7 @@ Get updates for a specific country for specified year range e.g Bosnia, Haiti fo
 ### Request
 `GET /alpha2/HT/year/2009-2015`
 
-    curl -i https://iso3166-updates/alpha2/HT/year/2009-2015
+    curl -i https://iso3166-updates.com?alpha2=HT&year=2009-2015
 
 ### Response
     HTTP/2 200 
@@ -324,7 +279,7 @@ Get updates for a specific country for specified year range e.g Bosnia, Haiti fo
 ```python
 import requests
 
-base_url = "https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates"
+base_url = "https://iso3166-updates.com/api"
 
 all_request = requests.get(base_url, params={"alpha2": "BA", "year": "2009-2015"}) 
 # all_request = requests.get(base_url, params={"alpha2": "HT", "year": "2009-2015"}) 
@@ -335,7 +290,7 @@ all_request.json()
 ```javascript
 function getData() {
   const response = 
-    await fetch('https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates?' + 
+    await fetch('https://iso3166-updates.com/api' + 
         new URLSearchParams({
             alpha2: 'BA',
             year: '2009-2015'
@@ -353,7 +308,7 @@ Get updates for a specific country less than/greater than specified year e.g Isr
 ### Request
 `GET /alpha2/IL/year/<2010`
 
-    curl -i https://iso3166-updates/alpha2/IL/year/<2010
+    curl -i https://iso3166-updates.com?alpha2=IL&year=<2010
 
 ### Response
     HTTP/2 200 
@@ -367,7 +322,7 @@ Get updates for a specific country less than/greater than specified year e.g Isr
 ### Request
 `GET /alpha2/LT/year/<2012`
 
-    curl -i https://iso3166-updates/alpha2/LT/year/>2012
+    curl -i https://iso3166-updates.com?alpha2=LT&year=>2012
 
 ### Response
     HTTP/2 200 
@@ -382,7 +337,7 @@ Get updates for a specific country less than/greater than specified year e.g Isr
 ```python
 import requests
 
-base_url = "https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates"
+base_url = "https://iso3166-updates.com"
 
 all_request = requests.get(base_url, params={"alpha2": "IL", "year": "<2010"}) 
 # all_request = requests.get(base_url, params={"alpha2": "LT", "year": ">2012"}) 
@@ -393,7 +348,7 @@ all_request.json()
 ```javascript
 function getData() {
   const response = 
-    await fetch('https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates?' + 
+    await fetch('https://iso3166-updates.com' + 
         new URLSearchParams({
             alpha2: 'IL',
             year: '<2010'
@@ -404,3 +359,8 @@ function getData() {
 // Begin accessing JSON data here
 var data = JSON.parse(this.response)
 ```
+
+[python]: https://www.python.org/downloads/release/python-360/
+[iso3166]: https://github.com/deactivated/python-iso3166
+[google-cloud-storage]: https://gcloud.readthedocs.io/en/latest/storage-client.html
+[python-dateutil]: https://pypi.org/project/python-dateutil/

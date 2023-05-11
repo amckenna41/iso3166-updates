@@ -2,12 +2,10 @@ import iso3166_updates
 import iso3166
 import os
 import json
+import flag
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-import ssl
-import smtplib
+import requests
 from google.cloud import storage
 
 def check_iso3166_updates_main(request):
@@ -17,11 +15,11 @@ def check_iso3166_updates_main(request):
     software package to web scrape all country's ISO3166-2 wiki's checking for 
     any updates in a date range. 
 
-    If any updates are found then an email is sent to a user/list of users using
-    the smtplib library conveyiny these updates. The user can then use these
-    updates to make any changes to their applications that use the ISO3166-2. If
-    any changes are found then the JSON in the storage bucket which the API uses
-    will be replaced with the up-to-date one.
+    If any updates are found then a GitHub Issue is automatically created in the 
+    iso3166-2 repository that itself stores all the latest info and data relating 
+    to the ISO3166-2 standard. Additionally, if changes are found then the 
+    iso3166-updates.json file in the GCP Storage bucket is updated which is the 
+    data source for the iso3166-updates Python package and accompanying API.
 
     Parameters
     ----------
@@ -35,7 +33,7 @@ def check_iso3166_updates_main(request):
        within specified date range.
     """
     #default month cutoff to check for updates
-    months = 12
+    months = 6
 
     #get list of any input parameters to function
     request_json = request.get_json()
@@ -89,10 +87,12 @@ def check_iso3166_updates_main(request):
         if (current_iso3166_updates[alpha2] == []):
             current_iso3166_updates.pop(alpha2, None)
     
-    def send_email(iso3166_updates_json):
+    def create_issue(iso3166_updates_json):
         """
-        Send email with parsed updates from the iso3166-2 updates json to the
-        sender and recepient specified in env vars of Cloud Function. 
+        Create a GitHub issue on the iso3166-2 repository, using the GitHub
+        api, if any updates/changes are made to any entries in the ISO3166-2. 
+        The Issue will be formatted in a way to clearly outline any of the 
+        updates/changes to be made to the JSONs in the iso3166-2 repo. 
 
         Parameters
         ----------
@@ -102,49 +102,39 @@ def check_iso3166_updates_main(request):
 
         Returns
         -------
-        None
+        :message : str
+            response message from GitHub api post request.
+
+        References
+        ----------
+        [1]: https://developer.github.com/v3/issues/#create-an-issue
         """
-        #get email variables from Google Func env vars
-        _to_email = os.environ['TO_MAIL']
-        _from_email = os.environ['FROM_MAIL']
-        _password = os.environ['PASSWORD']
-
-        #email subject 
-        subject = "ISO3166-2 Updates - " + str(current_datetime.strftime('%d-%m-%Y'))        
-        plain_text = ""
-
-        #body of email in html 
-        body = """\
-            <html>
-            <link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.5/css/flag-icons.min.css" rel="stylesheet" />
-            <body>
-                <h1>ISO3166-2 Updates</h1>
-            """
-
+        issue_json = {}
+        issue_json["title"] = "ISO3166-2 Updates: " + str(current_datetime.strftime('%d-%m-%Y'))
+        
         #get total sum of updates for all countrys in json
         total_updates = sum([len(iso3166_updates_json[code]) for code in iso3166_updates_json])
         total_countries = len(iso3166_updates_json)
 
+        #body of Github Issue
+        body = "# ISO3166-2 Updates\n"
+
+        #get total sum of updates for all countrys in json
+        total_updates = sum([len(iso3166_updates_json[code]) for code in iso3166_updates_json])
+        total_countries = len(iso3166_updates_json)
+        
         #display number of updates for countrys and the date period
-        body += "<h3>" + str(total_updates) + " updates found for " + str(total_countries) + " countries between period of " + \
-            str((current_datetime + relativedelta(months=-1)).strftime('%d-%m-%Y')) + " to " + str(current_datetime.strftime('%d-%m-%Y')) + ".</h3>" 
+        body += "## " + str(total_updates) + " updates found for " + str(total_countries) + " countries between period of " + \
+            str((current_datetime + relativedelta(months=-1)).strftime('%d-%m-%Y')) + " to " + str(current_datetime.strftime('%d-%m-%Y')) + ".\n"
 
         #iterate over updates in json, append to email body
         for code in list(iso3166_updates_json.keys()):
             
             #header displaying current country name and code
-            body += "<h2><u>" + "Country - " + iso3166.countries_by_alpha2[code].name + " (" + code + ")" + ":</u></h2>"
-            #flag_icon_attr = '<span class="flag-icon flag-icon-' + code.lower() + '" style="width: 100%;" </span>'
-            #body += "<span>" + "Country - " + iso3166.countries_by_alpha2[code].name + " (" + code + ")" + flag_icon_attr + "</span>"  
-
-            #get plaintext of country name and code
-            plain_text += "Country - " + iso3166.countries_by_alpha2[code].name + code + "\n"
+            body += "\n### " + "Country - " + iso3166.countries_by_alpha2[code].name + " (" + code + ") " + flag.flag(code) + ":\n"
 
             #convert json object to str, so it can be appended to body
             temp = json.dumps(iso3166_updates_json[code])
-
-            #append country updates to body within p tag
-            body += "<p>"
 
             row_count = 0
             #iterate over all update rows for each country in object, appending to html body
@@ -153,42 +143,24 @@ def check_iso3166_updates_main(request):
                 #increment row count which numbers each country's updates if more than 1
                 if (len(iso3166_updates_json[code]) > 1):
                     row_count = row_count + 1
-                    body += "<h4>" + str(row_count) + ".)" + "</h4>"
+                    body += str(row_count) + ".)"
 
                 #output all row field values 
                 for key, val in row.items():
-                    body += "<h4>" + str(key) + ": " + str(val)
+                    body += "<ins>" + str(key) + ":</ins> " + str(val) + "<br>"
 
-                #close h4 and p tag
-                body += "</h4></p>"
-        
-        #close body and html tags
-        body += "</body></html>"
+        #add attributes to data json 
+        issue_json["body"] = body
+        issue_json["assignee"] = "amckenna41"
+        issue_json["labels"] = ["iso3166-updates", "iso366-2", str(current_datetime.strftime('%d-%m-%Y'))]
 
-        #create instance of MIME (Multipurpose Internet Mail Extensions (MIME)) object,
-        # an Internet standard that extends the format of email to support: Text in 
-        #  character sets other than ASCII, initilaise subject and to and from 
-        msg = MIMEMultipart('alternative')
-        msg['Subject'] = subject
-        msg['From'] = _from_email
-        msg['To'] = _to_email
+        #api url and headers
+        issue_url = "https://api.github.com/repos/" + os.environ["github-owner"] + "/" + os.environ["github-repo"] + "/issues"
+        headers = {'Content-Type': "application/vnd.github+json", 
+            "Authorization": "token " + os.environ["github-api-token"]}
 
-        #record the MIME types of both parts - text/plain and text/html.
-        part1 = MIMEText(plain_text, 'plain')
-        part2 = MIMEText(body, 'html')
-
-        #attach parts into message container, according to RFC 2046, the last part 
-        #of a multipart message, in this case the HTML message, is best and preferred.
-        msg.attach(part1)
-        msg.attach(part2)
-
-        #create ssl context object
-        context = ssl.create_default_context()
-
-        #send email using gmail server (port 465) and smtp library 
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-            smtp.login(_from_email, _password)
-            smtp.sendmail(_from_email, _to_email, msg.as_string())
+        #make post request to github repo using api
+        github_post_request = requests.post(issue_url, data=json.dumps(issue_json), headers=headers)
 
     def update_json(iso3166_updates_json):
         """
@@ -250,19 +222,10 @@ def check_iso3166_updates_main(request):
 
     #if update object not empty - there are updates call send_email and update_json function
     if (current_iso3166_updates != {}):
-        send_email(current_iso3166_updates)
+        create_issue(current_iso3166_updates)
         update_json(current_iso3166_updates)
         return_message = "ISO3166-2 updates found."
     else:
         return_message = "No ISO3166-2 updates found."
 
     return return_message
-
-#Steps for calling an authenticated Cloud Function
-#1.) https://cloud.google.com/functions/docs/securing/authenticating#functions-bearer-token-example-python
-#2.) curl -H "Authorization: bearer $(gcloud auth print-identity-token)" https://us-central1-iso3166-updates.cloudfunctions.net/check-for-iso3166-updates
-#3.)curl -m 460 -X POST https://us-central1-iso3166-updates.cloudfunctions.net/check-for-iso3166-updates \
-# -H "Authorization: bearer $(gcloud auth print-identity-token)" \
-# -H "Content-Type: application/json" \
-# -d '{}'
-

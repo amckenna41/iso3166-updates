@@ -1,7 +1,7 @@
 # iso3166-updates
 
 [![iso3166_updates](https://img.shields.io/pypi/v/iso3166-updates)](https://pypi.org/project/iso3166-updates/)
-[![pytest](https://github.com/amckenna41/iso3166-updates/workflows/Building%20and%20Testing%20%F0%9F%90%8D/badge.svg)](https://github.com/amckenna41/iso3166-updates/actions?query=workflowBuilding%20and%20Testing%20%F0%9F%90%8D)
+[![pytest](https://github.com/amckenna41/iso3166-updates/workflows/Building%20and%20Testing/badge.svg)](https://github.com/amckenna41/iso3166-updates/actions?query=workflowBuilding%20and%20Testing)
 [![Platforms](https://img.shields.io/badge/platforms-linux%2C%20macOS%2C%20Windows-green)](https://pypi.org/project/iso3166-updates/)
 [![License: MIT](https://img.shields.io/github/license/amckenna41/iso3166-updates)](https://opensource.org/licenses/MIT)
 <!-- [![CircleCI](https://circleci.com/gh/amckenna41/iso3166-updates.svg?style=svg&circle-token=d860bb64668be19d44f106841b80eb47a8b7e7e8)](https://app.circleci.com/pipelines/github/amckenna41/iso3166-updates) -->
@@ -14,7 +14,7 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/ISO_Logo_%28Red_square%29.svg" alt="iso" height="200" width="300"/>
 </div>
 
-> Automated scripts that check for any updates/changes to the ISO 3166-1 and ISO 3166-2 country codes and naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui). Available via a Python software package and API; a demo of both is available [here](https://colab.research.google.com/drive/1oGF3j3_9b_g2qAmBtv3n-xO2GzTYRJjf?usp=sharing).
+> Automated scripts that check for any updates/changes to the ISO 3166-1 and ISO 3166-2 country codes and naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui). Available via a Python software package and API; a demo of both is available [here][demo].
 
 Table of Contents
 -----------------
@@ -22,8 +22,8 @@ Table of Contents
   * [Requirements](#requirements)
   * [Installation](#installation)
   * [Usage](#usage)
-  * [Issues](#Issues)
   * [Directories](#Directories)
+  * [Issues](#Issues)
   * [Contact](#contact)
   * [References](#references)
 
@@ -50,14 +50,14 @@ Updates
 **Last Updated:**
 
 The list of ISO 3166-2 updates was last updated on <strong>Nov 2022</strong>. 
-The object storing all updates both locally (iso3166-updates.json) and on the API are consistenly checked for the latest updates using a Cloud Function ([iso3166-check-for-updates](https://github.com/amckenna41/iso3166-updates/tree/main/iso3166-check-for-updates)). The function uses the `iso3166-updates` Python software to pull all latest updates from all ISO3166-2 wiki's to check for the latest updates within a certain period e.g the past 3 months. The function compares the generated output with that of the updates json in the Google Cloud Storage bucket and will replace this json to integrate the latest updates found such that the main GCP Cloud Function returns the latest data. 
+The object storing all updates both locally (iso3166-updates.json) and on the API are consistenly checked for the latest updates using a Cloud Function ([iso3166-check-for-updates](https://github.com/amckenna41/iso3166-updates/tree/main/iso3166-check-for-updates)). The function uses the `iso3166-updates` Python software to pull all the latest updates/changes from all ISO3166-2 wiki's to check for the latest updates within a certain period e.g the past 3 months. The function compares the generated output with that of the updates json currently in the Google Cloud Storage bucket and will replace this json to integrate the latest updates found such that the main GCP Cloud Function returns the latest data. Additionally, a GitHub Issue in the `iso3166-2` repository will be automatically created that outlines all updates/changes that need to be implemented into the `iso3166-2` JSONs and repo.
 Ultimately, this function ensures that the software and assoicated APIs are up-to-date with the latest ISO3166-2 information for all countries/territories/subdivisions etc.
 
 API
 ---
 An API is available that can be used to extract any applicable updates for a country via a URL. The API is available at the URL:
 
->https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates (https://www.iso3166-updates.com temporarily offline)
+> https://www.iso3166-updates.com/api
 
 Two query string parameters/paths are available in the API. The 2 letter alpha2 country code can be appeneded to the url as a query string parameter - "?alpha2=JP" - or appended to the base url - "/alpha2/YE". A single alpha2 or list of them can be passed to the API (e.g "FR", "DE", "GY", "HU", "ID"). The year parameter can be a specific year, year range, or a cut-off year to get updates less than/more than a year (e.g "2017", "2010-2015", "<2009", ">2002"). The API is hosted and built using GCP, with a Cloud Function being used in the backend which is fronted by an api gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON with all ISO 3166 updates. A complete diagram of the architecture is shown below.
 
@@ -119,14 +119,15 @@ import iso3166_updates as iso3166_updates
   #                       Whether to concatenate updates of individual countrys into the same json file or seperate.
 ```
 
+**Get all listed changes/updates for all countries which happens by default if no alpha2 codes specified in input param, export csv and json to folder "iso3166-updates":**
+```python
+iso3166_updates.get_updates(export_folder="iso3166-updates", export_json=1, export_csv=1)
+```
+
 **Get all listed changes/updates for Andorra from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:AD), export csv and json to folder "iso3166-updates":**
 ```python
 iso3166_updates.get_updates("AD", export_folder="iso3166-updates", export_json=1, export_csv=1)
 ```
-
-<!-- def get_updates(alpha2_codes, year=[''], export_filename="iso3166-updates",
-        export_json_filename="iso3166-updates", export_folder="../test/iso3166-updates", 
-        concat_updates=True, export_json=True, export_csv=False): -->
 
 **Get all listed changes/updates for BA, DE, FR, HU, PY, export only JSON of updates to export folder "iso3166-updates":**
 ```python
@@ -226,6 +227,7 @@ Support
 
 [Back to top](#TOP)
 
+[demo]: https://colab.research.google.com/drive/1oGF3j3_9b_g2qAmBtv3n-xO2GzTYRJjf?usp=sharing
 [python]: https://www.python.org/downloads/release/python-360/
 [pandas]: https://pandas.pydata.org/
 [numpy]: https://numpy.org/

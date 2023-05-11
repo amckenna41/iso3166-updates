@@ -39,9 +39,16 @@ jobs:
       - name: Call Updates Func
         run: |
           gcloud functions add-iam-policy-binding iso3166-updates --member=serviceAccount:iso3166-updates@iso3166-updates.iam.gserviceaccount.com --role=roles/cloudfunctions.invoker
-          curl -H "Authorization: bearer $(gcloud auth print-identity-token)" https://us-central1-iso3166-updates.cloudfunctions.net/check-for-iso3166-updates
+          curl -H "Authorization: bearer $(gcloud auth print-identity-token)" ${{ secrets.GCP_CHECK_FOR_UPDATES_URL }}
 
 # curl -m 460 -X POST https://us-central1-iso3166-updates.cloudfunctions.net/check-for-iso3166-updates \
+# -H "Authorization: bearer $(gcloud auth print-identity-token)" \
+# -H "Content-Type: application/json" \
+# -d '{}'
+
+#1.) https://cloud.google.com/functions/docs/securing/authenticating#functions-bearer-token-example-python
+#2.) curl -H "Authorization: bearer $(gcloud auth print-identity-token)" https://us-central1-iso3166-updates.cloudfunctions.net/check-for-iso3166-updates
+#3.)curl -m 460 -X POST https://us-central1-iso3166-updates.cloudfunctions.net/check-for-iso3166-updates \
 # -H "Authorization: bearer $(gcloud auth print-identity-token)" \
 # -H "Content-Type: application/json" \
 # -d '{}'

@@ -10,7 +10,6 @@ def iso3166_updates_main(request):
     Google Cloud Function for iso3166-updates API. This function can take
     country, alpha2 code and year as input parameters and return the relevant 
     ISO3166 updates for 1 or more input countries.
-
     Parameters
     ----------
     :request : (flask.Request)
@@ -23,10 +22,13 @@ def iso3166_updates_main(request):
     """
     #initialise storage client
     storage_client = storage.Client()
-    #create a bucket object for the bucket
-    bucket = storage_client.get_bucket("iso3166-updates")
+    try:
+        #create a bucket object for the bucket
+        bucket = storage_client.get_bucket("iso3166-updates")
+    except google.cloud.exceptions.NotFound:
+        print("iso3166-updates bucket name not found.")
     #create a blob object from the filepath
-    blob = bucket.blob("iso3166-updates.json")       
+    blob = bucket.blob("iso3166-updates.json")      
 
     #get input arguments as json
     request_json = request.get_json()
@@ -70,6 +72,7 @@ def iso3166_updates_main(request):
         except:
             raise TypeError("Invalid data type for months parameter, cannot cast to int.")
 
+    print("months", months)
     #if no input parameters set then return all country update updates_data
     if (year == [] and alpha2_code == [] and months == []):
         return updates_data
@@ -151,7 +154,7 @@ def iso3166_updates_main(request):
         input_data = iso3166_updates
     
     #correct column order
-    reordered_columns = ['Date Issued', 'Edition/Newsletter', 'Description of change in newsletter', 'Code/Subdivision change']
+    # reordered_columns = ['Date Issued', 'Edition/Newsletter', 'Description of change in newsletter', 'Code/Subdivision change']
 
     #use temp object to get updates data either for specific country/alpha2 code or for all
     #countries, dependant on input_alpha2_codes and input_data vars above
@@ -160,7 +163,7 @@ def iso3166_updates_main(request):
             temp_iso3166_updates[code] = []
             for update in range(0, len(input_data[code])):
                 #reorder dict columns
-                input_data[code][update] = {col: input_data[code][update][col] for col in reordered_columns}
+                # input_data[code][update] = {col: input_data[code][update][col] for col in reordered_columns}
                
                 #convert year in Date Issued column to string of year
                 temp_year = str(datetime.strptime(input_data[code][update]["Date Issued"].replace('\n', ''), '%Y-%m-%d').year)
@@ -196,17 +199,20 @@ def iso3166_updates_main(request):
             temp_iso3166_updates[code] = [] 
             for update in range(0, len(input_data[code])):
                 #reorder dict columns
-                input_data[code][update] = {col: input_data[code][update][col] for col in reordered_columns}
+                # input_data[code][update] = {col: input_data[code][update][col] for col in reordered_columns}
                 
                 #convert date in Date Issued column to date object
                 row_date = (datetime.strptime(input_data[code][update]["Date Issued"], "%Y-%m-%d"))
                 
+                print("row_date", row_date)
                 #calculate difference in dates
                 date_diff = relativedelta.relativedelta(current_datetime, row_date)
-                
+                print("date_diff", date_diff)
+
                 #calculate months difference
                 diff_months = date_diff.months + (date_diff.years * 12)
-                
+                print("diff_months", diff_months)
+
                 #if current updates row is <= month input param then add to temp object
                 if (diff_months <= months):
                     temp_iso3166_updates[code].append(input_data[code][update])
@@ -220,4 +226,4 @@ def iso3166_updates_main(request):
     #set main updates dict to temp one
     iso3166_updates = temp_iso3166_updates
 
-    return iso3166_updates
+    return iso3166_updates 

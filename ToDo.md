@@ -1,8 +1,7 @@
 # To Do 
-
 - [ ] Create CRON job that runs the script every few months using second cloud func, checking for updates on all the Wikis and exporting and updating the neccessary files (https://www.youtube.com/watch?v=2OwLb-aaiBQ). 
 - [ ] Check variable naming conventions (https://visualgit.readthedocs.io/en/latest/pages/naming_convention.html).
-- [ ] Check output of bandit and flake8 check.
+- [X] Check output of bandit and flake8 check.
 - [X] Export updates to csv, dataframe.
 - [X] Create API so each ISO3166-2 update info can be retrieved as json format, using GCP.
 - [X] Create demo using python notebook.
@@ -96,7 +95,7 @@ Edition/Newsletter - should be OBP.
 - [ ] https://cloud.google.com/api-gateway/docs/passing-data
 - [ ] Test concat_updates param in unit tests.
 - [X] Add path-ignore keywords to GitHub Action.
-- [ ] Update api/readme to incorporate new api gateway.
+- [X] Update api/readme to incorporate new api gateway.
 - [X] Update api config / gateway if api config file changed. Documentation requires new one to be created. Create new one (iso3166-updates-config-2), delete old one (iso3166-updates), then create new one (iso3166-updates), delete old new one (iso3166-updates-config-2) 
 - [ ] Add api gateway permission to SA.
 - [ ] Add terraform script for cloud arch.
@@ -110,7 +109,21 @@ Edition/Newsletter - should be OBP.
 - [ ] Remove all camel casing function names/vars, change to underscores and lowercase (https://peps.python.org/pep-0008/#function-and-variable-names).
 - [ ] Move from GCP to vercel.
 - [ ] Add example img of email to iso3166-check-for-updates dir.
-- [ ] Remove generate report from workflow
+- [X] Remove generate report from workflow
+- [X] Create Python Flask App -> Deploy to Vercel -> Connect to domain.
+- [ ] Convert json into sqlite3 database table (columns: country, year etc).
+- [X] Make bucket and iso3166-updates.json file publicly accessible.
+- [X] When updating file in bucket, ensure it is publicy accessible.
+- [ ] Create vercel deployment pipeline in Github workflow.
+- [ ] Create API endpoint for https://iso3166-updates.com/api and make main https://iso3166-updates.com a more visual frontend for the app with a dropdown of available countries, years etc.
+- [X] Fix pytest badge on readme.
+- [ ] Unit test new api to double check invalid responses are returning correct message and status.
+- [ ] When check-for-updates is called and updates are found, programmatically raise an issue in the relevant repositories with a formatted description of the updates found (https://stackoverflow.com/questions/31767596/github-is-there-a-way-to-programmatically-file-an-issue). Instead of creating a new Issue each time, could update the same Issue with new data (https://gist.github.com/JeffPaine/3145490?permalink_comment_id=2558013).
+- [ ] Change default month in check-for-updates from 12 to 6.
+- [ ] Update api readmes to reflect new Create Issue functionality.
+- [ ] Reformat Date Issued from 2022-11-29 to 29-11-2022 (dd-mm-yyyy), mention that it's formatted as such as it's the most common format.
+- [ ] Have example on readme for getting all updates for all countries. 
+- [ ] After reformatting Date Issued, dates are out of order '27-11-2015' before 15-11-2016. May need to sort by column then convert into new format.
 <!-- 
 Create new config, update config file
 gcloud api-gateway api-configs create NEW_CONFIG_ID --api=MY_API --openapi-spec=openapi2-functions.yaml 
