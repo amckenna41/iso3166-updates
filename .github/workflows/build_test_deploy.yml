@@ -170,7 +170,7 @@ jobs:
       #       --runtime=python310 --trigger-http --allow-unauthenticated --region=us-central1 \
       #       --entry-point=check_for_updates_main --timeout=300s --memory=256 \
       #       --service-account="iso3166-updates@iso3166-updates.iam.gserviceaccount.com" 
-          gcloud functions describe ${{ secrets.GCP_FUNCTION_UPDATES }}
+          # gcloud functions describe ${{ secrets.GCP_FUNCTION_UPDATES }}
 
       # #get datetime env var
       # - name: Get current datetime
