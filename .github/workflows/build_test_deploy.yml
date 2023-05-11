@@ -152,24 +152,24 @@ jobs:
             updates:
               - 'iso3166-check-for-updates/**'
 
-      #deploy updated api Google Cloud function only if change made to its dir, using paths filter action
-      - name: Deploy API Google Cloud Func
-        if: steps.filter.outputs.api == 'true'
-        run: |
-          gcloud functions deploy ${{ secrets.GCP_FUNCTION }} --source="iso3166-updates-api" \
-            --runtime=python310 --trigger-http --allow-unauthenticated --region=us-central1 \
-            --entry-point=iso3166_updates_main --timeout=60s --memory=256 \
-            --service-account="iso3166-updates@iso3166-updates.iam.gserviceaccount.com" 
-          gcloud functions describe ${{ secrets.GCP_FUNCTION }}
+      # #deploy updated api Google Cloud function only if change made to its dir, using paths filter action
+      # - name: Deploy API Google Cloud Func
+      #   if: steps.filter.outputs.api == 'true'
+      #   run: |
+      #     gcloud functions deploy ${{ secrets.GCP_FUNCTION }} --source="iso3166-updates-api" \
+      #       --runtime=python310 --trigger-http --allow-unauthenticated --region=us-central1 \
+      #       --entry-point=iso3166_updates_main --timeout=60s --memory=256 \
+      #       --service-account="iso3166-updates@iso3166-updates.iam.gserviceaccount.com" 
+      #     gcloud functions describe ${{ secrets.GCP_FUNCTION }}
 
-      #deploy updated check-for-updates Google Cloud function only if change made to its dir, using paths filter action
-      - name: Deploy check-for-updates Google Cloud Func
-        if: steps.filter.outputs.updates == 'true'
-        run: |
-          gcloud functions deploy ${{ secrets.GCP_FUNCTION_UPDATES }} --source="iso3166-check-for-updates" \
-            --runtime=python310 --trigger-http --allow-unauthenticated --region=us-central1 \
-            --entry-point=check_for_updates_main --timeout=300s --memory=256 \
-            --service-account="iso3166-updates@iso3166-updates.iam.gserviceaccount.com" 
+      # #deploy updated check-for-updates Google Cloud function only if change made to its dir, using paths filter action
+      # - name: Deploy check-for-updates Google Cloud Func
+      #   if: steps.filter.outputs.updates == 'true'
+      #   run: |
+      #     gcloud functions deploy ${{ secrets.GCP_FUNCTION_UPDATES }} --source="iso3166-check-for-updates" \
+      #       --runtime=python310 --trigger-http --allow-unauthenticated --region=us-central1 \
+      #       --entry-point=check_for_updates_main --timeout=300s --memory=256 \
+      #       --service-account="iso3166-updates@iso3166-updates.iam.gserviceaccount.com" 
           gcloud functions describe ${{ secrets.GCP_FUNCTION_UPDATES }}
 
       # #get datetime env var
