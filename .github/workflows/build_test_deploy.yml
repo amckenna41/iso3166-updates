@@ -130,27 +130,27 @@ jobs:
           if-no-files-found: error 
           
 ### GCP pipeline stopped due to cost ###
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [test, linter] #previous jobs must complete first
-    steps:  
-      - uses: actions/checkout@v3 #checkout repo 
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: [test, linter] #previous jobs must complete first
+  #   steps:  
+  #     - uses: actions/checkout@v3 #checkout repo 
       
-      #only deploy GCP function if changes made to its dir, using path filters action
-      #only upload iso3166-updates.json to GCP Storage if changes made to it
-      #only 
-      - uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          filters: |
-            api:
-              - 'iso3166-updates-api/**'
-            json:
-              - 'iso3166-updates.json'
-            config:
-              - 'iso3166-updates-api/api-config.yml'
-            updates:
-              - 'iso3166-check-for-updates/**'
+  #     #only deploy GCP function if changes made to its dir, using path filters action
+  #     #only upload iso3166-updates.json to GCP Storage if changes made to it
+  #     #only 
+  #     - uses: dorny/paths-filter@v2
+  #       id: filter
+  #       with:
+  #         filters: |
+  #           api:
+  #             - 'iso3166-updates-api/**'
+  #           json:
+  #             - 'iso3166-updates.json'
+  #           config:
+  #             - 'iso3166-updates-api/api-config.yml'
+  #           updates:
+  #             - 'iso3166-check-for-updates/**'
 
       # #deploy updated api Google Cloud function only if change made to its dir, using paths filter action
       # - name: Deploy API Google Cloud Func
