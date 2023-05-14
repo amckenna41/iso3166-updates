@@ -12,7 +12,7 @@ class ISO3166_Updates(unittest.TestCase):
      
     def setUp(self):
         """ Initialise test variables including base urls for API. """
-        # self.base_url = "https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates"
+        # self.base_url = "https://iso3166-updates-frontend.vercel.app/"
         self.base_url = "https://www.iso3166-updates.com/api" 
 
         self.__version__ = metadata('iso3166_updates')['version']
@@ -682,7 +682,7 @@ class ISO3166_Updates(unittest.TestCase):
         test_request = requests.get(self.base_url + '?months=' + test_month_5, headers=self.user_agent_header).json()
 
         self.assertIsInstance(test_request, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request)))
-        self.assertEqual(len(test_request), 61, "Expected 61 rows returned from API, got {}.".format(len(test_request)))
+        self.assertEqual(len(test_request), 60, "Expected 60 rows returned from API, got {}.".format(len(test_request)))
 #6.)
         test_request = requests.get(self.base_url + '?months=' + test_month_6, headers=self.user_agent_header).json()
 

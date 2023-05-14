@@ -38,7 +38,7 @@ def check_iso3166_updates_main(request):
     #get list of any input parameters to function
     request_json = request.get_json()
 
-    #parse months var from input params, if applicable
+    #parse months var from input params, use default value of 6 if param empty
     if request.args and 'months' in request.args:
         if (not(request.args.get('months') is None) or (request.args.get('months') != "")):
             months = request.args.get('months')
@@ -73,7 +73,7 @@ def check_iso3166_updates_main(request):
         for row in range(0, len(iso3166_json[alpha2])):
             if (iso3166_json[alpha2][row]["Date Issued"] != ""): #go to next iteration if no Date Issued in row
                 #convert str date into date object
-                row_date = (datetime.strptime(iso3166_json[alpha2][row]["Date Issued"], "%Y-%m-%d"))
+                row_date = (datetime.strptime(iso3166_json[alpha2][row]["Date Issued"], "%d-%m-%Y"))
                 #compare date difference from current row to current date
                 date_diff = relativedelta(current_datetime, row_date)
                 #calculate date difference in months
@@ -87,18 +87,21 @@ def check_iso3166_updates_main(request):
         if (current_iso3166_updates[alpha2] == []):
             current_iso3166_updates.pop(alpha2, None)
     
-    def create_issue(iso3166_updates_json):
+    def create_issue(iso3166_updates_json, month_range):
         """
-        Create a GitHub issue on the iso3166-2 repository, using the GitHub
-        api, if any updates/changes are made to any entries in the ISO3166-2. 
-        The Issue will be formatted in a way to clearly outline any of the 
-        updates/changes to be made to the JSONs in the iso3166-2 repo. 
+        Create a GitHub issue on the iso3166-2 and iso3166-flag-icons repository, 
+        using the GitHub api, if any updates/changes are made to any entries in 
+        the ISO3166-2. The Issue will be formatted in a way to clearly outline 
+        any of the updates/changes to be made to the JSONs in the iso3166-2 and 
+        iso3166-flag-icons repo. 
 
         Parameters
         ----------
         :iso3166_updates_json : json
            json object with all listed iso3166-2 updates in specified month 
            range. 
+        :month_range : int
+            number of past months updates were pulled from.
 
         Returns
         -------
@@ -110,24 +113,24 @@ def check_iso3166_updates_main(request):
         [1]: https://developer.github.com/v3/issues/#create-an-issue
         """
         issue_json = {}
-        issue_json["title"] = "ISO3166-2 Updates: " + str(current_datetime.strftime('%d-%m-%Y'))
+        issue_json["title"] = "ISO 3166-2 Updates: " + str(current_datetime.strftime('%d-%m-%Y')) + " (" + ', '.join(list(iso3166_updates_json)) + ")" 
         
         #get total sum of updates for all countrys in json
         total_updates = sum([len(iso3166_updates_json[code]) for code in iso3166_updates_json])
         total_countries = len(iso3166_updates_json)
 
         #body of Github Issue
-        body = "# ISO3166-2 Updates\n"
+        body = "# ISO 3166-2 Updates\n"
 
         #get total sum of updates for all countrys in json
         total_updates = sum([len(iso3166_updates_json[code]) for code in iso3166_updates_json])
         total_countries = len(iso3166_updates_json)
         
         #display number of updates for countrys and the date period
-        body += "## " + str(total_updates) + " updates found for " + str(total_countries) + " countries between period of " + \
-            str((current_datetime + relativedelta(months=-1)).strftime('%d-%m-%Y')) + " to " + str(current_datetime.strftime('%d-%m-%Y')) + ".\n"
+        body += "### " + str(total_updates) + " updates found for " + str(total_countries) + " countries between the " + str(month_range) + " month period of " + \
+            str((current_datetime + relativedelta(months=-month_range)).strftime('%d-%m-%Y')) + " to " + str(current_datetime.strftime('%d-%m-%Y')) + ".\n"
 
-        #iterate over updates in json, append to email body
+        #iterate over updates in json, append to updates object
         for code in list(iso3166_updates_json.keys()):
             
             #header displaying current country name and code
@@ -155,12 +158,14 @@ def check_iso3166_updates_main(request):
         issue_json["labels"] = ["iso3166-updates", "iso366-2", str(current_datetime.strftime('%d-%m-%Y'))]
 
         #api url and headers
-        issue_url = "https://api.github.com/repos/" + os.environ["github-owner"] + "/" + os.environ["github-repo"] + "/issues"
+        issue_url = "https://api.github.com/repos/" + os.environ["github-owner"] + "/" + os.environ["github-repo-1"] + "/issues"
+        issue_url_2 = "https://api.github.com/repos/" + os.environ["github-owner"] + "/" + os.environ["github-repo-2"] + "/issues"
         headers = {'Content-Type': "application/vnd.github+json", 
             "Authorization": "token " + os.environ["github-api-token"]}
 
-        #make post request to github repo using api
+        #make post request to github repos using api
         github_post_request = requests.post(issue_url, data=json.dumps(issue_json), headers=headers)
+        github_post_request = requests.post(issue_url_2, data=json.dumps(issue_json), headers=headers)
 
     def update_json(iso3166_updates_json):
         """
@@ -198,7 +203,7 @@ def check_iso3166_updates_main(request):
                 if not (update in previous_updates_data[code]):
                     updated_json[code].append(update)
 
-        #convert json objects into str
+        #convert json objects into str using json.dumps
         previous_updates_data_str = json.dumps(previous_updates_data, sort_keys=True)
         updated_json_str = json.dumps(updated_json, sort_keys=True)
 
@@ -214,15 +219,16 @@ def check_iso3166_updates_main(request):
             
             #create blob for updates JSON
             blob = bucket.blob('iso3166-updates.json')
+            
             #upload new updated json using gcp sdk 
             blob.upload_from_filename(tmp_updated_json_path)
     
     #all GCP cloud funcs need to return something
     return_message = ""
 
-    #if update object not empty - there are updates call send_email and update_json function
+    #if update object not empty - there are updates call update_json and create_issue functions
     if (current_iso3166_updates != {}):
-        create_issue(current_iso3166_updates)
+        create_issue(current_iso3166_updates, months)
         update_json(current_iso3166_updates)
         return_message = "ISO3166-2 updates found."
     else:

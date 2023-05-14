@@ -12,6 +12,11 @@ Usage
 import iso3166_updates as iso3166_updates
 ```
 
+**Get all listed changes/updates for all countries which happens by default if no alpha-2 codes specified in input param, export csv and json to folder "iso3166-updates":**
+```python
+iso3166_updates.get_updates(export_folder="iso3166-updates", export_json=1, export_csv=1)
+```
+
 ## Get all listed changes/updates for Andorra from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:AD)
 ```python
 iso3166_updates.get_updates("AD")

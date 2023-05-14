@@ -59,7 +59,7 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
     :export_folder : str (default = "../iso3166-updates")
         folder name to store all csv outputs for all country's ISO3166-2 updates. 
     :concat_updates : bool (default = True)
-        if multiple alpha-2 codes input, concatenate updates into one json file or into seperately
+        if multiple alpha-2 codes input, concatenate updates into one JSOn file or into seperately
         named files in export folder. Not available for csv output.
     :export_json : bool (default = True)
         export all ISO3166 updates for inputted country's into json format. 
@@ -68,7 +68,9 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
 
     Returns
     -------
-    None
+    :all_changes : dict
+        dictionary of all found ISO3166 updates from users inputted alpha2 codes and or year
+        parameter values.
     """
     year_range = False
     greater_than = False
@@ -79,12 +81,16 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
         raise TypeError('alpha2_codes input param should be a 2 letter '
             'ISO3166 alpha-2 code or a list of the same, got input of type {}.'.format(type(alpha2_codes)))
 
-    #if single str input for alpha2 codes param then convert to array, remove whitespace
-    if isinstance(alpha2_codes, str):
+    #if single str input for alpha-2 codes param then convert to array, remove whitespace
+    if (isinstance(alpha2_codes, str)):
         alpha2_codes = alpha2_codes.replace(' ', '').split(',')
 
+    #if list with 1 string of multiple alpha-2 codes, convert to multiple list elements e.g ['HI, LA'] will be converted to ['HI', 'LA']
+    if (isinstance(alpha2_codes, list) and len(alpha2_codes) == 1 and ',' in alpha2_codes[0]):
+        alpha2_codes = alpha2_codes[0].replace(' ', '').split(',')
+
     #if single str input for Year param then convert to array, remove whitespace
-    if isinstance(year, str):
+    if (isinstance(year, str)):
         year = year.replace(' ', '').split(',')
 
     #use all ISO3166 codes if invalid alpha-2 code input, otherwise convert alpha-2 to array
@@ -142,11 +148,7 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
 
     #iterate over all input ISO country codes
     for alpha2 in alpha2_codes:
-
-        # if len(alpha2_codes) == 1: 
-        #     export_fname = export_filename + alpha-2  
-        # else:
-        #     export_fname += "," + alpha-2
+        
         export_fname = export_filename + '-' + alpha2  
 
         #skip to next iteration if alpha-2 not valid
@@ -231,9 +233,11 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
             #convert date column into dd-mm-yyyy format  
             iso3166_df["Date Issued"] = iso3166_df["Date Issued"].apply(convert_date_format)
 
-            #export to csv
+            #export to csv, append extension if applicable
             if (export_csv): 
-                iso3166_df.to_csv(os.path.join(export_folder, export_fname + '.csv'), index=False)
+                if (os.path.splitext(export_json_filename)[1] != ".csv"):
+                    export_fname = export_fname + ".csv"
+                iso3166_df.to_csv(os.path.join(export_folder, export_fname), index=False)
         
             #add ISO updates to object of all ISO3166 updates, convert to json 
             all_changes[alpha2] = json.loads(iso3166_df.to_json(orient='records'))
@@ -241,10 +245,18 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
         #reset export filename var 
         export_fname = export_filename
 
-    #append extension to json filename, if applicable 
-    if (os.path.splitext(export_json_filename)[1] != "json"):
-        export_json_filename = export_json_filename + ".json"
+    #append list of alpha-2 codes to exported json filename if 10 or less codes input,
+    #and codes are not already in filename and the multiple outputs are to be concatenated (concat_updates=True)
+    if (len(alpha2_codes) <= 10 and not (any(code in export_json_filename for code in alpha2_codes)) and concat_updates==True):
+        alpha2_str = ','.join(alpha2_codes)
+        if (os.path.splitext(export_json_filename)[1] == ".json"):
+            export_json_filename = os.path.splitext(export_json_filename)[0]
+        export_json_filename = export_json_filename + "-" + alpha2_str + ".json"
 
+    #append extension to json filename, if applicable 
+    if (os.path.splitext(export_json_filename)[1] != ".json"):
+        export_json_filename = export_json_filename + ".json"
+        
     #export all ISO3166 updates to json, store in export folder dir
     if (export_json):
         if (all_changes):   #checking if all_changes obj isn't empty
@@ -260,6 +272,8 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
             
             print("All ISO3166 changes exported to folder {}.".format(export_folder))
     
+    return all_changes
+
 def get_updates_df(iso3166_updates_table, year=[], year_range=False, less_than=False, greater_than=False):
     """
     Convert parsed html table, from the Changes Section in the respective ISO3166-2 wiki
@@ -481,7 +495,7 @@ if __name__ == '__main__':
     parser.add_argument('-export_csv', '--export_csv', required=False, action="store_true", 
         help='Whether to export all found updates to csv files in export folder.')
     parser.add_argument('-concat_updates', '--concat_updates', action="store_true", default=True, required=False, 
-        help='Whether to concatenate updates of individual countrys into the same json file or seperate.')
+        help='Whether to concatenate updates of individual countrys into the same json file or individual. Only applies to JSON files, not CSVs.')
 
     #parse input args
     args = parser.parse_args()

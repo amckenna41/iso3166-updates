@@ -1,6 +1,6 @@
 # ISO3166 Updates API
 
-As well as the Python software package, an API is also available to access any updates to a country's ISO3166-2 codes via a URL endpoint. You can search for a particular country via it's name or its 2 letter alpha 2 code (e.g EG, FR, DE) via the 'name' and 'alpha2' query parameters appended to the API URL. Additionally, the 'year' query parameter allows you to search for updates to 1 or more countries via the updates for a selected year, multiple years or a year range. If no query parameters are included then the whole dataset with all updates for all countries will be returned. 
+As well as the Python software package, an API is also available to access any updates to a country's ISO 3166-2 codes via a URL endpoint. You can search for a particular country using its 2 letter alpha-2 code or 3 letter alpha-3 code (e.g EG, FR, DE or EGY, FRA, DEU) via 'alpha2' query parameter appended to the API URL. Additionally, the 'year' query parameter allows you to search for updates to 1 or more countries for a selected year, multiple years or a year range (e.g 2008, 2000-2010, <2016). The 'month' query parameter accepts an integer representing the number of months of past updates to be returned (e.g 6, 9, 24) from the current date. If no query parameters are included then the whole dataset with all updates for all countries will be returned. 
 
 The main API endpoint is:
 
@@ -63,7 +63,7 @@ Get updates for a specific country e.g France, Germany, Hondurus
 ### Request
 `GET /alpha2/FR`
 
-    curl -i https://iso3166-updates.com/api?=alpha2=FR
+    curl -i https://iso3166-updates.com/api?alpha2=FR
 
 ### Response
     HTTP/2 200 
@@ -77,7 +77,7 @@ Get updates for a specific country e.g France, Germany, Hondurus
 ### Request
 `GET /alpha2/DE`
 
-    curl -i https://iso3166-updates.com/api?=alpha2=DE
+    curl -i https://iso3166-updates.com/api?alpha2=DE
 
 ### Response
     HTTP/2 200 
@@ -190,7 +190,7 @@ Get updates for a specific country for specified year e.g Andorra, Dominica for 
 ------------------------------------------------------------------------------------
 
 ### Request
-`GET /alpha2/AD/year/2014`
+`GET /alpha2/AD/year/2007`
 
     curl -i https://iso3166-updates.com/api?alpha2=AD&year=2007
 
@@ -206,7 +206,7 @@ Get updates for a specific country for specified year e.g Andorra, Dominica for 
 ### Request
 `GET /alpha2/DM/year/2007`
 
-    curl -i https://iso3166-updates.com?alpha2=DM&year=2007
+    curl -i https://iso3166-updates.com/api?alpha2=DM&year=2007
 
 ### Response
     HTTP/2 200 
@@ -264,7 +264,7 @@ Get updates for a specific country for specified year range e.g Bosnia, Haiti fo
 ### Request
 `GET /alpha2/HT/year/2009-2015`
 
-    curl -i https://iso3166-updates.com?alpha2=HT&year=2009-2015
+    curl -i https://iso3166-updates.com/api?alpha2=HT&year=2009-2015
 
 ### Response
     HTTP/2 200 
@@ -308,7 +308,7 @@ Get updates for a specific country less than/greater than specified year e.g Isr
 ### Request
 `GET /alpha2/IL/year/<2010`
 
-    curl -i https://iso3166-updates.com?alpha2=IL&year=<2010
+    curl -i https://iso3166-updates.com/api?alpha2=IL&year=<2010
 
 ### Response
     HTTP/2 200 
@@ -322,7 +322,7 @@ Get updates for a specific country less than/greater than specified year e.g Isr
 ### Request
 `GET /alpha2/LT/year/<2012`
 
-    curl -i https://iso3166-updates.com?alpha2=LT&year=>2012
+    curl -i https://iso3166-updates.com/api?alpha2=LT&year=>2012
 
 ### Response
     HTTP/2 200 

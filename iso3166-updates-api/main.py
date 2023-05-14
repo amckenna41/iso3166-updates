@@ -26,7 +26,7 @@ def iso3166_updates_main(request):
         #create a bucket object for the bucket
         bucket = storage_client.get_bucket("iso3166-updates")
     except google.cloud.exceptions.NotFound:
-        print("iso3166-updates bucket name not found.")
+        print("iso3166-updates bucket not found.")
     #create a blob object from the filepath
     blob = bucket.blob("iso3166-updates.json")      
 
@@ -72,7 +72,6 @@ def iso3166_updates_main(request):
         except:
             raise TypeError("Invalid data type for months parameter, cannot cast to int.")
 
-    print("months", months)
     #if no input parameters set then return all country update updates_data
     if (year == [] and alpha2_code == [] and months == []):
         return updates_data
@@ -198,20 +197,15 @@ def iso3166_updates_main(request):
         for code in input_alpha2_codes:
             temp_iso3166_updates[code] = [] 
             for update in range(0, len(input_data[code])):
-                #reorder dict columns
-                # input_data[code][update] = {col: input_data[code][update][col] for col in reordered_columns}
                 
                 #convert date in Date Issued column to date object
                 row_date = (datetime.strptime(input_data[code][update]["Date Issued"], "%Y-%m-%d"))
                 
-                print("row_date", row_date)
                 #calculate difference in dates
                 date_diff = relativedelta.relativedelta(current_datetime, row_date)
-                print("date_diff", date_diff)
 
                 #calculate months difference
                 diff_months = date_diff.months + (date_diff.years * 12)
-                print("diff_months", diff_months)
 
                 #if current updates row is <= month input param then add to temp object
                 if (diff_months <= months):

@@ -14,11 +14,13 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/ISO_Logo_%28Red_square%29.svg" alt="iso" height="200" width="300"/>
 </div>
 
-> Automated scripts that check for any updates/changes to the ISO 3166-1 and ISO 3166-2 country codes and naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui). Available via a Python software package and API; a demo of both is available [here][demo].
+> Automated scripts and API that check for any updates/changes to the ISO 3166-1 and ISO 3166-2 country codes and naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui). Available via a Python software package and API; a demo of both is available [here][demo].
 
 Table of Contents
 -----------------
   * [Introduction](#introduction)
+  * [API][#API]
+  * [Staying up to date](#stayinguptodate)
   * [Requirements](#requirements)
   * [Installation](#installation)
   * [Usage](#usage)
@@ -29,29 +31,21 @@ Table of Contents
 
 Introduction
 ------------
-`iso3166-updates` is a repo that consists of a series of scripts that check for any updates/changes to the ISO 3166-2 country codes and subdivision naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html). The ISO 3166 standard by the ISO defines codes for the names of countries, dependent territories, special areas of geographical interest, consolidated into the ISO 3166-1 standard [[1]](#references), and their principal subdivisions (e.g., provinces, states, departments, regions), which comprise the ISO 3166-2 standard [[2]](#references). 
+`iso3166-updates` is a repo that consists of a series of scripts that check for any updates/changes to the ISO 3166-2 country codes and subdivision naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html). The ISO 3166 standard by the ISO (International Organization for Standardisation) defines codes for the names of countries, dependent territories, special areas of geographical interest, consolidated into the ISO 3166-1 standard [[1]](#references), and their principal subdivisions (e.g., provinces, states, departments, regions), which comprise the ISO 3166-2 standard [[2]](#references). 
 
 The ISO 3166-1 was first published in 1974 and currently comprises 249 countries, 193 of which are sovereign states that are members of the United Nations [[1]](#references). The ISO 3166-2 was first published in 1998 and as of 29 November 2022 there are 5,043 codes defined in it [[2]](#references).
 
 ## Problem Statement:
 
-The ISO is a very dynamic organisation and regularly change/update/remove entries within its library of standards, including the ISO 3166. Additions/changes/deletions to country/territorial codes occur less often in the ISO 3166-1, but changes are more frequent for the ISO 3166-2 codes due to there being thousands more entries, thus it can be difficult to keep up with any changes to these codes. These changes can occur for a variety of geopolitical and bureaucratic reasons and are usually communicated via Newsletters on the ISO platform, their Online Browsing Platform (OBP) or via a database, which usually costs money to subscribe to [[3]](#references). Usually these updates are conveyed at the end of the year, with amendments and updates sometimes being published at various times throughout the year [[4]](#references). 
+The ISO is a very dynamic organisation and regularly change/update/remove entries within its library of standards, including the ISO 3166. Additions/changes/deletions to country/territorial codes occur less often in the ISO 3166-1, but changes are more frequent for the ISO 3166-2 codes due to there being thousands more entries, thus it can be difficult to keep up with any changes to these codes. These changes can occur for a variety of geopolitical and bureaucratic reasons and are usually communicated via Newsletters on the ISO platform, their Online Browsing Platform (OBP) or via a database, which usually costs money to subscribe to [[3]](#references). Usually these updates are conveyed at the end of the year, with amendments and updates occasionally published at various times throughout the year [[4]](#references). 
 
 This software and accompanying API makes it extremely easy to check for any new or historic updates to a country or set of country's ISO 3166-2 codes for free, with an easy-to-use interface and Python package and API, ensuring that you get the most up-to-date and accurate ISO 3166-2 codes and naming conventions.
 
-## Intended Audience:
-
-This software and accompanying API is for anyone working with country data at the ISO 3166 level. It's of high importance that the data that you are working with is correct and up-to-date, especially with consistent changes being posted every year since 2000 (except 2001 and 2006). Also, it's aimed not just at developers of ISO 3166 applications but for anyone working in that space, hence the creation of an easy-to-use API. 
-
 <strong> The earliest date for any ISO 3166 updates is 2000-06-21, and the most recent is 2022-11-29. </strong>
 
-Updates
--------
-**Last Updated:**
+## Intended Audience:
 
-The list of ISO 3166-2 updates was last updated on <strong>Nov 2022</strong>. 
-The object storing all updates both locally (iso3166-updates.json) and on the API are consistenly checked for the latest updates using a Cloud Function ([iso3166-check-for-updates](https://github.com/amckenna41/iso3166-updates/tree/main/iso3166-check-for-updates)). The function uses the `iso3166-updates` Python software to pull all the latest updates/changes from all ISO3166-2 wiki's to check for the latest updates within a certain period e.g the past 3 months. The function compares the generated output with that of the updates json currently in the Google Cloud Storage bucket and will replace this json to integrate the latest updates found such that the main GCP Cloud Function returns the latest data. Additionally, a GitHub Issue in the `iso3166-2` repository will be automatically created that outlines all updates/changes that need to be implemented into the `iso3166-2` JSONs and repo.
-Ultimately, this function ensures that the software and assoicated APIs are up-to-date with the latest ISO3166-2 information for all countries/territories/subdivisions etc.
+This software and accompanying API is for anyone working with country data at the ISO 3166 level. It's of high importance that the data that you are working with is correct and up-to-date, especially with consistent changes being posted every year since 2000 (excluding 2001 and 2006). Also, it's aimed not just at developers of ISO 3166 applications but for anyone working in that space, hence the creation of an easy-to-use API (https://iso3166-updates.com). 
 
 API
 ---
@@ -59,14 +53,24 @@ An API is available that can be used to extract any applicable updates for a cou
 
 > https://www.iso3166-updates.com/api
 
-Two query string parameters/paths are available in the API. The 2 letter alpha2 country code can be appeneded to the url as a query string parameter - "?alpha2=JP" - or appended to the base url - "/alpha2/YE". A single alpha2 or list of them can be passed to the API (e.g "FR", "DE", "GY", "HU", "ID"). The year parameter can be a specific year, year range, or a cut-off year to get updates less than/more than a year (e.g "2017", "2010-2015", "<2009", ">2002"). The API is hosted and built using GCP, with a Cloud Function being used in the backend which is fronted by an api gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON with all ISO 3166 updates. A complete diagram of the architecture is shown below.
+Three query string parameters/paths are available in the API - `alpha2`, `year` and `months`. The 2 letter alpha-2 country code can be appeneded to the url as a query string parameter - "?alpha2=JP". A single alpha-2 or list of them can be passed to the API (e.g "FR", "DE", "HU, ID, MA"). The year parameter can be a specific year, year range, or a cut-off year to get updates less than/more than a year (e.g "?year=2017", "2010-2015", "<2009", ">2002"). Finally, the months parameter will gather all updates for 1 or more alpha-2 codes from a number of months from the present day (e.g "?month=6", "?month=48").
+
+The API was hosted and built using GCP, with a Cloud Function being used in the backend which is fronted by an api gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON with all ISO 3166 updates. A complete diagram of the architecture is shown below. Although, due to the cost of infrastructure the hosting was switched to Vercel (https://vercel.com/).
 
 The API documentation and usage with all useful commands and examples to the API is available on the [README](https://github.com/amckenna41/iso3166-updates/blob/main/iso3166-updates-api/README.md) of the iso3166-updates-api folder. 
 
- <!-- "?year" can be a specific year or year range to get updates for (e.g "2017", "2010-2015"), you can also get updates less than or greater than a year (e.g ">2004", "<2020") and "?months" which allows you to get the updates of the past X months. If months and year input params are set then months will take precedence. -->
 <p align="center">
   <img src="https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166-updates-api/gcp_arch.png" alt="gcp_arch" height="200" width="400"/>
 </p>
+
+Staying up to date
+------------------
+The list of ISO 3166-2 updates was last updated on <strong>Nov 2022</strong>. 
+The object storing all updates, both locally (iso3166-updates.json) and on the API, are consistenly checked for the latest updates using a Google Cloud Function ([iso3166-check-for-updates](https://github.com/amckenna41/iso3166-updates/tree/main/iso3166-check-for-updates)). The function uses the `iso3166-updates` Python software to pull all the latest updates/changes from all ISO 3166-2 wiki's to check for the latest updates within a certain period e.g the past 3-6 months. The function compares the generated output with that of the updates json currently in the Google Cloud Storage bucket and will replace this json to integrate the latest updates found such that the API will have the most up-to-date data.
+
+Additionally, a GitHub Issue in the `iso3166-2` and `iso3166-flag-icons` repositories will be automatically created that outlines all updates/changes that need to be implemented into the `iso3166-2` and `iso3166-flag-icons` JSONs and repos.
+
+Ultimately, this Cloud Function ensures that the software and assoicated APIs are up-to-date with the latest ISO 3166-2 information for all countries/territories/subdivisions etc.
 
 Requirements
 ------------
@@ -102,7 +106,7 @@ import iso3166_updates as iso3166_updates
 **Input parameters to get_updates function:**
 ```python
   # -alpha2 ALPHA2, --alpha2 ALPHA2
-  #                       Alpha2 code/s of ISO3166 countries to check for updates.
+  #                       Alpha-2 code/s of ISO3166 countries to check for updates.
   # -export_filename EXPORT_FILENAME, --export_filename EXPORT_FILENAME
   #                       Filename for exported ISO3166 updates csv file.
   # -export_json_filename EXPORT_JSON_FILENAME, --export_json_filename EXPORT_JSON_FILENAME
@@ -119,7 +123,7 @@ import iso3166_updates as iso3166_updates
   #                       Whether to concatenate updates of individual countrys into the same json file or seperate.
 ```
 
-**Get all listed changes/updates for all countries which happens by default if no alpha2 codes specified in input param, export csv and json to folder "iso3166-updates":**
+**Get all listed changes/updates for all countries which happens by default if no alpha-2 codes specified in input param, export csv and json to folder "iso3166-updates":**
 ```python
 iso3166_updates.get_updates(export_folder="iso3166-updates", export_json=1, export_csv=1)
 ```
@@ -155,20 +159,20 @@ iso3166_updates.get_updates("YE", year="<2010")
 ```
 
 The output to the above functions for the updates/changes to a ISO 3166-2 country returns 4 columns: 
-Edition/Newsletter, Date Issued, Description of change in newsletter and Code/Subdivision change. 
+<b>Edition/Newsletter, Date Issued, Code/Subdivision change</b> and <b>Description of change in newsletter.</b> 
 
 * Edition/Newsletter: Name and or edition of newsletter that ISO 3166-2 change/update was communicated in.
 * Date Issued: Date that the change was communicated.
-* Description of change in newsletter: More in-depth info about the change/update that was made.
 * Code/Subdivision change: Overall summary of change/update made.
+* Description of change in newsletter: More in-depth info about the change/update that was made.
 
 E.g. The output format of the exported CSV for AD (Andorra) is:
 
-| Edition/Newsletter | Date Issued | Description of change in newsletter | Code/Subdivision change |   
+| Edition/Newsletter | Date Issued | Code/Subdivision change | Description of change in newsletter |   
 |:-------------------|:------------|------------------------------------:|------------------------:|
-| Newsletter I-8     | 2007-04-17  | Addition of the administrative subdivisions...   | Subdivisions added: 7 parishes...                 | 
-| Online Browsing Platform (OBP) | 2014-11-03 | Update List Source | No subdivision changes listed |
-| Online Browsing Platform (OBP) | 2015-11-27 | Update List Source | No subdivision changes listed | 
+| Newsletter I-8     | 2007-04-17  | Subdivisions added: 7 parishes...   | Addition of the administrative subdivisions...                 | 
+| Online Browsing Platform (OBP) | 2014-11-03 | No subdivision changes listed | Update List Source |
+| Online Browsing Platform (OBP) | 2015-11-27 | No subdivision changes listed | Update List Source | 
 
 E.g. The output format of the exported JSON for AD (Andorra) is:
 ```javascript
@@ -201,7 +205,7 @@ Directories
 * `/docs` - documentation for `iso3166-updates` Python package.
 * `/iso3166_updates` - source code for `iso3166-updates` Python package.
 * `/iso3166-updates-api` - all code and files related to the serverless Google Cloud Function for the `iso3166-updates` API, including the main.py, requirements.txt and API config file.
-* `/iso3166-check-for-updates` - all code and files related to the serverless Google Cloud Function for the check-for-updates function which is a periodically called Cloud Func that uses the Python software to check for the latest updates for all country's, ensuring the API and jsons are reliable and up-to-date. Includes the main.py and requirements.txt.
+* `/iso3166-check-for-updates` - all code and files related to the serverless Google Cloud Function for the check-for-updates function which is a periodically called Cloud Function that uses the Python software to check for the latest updates for all country's, ensuring the API and jsons are reliable and up-to-date. Includes the main.py and requirements.txt files.
 * `/tests` - unit and integration tests for `iso3166-updates`.
 
 Issues
@@ -220,6 +224,7 @@ References
 \[3\]: ISO Country Codes Collection: https://www.iso.org/publication/PUB500001 <br>
 \[4\]: ISO Country Codes: https://www.iso.org/iso-3166-country-codes.html <br>
 \[5\]: ISO3166-1 flag-icons repo: https://github.com/lipis/flag-icons <br>
+\[6\]: ISO3166-2 flag-icons repo: https://github.com/amckenna41/iso3166-flag-icons <br>
 
 Support
 -------

@@ -36,10 +36,10 @@ class ISO3166_Updates(unittest.TestCase):
         #create temp dir to store any function outputs
         if not (os.path.isdir(self.export_folder)):
             os.mkdir(self.export_folder)
-
+    
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        # self.assertEqual(metadata('iso3166_updates')['version'], "1.0.1", 
+        # self.assertEqual(metadata('iso3166_updates')['version'], "1.1.0.", 
         #     "iso3166-updates version is not correct, got: {}".format(metadata('iso3166_updates')['version']))
         self.assertEqual(metadata('iso3166_updates')['name'], "iso3166-updates", 
             "iso3166-updates software name is not correct, got: {}".format(metadata('iso3166_updates')['name']))
@@ -230,7 +230,7 @@ class ISO3166_Updates(unittest.TestCase):
         #correct column/key names for dict returned from function
         expected_output_columns = ["Date Issued", "Edition/Newsletter", "Code/Subdivision change", "Description of change in newsletter"]
 #1.)
-        iso3166_updates.get_updates(alpha2_codes=test_alpha2_au, export_filename=self.export_filename,
+        test_alpha2_au_updates = iso3166_updates.get_updates(alpha2_codes=test_alpha2_au, export_filename=self.export_filename,
             export_json_filename=self.export_json_filename + "-AU", export_folder=self.export_folder, 
                 concat_updates=True, export_json=True, export_csv=True)
         
@@ -319,7 +319,6 @@ class ISO3166_Updates(unittest.TestCase):
         self.assertEqual(list(test_id_iso3166_csv.columns), expected_output_columns, "")
         self.assertEqual(len(test_id_iso3166_csv), 13, "Expected there to be 13 output objects in csv, got {}.".format(len(list(test_id_iso3166_csv))))
         self.assertEqual(test_id_iso3166_csv.head(1).to_dict(orient='records')[0], test_id_expected, "")
-
 #4.)
         iso3166_updates.get_updates(test_alpha2_pt, export_filename=self.export_filename,
             export_json_filename=self.export_json_filename + "-PT", export_folder=self.export_folder, 
@@ -337,13 +336,10 @@ class ISO3166_Updates(unittest.TestCase):
         self.assertEqual(len(list(test_pt_iso3166_json["PT"])), 0, "Expected there to be 0 output objects in json, got {}.".format(len(list(test_pt_iso3166_json))))
         self.assertEqual(test_pt_iso3166_json['PT'], test_pt_expected, "Expected observed and expected outputs to match.")
 #5.) 
-        iso3166_updates.get_updates(test_alpha2_bf_ca_gu_ie_je_str, export_filename=self.export_filename,
+        iso3166_updates.get_updates(test_alpha2_bf_ca_gu_ie_je_str, export_filename=self.export_filename, #concat_updates=False, individual output files
             export_json_filename=self.export_json_filename, export_folder=self.export_folder, 
                 concat_updates=False, export_json=True, export_csv=True)
         
-        test_alpha2_bf_ca_gu_ie_je_str_expected = {}
-        
-        # self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-BF,CA,GU,IE,JE.csv")), "")
         self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-BF.json")), "")
         self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-CA.json")), "")
         self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-GU.json")), "")
@@ -375,9 +371,17 @@ class ISO3166_Updates(unittest.TestCase):
                 test_je_iso3166_json = json.load(output_json)
         self.assertEqual(len(list(test_je_iso3166_json)), 1, "Expected there to be 1 output objects in json, got {}.".format(len(list(test_je_iso3166_json))))
 #6.)    
-        iso3166_updates.get_updates(test_alpha2_1, export_filename=self.export_filename,
+        iso3166_updates.get_updates(test_alpha2_bf_ca_gu_ie_je_str, export_filename=self.export_filename, #concat_updates=True, one output file
             export_json_filename=self.export_json_filename, export_folder=self.export_folder, 
-                concat_updates=True, export_json=True, export_csv=True)
+                concat_updates=True, export_json=True, export_csv=True) 
+
+        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-BF,CA,GU,IE,JE.json")), 
+            "Output file {} not found in export folder {}.".format(os.path.join(self.export_json_filename + "-BF,CA,GU,IE,JE.json"), self.export_folder))
+        #open exported BF,CA,GU,IE,JE json
+        with open(os.path.join(self.export_folder, self.export_json_filename + "-BF,CA,GU,IE,JE.json")) as output_json:
+            test_bf_ca_gu_ie_je_iso3166_json = json.load(output_json)
+        self.assertEqual(len(list(test_bf_ca_gu_ie_je_iso3166_json)), 5, "Expected there to be 5 output objects in json, got {}.".format(len(list(test_bf_ca_gu_ie_je_iso3166_json))))
+        self.assertEqual(list(test_bf_ca_gu_ie_je_iso3166_json), ["BF", "CA", "GU", "IE", "JE"], "Expected keys of JSON to be BF, CA, GU, IE, JE, got {}.".format(list(test_bf_ca_gu_ie_je_iso3166_json)))
 #7.)
         with self.assertRaises(TypeError):
             iso3166_updates.get_updates(test_alpha2_2, export_filename=self.export_filename,
@@ -514,9 +518,7 @@ class ISO3166_Updates(unittest.TestCase):
         iso3166_updates.get_updates(test_alpha2_bf_ca_gu_ie_je_str, export_filename=self.export_filename,
             export_json_filename=self.export_json_filename, export_folder=self.export_folder, 
                 concat_updates=False, export_json=True, export_csv=True)
-        
-        test_alpha2_bf_ca_gu_ie_je_str_expected = {}
-        
+                
         # self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-BF,CA,GU,IE,JE.csv")), "")
         self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-BF.json")), "")
         self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_json_filename + "-CA.json")), "")

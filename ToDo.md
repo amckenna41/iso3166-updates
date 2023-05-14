@@ -8,7 +8,7 @@
 - [X] Generate updated for a particular year. 
 - [X] Change all instances of iso3166-updates to iso3166_updates except for pypi name.
 - [X] Add GCP upload to workflow.
-- [ ] Upload all iso3166-updates for all countries in seperate folder of main repo dir.
+- [X] Upload all iso3166-updates for all countries in seperate folder of main repo dir.
 - [X] If single ISO code put in then print, if mutliple then output to files.
 - [X] Append date to update filenames.
 - [X] Add maintainer and keywords to setup.py & cfg.
@@ -17,9 +17,9 @@
 - [X] Change "Newsletter" column to "Edition/Newsletter"
 - [X] All countries should have 4 columns: "Edition/Newsletter", "Date issued", "Description of change in newsletter", "Code/Subdivision change"
 - [X] href of newsletter not exporting to json
-- [ ] Add build passing to readme
-- [ ] Add format section to README and demo.
-- [ ] Remove .DS_Store and pycache from repo.
+- [X] Add build passing to readme
+- [X] Add format section to README and demo.
+- [X] Remove .DS_Store and pycache from repo.
 - [X] Add API/Google Cloud code to its own folder in repo.
 - [ ] Make Source repo on GCP, use as import to Cloud Function (https://www.youtube.com/watch?v=LAcErtGU-VU). Creat Cloud Build that builds on push to branch, using repo as source.
 - [X] Add diagram of cloud arch & pipeline in API fodler: https://medium.com/google-cloud/use-multiple-paths-in-cloud-functions-python-and-flask-fc6780e560d3
@@ -107,23 +107,27 @@ Edition/Newsletter - should be OBP.
 - [X] Update api tests to reflect updated url. 
 - [ ] Mention schedule that check-for-updates is run and that it is appropriate to the general release of updates by the ISO3166.
 - [ ] Remove all camel casing function names/vars, change to underscores and lowercase (https://peps.python.org/pep-0008/#function-and-variable-names).
-- [ ] Move from GCP to vercel.
-- [ ] Add example img of email to iso3166-check-for-updates dir.
+- [X] Move from GCP to vercel.
 - [X] Remove generate report from workflow
 - [X] Create Python Flask App -> Deploy to Vercel -> Connect to domain.
-- [ ] Convert json into sqlite3 database table (columns: country, year etc).
 - [X] Make bucket and iso3166-updates.json file publicly accessible.
 - [X] When updating file in bucket, ensure it is publicy accessible.
-- [ ] Create vercel deployment pipeline in Github workflow.
+- [X] Create vercel deployment pipeline in Github workflow.
 - [ ] Create API endpoint for https://iso3166-updates.com/api and make main https://iso3166-updates.com a more visual frontend for the app with a dropdown of available countries, years etc.
 - [X] Fix pytest badge on readme.
-- [ ] Unit test new api to double check invalid responses are returning correct message and status.
-- [ ] When check-for-updates is called and updates are found, programmatically raise an issue in the relevant repositories with a formatted description of the updates found (https://stackoverflow.com/questions/31767596/github-is-there-a-way-to-programmatically-file-an-issue). Instead of creating a new Issue each time, could update the same Issue with new data (https://gist.github.com/JeffPaine/3145490?permalink_comment_id=2558013).
-- [ ] Change default month in check-for-updates from 12 to 6.
+- [X] Unit test new api to double check invalid responses are returning correct message and status.
+- [X] When check-for-updates is called and updates are found, programmatically raise an issue in the relevant repositories with a formatted description of the updates found (https://stackoverflow.com/questions/31767596/github-is-there-a-way-to-programmatically-file-an-issue). Instead of creating a new Issue each time, could update the same Issue with new data (https://gist.github.com/JeffPaine/3145490?permalink_comment_id=2558013).
+- [X] Change default month in check-for-updates from 12 to 6.
 - [ ] Update api readmes to reflect new Create Issue functionality.
-- [ ] Reformat Date Issued from 2022-11-29 to 29-11-2022 (dd-mm-yyyy), mention that it's formatted as such as it's the most common format.
-- [ ] Have example on readme for getting all updates for all countries. 
-- [ ] After reformatting Date Issued, dates are out of order '27-11-2015' before 15-11-2016. May need to sort by column then convert into new format.
+- [X] Reformat Date Issued from 2022-11-29 to 29-11-2022 (dd-mm-yyyy), mention that it's formatted as such as it's the most common format.
+- [X] Have example on readme for getting all updates for all countries. 
+- [X] After reformatting Date Issued, dates are out of order '27-11-2015' before 15-11-2016. May need to sort by column then convert into new format.
+- [X] Append alpha-2 code to exported json filename. If more than one alpha-2 codes, seperate by comma.
+- [X] iso.get_updates(["HI, LV"]) - passing in list of alpha-2 codes should pull updates.
+- [X] Create unit test that check exported json filename contains multiple alpha2-codes appended to it.
+- [X] Comment that concat_updates only works for JSON outputs as wouldn't for csv.
+- [ ] Actually return the json of updates from get_updates func. Update unit tests such that more of a focus on the output object than the json.
+- [X] Append list of alpha-2 codes with updates to ISO3166-2 Updates: 09-05-2023 (here).
 <!-- 
 Create new config, update config file
 gcloud api-gateway api-configs create NEW_CONFIG_ID --api=MY_API --openapi-spec=openapi2-functions.yaml 
