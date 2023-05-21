@@ -24,7 +24,7 @@ USER_AGENT_HEADER = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(__versio
 wiki_base_url = "https://en.wikipedia.org/wiki/ISO_3166-2:"
 
 
-def get_updates(alpha2_codes=[], year=[], months="", export_filename="iso3166-updates",
+def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
         export_json_filename="iso3166-updates", export_folder="test_iso3166-updates", 
         concat_updates=True, export_json=True, export_csv=False):
     """
@@ -49,8 +49,6 @@ def get_updates(alpha2_codes=[], year=[], months="", export_filename="iso3166-up
         single string or list of alpha-2 ISO3166 codes to get the latest ISO3166-2 updates from. If
         single alpha-2 code passed in then it is converted to an iterable list. If no value passed
         into param then all updates for all ISO3166 gotten. 
-    :month : str (default = "")
-        number of previous months to get updates from up to current date. 
     :year : list (default = [])
         list of 1 or more years to get the specific ISO3166-2 updates from, per country. By default, 
         the year param will be empty meaning all changes/updates for all years will be gotten.
@@ -517,8 +515,6 @@ if __name__ == '__main__':
         help='Alpha-2 code/s of ISO3166 countries to check for updates.')
     parser.add_argument('-year', '--year', type=str, required=False, default="", 
         help='Selected year to check for updates.')
-    parser.add_argument('-months', '--months', type=str, required=False, default="", 
-        help='Number of previous months to get updates from.')
     parser.add_argument('-export_filename', '--export_filename', type=str, required=False, default="iso3166-updates", 
         help='Filename for exported ISO3166 updates csv file.')
     parser.add_argument('-export_json_filename', '--export_json_filename', type=str, required=False, default="iso3166-updates", 
@@ -543,7 +539,6 @@ if __name__ == '__main__':
     concat_updates = args.concat_updates
     export_json = args.export_json
     export_csv = args.export_csv
-    month = [args.months]
     year = [args.year]
     if (',' in year[0]):
         year = year[0].split(',')
@@ -558,5 +553,5 @@ if __name__ == '__main__':
     alpha2_codes = [code.upper() for code in alpha2_codes]
     
     #output ISO3166 updates/changes for selected alpha-2 code/s
-    get_updates(alpha2_codes, year, months, export_filename, export_json_filename,
+    get_updates(alpha2_codes, year, export_filename, export_json_filename,
         export_folder, concat_updates, export_json, export_csv)
