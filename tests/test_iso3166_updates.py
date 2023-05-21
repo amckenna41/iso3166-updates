@@ -6,6 +6,7 @@ import json
 import shutil
 import os
 import pandas as pd
+from datetime import datetime
 from bs4 import BeautifulSoup
 from importlib.metadata import metadata
 import unittest
@@ -39,7 +40,7 @@ class ISO3166_Updates(unittest.TestCase):
     
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        # self.assertEqual(metadata('iso3166_updates')['version'], "1.1.0.", 
+        # self.assertEqual(metadata('iso3166_updates')['version'], "1.2.0.", 
         #     "iso3166-updates version is not correct, got: {}".format(metadata('iso3166_updates')['version']))
         self.assertEqual(metadata('iso3166_updates')['name'], "iso3166-updates", 
             "iso3166-updates software name is not correct, got: {}".format(metadata('iso3166_updates')['name']))
@@ -236,7 +237,7 @@ class ISO3166_Updates(unittest.TestCase):
         
         #change export_json & export_csv
         test_au_expected = {
-            "Date Issued": "15-11-2016",
+            "Date Issued": "2016-11-15",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
             "Description of change in newsletter": "Update List Source; update Code Source",
             "Code/Subdivision change": ""
@@ -265,7 +266,7 @@ class ISO3166_Updates(unittest.TestCase):
                 concat_updates=True, export_json=True, export_csv=True)
         
         test_cv_expected = {
-            "Date Issued": "15-12-2011",
+            "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
             "Description of change in newsletter": "Correction of NL II-2 for toponyms and typographical errors and source list update.",
             "Code/Subdivision change": "Codes: São Lourenço dos Órgãos CV-SL → CV-SO"
@@ -295,7 +296,7 @@ class ISO3166_Updates(unittest.TestCase):
                 export_json=True, export_csv=True)
         
         test_id_expected = {
-            "Date Issued": "29-11-2022",
+            "Date Issued": "2022-11-29",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
             "Description of change in newsletter": "Addition of provinces ID-PE, ID-PS and ID-PT; Update List Source",
             "Code/Subdivision change": ""
@@ -413,7 +414,7 @@ class ISO3166_Updates(unittest.TestCase):
         
         #change export_json & export_csv
         test_au_expected = {
-            "Date Issued": "15-11-2016",
+            "Date Issued": "2016-11-15",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
             "Description of change in newsletter": "Update List Source; update Code Source",
             "Code/Subdivision change": ""
@@ -443,7 +444,7 @@ class ISO3166_Updates(unittest.TestCase):
                 concat_updates=True, export_json=True, export_csv=True)
         
         test_cv_expected = {
-            "Date Issued": "15-12-2011",
+            "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
             "Description of change in newsletter": "Correction of NL II-2 for toponyms and typographical errors and source list update.",
             "Code/Subdivision change": "Codes: São Lourenço dos Órgãos CV-SL → CV-SO"
@@ -473,7 +474,7 @@ class ISO3166_Updates(unittest.TestCase):
                 export_json=True, export_csv=True)
         
         test_id_expected = {
-            "Date Issued": "29-11-2022",
+            "Date Issued": "2022-11-29",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
             "Description of change in newsletter": "Addition of provinces ID-PE, ID-PS and ID-PT; Update List Source",
             "Code/Subdivision change": ""
@@ -590,7 +591,7 @@ class ISO3166_Updates(unittest.TestCase):
         az_expected_output2 = [entry.replace(" ", "") for entry in az_expected_output2]
         az_updates_df_output1 = [entry.replace(" ", "") for entry in az_updates_df.iloc[0].tolist()]
         az_updates_df_output2 = [entry.replace(" ", "") for entry in az_updates_df.iloc[1].tolist()]
-        
+
         self.assertIsInstance(az_updates_df, pd.DataFrame, "Ouput of function should be a dataframe, got {}.".format(type(az_updates_df)))
         self.assertEqual(len(az_updates_df), 2, "Expected there to be 2 elements in output table, got {}".format(len(az_updates_df)))
         self.assertEqual(expected_output_columns, list(az_updates_df.columns), "Columns/Headers of dataframe do not match.")
@@ -722,9 +723,9 @@ class ISO3166_Updates(unittest.TestCase):
         #output keys/columns for each entry in json
         expected_output_columns = ["Date Issued", "Edition/Newsletter", "Code/Subdivision change", "Description of change in newsletter"]
 #1.)       
-        bg_expected_output1 = {'Date Issued': '26-11-2018', 'Edition/Newsletter': 'Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:BG)', 
+        bg_expected_output1 = {'Date Issued': '2018-11-26', 'Edition/Newsletter': 'Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:BG)', 
             'Description of change in newsletter': 'Correction of the romanization system label', 'Code/Subdivision change': ''}
-        bg_expected_output2 = {'Date Issued': '20-04-2018', 'Edition/Newsletter': 'Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:BG)', 
+        bg_expected_output2 = {'Date Issued': '2018-04-20', 'Edition/Newsletter': 'Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:BG)', 
             'Description of change in newsletter': 'Change of subdivision category from region to district in eng and fra; update List Source', 'Code/Subdivision change': ''}
 
         self.assertIsInstance(self.iso3166_json[test_alpha2_bg], list, "Expected output to be of type list, got {}".format(type(self.iso3166_json[test_alpha2_bg])))
@@ -734,9 +735,9 @@ class ISO3166_Updates(unittest.TestCase):
         self.assertEqual(self.iso3166_json[test_alpha2_bg][0], bg_expected_output1, "Row in updates json does not match expected output.")
         self.assertEqual(self.iso3166_json[test_alpha2_bg][1], bg_expected_output2, "Row in updates json does not match expected output.")
 #2.)
-        cn_expected_output1 = {'Date Issued': '25-11-2021', 'Edition/Newsletter': 'Online Browsing Platform (OBP)', 
+        cn_expected_output1 = {'Date Issued': '2021-11-25', 'Edition/Newsletter': 'Online Browsing Platform (OBP)', 
             'Description of change in newsletter': 'Change of spelling of CN-NX; Update List Source', 'Code/Subdivision change': ''}
-        cn_expected_output2 = {'Date Issued': '22-11-2019', 'Edition/Newsletter': 'Online Browsing Platform (OBP)', 'Description of change in newsletter': 
+        cn_expected_output2 = {'Date Issued': '2019-11-22', 'Edition/Newsletter': 'Online Browsing Platform (OBP)', 'Description of change in newsletter': 
             'Change language from mon to zho for CN-NM', 'Code/Subdivision change': ''}
 
         self.assertIsInstance(self.iso3166_json[test_alpha2_cn], list, "Expected output to be of type list, got {}".format(type(self.iso3166_json[test_alpha2_cn])))
@@ -746,9 +747,9 @@ class ISO3166_Updates(unittest.TestCase):
         self.assertEqual(self.iso3166_json[test_alpha2_cn][0], cn_expected_output1, "Row in updates json does not match expected output.")
         self.assertEqual(self.iso3166_json[test_alpha2_cn][1], cn_expected_output2, "Row in updates json does not match expected output.")
 #3.)
-        cy_expected_output1 = {'Date Issued': '26-11-2018', 'Edition/Newsletter': 'Online Browsing Platform (OBP)', 
+        cy_expected_output1 = {'Date Issued': '2018-11-26', 'Edition/Newsletter': 'Online Browsing Platform (OBP)', 
             'Description of change in newsletter': 'Correction of the romanization system label', 'Code/Subdivision change': ''}
-        cy_expected_output2 = {'Date Issued': '20-04-2018', 'Edition/Newsletter': 'Online Browsing Platform (OBP)', 
+        cy_expected_output2 = {'Date Issued': '2018-04-20', 'Edition/Newsletter': 'Online Browsing Platform (OBP)', 
             'Description of change in newsletter': 'Update Code Source; update List Source', 'Code/Subdivision change': ''}
 
         self.assertIsInstance(self.iso3166_json[test_alpha2_cy], list, "Expected output to be of type list, got {}".format(type(self.iso3166_json[test_alpha2_cy])))
@@ -758,11 +759,11 @@ class ISO3166_Updates(unittest.TestCase):
         self.assertEqual(self.iso3166_json[test_alpha2_cy][0], cy_expected_output1, "Row in updates json does not match expected output.")
         self.assertEqual(self.iso3166_json[test_alpha2_cy][1], cy_expected_output2, "Row in updates json does not match expected output.")
 #4.)
-        ec_expected_output1 = {'Date Issued': '30-06-2010', 'Edition/Newsletter': 
+        ec_expected_output1 = {'Date Issued': '2010-06-30', 'Edition/Newsletter': 
             'Newsletter II-2 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf)', 
                 'Description of change in newsletter': 'Update of the administrative structure and of the list source', 'Code/Subdivision change': 
                     'Subdivisions added: EC-SE Santa Elena EC-SD Santo Domingo de los Tsáchilas'}
-        ec_expected_output2 = {'Date Issued': '10-12-2002', 'Edition/Newsletter': 
+        ec_expected_output2 = {'Date Issued': '2002-12-10', 'Edition/Newsletter': 
             'Newsletter I-4 (https://web.archive.org/web/20081218103210/http://www.iso.org/iso/iso_3166-2_newsletter_i-4_en.pdf)', 
                 'Description of change in newsletter': 'Addition of one province', 'Code/Subdivision change': 'Subdivisions added: EC-D Orellana'}
 
@@ -776,16 +777,21 @@ class ISO3166_Updates(unittest.TestCase):
         self.assertEqual(self.iso3166_json[test_alpha2_pm], {}, "Expected output to be of type dict, got {}".format(type(self.iso3166_json[test_alpha2_pm])))
 #6.)
         self.assertEqual(self.iso3166_json[test_alpha2_pn], {}, "Expected output to be of type list, got {}".format(type(self.iso3166_json[test_alpha2_pn])))
-#7.)
-        with self.assertRaises(KeyError):
-            self.iso3166_json[test_alpha2_abc]
-            self.iso3166_json[12345]
-            self.iso3166_json[False]
-#8.)   
+#7.)   
         for alpha2 in list(self.iso3166_json.keys()): #Testing no entries have an empty Edition/Newsletter field
             for row in range(0, len(self.iso3166_json[alpha2])):
                 self.assertNotEqual(self.iso3166_json[alpha2][row]["Edition/Newsletter"], "", 
                     "For all entries in json the Edition/Newsletter column should not be empty, {}".format(self.iso3166_json[alpha2][row]))
+#8.)    
+        for alpha2 in list(self.iso3166_json.keys()): #Testing Date Issued columns have correct data format (Y-m-d)
+            for row in range(0, len(self.iso3166_json[alpha2])):
+                self.assertTrue(bool(datetime.strptime(self.iso3166_json[alpha2][row]["Date Issued"], "%Y-%m-%d")), 
+                    "Expected Date Issued column to be in format Y-m-d, got {}.".format(self.iso3166_json[alpha2][row]["Date Issued"]))
+#9.)        
+        with self.assertRaises(KeyError):
+            self.iso3166_json[test_alpha2_abc]
+            self.iso3166_json[12345]
+            self.iso3166_json[False]   
 
     def tearDown(self):
         """ Delete imported json from memory. """

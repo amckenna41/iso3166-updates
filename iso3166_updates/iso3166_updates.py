@@ -24,7 +24,7 @@ USER_AGENT_HEADER = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(__versio
 wiki_base_url = "https://en.wikipedia.org/wiki/ISO_3166-2:"
 
 
-def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
+def get_updates(alpha2_codes=[], year=[], months="", export_filename="iso3166-updates",
         export_json_filename="iso3166-updates", export_folder="test_iso3166-updates", 
         concat_updates=True, export_json=True, export_csv=False):
     """
@@ -49,6 +49,8 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
         single string or list of alpha-2 ISO3166 codes to get the latest ISO3166-2 updates from. If
         single alpha-2 code passed in then it is converted to an iterable list. If no value passed
         into param then all updates for all ISO3166 gotten. 
+    :month : str (default = "")
+        number of previous months to get updates from up to current date. 
     :year : list (default = [])
         list of 1 or more years to get the specific ISO3166-2 updates from, per country. By default, 
         the year param will be empty meaning all changes/updates for all years will be gotten.
@@ -92,6 +94,44 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
     #if single str input for Year param then convert to array, remove whitespace
     if (isinstance(year, str)):
         year = year.replace(' ', '').split(',')
+
+    #convert months parameter into integer, raise error if invalid type
+    try:
+        months = int(months)
+    except:
+        raise TypeError("Invalid data type for months input parameter, expected string or int.")
+
+    def convert_to_alpha2(alpha3_code):
+        """ 
+        Convert an ISO3166 country's 3 letter alpha-3 code into its 2 letter
+        alpha-2 counterpart. 
+
+        Parameters 
+        ----------
+        :alpha3_code: str
+            3 letter ISO3166 country code.
+        
+        Returns
+        -------
+        :iso3166.countries_by_alpha3[alpha3_code].alpha2: str
+            2 letter ISO3166 country code. 
+        """
+        #return error if 3 letter alpha-3 code not found
+        if not (alpha3_code in list(iso3166.countries_by_alpha3.keys())):
+            return None
+        else:
+            #use iso3166 package to find corresponding alpha-2 code from its alpha-3
+            return iso3166.countries_by_alpha3[alpha3_code].alpha2
+    
+    #if 3 letter alpha-3 codes input then convert to corresponding alpha-2, else raise error
+    if (alpha2_codes != []):
+        for code in range(0, len(alpha2_codes)):
+            if (len(alpha2_codes[code]) == 3): 
+                temp_alpha2_code = convert_to_alpha2(alpha2_codes[code])
+                if not (temp_alpha2_code is None):
+                    alpha2_codes[code] = temp_alpha2_code
+                else:
+                    raise ValueError("Invalid alpha-3 code input, cannot convert into corresponding alpha-2 code: {}.".format(alpha2_codes[code]))
 
     #use all ISO3166 codes if invalid alpha-2 code input, otherwise convert alpha-2 to array
     if (alpha2_codes == []):
@@ -155,7 +195,7 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
         if (alpha2 not in list(iso3166.countries_by_alpha2.keys())):
             continue
 
-        print("ISO Code: {} ({})".format(alpha2, wiki_base_url + alpha2))
+        print("ISO 3166 Code: {} ({})".format(alpha2, wiki_base_url + alpha2))
 
         all_changes[alpha2] = {}
 
@@ -225,13 +265,6 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
             iso3166_df = iso3166_df.sort_values(by=['Date Issued'], ascending=False)
             #convert date column back to string 
             iso3166_df['Date Issued'] = iso3166_df['Date Issued'].astype(str)
-
-            def convert_date_format(row):
-                """ convert date in rows of df into dd-mm-yyyy data format from date object. """
-                return datetime.datetime.strptime(row.replace('\n', ''), '%Y-%m-%d').strftime('%d-%m-%Y')
-
-            #convert date column into dd-mm-yyyy format  
-            iso3166_df["Date Issued"] = iso3166_df["Date Issued"].apply(convert_date_format)
 
             #export to csv, append extension if applicable
             if (export_csv): 
@@ -484,6 +517,8 @@ if __name__ == '__main__':
         help='Alpha-2 code/s of ISO3166 countries to check for updates.')
     parser.add_argument('-year', '--year', type=str, required=False, default="", 
         help='Selected year to check for updates.')
+    parser.add_argument('-months', '--months', type=str, required=False, default="", 
+        help='Number of previous months to get updates from.')
     parser.add_argument('-export_filename', '--export_filename', type=str, required=False, default="iso3166-updates", 
         help='Filename for exported ISO3166 updates csv file.')
     parser.add_argument('-export_json_filename', '--export_json_filename', type=str, required=False, default="iso3166-updates", 
@@ -508,6 +543,7 @@ if __name__ == '__main__':
     concat_updates = args.concat_updates
     export_json = args.export_json
     export_csv = args.export_csv
+    month = [args.months]
     year = [args.year]
     if (',' in year[0]):
         year = year[0].split(',')
@@ -522,5 +558,5 @@ if __name__ == '__main__':
     alpha2_codes = [code.upper() for code in alpha2_codes]
     
     #output ISO3166 updates/changes for selected alpha-2 code/s
-    get_updates(alpha2_codes, year, export_filename, export_json_filename,
+    get_updates(alpha2_codes, year, months, export_filename, export_json_filename,
         export_folder, concat_updates, export_json, export_csv)

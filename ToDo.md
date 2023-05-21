@@ -88,7 +88,6 @@ Edition/Newsletter - should be OBP.
 - [X] Upload any found updates from check_for_updates function to GCP bucket, download same object in email_updates func.
 - [ ] Add month unit tests to api tests.
 - [ ] Add month param to software.
-- [ ] What about incorporating a "from" and "to" date parameters in api, user inputted start and end date to which they want updates.
 - [X] Mention the earliest Date Issued was 2000-06-21.
 - [ ] Add readthedocs badge - [![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](http://ansicolortags.readthedocs.io/?badge=latest)
 - [ ] Implemenet API gateway and endpoints for Cloud Func - update cloud arch image to include gateway, endpoints, load balancer, instance group, template etc.
@@ -101,7 +100,7 @@ Edition/Newsletter - should be OBP.
 - [ ] Add terraform script for cloud arch.
 - [X] Mention intended audience in readme.
 - [ ] Add api landing page with documentation, similar to restcountries.
-- [ ] Add years to input param of get_updates func, use tupele of (alpha2, year)
+- [X] Add years to input param of get_updates func, use tupele of (alpha2, year)
 - [X] Reorder software metadata in setup.py to be in order of main func, create __description__ var.
 - [X] Add download_url to setup.py - url of zipped package.
 - [X] Update api tests to reflect updated url. 
@@ -118,7 +117,7 @@ Edition/Newsletter - should be OBP.
 - [X] Unit test new api to double check invalid responses are returning correct message and status.
 - [X] When check-for-updates is called and updates are found, programmatically raise an issue in the relevant repositories with a formatted description of the updates found (https://stackoverflow.com/questions/31767596/github-is-there-a-way-to-programmatically-file-an-issue). Instead of creating a new Issue each time, could update the same Issue with new data (https://gist.github.com/JeffPaine/3145490?permalink_comment_id=2558013).
 - [X] Change default month in check-for-updates from 12 to 6.
-- [ ] Update api readmes to reflect new Create Issue functionality.
+- [X] Update api readmes to reflect new Create Issue functionality.
 - [X] Reformat Date Issued from 2022-11-29 to 29-11-2022 (dd-mm-yyyy), mention that it's formatted as such as it's the most common format.
 - [X] Have example on readme for getting all updates for all countries. 
 - [X] After reformatting Date Issued, dates are out of order '27-11-2015' before 15-11-2016. May need to sort by column then convert into new format.
@@ -126,8 +125,31 @@ Edition/Newsletter - should be OBP.
 - [X] iso.get_updates(["HI, LV"]) - passing in list of alpha-2 codes should pull updates.
 - [X] Create unit test that check exported json filename contains multiple alpha2-codes appended to it.
 - [X] Comment that concat_updates only works for JSON outputs as wouldn't for csv.
-- [ ] Actually return the json of updates from get_updates func. Update unit tests such that more of a focus on the output object than the json.
+- [X] Actually return the json of updates from get_updates func. Update unit tests such that more of a focus on the output object than the json.
 - [X] Append list of alpha-2 codes with updates to ISO3166-2 Updates: 09-05-2023 (here).
+- [ ] https://github.com/codecov/codecov-action/issues/559
+- [ ] Check for unit tests for passing in alpha3 code into API.
+- [X] Reconfigure date format to format Y-m-d. Will need to rerun software.
+- [X] Update check-for-updates API to use GCP Client library instead of requests after making storage bucket unpublic.
+- [ ] In check-for-updates, verify that the new updates aren't already in updates.json object. Currently, it may just Create an Issue if updates are found in specified month period, regardless if they're in object. Current behaviour creates issue regardless.
+- [X] Update api to reflect updates from frontend.
+- [ ] API unit tests, pass in invalid 3 letter alpha-3 code, should return error message.
+- [X] Remove request.args or request_json from api, probably only need one.
+- [X] In check-for-updates, if new updates are found in month range, move old updates.json to an archive file with its date appened to filename, save new updates.json to root folder.
+- [ ] In updates json, currently I think we're comparing the new updates found in specified month range with the whole of the updates JSON. Should iterate through new updates JSON to see if individual key string found in json.
+- [X] Rename vars in check-for-updates to make more clear the current and old updates jsons.
+- [X] Update return message in check-for-updates to be flask error message response.
+- [X] Update software to be able to accept alpha-3 codes.
+- [ ] Update API cloud arch to incorporate new archive folder and Create Issue functionality.
+- [ ] Create Issue seems to add all updates from month range rather than just those updates that aren't in json.
+- [ ] check-for-updates not working: need to publish new version of software, updates using d-m-Y format addtionally being appended with updates in format Y-m-d.
+- [X] Unit tests to check all Date Issued in correct format. 
+- [X] Change all date formats back to original in unit tests.
+- [X] In API, incorporate different API endpoints for parameters, e.g /alpha2, /year, /months.
+- [X] Update api.md to incorporate new endpoints/paths.
+- [X] Unit tests for ">year" and < year , go through each entry and Date Issued, check they're all less than or greater than input year.
+- [X] API unit tests for alpha2 + year path when no year specified (https://iso3166-updates-frontend-amckenna41.vercel.app/api/alpha2/AD/year) - should return all results for AD.
+- [X] Double check '>' and '<' work for API url, may need to unicode decode these.
 <!-- 
 Create new config, update config file
 gcloud api-gateway api-configs create NEW_CONFIG_ID --api=MY_API --openapi-spec=openapi2-functions.yaml 

@@ -44,6 +44,7 @@ jobs:
         pip3 install pytest-cov
         pip3 install bandit
         pip3 install safety
+        pip install codecov
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         python3 setup.py install    
 
@@ -73,7 +74,9 @@ jobs:
       run: |
         echo "Testing using pytest..."
         python3 -m pytest tests/
-        
+        pytest --cov=./ --cov-report=xml
+        codecov
+
     #upload to Code Coverage
     - name: Upload Coverage Report to Codecov
       uses: codecov/codecov-action@v3

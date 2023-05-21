@@ -19,8 +19,8 @@
 Table of Contents
 -----------------
   * [Introduction](#introduction)
-  * [API][#API]
-  * [Staying up to date](#stayinguptodate)
+  * [API](#api)
+  * [Staying up to date](#staying-up-to-date)
   * [Requirements](#requirements)
   * [Installation](#installation)
   * [Usage](#usage)
@@ -35,7 +35,7 @@ Introduction
 
 The ISO 3166-1 was first published in 1974 and currently comprises 249 countries, 193 of which are sovereign states that are members of the United Nations [[1]](#references). The ISO 3166-2 was first published in 1998 and as of 29 November 2022 there are 5,043 codes defined in it [[2]](#references).
 
-## Problem Statement:
+### Problem Statement:
 
 The ISO is a very dynamic organisation and regularly change/update/remove entries within its library of standards, including the ISO 3166. Additions/changes/deletions to country/territorial codes occur less often in the ISO 3166-1, but changes are more frequent for the ISO 3166-2 codes due to there being thousands more entries, thus it can be difficult to keep up with any changes to these codes. These changes can occur for a variety of geopolitical and bureaucratic reasons and are usually communicated via Newsletters on the ISO platform, their Online Browsing Platform (OBP) or via a database, which usually costs money to subscribe to [[3]](#references). Usually these updates are conveyed at the end of the year, with amendments and updates occasionally published at various times throughout the year [[4]](#references). 
 
@@ -43,7 +43,7 @@ This software and accompanying API makes it extremely easy to check for any new 
 
 <strong> The earliest date for any ISO 3166 updates is 2000-06-21, and the most recent is 2022-11-29. </strong>
 
-## Intended Audience:
+### Intended Audience:
 
 This software and accompanying API is for anyone working with country data at the ISO 3166 level. It's of high importance that the data that you are working with is correct and up-to-date, especially with consistent changes being posted every year since 2000 (excluding 2001 and 2006). Also, it's aimed not just at developers of ISO 3166 applications but for anyone working in that space, hence the creation of an easy-to-use API (https://iso3166-updates.com). 
 
