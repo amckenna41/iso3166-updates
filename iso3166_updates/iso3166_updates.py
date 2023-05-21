@@ -93,12 +93,6 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
     if (isinstance(year, str)):
         year = year.replace(' ', '').split(',')
 
-    #convert months parameter into integer, raise error if invalid type
-    try:
-        months = int(months)
-    except:
-        raise TypeError("Invalid data type for months input parameter, expected string or int.")
-
     def convert_to_alpha2(alpha3_code):
         """ 
         Convert an ISO3166 country's 3 letter alpha-3 code into its 2 letter
