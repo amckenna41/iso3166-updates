@@ -49,9 +49,6 @@ def check_iso3166_updates_main(request):
     #default month cutoff to check for updates
     months = 6
 
-    # #set to True when new updates are found in month range that arent current json object
-    # new_updates_found = False
-
     #get list of any input parameters to function
     request_json = request.get_json()
 
@@ -86,7 +83,7 @@ def check_iso3166_updates_main(request):
         for row in range(0, len(latest_iso3166_updates[alpha2])):
             if (latest_iso3166_updates[alpha2][row]["Date Issued"] != ""): #go to next iteration if no Date Issued in row
                 #convert str date into date object
-                row_date = (datetime.strptime(latest_iso3166_updates[alpha2][row]["Date Issued"], "%d-%m-%Y"))
+                row_date = (datetime.strptime(latest_iso3166_updates[alpha2][row]["Date Issued"], "%Y-%m-%d"))
                 #compare date difference from current row to current date
                 date_diff = relativedelta(current_datetime, row_date)
                 #calculate date difference in months
@@ -112,12 +109,14 @@ def check_iso3166_updates_main(request):
         :latest_iso3166_updates_after_date_filter : json
            json object with all listed iso3166-2 updates after month date filter
            applied.
-        :updates_found : bool
-            bool to track if updates/changes have been found in JSON object.
 
         Returns
         -------
-        None
+        :updates_found : bool
+            bool to track if updates/changes have been found in JSON object.
+        individual_updates_json: dict
+            dictionary of individual ISO 3166 updates that aren't in existing 
+            updates object on JSON.
         """
         #initialise storage client
         storage_client = storage.Client()
@@ -141,40 +140,26 @@ def check_iso3166_updates_main(request):
         updated_json = current_updates_data
         updates_found = False
 
-        #**seperate object that holds individual updates that were found, used in create_issue function
+        #seperate object that holds individual updates that were found, used in create_issue function
         individual_updates_json = {}
 
-        print("current_updates_data")
-        print(current_updates_data)
         #iterate over all updates in json, if update/row not found in original json
         #pulled from GCP storage, append to new updated_json object
         for code in latest_iso3166_updates_after_date_filter:   
             individual_updates_json[code] = []
             for update in latest_iso3166_updates_after_date_filter[code]:
                 if not (update in current_updates_data[code]):
-                    print("code", code)
-                    print(update in current_updates_data[code])
-                    print("update here", update)
-                    print("current_updates_data[code]", current_updates_data[code])
                     updated_json[code].append(update)
                     updates_found = True
                     individual_updates_json[code].append(update)
 
             #updates are appended to end of updates json, need to reorder by Date Issued, latest first
             updated_json[code] = sorted(updated_json[code], key=itemgetter('Date Issued'), reverse=True)
-            # individual_updates_json[code] = sorted(individual_updates_json[code], key=itemgetter('Date Issued'), reverse=True)
-
-            print("individual_updates_json1", individual_updates_json)
 
             #if current alpha2 code has no updates associated with it, remove from temp object
             if (individual_updates_json[code] == []):
                 individual_updates_json.pop(code, None)
 
-# update_json(latest_iso3166_updates_after_date_filter) File "/workspace/main.py", line 161, in 
-# update_json individual_updates_json[code].append(update) 
-# AttributeError: 'dict' object has no attribute 'append
-
-        print("individual_updates_json2", individual_updates_json)
         #if updates found in new updates json compared to current one
         if (updates_found):
 
@@ -190,7 +175,7 @@ def check_iso3166_updates_main(request):
 
             #move current updates json in bucket to an archive folder, append datetime to it
             archive_filepath = os.environ["ARCHIVE_FOLDER"] + "/" + os.path.splitext(os.environ["BLOB_NAME"])[0] \
-                + "_" + str(current_datetime.strftime('%d-%m-%Y')) + ".json"
+                + "_" + str(current_datetime.strftime('%Y-%m-%d')) + ".json"
             #create blob for archive updates json 
             archive_blob = bucket.blob(archive_filepath)
             #upload old updates json to archive folder 
@@ -198,11 +183,8 @@ def check_iso3166_updates_main(request):
 
             #upload new updated json using gcp sdk, replacing current updates json 
             blob.upload_from_filename(tmp_updated_json_path)
-        
-        print("updates_found here", updates_found)
-        #set to True, updates found that arent in current updates json
-        # new_updates_found = updates_found
-        return updates_found
+
+        return updates_found, individual_updates_json
         
     def create_issue(latest_iso3166_updates_after_date_filter, month_range):
         """
@@ -230,7 +212,7 @@ def check_iso3166_updates_main(request):
         [1]: https://developer.github.com/v3/issues/#create-an-issue
         """
         issue_json = {}
-        issue_json["title"] = "ISO 3166-2 Updates: " + str(current_datetime.strftime('%d-%m-%Y')) + " (" + ', '.join(list(latest_iso3166_updates_after_date_filter)) + ")" 
+        issue_json["title"] = "ISO 3166-2 Updates: " + str(current_datetime.strftime('%Y-%m-%d')) + " (" + ', '.join(list(latest_iso3166_updates_after_date_filter)) + ")" 
         
         #get total sum of updates for all countrys in json
         total_updates = sum([len(latest_iso3166_updates_after_date_filter[code]) for code in latest_iso3166_updates_after_date_filter])
@@ -243,9 +225,15 @@ def check_iso3166_updates_main(request):
         total_updates = sum([len(latest_iso3166_updates_after_date_filter[code]) for code in latest_iso3166_updates_after_date_filter])
         total_countries = len(latest_iso3166_updates_after_date_filter)
         
+        #change body text if more than 1 country 
+        if (total_countries == 1):
+            body += "### " + str(total_updates) + " updates found for " + str(total_countries) + " country between the "
+        else:
+            body += "### " + str(total_updates) + " updates found for " + str(total_countries) + " countries between the "
+
         #display number of updates for countrys and the date period
         body += "### " + str(total_updates) + " updates found for " + str(total_countries) + " countries between the " + str(month_range) + " month period of " + \
-            str((current_datetime + relativedelta(months=-month_range)).strftime('%d-%m-%Y')) + " to " + str(current_datetime.strftime('%d-%m-%Y')) + ".\n"
+            str((current_datetime + relativedelta(months=-month_range)).strftime('%Y-%m-%d')) + " to " + str(current_datetime.strftime('%d-%m-%Y')) + ".\n"
 
         #iterate over updates in json, append to updates object
         for code in list(latest_iso3166_updates_after_date_filter.keys()):
@@ -272,7 +260,7 @@ def check_iso3166_updates_main(request):
         #add attributes to data json 
         issue_json["body"] = body
         issue_json["assignee"] = "amckenna41"
-        issue_json["labels"] = ["iso3166-updates", "iso366-2", str(current_datetime.strftime('%d-%m-%Y'))]
+        issue_json["labels"] = ["iso3166-updates", "iso3166", "iso366-2", "subdivisions", str(current_datetime.strftime('%Y-%m-%d'))]
 
         #api url and headers
         issue_url = "https://api.github.com/repos/" + os.environ["github-owner"] + "/" + os.environ["github-repo-1"] + "/issues"
@@ -282,17 +270,13 @@ def check_iso3166_updates_main(request):
 
         #make post request to github repos using api
         github_post_request = requests.post(issue_url, data=json.dumps(issue_json), headers=headers)
-        print("github_post_reques1", github_post_request)
         github_post_request = requests.post(issue_url_2, data=json.dumps(issue_json), headers=headers)
-        print("github_post_reques2", github_post_request)
 
     #if update object not empty - there are updates call update_json and create_issue functions
     if (latest_iso3166_updates_after_date_filter != {}):
-        updates_found = update_json(latest_iso3166_updates_after_date_filter)
-        print("new_updates_found there", updates_found)
+        updates_found, filtered_updates = update_json(latest_iso3166_updates_after_date_filter)
     if (updates_found):
-        print('creati g issue')
-        create_issue(latest_iso3166_updates_after_date_filter, months)
+        create_issue(filtered_updates, months)
         success_message["message"] = "ISO3166-2 updates found and successfully exported."
     else:
         success_message["message"] = "No ISO3166-2 updates found."

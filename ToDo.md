@@ -150,6 +150,7 @@ Edition/Newsletter - should be OBP.
 - [X] Unit tests for ">year" and < year , go through each entry and Date Issued, check they're all less than or greater than input year.
 - [X] API unit tests for alpha2 + year path when no year specified (https://iso3166-updates-frontend-amckenna41.vercel.app/api/alpha2/AD/year) - should return all results for AD.
 - [X] Double check '>' and '<' work for API url, may need to unicode decode these.
+- [ ] Date range not working for https://iso3166-updates.com/?year=2002-2010. 
 <!-- 
 Create new config, update config file
 gcloud api-gateway api-configs create NEW_CONFIG_ID --api=MY_API --openapi-spec=openapi2-functions.yaml 

@@ -1,4 +1,4 @@
-iso3166-updates
+iso3166-updates>=1.2.0
 iso3166
 google-cloud-storage
 requests

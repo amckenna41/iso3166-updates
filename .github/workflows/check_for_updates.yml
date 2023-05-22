@@ -27,19 +27,23 @@ jobs:
 
       #setup gcloud SDK with env vars
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v0
+        uses: google-github-actions/setup-gcloud@v0.2.0
         with:
-            version: "318.0.0"
+            service_account_email: ${{ secrets.GCP_SA_EMAIL }} 
+            service_account_key: ${{ secrets.GCP_SA_KEY }} 
             project_id: ${{ secrets.GCP_PROJECT }}
             # service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-            service_account_key: ${{ secrets.GCP_SA_KEY }}
-            # export_default_credentials: true
+            # service_account_key: ${{ secrets.GCP_SA_KEY }}
+            export_default_credentials: true
       
-      #call Cloud Func using curl command
+      #call Cloud Func using gcloud cli
       - name: Call Updates Func
         run: |
-          gcloud functions add-iam-policy-binding iso3166-updates --member=serviceAccount:iso3166-updates@iso3166-updates.iam.gserviceaccount.com --role=roles/cloudfunctions.invoker
-          curl -H "Authorization: bearer $(gcloud auth print-identity-token)" ${{ secrets.GCP_CHECK_FOR_UPDATES_URL }}
+          gcloud functions call check-for-iso3166-updates
+
+         
+# gcloud functions add-iam-policy-binding iso3166-updates --member=serviceAccount:${{ secrets.GCP_SA_EMAIL }} --role=roles/cloudfunctions.invoker
+# curl -H "Authorization: bearer $(gcloud auth print-identity-token)" ${{ secrets.GCP_CHECK_FOR_UPDATES_URL }}
 
 # curl -m 460 -X POST https://us-central1-iso3166-updates.cloudfunctions.net/check-for-iso3166-updates \
 # -H "Authorization: bearer $(gcloud auth print-identity-token)" \
