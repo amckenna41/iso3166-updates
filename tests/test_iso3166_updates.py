@@ -40,7 +40,7 @@ class ISO3166_Updates(unittest.TestCase):
     
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        # self.assertEqual(metadata('iso3166_updates')['version'], "1.2.0.", 
+        # self.assertEqual(metadata('iso3166_updates')['version'], "1.2.2.", 
         #     "iso3166-updates version is not correct, got: {}".format(metadata('iso3166_updates')['version']))
         self.assertEqual(metadata('iso3166_updates')['name'], "iso3166-updates", 
             "iso3166-updates software name is not correct, got: {}".format(metadata('iso3166_updates')['name']))

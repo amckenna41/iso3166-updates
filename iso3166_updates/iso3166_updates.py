@@ -149,7 +149,7 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
             year = year[0].split(',')
         #parse array for using greater than symbol
         elif ('>' in year[0]):
-            year = year[0].split('>')
+            year = list(year[0].rpartition(">")[1:])
             greater_than = True
             year.remove('>')
             if (len(year) > 2):
@@ -157,7 +157,7 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates",
                 greater_than = False
         #parse array for using less than symbol
         elif ('<' in year[0]):
-            year = year[0].split('<')
+            year = list(year[0].rpartition("<")[1:])
             less_than = True
             year.remove('<')
             if (len(year) > 2):
@@ -339,8 +339,8 @@ def get_updates_df(iso3166_updates_table, year=[], year_range=False, less_than=F
             return row 
 
     def get_year(row):
-        """ convert string date in rows of df into dd-mm-yyyy data format from date object. """
-        return datetime.datetime.strptime(row, '%d-%m-%Y').year
+        """ convert string date in rows of df into yyyy-mm-dd data format from date object. """
+        return datetime.datetime.strptime(row, '%Y-%m-%d').year
 
     #reformat date column if date has been corrected
     iso3166_df[date_col_name] = iso3166_df[date_col_name].apply(correct_date)
