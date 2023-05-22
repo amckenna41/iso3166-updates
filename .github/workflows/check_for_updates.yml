@@ -39,9 +39,9 @@ jobs:
       #call Cloud Func using gcloud cli
       - name: Call Updates Func
         run: |
-          gcloud functions call check-for-iso3166-updates
+          gcloud functions call check-for-iso3166-updates --region us-central1
 
-         
+        
 # gcloud functions add-iam-policy-binding iso3166-updates --member=serviceAccount:${{ secrets.GCP_SA_EMAIL }} --role=roles/cloudfunctions.invoker
 # curl -H "Authorization: bearer $(gcloud auth print-identity-token)" ${{ secrets.GCP_CHECK_FOR_UPDATES_URL }}
 
