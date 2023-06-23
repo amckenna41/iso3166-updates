@@ -21,5 +21,3 @@ python -m unittest discover tests.test_iso3166_updates -v
 ```
 
 [unittest]: https://docs.python.org/3/library/unittest.html
-
-

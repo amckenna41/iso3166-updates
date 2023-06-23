@@ -1,10 +1,9 @@
 from flask import jsonify
-from google.cloud import storage, exceptions
+from google.cloud import storage
 from google.api_core.exceptions import NotFound
 import json 
 import iso3166
 import re
-import unicodedata
 import os
 from datetime import datetime
 from dateutil import relativedelta
@@ -12,8 +11,9 @@ from dateutil import relativedelta
 def iso3166_updates_main(request):
     """
     Google Cloud Function for iso3166-updates API. This function can take
-    country, alpha2 code and year as input parameters and return the relevant 
-    ISO3166 updates for 1 or more input countries.
+    country, alpha-2 code, year and months as input parameters and return 
+    the relevant ISO 3166 updates for 1 or more input countries.
+
     Parameters
     ----------
     :request : (flask.Request)
@@ -22,7 +22,7 @@ def iso3166_updates_main(request):
     Returns
     -------
     :iso3166_updates : json
-      jsonified response of iso3166 updates for selected country/alpha2 ISO code.
+      jsonified response of iso3166 updates for selected country/alpha-2 ISO code.
     """
     #json object storing the error message and status code 
     error_message = {}
@@ -34,14 +34,14 @@ def iso3166_updates_main(request):
         #create a bucket object for the bucket
         bucket = storage_client.get_bucket(os.environ["BUCKET_NAME"])
     except NotFound:
-        error_message["message"] = f"Error retrieving updates data json."
+        error_message["message"] = "Error retrieving updates data json storage bucket: {}.".format(os.environ["BUCKET_NAME"])
         return jsonify(error_message), 400
     #create a blob object from the filepath
     blob = bucket.blob(os.environ["BLOB_NAME"])      
     
     #return error if object not found in bucket
     if not (blob.exists()):
-        error_message["message"] = f"Error retrieving updates data json."
+        error_message["message"] = "Error retrieving updates data json: {}.".format(os.environ["BLOB_NAME"])
         return jsonify(error_message), 400
 
     #download iso3166-updates.json file from storage bucket 
@@ -59,7 +59,7 @@ def iso3166_updates_main(request):
     year = []
     months = []
 
-    #parse alpha2 code parameter
+    #parse alpha-2 code parameter
     if (request.args and 'alpha2' in request.args):
         alpha2_code = sorted([request.args.get('alpha2').upper()])
 
@@ -88,18 +88,18 @@ def iso3166_updates_main(request):
 
     def convert_to_alpha2(alpha3_code):
         """ 
-        Convert an ISO3166 country's 3 letter alpha-3 code into its 2 letter
+        Convert an ISO 3166 country's 3 letter alpha-3 code into its 2 letter
         alpha-2 counterpart. 
 
         Parameters 
         ----------
         :alpha3_code: str
-            3 letter ISO3166 country code.
+            3 letter ISO 3166 country code.
         
         Returns
         -------
         :iso3166.countries_by_alpha3[alpha3_code].alpha2: str
-            2 letter ISO3166 country code. 
+            2 letter ISO 3166 country code. 
         """
         #return error if 3 letter alpha-3 code not found
         if not (alpha3_code in list(iso3166.countries_by_alpha3.keys())):
@@ -181,7 +181,7 @@ def iso3166_updates_main(request):
             error_message["message"] = f"Invalid year input: {''.join(year)}."
             return jsonify(error_message), 400
 
-    #get updates from updates_data object per country using alpha2 code
+    #get updates from updates_data object per country using alpha-2 code
     if (alpha2_code == [] and year == [] and months == []):
         iso3166_updates = {alpha2_code[0]: updates_data[alpha2_code[0]]}
     else:
@@ -191,17 +191,17 @@ def iso3166_updates_main(request):
     #temporary updates object
     temp_iso3166_updates = {}
 
-    #if no valid alpha2 codes input use all alpha2 codes from iso3166 and all updates data
+    #if no valid alpha-2 codes input use all alpha-2 codes from iso3166 and all updates data
     if ((year != [] and alpha2_code == [] and months == []) or \
-        ((year == [] or year != []) and alpha2_code == [] and months != [])): #**
+        ((year == [] or year != []) and alpha2_code == [] and months != [])):
         input_alpha2_codes  = list(iso3166.countries_by_alpha2.keys())
         input_data = updates_data
-    #else set input alpha2 codes to inputted and use corresponding updates data
+    #else set input alpha-2 codes to inputted and use corresponding updates data
     else:
         input_alpha2_codes = alpha2_code
         input_data = iso3166_updates
     
-    #use temp object to get updates data either for specific country/alpha2 code or for all
+    #use temp object to get updates data either for specific country/alpha-2 code or for all
     #countries, dependant on input_alpha2_codes and input_data vars above
     if (year != [] and months == []):
         for code in input_alpha2_codes:
@@ -232,7 +232,7 @@ def iso3166_updates_main(request):
                         if (temp_year != "" and (temp_year == year_)):
                             temp_iso3166_updates[code].append(input_data[code][update])
             
-            #if current alpha2 has no rows for selected year/year range, remove from temp object
+            #if current alpha-2 has no rows for selected year/year range, remove from temp object
             if (temp_iso3166_updates[code] == []):
                 temp_iso3166_updates.pop(code, None)
 
@@ -259,7 +259,7 @@ def iso3166_updates_main(request):
                 if (diff_months <= months):
                     temp_iso3166_updates[code].append(input_data[code][update])
    
-            #if current alpha2 has no rows for selected month range, remove from temp object
+            #if current alpha-2 has no rows for selected month range, remove from temp object
             if (temp_iso3166_updates[code] == []):
                 temp_iso3166_updates.pop(code, None)
     else:

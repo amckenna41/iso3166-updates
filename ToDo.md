@@ -1,5 +1,5 @@
 # To Do 
-- [ ] Create CRON job that runs the script every few months using second cloud func, checking for updates on all the Wikis and exporting and updating the neccessary files (https://www.youtube.com/watch?v=2OwLb-aaiBQ). 
+- [X] Create CRON job that runs the script every few months using second cloud func, checking for updates on all the Wikis and exporting and updating the neccessary files (https://www.youtube.com/watch?v=2OwLb-aaiBQ). 
 - [ ] Check variable naming conventions (https://visualgit.readthedocs.io/en/latest/pages/naming_convention.html).
 - [X] Check output of bandit and flake8 check.
 - [X] Export updates to csv, dataframe.
@@ -21,10 +21,10 @@
 - [X] Add format section to README and demo.
 - [X] Remove .DS_Store and pycache from repo.
 - [X] Add API/Google Cloud code to its own folder in repo.
-- [ ] Make Source repo on GCP, use as import to Cloud Function (https://www.youtube.com/watch?v=LAcErtGU-VU). Creat Cloud Build that builds on push to branch, using repo as source.
+- [X] Make Source repo on GCP, use as import to Cloud Function (https://www.youtube.com/watch?v=LAcErtGU-VU). Creat Cloud Build that builds on push to branch, using repo as source.
 - [X] Add diagram of cloud arch & pipeline in API fodler: https://medium.com/google-cloud/use-multiple-paths-in-cloud-functions-python-and-flask-fc6780e560d3
 - [X] Add API tests for tests folder - iterate through all iso codes confirming that successful response code returned.
-- [ ] Update/upload iso3166-updates.json to GCP Stroage in github workflow (https://sha.ws/automatic-upload-to-google-cloud-storage-with-github-actions.html).
+- [X] Update/upload iso3166-updates.json to GCP Stroage in github workflow (https://sha.ws/automatic-upload-to-google-cloud-storage-with-github-actions.html).
 - [X] Update Google Cloud Function on push to repo in workflow - if changes made to its folder.
 - [X] Add in readme/demo how to use API with requests library.
 - [X] Return multiple updates if array of iso_codes applied.
@@ -36,7 +36,7 @@
 - [X] Change "Date issued" to "Date Issued"
 - [X] Accept list of iso codes or string seperated by comma for main python script - use regex to check correct format.
 - [X] Several instances where "Online Browsing Platform" wrriten as "Online BrowsingPlatform" e.g BG, BY
-- [ ] Validation in get_updates_df func, if input table is not type list & >1 then raise exception.
+- [X] Validation in get_updates_df func, if input table is not type list & >1 then raise exception.
 - [X] Update get_updates comments.
 - [X] In code & comments change any var refereneces to "iso" to "iso3166" for clarification.
 - [X] API can accept year input with greater or less than symbol.
@@ -57,10 +57,10 @@ Edition/Newsletter - should be OBP.
 - [ ] AF, BW, CZ - ensure that newlines in a column are not being concatted into one.
 - [X] Add demo link to Colab to readme
 - [X] Remove info about ISO3166-1 from intro on readme
-- [ ] Go over year input parameter in software. 
+- [X] Go over year input parameter in software. 
 - [X] https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates?alpha2=FR&year=2018,201 - remove invalid years from year input and just use 2018 in this example.
-- [ ] If invalid year/type input to python script, return all updates for inputted alpha2/s
-- [ ] If invalid alpha2 input then export all updates data (python3 iso3166_updates.py --alpha2=adkad)
+- [X] If invalid year/type input to python script, return all updates for inputted alpha2/s
+- [X] If invalid alpha2 input then export all updates data (python3 iso3166_updates.py --alpha2=adkad)
 - [X] Unit tests that test if Edition/Newsletter columns are not empty.
 - [X] Unit tests that test some alpha2 codes that have no Updates/Changes Section.
 - [X] For all unit tests add country name beside alpha2 code & change e.g test_alpha1_code -> test_ad_code
@@ -72,7 +72,7 @@ Edition/Newsletter - should be OBP.
 - [ ] Add green MIT logo to Readme (https://shields.io/category/license).
 - [ ] Documentation on readthedocs.
 - [ ] Create logo for API.
-- [ ] If invalid input param put into URL then return empty dict instead.
+- [X] If invalid input param put into URL then return empty dict instead.
 - [X] Example on reamde and demo of how to use API using JS axios library (https://www.taniarascia.com/how-to-connect-to-an-api-with-javascript/).
 - [X] Add diagram of CRON job workflow to worklfow dir on repo, including Email Cloud Func.
 - [X] If json file is different in repo, upload to Cloud Storage.
@@ -80,19 +80,19 @@ Edition/Newsletter - should be OBP.
 - [X] Remove if __name__ == "main" from software script. 
 - [X] Software can accept list of alpha2 codes e.g "GY, HI, LU, MD"
 - [X] Add try, except to Python requests.get in software, don't do it in unit tests.
-- [ ] For 3rd test in test_get_updates_df tests, add array/list of correct column headers, use this array instead of list.
+- [X] For 3rd test in test_get_updates_df tests, add array/list of correct column headers, use this array instead of list.
 - [X] Finalise unit tests for get_updates() func.
 - [X] Fix CSV file naming conventions when multiple alpha2 codes input to get_updates() func.
 - [X] concat_csv param in get_updates() that determines whether to seperate inputted alpha2 updates into seperate or the same json file.
 - [X] Create notification function that emails me when an update is found from CRON job workflow (https://documentation.matillion.com/docs/2434849). Add to workflows folder.
 - [X] Upload any found updates from check_for_updates function to GCP bucket, download same object in email_updates func.
-- [ ] Add month unit tests to api tests.
-- [ ] Add month param to software.
+- [X] Add month unit tests to api tests.
+- [X] Add month param to software.
 - [X] Mention the earliest Date Issued was 2000-06-21.
 - [ ] Add readthedocs badge - [![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](http://ansicolortags.readthedocs.io/?badge=latest)
 - [ ] Implemenet API gateway and endpoints for Cloud Func - update cloud arch image to include gateway, endpoints, load balancer, instance group, template etc.
 - [ ] https://cloud.google.com/api-gateway/docs/passing-data
-- [ ] Test concat_updates param in unit tests.
+- [X] Test concat_updates param in unit tests.
 - [X] Add path-ignore keywords to GitHub Action.
 - [X] Update api/readme to incorporate new api gateway.
 - [X] Update api config / gateway if api config file changed. Documentation requires new one to be created. Create new one (iso3166-updates-config-2), delete old one (iso3166-updates), then create new one (iso3166-updates), delete old new one (iso3166-updates-config-2) 
@@ -128,21 +128,20 @@ Edition/Newsletter - should be OBP.
 - [X] Actually return the json of updates from get_updates func. Update unit tests such that more of a focus on the output object than the json.
 - [X] Append list of alpha-2 codes with updates to ISO3166-2 Updates: 09-05-2023 (here).
 - [ ] https://github.com/codecov/codecov-action/issues/559
-- [ ] Check for unit tests for passing in alpha3 code into API.
+- [X] Check for unit tests for passing in alpha3 code into API.
 - [X] Reconfigure date format to format Y-m-d. Will need to rerun software.
 - [X] Update check-for-updates API to use GCP Client library instead of requests after making storage bucket unpublic.
-- [ ] In check-for-updates, verify that the new updates aren't already in updates.json object. Currently, it may just Create an Issue if updates are found in specified month period, regardless if they're in object. Current behaviour creates issue regardless.
+- [X] In check-for-updates, verify that the new updates aren't already in updates.json object. Currently, it may just Create an Issue if updates are found in specified month period, regardless if they're in object. Current behaviour creates issue regardless.
 - [X] Update api to reflect updates from frontend.
-- [ ] API unit tests, pass in invalid 3 letter alpha-3 code, should return error message.
+- [X] API unit tests, pass in invalid 3 letter alpha-3 code, should return error message.
 - [X] Remove request.args or request_json from api, probably only need one.
 - [X] In check-for-updates, if new updates are found in month range, move old updates.json to an archive file with its date appened to filename, save new updates.json to root folder.
-- [ ] In updates json, currently I think we're comparing the new updates found in specified month range with the whole of the updates JSON. Should iterate through new updates JSON to see if individual key string found in json.
 - [X] Rename vars in check-for-updates to make more clear the current and old updates jsons.
 - [X] Update return message in check-for-updates to be flask error message response.
 - [X] Update software to be able to accept alpha-3 codes.
 - [ ] Update API cloud arch to incorporate new archive folder and Create Issue functionality.
-- [ ] Create Issue seems to add all updates from month range rather than just those updates that aren't in json.
-- [ ] check-for-updates not working: need to publish new version of software, updates using d-m-Y format addtionally being appended with updates in format Y-m-d.
+- [X] Create Issue seems to add all updates from month range rather than just those updates that aren't in json.
+- [X] check-for-updates not working: need to publish new version of software, updates using d-m-Y format addtionally being appended with updates in format Y-m-d.
 - [X] Unit tests to check all Date Issued in correct format. 
 - [X] Change all date formats back to original in unit tests.
 - [X] In API, incorporate different API endpoints for parameters, e.g /alpha2, /year, /months.
@@ -150,7 +149,54 @@ Edition/Newsletter - should be OBP.
 - [X] Unit tests for ">year" and < year , go through each entry and Date Issued, check they're all less than or greater than input year.
 - [X] API unit tests for alpha2 + year path when no year specified (https://iso3166-updates-frontend-amckenna41.vercel.app/api/alpha2/AD/year) - should return all results for AD.
 - [X] Double check '>' and '<' work for API url, may need to unicode decode these.
-- [ ] Date range not working for https://iso3166-updates.com/?year=2002-2010. 
+- [X] Change license from MIT to MPL or BSD. Find which one works best.
+- [X] Add examples for use of month query parameter in api.md and iso3166-updates-api.
+- [X] Unit tests that validate when using query string params that 
+- [X] Convert alpha2/alpha3 to alpha-2/alpha-3 in test modules.
+- [X] Update and add some more examples to api.md.
+- [X] Run vulture library to search package and remove any unused code/vars.
+- [ ] Pull request for django-countries (https://github.com/SmileyChris/django-countries/tree/main). Update data.py and __init__.py using iso3166_2.json to get list of subdivision names and flags.
+- [X] For tableToArray test, pass in wrong data type, int, bool etc.
+- [X] Combine error tests of same type into one Test case.
+- [X] In get_updates_df(), provide validation if input array parameter isnt array/list.
+- [X] Double check year_range, greater_than and less_than need to be passed into get_updates_df.
+- [ ] Go through updates object country by country, comparing its output and that of wiki.
+- [X] Include tests for year param in iso3166.get_updates(year=[])
+- [X] If no alpha2 input param values input but year is then append year to filename, append list of years if less than 10 years input e.g iso3166-updates-RU-2011,2022.json, iso3166-updates-RU-2011,2022.csv
+- [X] Unit tests for testing above filename convention.
+- [X] Seperate export_json and export_csv filename variables into one export_filename var.
+- [X] Currently if year passed in as var, all alpha2 codes are added to JSON, remove any empty ones.
+- [X] Concat updates in csv file as well, add primary key column of alpha2 iso3166-1 code, only add column if one or more alpha2 codes present.
+- [X] Unit tests for testing new primary key column in csv export.
+- [X] In readme include examples of calling the main script from terminal, export_csv and export_json called by --export_json/--no-export_json.
+- [X] Update comments in iso3166_updates.py to reflect new export_csv concat functionality.
+- [X] python3 iso3166_updates.py --alpha2=ES,IE,FR --export_csv --no-concat_updates (doesnt produce individual csv files).
+- [X] python3 iso3166_updates.py --alpha2=ES,IE,FR --no-concat_updates --year=2011 --export_csv : doesn't append year to filename.
+- [X] Arrows in csv output (->) get converted into ,Üí - convert → to -> :
+if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
+- [X] Convert small functions in iso3166_updates.py into lamda functions.
+- [X] Unit tests to test → not in any entries. 
+- [X] Don't remove empty dicts when all country updates being generated.
+- [X] Unit tests for CSV that has all updates from it.
+- [X] If no updates found, export empty json but don't export empty csv, even if export_csv=True
+- [X] python3 iso3166_updates.py --alpha2=ES,IE,FR --no-concat_updates --year=2011 --export_csv : exports empty CSVs. /iso3166_updates/test-iso3166-updates/iso3166-updates-ES-2011.csv 
+- [X] If  no updates found for singular country export, export {} rather than "ES" : {} 
+- [ ] Include unit tests for json, open each json, validate keys and length.
+- [ ] Validate API returns {} when single alpha-2 input and no updates found e.g /alpha2/DE should return {} not "DE": {}.
+- [X] Update iso3166-updates.json on repo and GCP with new updated functionality.
+- [X] In unit tests, don't append alpha-2 codes to filename, this should automatically be done in code (export_filename +).
+- [X] Update filename when Year input parameter input with greater than/less than or year range.
+- [X] Get rid of export_json_filename and csv export_json_filename to just have one export_filename.
+- [X] Add year range tests for test_alpha2 and test_alpha2_year test cases.
+- [X] Add /year/alpha2 path to api repo, currently just has alpha2/year path e.g https://iso3166-updates.com/api/year/2027/alpha2/ie.
+- [X] Add params arg to requests.get()
+- [X] In unit tests, change test_request var to name more appropriate to test case.
+- [ ] Brings up api error: https://iso3166-updates.com/api/alpha2/tr/year/
+- [X] Add "gt" or "lt" to any vars/requests that are using greater than/less than years etc.
+- [X] In unit tests, change datetime.datetime to datetime.
+- [X] Remove any instance of "test_request" var in unit tests.
+- [X] Change arrow from → to -> in api unit tests after reupload.
+- [ ] Reupload iso3166-updates.json - empty dicts e.g AX not showing up in output.
 <!-- 
 Create new config, update config file
 gcloud api-gateway api-configs create NEW_CONFIG_ID --api=MY_API --openapi-spec=openapi2-functions.yaml 

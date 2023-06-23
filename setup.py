@@ -5,11 +5,10 @@
 import pathlib
 from setuptools import setup, find_packages
 import sys
-# import iso3166_updates
 
 #software metadata
 __name__ = 'iso3166-updates'
-__version__ = "1.2.2"
+__version__ = "1.3.0"
 __description__ = "A Python package that pulls the latest updates & changes to all ISO3166 listed countries."
 __author__ = 'AJ McKenna, https://github.com/amckenna41'
 __authorEmail__ = 'amckenna41@qub.ac.uk'
@@ -18,8 +17,8 @@ __url__ = 'https://github.com/amckenna41/iso3166-updates'
 __download_url__ = "https://github.com/amckenna41/iso3166-updates/archive/refs/heads/main.zip"
 __status__ = 'Development'
 __maintainer__ = "AJ McKenna"
-__keywords__ = ["iso", "iso3166", "beautifulsoup", "python", "pypi", "countries", "country codes", "csv" \
-            "iso3166-2", "iso3166-1", "alpha2", "alpha3"]
+__keywords__ = ["iso", "iso3166", "beautifulsoup", "python", "pypi", "countries", "country codes", "csv", \
+            "iso3166-2", "iso3166-1", "alpha-2", "alpha-3"]
 __test_suite__ = "tests"
  
 #ensure python version is greater than 3

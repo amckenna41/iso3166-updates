@@ -55,7 +55,7 @@
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
-            "Code/Subdivision change": "Codes: AF-LOW Lowgar → AF-LOG Lōgar AF-ORU Orūzgān → AF-URU Uruzgān",
+            "Code/Subdivision change": "Codes: AF-LOW Lowgar -> AF-LOG Lōgar AF-ORU Orūzgān -> AF-URU Uruzgān",
             "Description of change in newsletter": "Language corrections, administrative name corrections, alphabetical re-ordering and source list update"
         },
         {
@@ -138,7 +138,7 @@
         {
             "Date Issued": "2002-05-21",
             "Edition/Newsletter": "Newsletter I-2 (https://web.archive.org/web/20081218103157/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf)",
-            "Code/Subdivision change": "Subdivisions added: 12 prefectures (now called counties) Codes: AL-LA Laç → AL-KB Kurbin",
+            "Code/Subdivision change": "Subdivisions added: 12 prefectures (now called counties) Codes: AL-LA Laç -> AL-KB Kurbin",
             "Description of change in newsletter": "Introduction of 12 prefectures with their code elements. One district name and its code element changed. One district name corrected. Attribution of the prefecture code element to each district"
         }
     ],
@@ -228,7 +228,7 @@
         {
             "Date Issued": "2004-03-08",
             "Edition/Newsletter": "Newsletter I-6 (https://web.archive.org/web/20081218103224/http://www.iso.org/iso/iso_3166-2_newsletter_i-6_en.pdf)",
-            "Code/Subdivision change": "Codes: New South Wales: AU-NS → AU-NSW Queensland: AU-QL → AU-QLD Tasmania: AU-TS → AU-TAS Victoria: AU-VI → AU-VIC Australian Capital Territory: AU-CT → AU-ACT",
+            "Code/Subdivision change": "Codes: New South Wales: AU-NS -> AU-NSW Queensland: AU-QL -> AU-QLD Tasmania: AU-TS -> AU-TAS Victoria: AU-VI -> AU-VIC Australian Capital Territory: AU-CT -> AU-ACT",
             "Description of change in newsletter": "Change of subdivision code in accordance with Australian Standard AS 4212-1994"
         }
     ],
@@ -251,13 +251,13 @@
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
-            "Code/Subdivision change": "Subdivisions added: AZ-KAN Kǝngǝrli AZ-NV Naxçıvan (municipality) Subdivisions deleted: AZ-SS Şuşa Codes: AZ-AB Əli Bayramlı → AZ-SR Şirvan AZ-DAV Dəvəçi → AZ-SBN Şabran AZ-XAN Xanlar → AZ-GYG Göygöl",
+            "Code/Subdivision change": "Subdivisions added: AZ-KAN Kǝngǝrli AZ-NV Naxçıvan (municipality) Subdivisions deleted: AZ-SS Şuşa Codes: AZ-AB Əli Bayramlı -> AZ-SR Şirvan AZ-DAV Dəvəçi -> AZ-SBN Şabran AZ-XAN Xanlar -> AZ-GYG Göygöl",
             "Description of change in newsletter": "Alphabetical re-ordering, name change of administrative places, first level prefix addition and source list update"
         },
         {
             "Date Issued": "2002-05-21",
             "Edition/Newsletter": "Newsletter I-2 (https://web.archive.org/web/20081218103157/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf)",
-            "Code/Subdivision change": "Codes: Naxçıvan: AZ-MM → AZ-NX",
+            "Code/Subdivision change": "Codes: Naxçıvan: AZ-MM -> AZ-NX",
             "Description of change in newsletter": "Correction of one code and four spelling errors. Notification of the rayons belonging to the autonomous republic"
         }
     ],
@@ -335,7 +335,7 @@
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
-            "Code/Subdivision change": "Subdivisions added: BD-F Rangpur (division) Codes: Barisal (division) : BD-1 → BD-A Chittagong (division) : BD-2 → BD-B Dhaka (division) : BD-3 → BD-C Khulna (division) : BD-4 → BD-D Rajshahi (division) : BD-5 → BD-E Sylhet (division) : BD-6 → BD-G",
+            "Code/Subdivision change": "Subdivisions added: BD-F Rangpur (division) Codes: Barisal (division) : BD-1 -> BD-A Chittagong (division) : BD-2 -> BD-B Dhaka (division) : BD-3 -> BD-C Khulna (division) : BD-4 -> BD-D Rajshahi (division) : BD-5 -> BD-E Sylhet (division) : BD-6 -> BD-G",
             "Description of change in newsletter": "Country name romanization adjustment, first level prefix addition, deletion of generic terms, addition of administrative division and source list update"
         },
         {
@@ -369,7 +369,7 @@
         {
             "Date Issued": "2016-11-15",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
-            "Code/Subdivision change": "Spelling change:BF-TUI Tui → Tuy",
+            "Code/Subdivision change": "Spelling change:BF-TUI Tui -> Tuy",
             "Description of change in newsletter": "Change of spelling of BF-TUI; update list source"
         },
         {
@@ -425,7 +425,7 @@
         {
             "Date Issued": "2002-05-21",
             "Edition/Newsletter": "Newsletter I-2 (https://web.archive.org/web/20081218103157/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 9 regions (see below) → 28 regions",
+            "Code/Subdivision change": "Subdivision layout: 9 regions (see below) -> 28 regions",
             "Description of change in newsletter": "New subdivision layout: Nine regions with former names (two remaining with former code). Ten regions with new names. New references for list source, code source and romanization system"
         }
     ],
@@ -439,7 +439,7 @@
         {
             "Date Issued": "2007-04-17",
             "Edition/Newsletter": "Newsletter I-8 (https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 12 regions (see below) → 5 governorates",
+            "Code/Subdivision change": "Subdivision layout: 12 regions (see below) -> 5 governorates",
             "Description of change in newsletter": "Modification of the administrative structure"
         }
     ],
@@ -496,7 +496,7 @@
         {
             "Date Issued": "2019-11-22",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
-            "Code/Subdivision change": "Spelling change:BN-BM Brunei-Muara → Brunei dan Muara (ms)",
+            "Code/Subdivision change": "Spelling change:BN-BM Brunei-Muara -> Brunei dan Muara (ms)",
             "Description of change in newsletter": "Change of subdivision name of BN-BM; Update List Source"
         }
     ],
@@ -557,7 +557,7 @@
         {
             "Date Issued": "2010-06-30",
             "Edition/Newsletter": "Newsletter II-2 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 21 districts (see below) → 32 districts (mistakenly listed as 31 districts in newsletter)",
+            "Code/Subdivision change": "Subdivision layout: 21 districts (see below) -> 32 districts (mistakenly listed as 31 districts in newsletter)",
             "Description of change in newsletter": "Update of the administrative structure and of the list source"
         }
     ],
@@ -598,13 +598,13 @@
         {
             "Date Issued": "2014-10-29",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:BW)",
-            "Code/Subdivision change": "Subdivisions added:BW-CH ChobeBW-FR FrancistownBW-GA  \tGaboroneBW-JW JwanengBW-LO LobatseBW-SP Selibe PhikweBW-ST Sowa TownSpelling changes:BW-NE North-East → North EastBW-NW North-West → North WestBW-SE South-East → South East",
+            "Code/Subdivision change": "Subdivisions added:BW-CH ChobeBW-FR FrancistownBW-GA  \tGaboroneBW-JW JwanengBW-LO LobatseBW-SP Selibe PhikweBW-ST Sowa TownSpelling changes:BW-NE North-East -> North EastBW-NW North-West -> North WestBW-SE South-East -> South East",
             "Description of change in newsletter": "Add 1 district BW-CH, 2 cities BW-FR and BW-GA, 4 towns BW-JW, BW-LO, BW-SP, BW-ST; remove hyphens from BW-NE, BW-NW, and BW-SE; update List Source"
         },
         {
             "Date Issued": "2003-09-05",
             "Edition/Newsletter": "Newsletter I-5 (https://web.archive.org/web/20081218103244/http://www.iso.org/iso/iso_3166-2_newsletter_i-5_en.pdf)",
-            "Code/Subdivision change": "Subdivisions deleted: BW-CH Chobe Codes: BW-NG Ngamiland → BW-NW North-West",
+            "Code/Subdivision change": "Subdivisions deleted: BW-CH Chobe Codes: BW-NG Ngamiland -> BW-NW North-West",
             "Description of change in newsletter": "Deletion of Chobe district which is incorporated into (new) BW-NW. Change of code element of North-West District to BW-NW. Deletion of alternative names. Update of list source"
         }
     ],
@@ -645,19 +645,19 @@
         {
             "Date Issued": "2014-10-29",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:CA)",
-            "Code/Subdivision change": "Name change:CA-YT Yukon Territory → Yukon",
+            "Code/Subdivision change": "Name change:CA-YT Yukon Territory -> Yukon",
             "Description of change in newsletter": "Change spelling of CA-YT; update List Source"
         },
         {
             "Date Issued": "2002-12-10",
             "Edition/Newsletter": "Newsletter I-4 (https://web.archive.org/web/20081218103210/http://www.iso.org/iso/iso_3166-2_newsletter_i-4_en.pdf)",
-            "Code/Subdivision change": "Codes: CA-NF Newfoundland → CA-NL Newfoundland and Labrador",
+            "Code/Subdivision change": "Codes: CA-NF Newfoundland -> CA-NL Newfoundland and Labrador",
             "Description of change in newsletter": "Change of code element of Newfoundland and Labrador"
         },
         {
             "Date Issued": "2002-05-21",
             "Edition/Newsletter": "Newsletter I-2 (https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf)",
-            "Code/Subdivision change": "Codes: CA-NF Newfoundland → CA-NL Newfoundland and Labrador",
+            "Code/Subdivision change": "Codes: CA-NF Newfoundland -> CA-NL Newfoundland and Labrador",
             "Description of change in newsletter": "Correction of name form of CA-NF"
         },
         {
@@ -678,7 +678,7 @@
         {
             "Date Issued": "2002-05-21",
             "Edition/Newsletter": "Newsletter I-2 (https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf)",
-            "Code/Subdivision change": "Codes: CD-HC Haut-Congo → CD-OR Orientale",
+            "Code/Subdivision change": "Codes: CD-HC Haut-Congo -> CD-OR Orientale",
             "Description of change in newsletter": "One subdivision name changed. Generic name of subdivisions changed. New reference in the list source"
         }
     ],
@@ -800,7 +800,7 @@
         {
             "Date Issued": "2017-11-23",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
-            "Code/Subdivision change": "Change of subdivision code:CN-11 → CN-BJCN-12 → CN-TJCN-13 → CN-HECN-14 → CN-SXCN-15 → CN-NMCN-21 → CN-LNCN-22 → CN-JLCN-23 → CN-HLCN-31 → CN-SHCN-32 → CN-JSCN-33 → CN-ZJCN-34 → CN-AHCN-35 → CN-FJCN-36 → CN-JXCN-37 → CN-SDCN-41 → CN-HACN-42 → CN-HBCN-43 → CN-HNCN-44 → CN-GDCN-45 → CN-GXCN-46 → CN-HICN-50 → CN-CQCN-51 → CN-SCCN-52 → CN-GZCN-53 → CN-YNCN-54 → CN-XZCN-61 → CN-SNCN-62 → CN-GSCN-63 → CN-QHCN-64 → CN-NXCN-65 → CN-XJCN-71 → CN-TWCN-91 → CN-HKCN-92 → CN-MO",
+            "Code/Subdivision change": "Change of subdivision code:CN-11 -> CN-BJCN-12 -> CN-TJCN-13 -> CN-HECN-14 -> CN-SXCN-15 -> CN-NMCN-21 -> CN-LNCN-22 -> CN-JLCN-23 -> CN-HLCN-31 -> CN-SHCN-32 -> CN-JSCN-33 -> CN-ZJCN-34 -> CN-AHCN-35 -> CN-FJCN-36 -> CN-JXCN-37 -> CN-SDCN-41 -> CN-HACN-42 -> CN-HBCN-43 -> CN-HNCN-44 -> CN-GDCN-45 -> CN-GXCN-46 -> CN-HICN-50 -> CN-CQCN-51 -> CN-SCCN-52 -> CN-GZCN-53 -> CN-YNCN-54 -> CN-XZCN-61 -> CN-SNCN-62 -> CN-GSCN-63 -> CN-QHCN-64 -> CN-NXCN-65 -> CN-XJCN-71 -> CN-TWCN-91 -> CN-HKCN-92 -> CN-MO",
             "Description of change in newsletter": "Change of subdivision codeschange of subdivision name of CN-NM, CN-GX, CN-XZ, CN-NX, CN-XJ, CN-BJ, CN-TJ, CN-SH, CN-CQ, CN-HE, CN-SX, CN-LN, CN-JL, CN-HL CN-JS, CN-ZJ, CN-AH, CN-FJ, CN-JX, CN-SD, CN-HA, CN-HB, CN-HN, CN-GD, CN-HI, CN-SC, CN-GZ, CN-YN, CN-SN, CN-GS, CN-QH, CN-TW, CN-HK, CN-MOaddition of remark in parentheses to subdivision name for CN-HK, CN-MO in Englishaddition of region CN-MO in Portugueseupdate code sourceupdate list source"
         },
         {
@@ -849,13 +849,13 @@
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
-            "Code/Subdivision change": "Codes: São Lourenço dos Órgãos CV-SL → CV-SO",
+            "Code/Subdivision change": "Codes: São Lourenço dos Órgãos CV-SL -> CV-SO",
             "Description of change in newsletter": "Correction of NL II-2 for toponyms and typographical errors and source list update."
         },
         {
             "Date Issued": "2010-06-30",
             "Edition/Newsletter": "Newsletter II-2 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf)",
-            "Code/Subdivision change": "Subdivisions added: CV-RB Ribeira Brava CV-RS Ribeira Grande de Santiago CV-CF Santa Catarina do Fogo CV-SL São Lourenço dos Órgãos CV-SS São Salvador do Mundo CV-TS Tarrafal de São Nicolau Subdivisions deleted: CV-SN São Nicolau Codes: CV-CS Calheta de São Miguel → CV-SM São Miguel",
+            "Code/Subdivision change": "Subdivisions added: CV-RB Ribeira Brava CV-RS Ribeira Grande de Santiago CV-CF Santa Catarina do Fogo CV-SL São Lourenço dos Órgãos CV-SS São Salvador do Mundo CV-TS Tarrafal de São Nicolau Subdivisions deleted: CV-SN São Nicolau Codes: CV-CS Calheta de São Miguel -> CV-SM São Miguel",
             "Description of change in newsletter": "Addition of the country code prefix as the first code element, update of the administrative structure and of the list source"
         },
         {
@@ -910,7 +910,7 @@
         {
             "Date Issued": "2020-03-02",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
-            "Code/Subdivision change": "Change of subdivision name:CZ-10 Praha, Hlavní mešto → Praha, Hlavní městoCZ-802 Frýdek Místek → Frýdek-Místek",
+            "Code/Subdivision change": "Change of subdivision name:CZ-10 Praha, Hlavní mešto -> Praha, Hlavní městoCZ-802 Frýdek Místek -> Frýdek-Místek",
             "Description of change in newsletter": "Typographical correction of subdivision name of CZ-10, CZ-802; Typographical correction of subdivision category name in Czech"
         },
         {
@@ -922,7 +922,7 @@
         {
             "Date Issued": "2016-11-15",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
-            "Code/Subdivision change": "Change of subdivision code:CZ-621 → CZ-641CZ-624 → CZ-644CZ-622 → CZ-642CZ-623 → CZ-643CZ-611 → CZ-631CZ-612 → CZ-632CZ-613 → CZ-633CZ-10A → CZ-110CZ-10B → CZ-111CZ-10C → CZ-112CZ-10D → CZ-113CZ-0E → CZ-114CZ-10F5 → CZ-115CZ-614 → CZ-634CZ-626 → CZ-646CZ-615 → CZ-635CZ-627 → CZ-647CZ-PR → CZ-10",
+            "Code/Subdivision change": "Change of subdivision code:CZ-621 -> CZ-641CZ-624 -> CZ-644CZ-622 -> CZ-642CZ-623 -> CZ-643CZ-611 -> CZ-631CZ-612 -> CZ-632CZ-613 -> CZ-633CZ-10A -> CZ-110CZ-10B -> CZ-111CZ-10C -> CZ-112CZ-10D -> CZ-113CZ-0E -> CZ-114CZ-10F5 -> CZ-115CZ-614 -> CZ-634CZ-626 -> CZ-646CZ-615 -> CZ-635CZ-627 -> CZ-647CZ-PR -> CZ-10",
             "Description of change in newsletter": "Addition of category name of “capital city” in eng, fra, ces; change of subdivision category of CZ-10 from region to capital city; change of spelling of CZ-802, CZ-806, CZ-63; typographical correction of CZ-615; addition of districts CZ-116 to CZ-122; change of parent subdivision from CZ-JC to CZ-31, CZ-JM to CZ-64, CZ-KA to CZ-41, CZ-KR to CZ-52, CZ-LI to CZ-51, Z-O to CZ-80, CZ-OL to CZ-71, CZ-PA to CZ-53, CZ-PL to CZ-32, CZ-ST to CZ-20, CZ-US to CZ-42, CZ-VY to CZ-63, CZ-ZL to CZ-72; change of subdivision code from CZ-621 to CZ 641, CZ-624 to CZ 644; CZ-622 to CZ 642, CZ-623 to CZ 643, CZ-611 to CZ 631, CZ-612 to CZ 632, CZ-613 to CZ 633, CZ-10A to CZ 110, CZ-10B to CZ 111, CZ-10C to CZ 112, CZ-10D to CZ 113, CZ-0E to CZ 114, CZ-10F to CZ 115, CZ-614 to CZ 634, CZ-626 to CZ 646, CZ-615 to CZ 635, CZ-627 to CZ 647, CZ-PR to CZ-10; update List Source"
         },
         {
@@ -964,7 +964,7 @@
         {
             "Date Issued": "2002-05-21",
             "Edition/Newsletter": "Newsletter I-2 (https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 1 city, 7 regions (see below) → 14 regions",
+            "Code/Subdivision change": "Subdivision layout: 1 city, 7 regions (see below) -> 14 regions",
             "Description of change in newsletter": "Completely new subdivision layout. New reference for the list source"
         }
     ],
@@ -1109,7 +1109,7 @@
         {
             "Date Issued": "2000-06-21",
             "Edition/Newsletter": "Newsletter I-1 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_i-1_en.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 10 provinces (see below) → 6 provinces",
+            "Code/Subdivision change": "Subdivision layout: 10 provinces (see below) -> 6 provinces",
             "Description of change in newsletter": "Introduction of a completely new subdivision layout"
         }
     ],
@@ -1123,7 +1123,7 @@
         {
             "Date Issued": "2010-02-19",
             "Edition/Newsletter": "Newsletter II-1 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-1_corrected_2010-02-19.pdf)",
-            "Code/Subdivision change": "Codes: (to correct duplicate use) Asturias, Principado de: ES-O → ES-AS Cantabria (autonomous community): ES-S → ES-CB La Rioja: (autonomous community): ES-LO → ES-RI Madrid, Comunidad de: ES-M → ES-MD Murcia, Región de: ES-MU → ES-MC Navarra, Comunidad Foral de: ES-NA → ES-NC",
+            "Code/Subdivision change": "Codes: (to correct duplicate use) Asturias, Principado de: ES-O -> ES-AS Cantabria (autonomous community): ES-S -> ES-CB La Rioja: (autonomous community): ES-LO -> ES-RI Madrid, Comunidad de: ES-M -> ES-MD Murcia, Región de: ES-MU -> ES-MC Navarra, Comunidad Foral de: ES-NA -> ES-NC",
             "Description of change in newsletter": "Addition of the country code prefix as the first code element, reallocation of 3166-2 alpha-2 codes to avoid duplication, update of the administrative structure, addition of names in administrative languages"
         },
         {
@@ -1135,7 +1135,7 @@
         {
             "Date Issued": "2002-05-21",
             "Edition/Newsletter": "Newsletter I-2 (https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf)",
-            "Code/Subdivision change": "Codes: Illes Balears: ES-PM → ES-IB (to correct duplicate use) ES-GE Gerona → ES-GI Girona",
+            "Code/Subdivision change": "Codes: Illes Balears: ES-PM -> ES-IB (to correct duplicate use) ES-GE Gerona -> ES-GI Girona",
             "Description of change in newsletter": "Spelling correction and update in header information. Four corrections in spellings of subdivisions"
         },
         {
@@ -1161,7 +1161,7 @@
         {
             "Date Issued": "2019-04-09",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:ET)",
-            "Code/Subdivision change": "Category change:state → regional state",
+            "Code/Subdivision change": "Category change:state -> regional state",
             "Description of change in newsletter": "Change of eng subdivision category from state to regional state; Update List Source"
         },
         {
@@ -1187,13 +1187,13 @@
         {
             "Date Issued": "2022-11-29",
             "Edition/Newsletter": "ISO Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:FI)",
-            "Code/Subdivision change": "Name change: Satakunda → Satakunta",
+            "Code/Subdivision change": "Name change: Satakunda -> Satakunta",
             "Description of change in newsletter": "Change of spelling of FI-17; Update List Source"
         },
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3[1]",
-            "Code/Subdivision change": "Subdivision layout: 6 provinces (see below) → 19 regions",
+            "Code/Subdivision change": "Subdivision layout: 6 provinces (see below) -> 19 regions",
             "Description of change in newsletter": "Administrative re-organization, deletion of useless information and the region names in English and French, source list and source code update."
         }
     ],
@@ -1218,31 +1218,31 @@
         {
             "Date Issued": "2021-11-25",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:FR)",
-            "Code/Subdivision change": "Codes added:FR-6AE AlsaceFR-69M Métropole de LyonCodes changed:FR-75 Paris (metropolitan department) → FR-75C Paris (metropolitan collectivity with special status)Codes removed:FR-GF Guyane (française)FR-GP GuadeloupeFR-MQ MartiniqueFR-RE La RéunionFR-YT MayotteCategory changes:FR-971 overseas department → overseas departmental collectivityFR-972 overseas department → overseas unique territorial collectivityFR-973 overseas department → overseas unique territorial collectivityFR-974 overseas department → overseas departmental collectivityFR-976 overseas department → overseas departmental collectivityParent changes:FR-67 FR-GES → FR-6AEFR-68 FR-GES → FR-6AE",
+            "Code/Subdivision change": "Codes added:FR-6AE AlsaceFR-69M Métropole de LyonCodes changed:FR-75 Paris (metropolitan department) -> FR-75C Paris (metropolitan collectivity with special status)Codes removed:FR-GF Guyane (française)FR-GP GuadeloupeFR-MQ MartiniqueFR-RE La RéunionFR-YT MayotteCategory changes:FR-971 overseas department -> overseas departmental collectivityFR-972 overseas department -> overseas unique territorial collectivityFR-973 overseas department -> overseas unique territorial collectivityFR-974 overseas department -> overseas departmental collectivityFR-976 overseas department -> overseas departmental collectivityParent changes:FR-67 FR-GES -> FR-6AEFR-68 FR-GES -> FR-6AE",
             "Description of change in newsletter": ""
         },
         {
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:FR)",
-            "Code/Subdivision change": "Category changes: FR-COR collectivity → metropolitan collectivity with special statusFR-GP overseas department → overseas regionFR-RE overseas department → overseas regionFR-YT overseas department → overseas regionFR-GUA overseas region → overseas departmentFR-LRE overseas region → overseas departmentFR-MAY overseas region → overseas departmentFR-BL overseas territorial collectivity → overseas collectivityFR-MF overseas territorial collectivity → overseas collectivityFR-PF overseas territorial collectivity → overseas collectivityFR-PM overseas territorial collectivity → overseas collectivityFR-WF overseas territorial collectivity → overseas collectivityFR-NC overseas territorial collectivity → overseas collectivity with special statusFR-TF overseas territorial collectivity → overseas territoryCode changes:FR-COR → FR-20RFR-GUA → FR-971FR-LRE → FR-974FR-MAY → FR-976Subdivisions added:FR-972 Martinique (parent FR-MQ)FR-973 Guyane (française) (parent FR-GF)",
+            "Code/Subdivision change": "Category changes: FR-COR collectivity -> metropolitan collectivity with special statusFR-GP overseas department -> overseas regionFR-RE overseas department -> overseas regionFR-YT overseas department -> overseas regionFR-GUA overseas region -> overseas departmentFR-LRE overseas region -> overseas departmentFR-MAY overseas region -> overseas departmentFR-BL overseas territorial collectivity -> overseas collectivityFR-MF overseas territorial collectivity -> overseas collectivityFR-PF overseas territorial collectivity -> overseas collectivityFR-PM overseas territorial collectivity -> overseas collectivityFR-WF overseas territorial collectivity -> overseas collectivityFR-NC overseas territorial collectivity -> overseas collectivity with special statusFR-TF overseas territorial collectivity -> overseas territoryCode changes:FR-COR -> FR-20RFR-GUA -> FR-971FR-LRE -> FR-974FR-MAY -> FR-976Subdivisions added:FR-972 Martinique (parent FR-MQ)FR-973 Guyane (française) (parent FR-GF)",
             "Description of change in newsletter": ""
         },
         {
             "Date Issued": "2018-11-26",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:FR)",
-            "Code/Subdivision change": "Category change: FR-COR metropolitan region → collectivity",
+            "Code/Subdivision change": "Category change: FR-COR metropolitan region -> collectivity",
             "Description of change in newsletter": ""
         },
         {
             "Date Issued": "2016-12-07",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:FR)",
-            "Code/Subdivision change": "Parent changes: FR-02 FR-PDL → FR-HDF FR-60 FR-PDL → FR-HDF FR-80 FR-PDL → FR-HDF",
+            "Code/Subdivision change": "Parent changes: FR-02 FR-PDL -> FR-HDF FR-60 FR-PDL -> FR-HDF FR-80 FR-PDL -> FR-HDF",
             "Description of change in newsletter": ""
         },
         {
             "Date Issued": "2016-11-15",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:FR)",
-            "Code/Subdivision change": "Subdivisions added: FR-GUA Guadeloupe FR-LRE La Réunion FR-MAY MayotteCategory change: FR-GR overseas department → overseas territorial collectivity FR-MQ overseas department → overseas territorial collectivity",
+            "Code/Subdivision change": "Subdivisions added: FR-GUA Guadeloupe FR-LRE La Réunion FR-MAY MayotteCategory change: FR-GR overseas department -> overseas territorial collectivity FR-MQ overseas department -> overseas territorial collectivity",
             "Description of change in newsletter": ""
         },
         {
@@ -1254,7 +1254,7 @@
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
-            "Code/Subdivision change": "Category change: FR-YT Mayotte overseas territorial collectivity → overseas department",
+            "Code/Subdivision change": "Category change: FR-YT Mayotte overseas territorial collectivity -> overseas department",
             "Description of change in newsletter": ""
         },
         {
@@ -1329,7 +1329,7 @@
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
-            "Code/Subdivision change": "Status change: WLS Wales principality → country",
+            "Code/Subdivision change": "Status change: WLS Wales principality -> country",
             "Description of change in newsletter": "NL II-2 correction for administrative name changes."
         },
         {
@@ -1393,7 +1393,7 @@
         {
             "Date Issued": "2002-05-21",
             "Edition/Newsletter": "Newsletter I-2 (https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 2 autonomous republics, 13 cities, 63 rayons (see below) → 2 autonomous republics, 10 regions",
+            "Code/Subdivision change": "Subdivision layout: 2 autonomous republics, 13 cities, 63 rayons (see below) -> 2 autonomous republics, 10 regions",
             "Description of change in newsletter": "New subdivision layout. City level cancelled. Spelling of autonomous republics' names changed. One generic subdivision name changed"
         }
     ],
@@ -1471,7 +1471,7 @@
         {
             "Date Issued": "2002-05-21",
             "Edition/Newsletter": "Newsletter I-2 (https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf)",
-            "Code/Subdivision change": "Codes: (to correct duplicate use) Koundara: GN-KD → GN-KN",
+            "Code/Subdivision change": "Codes: (to correct duplicate use) Koundara: GN-KD -> GN-KN",
             "Description of change in newsletter": "One governorate changed into a city (new subdivision level). One code corrected"
         }
     ],
@@ -1625,7 +1625,7 @@
         {
             "Date Issued": "2021-11-25",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:ET)",
-            "Code/Subdivision change": "Subdivision renamed: HU-CS Csongrád → Csongrád-Csanád",
+            "Code/Subdivision change": "Subdivision renamed: HU-CS Csongrád -> Csongrád-Csanád",
             "Description of change in newsletter": "Change of name of HU-CS; Update List Source"
         },
         {
@@ -1669,7 +1669,7 @@
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
-            "Code/Subdivision change": "Codes: Maluku (geographical unit) ID-MA → ID-ML",
+            "Code/Subdivision change": "Codes: Maluku (geographical unit) ID-MA -> ID-ML",
             "Description of change in newsletter": "Removal of duplicate code"
         },
         {
@@ -1711,7 +1711,7 @@
         {
             "Date Issued": "2002-05-21",
             "Edition/Newsletter": "Newsletter I-2 (https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf)",
-            "Code/Subdivision change": "Subdivisions added: ID-BB Bangka Belitung ID-BT Banten ID-GO Gorontalo ID-MU Maluku Utara Subdivisions deleted: ID-TT Timor Timur (see ISO 3166-2:TL) Codes: (to correct duplicate use) ID-IJ Irian Jaya (province) → ID-PA Papua",
+            "Code/Subdivision change": "Subdivisions added: ID-BB Bangka Belitung ID-BT Banten ID-GO Gorontalo ID-MU Maluku Utara Subdivisions deleted: ID-TT Timor Timur (see ISO 3166-2:TL) Codes: (to correct duplicate use) ID-IJ Irian Jaya (province) -> ID-PA Papua",
             "Description of change in newsletter": "Addition of four new provinces and deletion of one (ID-TT). Inclusion of one alternative name form and one changed province name (ID-PA, formerly ID-IJ)"
         }
     ],
@@ -1719,7 +1719,7 @@
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
-            "Code/Subdivision change": "Codes: Cork IE-C → IE-CO",
+            "Code/Subdivision change": "Codes: Cork IE-C -> IE-CO",
             "Description of change in newsletter": "Removal of duplicate code"
         },
         {
@@ -1760,7 +1760,7 @@
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
-            "Code/Subdivision change": "Codes: IN-UL Uttaranchal → IN-UT Uttarakhand",
+            "Code/Subdivision change": "Codes: IN-UL Uttaranchal -> IN-UT Uttarakhand",
             "Description of change in newsletter": "Addition of local generic administrative terms, update of the official languages according to ISO 3166-2, addition of a comment and source list update."
         },
         {
@@ -1778,7 +1778,7 @@
         {
             "Date Issued": "2002-08-20",
             "Edition/Newsletter": "Newsletter I-3 (https://web.archive.org/web/20081218103236/http://www.iso.org/iso/iso_3166-2_newsletter_i-3_en.pdf)",
-            "Code/Subdivision change": "Codes: (to correct duplicate use) Chhattisgarh: IN-CH → IN-CT",
+            "Code/Subdivision change": "Codes: (to correct duplicate use) Chhattisgarh: IN-CH -> IN-CT",
             "Description of change in newsletter": "Error correction: Duplicate use of IN-CH corrected. Spelling correction"
         },
         {
@@ -1859,31 +1859,31 @@
         {
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:IT)",
-            "Code/Subdivision change": "Code changes:IT-SD → IT-SU Sud SardegnaSubdivisions added: IT-GO Gorizia IT-PN Pordenone IT-TS TriesteIT-UD Udine",
+            "Code/Subdivision change": "Code changes:IT-SD -> IT-SU Sud SardegnaSubdivisions added: IT-GO Gorizia IT-PN Pordenone IT-TS TriesteIT-UD Udine",
             "Description of change in newsletter": "Correction of subdivision code from IT-SD to IT-SU; Addition of category decentralized regional entity; addition of decentralized regional entity IT-GO, IT-PN, IT-TS, IT-UD; Update List Source"
         },
         {
             "Date Issued": "2019-11-22",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:IT)",
-            "Code/Subdivision change": "Name changes:IT-36 Friuli-Venezia Giulia → Friuli Venezia Giuliafree communal consortia → free municipal consortiumSubdivisions deleted:IT-AO AostaCategory changes:IT-23, IT-32, IT-36, IT-82, IT-88:region → autonomous regionIT-BZ, IT-TN:province → autonomous province",
+            "Code/Subdivision change": "Name changes:IT-36 Friuli-Venezia Giulia -> Friuli Venezia Giuliafree communal consortia -> free municipal consortiumSubdivisions deleted:IT-AO AostaCategory changes:IT-23, IT-32, IT-36, IT-82, IT-88:region -> autonomous regionIT-BZ, IT-TN:province -> autonomous province",
             "Description of change in newsletter": "Change of spelling of IT-36; Deletion of province IT-AO; Change of spelling of category name in eng from free communal consortia to free municipal consortium; Change of spelling of category name in ita from libero consorzion communale [sic] to libero consorzio comunale ; Change of spelling of category name in ita from città metropolitan to città metropolitana; Addition of category name autonomous region and autonomous province; Change of category name from region to autonomous region for IT-23, IT-32, IT-36, IT-82, IT-88; Change of category name from province to autonomous province for IT-BZ, IT-TN; Update List Source"
         },
         {
             "Date Issued": "2019-04-09",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:IT)",
-            "Code/Subdivision change": "Subdivisions deleted:8 provinces (see below)Subdivisions added:IT-SD Sud SardegnaCategory changes:IT-AG, IT-CL, IT-EN, IT-RG, IT-SR, IT-TP:province → free communal consortiaIT-BA, IT-BO, IT-CA, IT-CT, IT-FI, IT-GE, IT-ME, IT-MI, IT-NA, IT-PA, IT-RC, IT-RM, IT-TO, IT-VE:province → metropolitan city",
+            "Code/Subdivision change": "Subdivisions deleted:8 provinces (see below)Subdivisions added:IT-SD Sud SardegnaCategory changes:IT-AG, IT-CL, IT-EN, IT-RG, IT-SR, IT-TP:province -> free communal consortiaIT-BA, IT-BO, IT-CA, IT-CT, IT-FI, IT-GE, IT-ME, IT-MI, IT-NA, IT-PA, IT-RC, IT-RM, IT-TO, IT-VE:province -> metropolitan city",
             "Description of change in newsletter": "Addition of province IT-SD; Addition of category names free communal consortia and metropolitan cities in eng,fra and ita; Change of category name from province to free communal consortia for IT-AG, IT-CL, IT-EN, IT-RG, IT-SR, IT-TP; Change of category name from province to metropolitan city for IT-BA, IT-BO, IT-CA, IT-CT, IT-FI, IT-GE, IT-ME, IT-MI, IT-NA, IT-PA, IT-RC, IT-RM, IT-TO, IT-VE; Deletion of provinces IT-CI, IT-GO, IT-OG, IT-OT, IT-PN, IT-TS, IT-UD, IT-VS; Update List Source"
         },
         {
             "Date Issued": "2010-06-30",
             "Edition/Newsletter": "Newsletter II-2 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf)",
-            "Code/Subdivision change": "Codes: (to correct inconsistencies between newsletters) Medio Campidano: IT-MA → IT-VS Olbia-Tempio IT-OL → IT-OT Pesaro e Urbino IT-PS → IT-PU",
+            "Code/Subdivision change": "Codes: (to correct inconsistencies between newsletters) Medio Campidano: IT-MA -> IT-VS Olbia-Tempio IT-OL -> IT-OT Pesaro e Urbino IT-PS -> IT-PU",
             "Description of change in newsletter": "Corrections from Newsletters I-1 and I-8"
         },
         {
             "Date Issued": "2010-02-19",
             "Edition/Newsletter": "Newsletter II-1 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-1_corrected_2010-02-19.pdf)",
-            "Code/Subdivision change": "Subdivisions added: IT-BT Barletta-Andria-Trani IT-FM Fermo IT-MB Monza e Brianza Codes: IT-FO Forlì → IT-FC Forlì-Cesena",
+            "Code/Subdivision change": "Subdivisions added: IT-BT Barletta-Andria-Trani IT-FM Fermo IT-MB Monza e Brianza Codes: IT-FO Forlì -> IT-FC Forlì-Cesena",
             "Description of change in newsletter": "Addition of the country code prefix as the first code element, administrative update"
         },
         {
@@ -1939,7 +1939,7 @@
         {
             "Date Issued": "2007-12-13",
             "Edition/Newsletter": "ISO 3166-2:2007 (http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718)",
-            "Code/Subdivision change": "Codes: Western: KE-900 → KE-800",
+            "Code/Subdivision change": "Codes: Western: KE-900 -> KE-800",
             "Description of change in newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1] (#cite_note-1)"
         }
     ],
@@ -1985,7 +1985,7 @@
         {
             "Date Issued": "2015-11-27",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:KH)",
-            "Code/Subdivision change": "Category changes:KH-18, KH-23, KH-24autonomous municipality → provinceSubdivision added:KH-25",
+            "Code/Subdivision change": "Category changes:KH-18, KH-23, KH-24autonomous municipality -> provinceSubdivision added:KH-25",
             "Description of change in newsletter": "Change of subdivision category from autonomous municipalities to provinces for KH-18, KH-23, KH-24; addition of province KH-25, update List Source"
         },
         {
@@ -2126,19 +2126,19 @@
         {
             "Date Issued": "2022-11-29",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
-            "Code/Subdivision change": "Codes changed: KZ-ALA → KZ-75 KZ-AST → KZ-71 KZ-SHY → KZ-79 KZ-ALM → KZ-19 KZ-AKM → KZ-11 KZ-AKT → KZ-15 KZ-ATY → KZ-23 KZ-VOS → KZ-63 KZ-MAN → KZ-47 KZ-SEV → KZ-59 KZ-YUZ → KZ-61 KZ-PAV → KZ-55 KZ-KAR → KZ-35 KZ-KUS → KZ-39 KZ-KZY → KZ-43 KZ-ZAP → KZ-27 KZ-ZHA → KZ-31Subdivisions added: KZ-10, KZ-33, and KZ-62Name change: KZ-71 Nur-Sultan → Astana",
+            "Code/Subdivision change": "Codes changed: KZ-ALA -> KZ-75 KZ-AST -> KZ-71 KZ-SHY -> KZ-79 KZ-ALM -> KZ-19 KZ-AKM -> KZ-11 KZ-AKT -> KZ-15 KZ-ATY -> KZ-23 KZ-VOS -> KZ-63 KZ-MAN -> KZ-47 KZ-SEV -> KZ-59 KZ-YUZ -> KZ-61 KZ-PAV -> KZ-55 KZ-KAR -> KZ-35 KZ-KUS -> KZ-39 KZ-KZY -> KZ-43 KZ-ZAP -> KZ-27 KZ-ZHA -> KZ-31Subdivisions added: KZ-10, KZ-33, and KZ-62Name change: KZ-71 Nur-Sultan -> Astana",
             "Description of change in newsletter": "Change of subdivision code from KZ-ALA to KZ-75, KZ-AST to KZ-71, KZ-SHY to KZ-79, KZ-ALM to KZ-19, KZ-AKM to KZ-11, KZ-AKT to KZ-15, KZ-ATY to KZ-23, KZ-VOS to KZ-63, KZ-MAN to KZ-47, KZ-SEV to KZ-59, KZ-YUZ to KZ-61, KZ-PAV to KZ-55, KZ-KAR to KZ-35, KZ-KUS to KZ-39, KZ-KZY to KZ-43, KZ-ZAP to KZ-27, KZ-ZHA to KZ-31; Addition of region KZ-10, KZ-33, KZ-62; Change of subdivision name for KZ-71 in kaz and rus; Update List Source; Update Code Source"
         },
         {
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
-            "Code/Subdivision change": "Subdivision deleted: KZ-BAY BayqongyrName change:KZ-AST Astana → Nur-Sultan",
+            "Code/Subdivision change": "Subdivision deleted: KZ-BAY BayqongyrName change:KZ-AST Astana -> Nur-Sultan",
             "Description of change in newsletter": "Deletion of city KZ-BAY; Change of subdivision name of KZ‐AST; Correction of the Code Source; Update List Source"
         },
         {
             "Date Issued": "2018-11-26",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
-            "Code/Subdivision change": "Subdivision added: KZ-SHYName change:KZ-YUZ Ongtüstik Qazaqstan oblysy (kk), Yuzhno-Kazakhstankaya oblast' (ru BGN/PCGN), Južno-Kazahstankaja oblast' (ru GOST) → Türkistan oblysy (kk), Turkestankaya oblast' (ru BGN/PCGN), Turkestanskaja oblast' (ru GOST)",
+            "Code/Subdivision change": "Subdivision added: KZ-SHYName change:KZ-YUZ Ongtüstik Qazaqstan oblysy (kk), Yuzhno-Kazakhstankaya oblast' (ru BGN/PCGN), Južno-Kazahstankaja oblast' (ru GOST) -> Türkistan oblysy (kk), Turkestankaya oblast' (ru BGN/PCGN), Turkestanskaja oblast' (ru GOST)",
             "Description of change in newsletter": "Correction of the romanization system label; Addition of city KZ-SHY; Change of subdivision name of KZ-YUZ; Update List Source"
         },
         {
@@ -2280,7 +2280,7 @@
         {
             "Date Issued": "2021-11-25",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
-            "Code/Subdivision change": "Subdivisions renamed:  LT-05 Birštono → Birštonas LT-14 Kalvarijos → Kalvarija LT-39 Rietavo → Rietavas",
+            "Code/Subdivision change": "Subdivisions renamed:  LT-05 Birštono -> Birštonas LT-14 Kalvarijos -> Kalvarija LT-39 Rietavo -> Rietavas",
             "Description of change in newsletter": "Change of spelling of LT-05, LT-14, LT-39; Assign parent subdivision to LT-01 through LT-60; Update List Source"
         },
         {
@@ -2301,7 +2301,7 @@
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 26 districts (see below) → 110 municipalities Subdivisions added: (republican cities) LV-JKB Jēkabpils LV-VMR Valmiera",
+            "Code/Subdivision change": "Subdivision layout: 26 districts (see below) -> 110 municipalities Subdivisions added: (republican cities) LV-JKB Jēkabpils LV-VMR Valmiera",
             "Description of change in newsletter": "Administrative re-organization and source list update."
         }
     ],
@@ -2321,7 +2321,7 @@
         {
             "Date Issued": "2010-06-30",
             "Edition/Newsletter": "Newsletter II-2 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 34 municipalities (see below) → 22 popularates",
+            "Code/Subdivision change": "Subdivision layout: 34 municipalities (see below) -> 22 popularates",
             "Description of change in newsletter": "Update of the administrative structure and of the list source"
         },
         {
@@ -2333,7 +2333,7 @@
         {
             "Date Issued": "2003-09-05",
             "Edition/Newsletter": "Newsletter I-5 (https://web.archive.org/web/20081218103244/http://www.iso.org/iso/iso_3166-2_newsletter_i-5_en.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 13 municipalities (see below) → 34 municipalities",
+            "Code/Subdivision change": "Subdivision layout: 13 municipalities (see below) -> 34 municipalities",
             "Description of change in newsletter": "Revision of subdivision layout. Revision of header information"
         }
     ],
@@ -2341,25 +2341,25 @@
         {
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:MA)",
-            "Code/Subdivision change": "Spelling change:MA-KHE Khemisset → KhémissetMA-KHN Khenifra → KhénifraMA-TAR Taroudant → Taroudannt",
+            "Code/Subdivision change": "Spelling change:MA-KHE Khemisset -> KhémissetMA-KHN Khenifra -> KhénifraMA-TAR Taroudant -> Taroudannt",
             "Description of change in newsletter": ""
         },
         {
             "Date Issued": "2019-04-09",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:MA)",
-            "Code/Subdivision change": "Parent changes:MA-CAS MA-08 → MA-06MA-SET MA-08 → MA-06MA-SIK MA-06 → MA-04Spelling change:MA-03 Fès- Meknès → Fès-Meknès",
+            "Code/Subdivision change": "Parent changes:MA-CAS MA-08 -> MA-06MA-SET MA-08 -> MA-06MA-SIK MA-06 -> MA-04Spelling change:MA-03 Fès- Meknès -> Fès-Meknès",
             "Description of change in newsletter": ""
         },
         {
             "Date Issued": "2018-11-26",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:MA)",
-            "Code/Subdivision change": "Spelling change:MA-05 Béni-Mellal-Khénifra → Béni Mellal-KhénifraLocation change:MA-ESM Es-Semara (EH) → Es-Semara (EH-partial)",
+            "Code/Subdivision change": "Spelling change:MA-05 Béni-Mellal-Khénifra -> Béni Mellal-KhénifraLocation change:MA-ESM Es-Semara (EH) -> Es-Semara (EH-partial)",
             "Description of change in newsletter": ""
         },
         {
             "Date Issued": "2018-04-20",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:MA)",
-            "Code/Subdivision change": "Subdivisions deleted:MA-01 - MA-16MA-MDFMA-MMDMA-MMNMA-SYBSubdivisions added:MA-01 - MA-12MA-BRRMA-DRIMA-FQHMA-GUFMA-MARMA-MIDMA-OUZMA-REHMA-SIBMA-SIFMA-SILMA-TAFMA-TINMA-YUSCategory changes:MA-AOU prefecture → provinceMA-FAH prefecture → provinceMA-TET prefecture → provinceParent changes:MA-AGD MA-13 → MA-09MA-AOU MA-16 → MA-12MA-ASZ MA-14 → MA-10MA-AZI MA-12 → MA-05MA-BEM MA-12 → MA-05MA-BER MA-04 → MA-02MA-BES MA-09 → MA-06MA-BOD MA-15 → MA-11MA-BOM MA-05 → MA-03MA-CHI MA-11 → MA-07MA-CHT MA-13 → MA-06MA-ERR MA-06 → MA-08MA-ESI MA-11 → MA-07MA-ESM MA-14 → MA-11MA-FES MA-05 → MA-03MA-FIG MA-04 → MA-02MA-GUE MA-14 → MA-10MA-HAJ MA-06 → MA-03MA-HAO MA-11 → MA-07MA-HOC MA-03 → MA-01MA-IFR MA-06 → MA-03MA-INE MA-13 → MA-09MA-JDI MA-10 → MA-06MA-JRA MA-04 → MA-02MA-KEN MA-02 → MA-04MA-KES MA-11 → MA-07MA-KHE MA-07 → MA-04MA-KHN MA-06 → MA-05MA-KHO MA-09 → MA-05MA-LAA MA-15 → MA-11MA-MED MA-08 → MA-06MA-MEK MA-06 → MA-03MA-MOH MA-08 → MA-06MA-MOU MA-05 → MA-03MA-NAD MA-04 → MA-02MA-NOU MA-08 → MA-04MA-OUA MA-13 → MA-08MA-OUD MA-16 → MA-12MA-OUJ MA-04 → MA-02MA-RAB MA-07 → MA-04MA-SAF MA-10 → MA-07MA-SAL MA-07 → MA-04MA-SEF MA-05 → MA-03MA-SET MA-09 → MA-08MA-SIK MA-02 → MA-06MA-SKH MA-07 → MA-04MA-TAI MA-04 → MA-02MA-TAR MA-13 → MA-09MA-TAT MA-14 → MA-09MA-TIZ MA-13 → MA-09MA-TNT MA-14 → MA-10MA-ZAG MA-13 → MA-08",
+            "Code/Subdivision change": "Subdivisions deleted:MA-01 - MA-16MA-MDFMA-MMDMA-MMNMA-SYBSubdivisions added:MA-01 - MA-12MA-BRRMA-DRIMA-FQHMA-GUFMA-MARMA-MIDMA-OUZMA-REHMA-SIBMA-SIFMA-SILMA-TAFMA-TINMA-YUSCategory changes:MA-AOU prefecture -> provinceMA-FAH prefecture -> provinceMA-TET prefecture -> provinceParent changes:MA-AGD MA-13 -> MA-09MA-AOU MA-16 -> MA-12MA-ASZ MA-14 -> MA-10MA-AZI MA-12 -> MA-05MA-BEM MA-12 -> MA-05MA-BER MA-04 -> MA-02MA-BES MA-09 -> MA-06MA-BOD MA-15 -> MA-11MA-BOM MA-05 -> MA-03MA-CHI MA-11 -> MA-07MA-CHT MA-13 -> MA-06MA-ERR MA-06 -> MA-08MA-ESI MA-11 -> MA-07MA-ESM MA-14 -> MA-11MA-FES MA-05 -> MA-03MA-FIG MA-04 -> MA-02MA-GUE MA-14 -> MA-10MA-HAJ MA-06 -> MA-03MA-HAO MA-11 -> MA-07MA-HOC MA-03 -> MA-01MA-IFR MA-06 -> MA-03MA-INE MA-13 -> MA-09MA-JDI MA-10 -> MA-06MA-JRA MA-04 -> MA-02MA-KEN MA-02 -> MA-04MA-KES MA-11 -> MA-07MA-KHE MA-07 -> MA-04MA-KHN MA-06 -> MA-05MA-KHO MA-09 -> MA-05MA-LAA MA-15 -> MA-11MA-MED MA-08 -> MA-06MA-MEK MA-06 -> MA-03MA-MOH MA-08 -> MA-06MA-MOU MA-05 -> MA-03MA-NAD MA-04 -> MA-02MA-NOU MA-08 -> MA-04MA-OUA MA-13 -> MA-08MA-OUD MA-16 -> MA-12MA-OUJ MA-04 -> MA-02MA-RAB MA-07 -> MA-04MA-SAF MA-10 -> MA-07MA-SAL MA-07 -> MA-04MA-SEF MA-05 -> MA-03MA-SET MA-09 -> MA-08MA-SIK MA-02 -> MA-06MA-SKH MA-07 -> MA-04MA-TAI MA-04 -> MA-02MA-TAR MA-13 -> MA-09MA-TAT MA-14 -> MA-09MA-TIZ MA-13 -> MA-09MA-TNT MA-14 -> MA-10MA-ZAG MA-13 -> MA-08",
             "Description of change in newsletter": ""
         },
         {
@@ -2371,7 +2371,7 @@
         {
             "Date Issued": "2010-02-19",
             "Edition/Newsletter": "Newsletter II-1 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-1_corrected_2010-02-19.pdf)",
-            "Code/Subdivision change": "Subdivisions added:MA-AOU AousserdMA-FAH Fahs-AnjraMA-MED MédiounaMA-MMD Marrakech-MedinaMA-MMN Marrakech-MenaraMA-MOH MohammadiaMA-MOU Moulay YacoubMA-NOU NouaceurMA-RAB RabatMA-SAL SaléMA-SKH Skhirate-TémaraMA-SYB Sidi Youssef Ben AliMA-TAI Taourirt MA-ZAG ZagoraSubdivisions deleted: MA-MAR Marrakech MA-RBA Rabat-Salé Code changes: MA-BAH Aït Baha → MA-CHT Chtouka-Ait Baha MA-MEL Aït Melloul → MA-INE Inezgane-Ait Melloul",
+            "Code/Subdivision change": "Subdivisions added:MA-AOU AousserdMA-FAH Fahs-AnjraMA-MED MédiounaMA-MMD Marrakech-MedinaMA-MMN Marrakech-MenaraMA-MOH MohammadiaMA-MOU Moulay YacoubMA-NOU NouaceurMA-RAB RabatMA-SAL SaléMA-SKH Skhirate-TémaraMA-SYB Sidi Youssef Ben AliMA-TAI Taourirt MA-ZAG ZagoraSubdivisions deleted: MA-MAR Marrakech MA-RBA Rabat-Salé Code changes: MA-BAH Aït Baha -> MA-CHT Chtouka-Ait Baha MA-MEL Aït Melloul -> MA-INE Inezgane-Ait Melloul",
             "Description of change in newsletter": ""
         },
         {
@@ -2383,7 +2383,7 @@
         {
             "Date Issued": "2002-05-21",
             "Edition/Newsletter": "Newsletter I-2 (https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 7 economic regions (see below) → 16 economic regions (now called regions) Code changes: Jerada: MA-IRA → MA-JRA",
+            "Code/Subdivision change": "Subdivision layout: 7 economic regions (see below) -> 16 economic regions (now called regions) Code changes: Jerada: MA-IRA -> MA-JRA",
             "Description of change in newsletter": ""
         }
     ],
@@ -2411,7 +2411,7 @@
         {
             "Date Issued": "2010-06-30",
             "Edition/Newsletter": "Newsletter II-2 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 1 autonomous territory, 1 city, 10 districts, 1 territorial unit (see below) → 1 autonomous territorial unit, 3 cities, 32 districts, 1 territorial unit",
+            "Code/Subdivision change": "Subdivision layout: 1 autonomous territory, 1 city, 10 districts, 1 territorial unit (see below) -> 1 autonomous territorial unit, 3 cities, 32 districts, 1 territorial unit",
             "Description of change in newsletter": "Consistency between ISO 3166-1 and ISO 3166-2, addition of names in administrative languages, and update of the administrative structure and of the list source"
         },
         {
@@ -2453,7 +2453,7 @@
         {
             "Date Issued": "2002-05-21",
             "Edition/Newsletter": "Newsletter I-2 (https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 10 cities, 40 districts (see below) → 1 autonomous territory, 1 city, 1 territorial unit, 9 districts",
+            "Code/Subdivision change": "Subdivision layout: 10 cities, 40 districts (see below) -> 1 autonomous territory, 1 city, 1 territorial unit, 9 districts",
             "Description of change in newsletter": "Completely new subdivision layout"
         }
     ],
@@ -2547,7 +2547,7 @@
             "Date Issued": "2019-03-13",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
             "Code/Subdivision change": "",
-            "Description of change in newsletter": "Change of the short and full name: Macedonia (the former Yugoslav Republic of) → North Macedonia; the former Yugoslav Republic of Macedonia → Republic of North Macedonia"
+            "Description of change in newsletter": "Change of the short and full name: Macedonia (the former Yugoslav Republic of) -> North Macedonia; the former Yugoslav Republic of Macedonia -> Republic of North Macedonia"
         },
         {
             "Date Issued": "2015-11-27",
@@ -2620,7 +2620,7 @@
         {
             "Date Issued": "2002-12-10",
             "Edition/Newsletter": "Newsletter I-4 (https://web.archive.org/web/20081218103210/http://www.iso.org/iso/iso_3166-2_newsletter_i-4_en.pdf)",
-            "Code/Subdivision change": "Codes: (to correct duplicate use) Port Louis (city): MU-PL → MU-PU",
+            "Code/Subdivision change": "Codes: (to correct duplicate use) Port Louis (city): MU-PL -> MU-PU",
             "Description of change in newsletter": "Error correction: Duplicate use of one code element corrected. Subdivision categories in header re-sorted"
         }
     ],
@@ -2628,7 +2628,7 @@
         {
             "Date Issued": "2018-11-26",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:MV)",
-            "Code/Subdivision change": "Subdivisions deleted:MV-CE CentralMV-NC North CentralMV-NO NorthMV-SC South CentralMV-SU SouthMV-UN Upper NorthMV-US Upper SouthCategory changes:MV-MLE capital → cityMV-01 administrative atoll → citySpelling changes (dv):MV-00 Ari Atholhu Dhekunuburi → Ariatholhu DhekunuburiMV-02 Ari Atholhu Uthuruburi → Ariatholhu UthuruburiMV-04 Ari Atholhu Uthuruburi → FelidheatholhuMV-14 Ari Atholhu Uthuruburi → Nilandheatholhu UthuruburiMV-17 Nilandhe Atholhu Dhekunuburi → Nilandheatholhu DhekunuburiMV-26 Maale Atholhu → MV-27 → MaaleatholhuMV-28 Huvadhu Atholhu Dhekunuburi → Huvadhuatholhu DhekunuburiSpelling changes (en):MV-00 Alifu Dhaalu → South Ari AtollMV-01 Seenu → Addu CityMV-02 Alifu Alifu → North Ari AtollMV-03 Lhaviyani → FaadhippolhuMV-04 Vaavu → Felidhu AtollMV-05 Laamu → Felidhu AtollMV-07 Haa Alifu → North ThiladhunmathiMV-08 Thaa → KolhumaduluMV-12 Meemu → Mulaku AtollMV-13 Raa → Mulaku AtollMV-14 Faafu → North Nilandhe AtollMV-17 Dhaalu → South Nilandhe AtollMV-20 Baa → South Nilandhe AtollMV-23 Haa Dhaalu → South ThiladhunmathiMV-24 Shaviyani → North MiladhunmaduluMV-25 Noonu → South MiladhunmaduluMV-26 Kaafu → South MiladhunmaduluMV-27 Gaafu Alifu → North Huvadhu AtollMV-28 Gaafu Dhaalu → North Huvadhu AtollMV-29 Gnaviyani → FuvammulahLocal variants added:all subdivisions",
+            "Code/Subdivision change": "Subdivisions deleted:MV-CE CentralMV-NC North CentralMV-NO NorthMV-SC South CentralMV-SU SouthMV-UN Upper NorthMV-US Upper SouthCategory changes:MV-MLE capital -> cityMV-01 administrative atoll -> citySpelling changes (dv):MV-00 Ari Atholhu Dhekunuburi -> Ariatholhu DhekunuburiMV-02 Ari Atholhu Uthuruburi -> Ariatholhu UthuruburiMV-04 Ari Atholhu Uthuruburi -> FelidheatholhuMV-14 Ari Atholhu Uthuruburi -> Nilandheatholhu UthuruburiMV-17 Nilandhe Atholhu Dhekunuburi -> Nilandheatholhu DhekunuburiMV-26 Maale Atholhu -> MV-27 -> MaaleatholhuMV-28 Huvadhu Atholhu Dhekunuburi -> Huvadhuatholhu DhekunuburiSpelling changes (en):MV-00 Alifu Dhaalu -> South Ari AtollMV-01 Seenu -> Addu CityMV-02 Alifu Alifu -> North Ari AtollMV-03 Lhaviyani -> FaadhippolhuMV-04 Vaavu -> Felidhu AtollMV-05 Laamu -> Felidhu AtollMV-07 Haa Alifu -> North ThiladhunmathiMV-08 Thaa -> KolhumaduluMV-12 Meemu -> Mulaku AtollMV-13 Raa -> Mulaku AtollMV-14 Faafu -> North Nilandhe AtollMV-17 Dhaalu -> South Nilandhe AtollMV-20 Baa -> South Nilandhe AtollMV-23 Haa Dhaalu -> South ThiladhunmathiMV-24 Shaviyani -> North MiladhunmaduluMV-25 Noonu -> South MiladhunmaduluMV-26 Kaafu -> South MiladhunmaduluMV-27 Gaafu Alifu -> North Huvadhu AtollMV-28 Gaafu Dhaalu -> North Huvadhu AtollMV-29 Gnaviyani -> FuvammulahLocal variants added:all subdivisions",
             "Description of change in newsletter": "Change of spelling in div of MV-00, MV-02, MV-04, MV-14, MV-17, MV-26, MV-27, MV-28; Change of spelling in eng of MV-00, MV-01, MV-02, MV-03, MV-04, MV-05, MV-07, MV-08, MV-12, MV-13, MV-14, MV-17, MV-20, MV-23, MV-24, MV-25, MV-26, MV-27, MV-28, MV-29; Addition of local variation of MV-00, MV-01, MV-02, MV-03, MV-04, MV-05, MV-07, MV-08, MV-12, MV-13, MV-14, MV-17, MV-20, MV-23, MV-24, MV-25, MV-26, MV-27, MV-28, MV-29; Change of category name from capital to city for MV-MLE; Change of category name from administrative atoll to city for MV-01; Removal of parent subdivision of MV-MLE, MV-00, MV-01, MV-02, MV-03, MV-04, MV-05, MV-07, MV-08, MV-12, MV-13, MV-14, MV-17, MV-20, MV-23, MV-24, MV-25, MV-26, MV-27, MV-28, MV-29; Deletion of provinces MV-CE, MV-NC, MV-NO, MV-SC, MV-SU, MV-UN and MV-US; Update List Source"
         },
         {
@@ -2709,7 +2709,7 @@
         {
             "Date Issued": "2018-04-20",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:NI)",
-            "Code/Subdivision change": "Name change:NI-AN Atlántico Norte → Costa Caribe Norte NI-AS Atlántico Sur → Costa Caribe Sur",
+            "Code/Subdivision change": "Name change:NI-AN Atlántico Norte -> Costa Caribe Norte NI-AS Atlántico Sur -> Costa Caribe Sur",
             "Description of change in newsletter": "Change of subdivision name of NI-AN, NI-AS; update List Source"
         },
         {
@@ -2801,7 +2801,7 @@
         {
             "Date Issued": "2017-11-23",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:NR)",
-            "Code/Subdivision change": "Name changed:NR-05 Baiti → Baitsi",
+            "Code/Subdivision change": "Name changed:NR-05 Baiti -> Baitsi",
             "Description of change in newsletter": "Change of subdivision name of NR-05; addition of local variation of NR-05, update List Source"
         },
         {
@@ -2854,7 +2854,7 @@
         {
             "Date Issued": "2010-06-30",
             "Edition/Newsletter": "Newsletter II-2 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf)",
-            "Code/Subdivision change": "Subdivisions added: OM-BU Al Buraymī Codes: OM-JA Al Janūbīyah → OM-ZU Z̧ufār",
+            "Code/Subdivision change": "Subdivisions added: OM-BU Al Buraymī Codes: OM-JA Al Janūbīyah -> OM-ZU Z̧ufār",
             "Description of change in newsletter": "Update of the administrative structure and of the list source"
         }
     ],
@@ -2886,7 +2886,7 @@
         {
             "Date Issued": "2010-06-30",
             "Edition/Newsletter": "Newsletter II-2 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf)",
-            "Code/Subdivision change": "Subdivisions added: PA-EM Emberá PA-NB Ngöbe-Buglé Codes: PA-0 Comarca de San Blas → PA-KY Kuna Yala",
+            "Code/Subdivision change": "Subdivisions added: PA-EM Emberá PA-NB Ngöbe-Buglé Codes: PA-0 Comarca de San Blas -> PA-KY Kuna Yala",
             "Description of change in newsletter": "Update of the administrative structure and of the list source"
         },
         {
@@ -2915,7 +2915,7 @@
         {
             "Date Issued": "2014-11-03",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:PG)",
-            "Code/Subdivision change": "Subdivisions added: PG-HLA HelaPG-JWK JiwakaName changed: PG-SAN Sandaun [West Sepik] → West Sepik",
+            "Code/Subdivision change": "Subdivisions added: PG-HLA HelaPG-JWK JiwakaName changed: PG-SAN Sandaun [West Sepik] -> West Sepik",
             "Description of change in newsletter": "Add two provinces PG-HLA and PG-JWK; change subdivision name of PG-SAN; update List Source"
         },
         {
@@ -2933,7 +2933,7 @@
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
-            "Code/Subdivision change": "Codes: PG-NSA North Solomons (province) → PG-NSB Bougainville (autonomous region)",
+            "Code/Subdivision change": "Codes: PG-NSA North Solomons (province) -> PG-NSB Bougainville (autonomous region)",
             "Description of change in newsletter": "Administrative readjustment, local generic administrative term addition and source list and source code update."
         }
     ],
@@ -2941,7 +2941,7 @@
         {
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:PH)",
-            "Code/Subdivision change": "Subdivisions renamed: PH-COM Compostela Valley → Davao de Oro",
+            "Code/Subdivision change": "Subdivisions renamed: PH-COM Compostela Valley -> Davao de Oro",
             "Description of change in newsletter": "Change of subdivision name of PH-COM in eng; Deletion of subdivision name of PH-COM in tgl; Update List Source ; Correction of the Code Source"
         },
         {
@@ -2959,7 +2959,7 @@
         {
             "Date Issued": "2002-05-21",
             "Edition/Newsletter": "Newsletter I-2 (https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf)",
-            "Code/Subdivision change": "Subdivisions added: PH-13 Caraga PH-APA Apayao PH-BIL Biliran PH-COM Compostela Valley PH-GUI Guimaras PH-SAR Sarangani PH-ZSI Zamboanga Sibugay Codes: Cordillera Administrative Region: PH-13 → PH-15",
+            "Code/Subdivision change": "Subdivisions added: PH-13 Caraga PH-APA Apayao PH-BIL Biliran PH-COM Compostela Valley PH-GUI Guimaras PH-SAR Sarangani PH-ZSI Zamboanga Sibugay Codes: Cordillera Administrative Region: PH-13 -> PH-15",
             "Description of change in newsletter": "Addition of one region and six provinces. New list source and code source. Precise specification of and minor corrections to the spelling of names"
         }
     ],
@@ -2985,7 +2985,7 @@
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
-            "Code/Subdivision change": "Codes: PK-NW North-West Frontier → PK-KP Khyber Pakhtunkhwa PK-NA Northern Areas → PK-GB Gilgit-Baltistan",
+            "Code/Subdivision change": "Codes: PK-NW North-West Frontier -> PK-KP Khyber Pakhtunkhwa PK-NA Northern Areas -> PK-GB Gilgit-Baltistan",
             "Description of change in newsletter": "Name change, language readjustment and source list update."
         }
     ],
@@ -2993,7 +2993,7 @@
         {
             "Date Issued": "2018-11-26",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:PL)",
-            "Code/Subdivision change": "Category change:province  → voivodshipCode changes:DS → 02KP → 04LB → 08LD → 10LU → 06MA → 12MZ → 14OP → 16PD → 20PK → 18PM → 22SK → 26SL → 24WN → 28WP → 30ZP → 32",
+            "Code/Subdivision change": "Category change:province  -> voivodshipCode changes:DS -> 02KP -> 04LB -> 08LD -> 10LU -> 06MA -> 12MZ -> 14OP -> 16PD -> 20PK -> 18PM -> 22SK -> 26SL -> 24WN -> 28WP -> 30ZP -> 32",
             "Description of change in newsletter": "Change of category name from province to voivodship in eng and from région to voïvodie in fra; Change of subdivision code from PL-DS to PL-02, PL-KP to PL-04, PL-LB to PL-08, PL-LD to PL-10, PL-LU to PL-06, PL-MA to PL-12, PL-MZ to PL-14, PL-OP to PL-16, PL-PD to PL-20, PL-PK to PL-18, PL-PM to PL-22, PL-SK to PL-26, PL-SL to PL-24, PL-WN to PL-28, PL-WP to PL-30 and PL-ZP to PL-32; Update List Source; Update Code Source"
         },
         {
@@ -3005,7 +3005,7 @@
         {
             "Date Issued": "2000-06-21",
             "Edition/Newsletter": "Newsletter I-1 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_i-1_en.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 49 provinces (see below) → 16 provinces",
+            "Code/Subdivision change": "Subdivision layout: 49 provinces (see below) -> 16 provinces",
             "Description of change in newsletter": "Introduction of a completely new subdivision layout"
         }
     ],
@@ -3043,7 +3043,7 @@
         {
             "Date Issued": "2016-11-15",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:PW)",
-            "Code/Subdivision change": "Name changed:PW-050 Hatobohei → Hatohobei",
+            "Code/Subdivision change": "Name changed:PW-050 Hatobohei -> Hatohobei",
             "Description of change in newsletter": "Change of spelling of PW-050 in eng, pau; update list source"
         },
         {
@@ -3163,7 +3163,7 @@
         {
             "Date Issued": "2007-04-17",
             "Edition/Newsletter": "Newsletter I-8 (https://web.archive.org/web/20120330105926/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 12 prefectures (see below) → 1 town council, 4 provinces",
+            "Code/Subdivision change": "Subdivision layout: 12 prefectures (see below) -> 1 town council, 4 provinces",
             "Description of change in newsletter": "Modification of the administrative structure"
         }
     ],
@@ -3231,7 +3231,7 @@
         {
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:SD)",
-            "Code/Subdivision change": "Spelling changes:SD-DC Wasaţ Dārfūr Zālinjay → Wasaţ DārfūrSD-KN Shiamāl Kurdufān → Shamāl Kurdufān",
+            "Code/Subdivision change": "Spelling changes:SD-DC Wasaţ Dārfūr Zālinjay -> Wasaţ DārfūrSD-KN Shiamāl Kurdufān -> Shamāl Kurdufān",
             "Description of change in newsletter": "Typographical correction of subdivision name of SD-KN, SD-DC; Addition of local variation of SD-DC"
         },
         {
@@ -3243,13 +3243,13 @@
         {
             "Date Issued": "2015-11-27",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:SD)",
-            "Code/Subdivision change": "Subdivision added:SD-GK Gharb Kurdufān (ar), West Kordofan (en)Spelling changes:SD-DC Zalingei → Wasaţ Dārfūr ZālinjaySD-DN ?  → Shamāl DārfūrSD-KN Shamāl Kurdufān → Shiamāl KurdufānSD-NO ? → Ash ShamālīyahSD-NR An Nīl → Nahr an Nīl",
+            "Code/Subdivision change": "Subdivision added:SD-GK Gharb Kurdufān (ar), West Kordofan (en)Spelling changes:SD-DC Zalingei -> Wasaţ Dārfūr ZālinjaySD-DN ?  -> Shamāl DārfūrSD-KN Shamāl Kurdufān -> Shiamāl KurdufānSD-NO ? -> Ash ShamālīyahSD-NR An Nīl -> Nahr an Nīl",
             "Description of change in newsletter": "Additions of state SD-GK; change spelling of SD-NR, SD-NO, SD-DN, SD-KN, SD-DC; update List Source"
         },
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 25 states (see below) → 17 states Subdivisions deleted: 10 states (SD-14 – SD-23) seceded to create South Sudan (SS) Subdivisions added: SD-DE Sharq Dārfūr SD-DC Zalingei",
+            "Code/Subdivision change": "Subdivision layout: 25 states (see below) -> 17 states Subdivisions deleted: 10 states (SD-14 – SD-23) seceded to create South Sudan (SS) Subdivisions added: SD-DE Sharq Dārfūr SD-DC Zalingei",
             "Description of change in newsletter": "Administrative adjustment and update"
         },
         {
@@ -3335,7 +3335,7 @@
         {
             "Date Issued": "2002-12-10",
             "Edition/Newsletter": "Newsletter I-4 (https://web.archive.org/web/20081218103210/http://www.iso.org/iso/iso_3166-2_newsletter_i-4_en.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 12 statistical regions (see below) → 193 municipalities",
+            "Code/Subdivision change": "Subdivision layout: 12 statistical regions (see below) -> 193 municipalities",
             "Description of change in newsletter": "Replacement of statistical regions with 193 municipalities"
         }
     ],
@@ -3359,7 +3359,7 @@
         {
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
-            "Code/Subdivision change": "Subdivisions renamed: SM-07 San Marino → Città di San Marino",
+            "Code/Subdivision change": "Subdivisions renamed: SM-07 San Marino -> Città di San Marino",
             "Description of change in newsletter": "Change of spelling of SM-07; Addition of local variation for SM-07; Update List Source"
         },
         {
@@ -3454,13 +3454,13 @@
         {
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:TD)",
-            "Code/Subdivision change": "Spelling changes:TD-BA Al Baţḩah (ar) → Al Baţḩā’TD-LO Lūqūn al Gharbī (ar) → Lūghūn al GharbīTD-LR Lūqūn ash Sharqī (ar) → Lūghūn ash SharqīTD-TA Tānjilī (ar) → TānjīlīTD-WF Wādī Fīrā (ar) → Wādī Fīrā’",
+            "Code/Subdivision change": "Spelling changes:TD-BA Al Baţḩah (ar) -> Al Baţḩā’TD-LO Lūqūn al Gharbī (ar) -> Lūghūn al GharbīTD-LR Lūqūn ash Sharqī (ar) -> Lūghūn ash SharqīTD-TA Tānjilī (ar) -> TānjīlīTD-WF Wādī Fīrā (ar) -> Wādī Fīrā’",
             "Description of change in newsletter": "Change of subdivision category region to province; Modification of spelling for TD-BA, TD-LO, TD-LR, TD-TA, TD-WF in ara; Addition of local variation for TD-BG in fra; Addition of subdivision name of TD-EE, TD-OE in ara; Update List Source"
         },
         {
             "Date Issued": "2014-11-03",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:TD)",
-            "Code/Subdivision change": "Subdivisions added:TD-EE Ennedi-Est (fr)TD-EO Ennedi-Ouest (fr)Subdivision deleted:TD-EN Innīdī (ar), Ennedi (fr)Spelling change:TD-BA Al Baṭḩah (ar) → Al Baţḩah",
+            "Code/Subdivision change": "Subdivisions added:TD-EE Ennedi-Est (fr)TD-EO Ennedi-Ouest (fr)Subdivision deleted:TD-EN Innīdī (ar), Ennedi (fr)Spelling change:TD-BA Al Baṭḩah (ar) -> Al Baţḩah",
             "Description of change in newsletter": "Add two regions TD-EE and TD-EO; correct spelling of TD-BA; delete TD-EN; update List Source"
         },
         {
@@ -3472,7 +3472,7 @@
         {
             "Date Issued": "2007-04-17",
             "Edition/Newsletter": "Newsletter I-8 (https://web.archive.org/web/20120330105926/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 14 prefectures (see below) → 18 regions",
+            "Code/Subdivision change": "Subdivision layout: 14 prefectures (see below) -> 18 regions",
             "Description of change in newsletter": "Modification of the administrative structure"
         }
     ],
@@ -3483,7 +3483,7 @@
         {
             "Date Issued": "2017-11-23",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
-            "Code/Subdivision change": "Spelling change:TJ-RA Nohiyahoi Tobei Jumhurí → nohiyahoi tobei jumhurí",
+            "Code/Subdivision change": "Spelling change:TJ-RA Nohiyahoi Tobei Jumhurí -> nohiyahoi tobei jumhurí",
             "Description of change in newsletter": "Change of subdivision name of TJ-RA; change of spelling of category name in eng, tgk; update List Source; modification of the English remark part 2"
         },
         {
@@ -3507,7 +3507,7 @@
         {
             "Date Issued": "2002-12-10",
             "Edition/Newsletter": "Newsletter I-4 (https://web.archive.org/web/20081218103210/http://www.iso.org/iso/iso_3166-2_newsletter_i-4_en.pdf)",
-            "Code/Subdivision change": "Subdivision deleted: TJ-KR Karategin Codes: TJ-LN Leninabad → TJ-SU Sughd",
+            "Code/Subdivision change": "Subdivision deleted: TJ-KR Karategin Codes: TJ-LN Leninabad -> TJ-SU Sughd",
             "Description of change in newsletter": "Change of name of one region. Deletion of one region. Introduction of one Tajik name form. Subdivision categories in header re-sorted"
         }
     ],
@@ -3522,7 +3522,7 @@
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
-            "Code/Subdivision change": "Spelling changeTL-DI Dili → Díli",
+            "Code/Subdivision change": "Spelling changeTL-DI Dili -> Díli",
             "Description of change in newsletter": "Update of the language adjustment and source list update."
         },
         {
@@ -3618,7 +3618,7 @@
         {
             "Date Issued": "2007-12-13",
             "Edition/Newsletter": "ISO 3166-2:2007 (http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718)",
-            "Code/Subdivision change": "Codes: Nui: TV-NIU → TV-NUI",
+            "Code/Subdivision change": "Codes: Nui: TV-NIU -> TV-NUI",
             "Description of change in newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1] (#cite_note-1)"
         },
         {
@@ -3632,19 +3632,19 @@
         {
             "Date Issued": "2016-11-15",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:TW)",
-            "Code/Subdivision change": "(each) district → county(each) municipality → city",
+            "Code/Subdivision change": "(each) district -> county(each) municipality -> city",
             "Description of change in newsletter": "Change of subdivision category from municipality to city and district to county; update List Source"
         },
         {
             "Date Issued": "2015-11-27",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:TW)",
-            "Code/Subdivision change": "Subdivision added:Kinmen (district): TW-KINLienchiang (district): TW-LIENew Taipei (special municipality): TW-NWTSubdivision deleted:Kaohsiung (district): TW-KHQTainan (district): TW-TNQTaipei (district): TW-TPQTaichung (district): TW-TXQSubdivision category changed:Taoyuan (TW-TAO): district → special municipalityTainan (TW-TNN): municipality → special municipalityTaichung (TW-TXG): municipality → special municipality",
+            "Code/Subdivision change": "Subdivision added:Kinmen (district): TW-KINLienchiang (district): TW-LIENew Taipei (special municipality): TW-NWTSubdivision deleted:Kaohsiung (district): TW-KHQTainan (district): TW-TNQTaipei (district): TW-TPQTaichung (district): TW-TXQSubdivision category changed:Taoyuan (TW-TAO): district -> special municipalityTainan (TW-TNN): municipality -> special municipalityTaichung (TW-TXG): municipality -> special municipality",
             "Description of change in newsletter": "Addition of category name for special municipality in zho; change of spelling of TW-ILA; deletion of districts TW-KHQ, TW-TNQ, TW-TPQ, TW-TXQ; addition of districts TW-KIN, TW-LIE and special municipality TW-NWT; change of subdivision category from municipalities to special municipalities for TW-TXG, TW-TNN; change of subdivision category from district to special municipality for TW-TAO; update List Source."
         },
         {
             "Date Issued": "2002-12-10",
             "Edition/Newsletter": "Newsletter I-4 (https://web.archive.org/web/20081218103210/http://www.iso.org/iso/iso_3166-2_newsletter_i-4_en.pdf)",
-            "Code/Subdivision change": "Codes: (to correct duplicate use)Chiayi (district): TW-CYI → TW-CYQHsinchu (district): TW-HSZ → TW-HSQKaohsiung (district): TW-KHH → TW-KHQTaichung (district): TW-TXG → TW-TXQTainan (district): TW-TNN → TW-TNQTaipei (district): TW-TPE → TW-TPQ",
+            "Code/Subdivision change": "Codes: (to correct duplicate use)Chiayi (district): TW-CYI -> TW-CYQHsinchu (district): TW-HSZ -> TW-HSQKaohsiung (district): TW-KHH -> TW-KHQTaichung (district): TW-TXG -> TW-TXQTainan (district): TW-TNN -> TW-TNQTaipei (district): TW-TPE -> TW-TPQ",
             "Description of change in newsletter": "Error correction: Duplicate use of six code elements corrected. Subdivision categories in header re-sorted"
         }
     ],
@@ -3744,7 +3744,7 @@
         {
             "Date Issued": "2002-05-21",
             "Edition/Newsletter": "Newsletter I-2 (https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf)",
-            "Code/Subdivision change": "Codes: UZ-KH Khorazm → UZ-XO Xorazm",
+            "Code/Subdivision change": "Codes: UZ-KH Khorazm -> UZ-XO Xorazm",
             "Description of change in newsletter": "Spelling corrections in accordance with the newly adopted Roman alphabet"
         }
     ],
@@ -3761,7 +3761,7 @@
         {
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:VE)",
-            "Code/Subdivision change": "Subdivisions renamed: VE-X Vargas → La Guaira",
+            "Code/Subdivision change": "Subdivisions renamed: VE-X Vargas -> La Guaira",
             "Description of change in newsletter": "Change of subdivision name of VE-X; Update List Source; Correction of the Code Source"
         },
         {
@@ -3813,7 +3813,7 @@
         {
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:VN)",
-            "Code/Subdivision change": "Subdivision renamed:VN-CT Can Tho → Cần ThơVN-DN Da Nang → Đà NẵngVN-HN Ha Noi → Hà NộiVN-HP Hai Phong → Hải PhòngVN-SG Ho Chi Minh → Hồ Chí Minh",
+            "Code/Subdivision change": "Subdivision renamed:VN-CT Can Tho -> Cần ThơVN-DN Da Nang -> Đà NẵngVN-HN Ha Noi -> Hà NộiVN-HP Hai Phong -> Hải PhòngVN-SG Ho Chi Minh -> Hồ Chí Minh",
             "Description of change in newsletter": "Change of spelling of VN-CT, VN-DN, VN-HN, VN-HP, VN-SG; Update List Source"
         },
         {
@@ -3831,7 +3831,7 @@
         {
             "Date Issued": "2011-12-15",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)",
-            "Code/Subdivision change": "Subdivision layout: 5 provinces → 5 municipalities",
+            "Code/Subdivision change": "Subdivision layout: 5 provinces -> 5 municipalities",
             "Description of change in newsletter": "Administrative adjustment update, typo corrections and source list update."
         },
         {
@@ -3849,7 +3849,7 @@
         {
             "Date Issued": "2000-06-21",
             "Edition/Newsletter": "Newsletter I-1 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_i-1_en.pdf)",
-            "Code/Subdivision change": "Codes: (to correct duplicate use) Quảng Ninh: VN-24 → VN-13",
+            "Code/Subdivision change": "Codes: (to correct duplicate use) Quảng Ninh: VN-24 -> VN-13",
             "Description of change in newsletter": "Duplicate assignment of VN-24 corrected. Correction of 1 subdivision name. Correction of alphabetic sorting of subdivision names"
         }
     ],
@@ -3861,7 +3861,7 @@
         {
             "Date Issued": "2016-11-15",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:YE)",
-            "Code/Subdivision change": "Spelling change:YE-AB Abyān → Abyan",
+            "Code/Subdivision change": "Spelling change:YE-AB Abyān -> Abyan",
             "Description of change in newsletter": "Change of spelling of YE-AB; update list source"
         },
         {
@@ -3873,7 +3873,7 @@
         {
             "Date Issued": "2014-11-17",
             "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:YE)",
-            "Code/Subdivision change": "Spelling change:YE-SA Şan‘ā’ [city] → Amānat al ‘Āşimah [city]",
+            "Code/Subdivision change": "Spelling change:YE-SA Şan‘ā’ [city] -> Amānat al ‘Āşimah [city]",
             "Description of change in newsletter": "Change spelling for YE-SA; update List Source"
         },
         {
@@ -3900,25 +3900,25 @@
         {
             "Date Issued": "2020-03-02",
             "Edition/Newsletter": "Online Browsing Platform (OBP)",
-            "Code/Subdivision change": "Change of subdivision code:ZA-GT → ZA-GPZA-NL → ZA-KZN",
+            "Code/Subdivision change": "Change of subdivision code:ZA-GT -> ZA-GPZA-NL -> ZA-KZN",
             "Description of change in newsletter": "Change of subdivision code from ZA-GT to ZA-GP, ZA-NL to ZA-KZN; Update Code Source"
         },
         {
             "Date Issued": "2007-12-13",
             "Edition/Newsletter": "ISO 3166-2:2007 (http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718)",
-            "Code/Subdivision change": "Codes: Gauteng: ZA-GP → ZA-GT KwaZulu-Natal: ZA-ZN → ZA-NL",
+            "Code/Subdivision change": "Codes: Gauteng: ZA-GP -> ZA-GT KwaZulu-Natal: ZA-ZN -> ZA-NL",
             "Description of change in newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)"
         },
         {
             "Date Issued": "2007-11-28",
             "Edition/Newsletter": "Newsletter I-9 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/newsletter_i-9.pdf)",
-            "Code/Subdivision change": "Codes: (not marked with red colour in newsletter) Gauteng: ZA-GT → ZA-GP KwaZulu-Natal: ZA-NL → ZA-ZN",
+            "Code/Subdivision change": "Codes: (not marked with red colour in newsletter) Gauteng: ZA-GT -> ZA-GP KwaZulu-Natal: ZA-NL -> ZA-ZN",
             "Description of change in newsletter": "Addition of administrative divisions and their codes"
         },
         {
             "Date Issued": "2004-03-08",
             "Edition/Newsletter": "Newsletter I-6 (https://web.archive.org/web/20120112041245/http://www.iso.org/iso/iso_3166-2_newsletter_i-6_en.pdf)",
-            "Code/Subdivision change": "Codes: ZA-NP Northern Province → ZA-LP Limpopo",
+            "Code/Subdivision change": "Codes: ZA-NP Northern Province -> ZA-LP Limpopo",
             "Description of change in newsletter": "Change of name of Northern Province to Limpopo"
         }
     ],

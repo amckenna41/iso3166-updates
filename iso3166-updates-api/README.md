@@ -2,7 +2,7 @@
 
 ![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=iso3166-updates-frontend)
 
-As well as the Python software package, an API is also available to access any updates to a country's ISO 3166-2 codes via a URL endpoint. You can search for a particular country using its 2 letter alpha-2 code or 3 letter alpha-3 code (e.g EG, FR, DE or EGY, FRA, DEU) via 'alpha2' query parameter appended to the API URL. Additionally, the 'year' query parameter allows you to search for updates to 1 or more countries for a selected year, multiple years or a year range (e.g 2008, 2000-2010, <2016). The 'month' query parameter accepts an integer representing the number of months of past updates to be returned (e.g 6, 9, 24) from the current date. If no query parameters are included then the whole dataset with all updates for all countries will be returned. 
+As well as the Python software package, an API is also available to access any updates to a country's ISO 3166-2 codes via a URL endpoint. You can search for a particular country using its 2 letter alpha-2 code or 3 letter alpha-3 code (e.g EG, FR, DE or EGY, FRA, DEU) via the 'alpha2' query parameter appended to the API URL. Additionally, the 'year' query parameter allows you to search for updates to 1 or more countries for a selected year, multiple years or a year range (e.g 2008, 2000-2010, <2016). The 'month' query parameter accepts an integer representing the number of months of past updates to be returned (e.g 6, 9, 24) from the current date. If no query parameters are included then the whole dataset with all updates for all countries will be returned. 
 
 The main API endpoint is:
 
@@ -18,9 +18,14 @@ GCP Cloud Architecture
 Requirements
 ------------
 * [python][python] >= 3.7
+* [flask][flask] >= 2.3.2
+* [requests][requests] >= 2.28.1
 * [iso3166][iso3166] >= 2.1.1
-* [google-cloud-storage][google-cloud-storage] >= 2.8.0
 * [python-dateutil][python-dateutil] >= 2.8.2
+* [google-auth][google-auth] >= 2.17.3
+* [google-cloud-storage][google-cloud-storage] >= 2.8.0
+* [google-api-python-client][google-api-python-client] >= 2.86.0
+
 
 Get All ISO 3166-2 updates for all countries
 -------------------------------------------
@@ -279,12 +284,12 @@ Get updates for a specific country for specified year range e.g Bosnia, Haiti fo
 
 ### Response
     HTTP/2 200 
-    Date: Thu, 24 Feb 2011 12:36:30 GMT
-    Connection: close
-    Content-Type: application/json
-    Content-Length: 35
+    content-type: application/json
+    date: Tue, 07 Jan 2023 17:19:23 GMT
+    server: Google Frontend
+    content-length: 476
 
-    {}
+    {"HT":[{"Code/Subdivision change":"",...}
 
 ### Python
 ```python
@@ -324,10 +329,10 @@ Get updates for a specific country less than/greater than specified year e.g Isr
 
 ### Response
     HTTP/2 200 
-    Date: Thu, 24 Feb 2011 12:36:30 GMT
-    Connection: close
-    Content-Type: application/json
-    Content-Length: 35
+    content-type: application/json
+    date: Tue, 05 Mar 2023 17:19:23 GMT
+    server: Google Frontend
+    content-length: 3
 
     {}
 
@@ -339,12 +344,12 @@ Get updates for a specific country less than/greater than specified year e.g Isr
 
 ### Response
     HTTP/2 200 
-    Date: Thu, 24 Feb 2011 12:39:30 GMT
-    Connection: close
-    Content-Type: application/json
-    Content-Length: 35
+    content-type: application/json
+    date: Tue, 07 Jan 2023 17:19:23 GMT
+    server: Google Frontend
+    content-length: 637
 
-    {}
+    {"LT":[{"Code/Subdivision change":...}
 
 ### Python
 ```python
@@ -373,7 +378,94 @@ function getData() {
 var data = JSON.parse(this.response)
 ```
 
+Get all updates for all countries from the past 3 or 6 months
+-------------------------------------------------------------
+
+### Request
+`GET /months/3`
+
+    curl -i https://iso3166-updates.com/api?months=3
+    curl -i https://iso3166-updates.com/api/months/3
+
+### Response
+    HTTP/2 200 
+    Date: Thu, 06 Apr 2023 12:36:30 GMT
+    Connection: close
+    Content-Type: application/json
+    Content-Length: 3
+
+    {}
+
+### Python
+```python
+import requests
+
+base_url = "https://iso3166-updates.com"
+
+all_request = requests.get(base_url, params={"months": "3"}) 
+all_request.json() 
+```
+
+### Javascript
+```javascript
+function getData() {
+  const response = 
+    await fetch('https://iso3166-updates.com' + 
+        new URLSearchParams({
+            months: 3
+  }));
+  const data = await response.json()
+}
+
+// Begin accessing JSON data here
+var data = JSON.parse(this.response)
+```
+
+### Request
+`GET /months/6`
+
+    curl -i https://iso3166-updates.com/api?months=6
+    curl -i https://iso3166-updates.com/api/months/6
+
+### Response
+    HTTP/2 200 
+    Date: Thu, 06 Apr 2023 14:36:30 GMT
+    Connection: close
+    Content-Type: application/json
+    Content-Length: 4818
+
+    {"DZ":[{"Code/Subdivision change":""...}
+
+### Python
+```python
+import requests
+
+base_url = "https://iso3166-updates.com"
+
+all_request = requests.get(base_url, params={"months": "6"}) 
+all_request.json() 
+```
+
+### Javascript
+```javascript
+function getData() {
+  const response = 
+    await fetch('https://iso3166-updates.com' + 
+        new URLSearchParams({
+            months: 6
+  }));
+  const data = await response.json()
+}
+
+// Begin accessing JSON data here
+var data = JSON.parse(this.response)
+```
+
+[flask]: https://flask.palletsprojects.com/en/2.3.x/
 [python]: https://www.python.org/downloads/release/python-360/
+[requests]: https://requests.readthedocs.io/
 [iso3166]: https://github.com/deactivated/python-iso3166
-[google-cloud-storage]: https://gcloud.readthedocs.io/en/latest/storage-client.html
 [python-dateutil]: https://pypi.org/project/python-dateutil/
+[google-auth]: https://cloud.google.com/python/docs/reference
+[google-cloud-storage]: https://cloud.google.com/python/docs/reference
+[google-api-python-client]: https://cloud.google.com/python/docs/reference
