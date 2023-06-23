@@ -385,7 +385,9 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
                     with open(os.path.join(export_folder, export_filename_no_concat_updates), "w") as write_file:
                         json.dump(all_changes_json[update], write_file, indent=4, ensure_ascii=False)
             
-            print("All ISO 3166 updates exported to folder {}.".format(export_folder))
+            #if verbose flag set, print export completion message
+            if (verbose):
+                print("All ISO 3166 updates exported to folder {}.".format(export_folder))
 
     #export all ISO 3166 updates to csv, store in export folder dir
     if (export_csv):

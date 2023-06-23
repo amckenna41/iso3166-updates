@@ -68,13 +68,13 @@ jobs:
     - name: Testing with unittest
       run: |
         echo "Testing using unittest..."
-        python3 -m unittest discover tests
+        python3 -m unittest discover tests -v
 
     - name: Test with pytest
       run: |
         echo "Testing using pytest..."
         python3 -m pytest tests/
-        pytest --cov=./ --cov-report=xml
+        pytest --cov=./ --cov-report=xml -v
         codecov
 
     #upload to Code Coverage
