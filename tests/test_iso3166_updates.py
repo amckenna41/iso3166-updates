@@ -42,24 +42,24 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        # self.assertEqual(metadata('iso3166_updates')['version'], "1.3.0.", 
-        #     "iso3166-updates version is not correct, got: {}".format(metadata('iso3166_updates')['version']))
-        self.assertEqual(metadata('iso3166_updates')['name'], "iso3166-updates", 
-            "iso3166-updates software name is not correct, got: {}".format(metadata('iso3166_updates')['name']))
-        # self.assertEqual(metadata('iso3166_updates')['author'], "AJ McKenna, https://github.com/amckenna41", 
-        #     "iso3166-updates author is not correct, got: {}".format(metadata('iso3166_updates')['author']))
-        self.assertEqual(metadata('iso3166_updates')['author-email'], "amckenna41@qub.ac.uk", 
-            "iso3166-updates author email is not correct, got: {}".format(metadata('iso3166_updates')['author-email']))
-        self.assertEqual(metadata('iso3166_updates')['summary'], "A Python package that pulls the latest updates & changes to all ISO3166 listed countries.", 
-            "iso3166-updates package summary is not correct, got: {}".format(metadata('iso3166_updates')['summary']))
-        # self.assertEqual(metadata('iso3166_updates')['keywords'], "iso,iso3166,beautifulsoup,python,pypi,countries,country codes,csv,iso3166-2,iso3166-1,alpha-2,alpha-3", 
-        #     "iso3166-updates keywords are not correct, got: {}".format(metadata('iso3166_updates')['keywords']))
-        self.assertEqual(metadata('iso3166_updates')['home-page'], "https://github.com/amckenna41/iso3166-updates", 
-            "iso3166-updates home page url is not correct, got: {}".format(metadata('iso3166_updates')['home-page']))
-        self.assertEqual(metadata('iso3166_updates')['maintainer'], "AJ McKenna", 
-            "iso3166-updates maintainer is not correct, got: {}".format(metadata('iso3166_updates')['maintainer']))
-        self.assertEqual(metadata('iso3166_updates')['license'], "MIT", 
-            "iso3166-updates license type is not correct, got: {}".format(metadata('iso3166_updates')['license']))
+        # self.assertEqual(metadata('iso3166-updates')['version'], "1.3.1.", 
+        #     "iso3166-updates version is not correct, got: {}".format(metadata('iso3166-updates')['version']))
+        self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
+            "iso3166-updates software name is not correct, got: {}".format(metadata('iso3166-updates')['name']))
+        # self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna, https://github.com/amckenna41", 
+        #     "iso3166-updates author is not correct, got: {}".format(metadata('iso3166-updates')['author']))
+        self.assertEqual(metadata('iso3166-updates')['author-email'], "amckenna41@qub.ac.uk", 
+            "iso3166-updates author email is not correct, got: {}".format(metadata('iso3166-updates')['author-email']))
+        self.assertEqual(metadata('iso3166-updates')['summary'], "A Python package that pulls the latest updates & changes to all ISO3166 listed countries.", 
+            "iso3166-updates package summary is not correct, got: {}".format(metadata('iso3166-updates')['summary']))
+        # self.assertEqual(metadata('iso3166-updates')['keywords'], "iso,iso3166,beautifulsoup,python,pypi,countries,country codes,csv,iso3166-2,iso3166-1,alpha-2,alpha-3", 
+        #     "iso3166-updates keywords are not correct, got: {}".format(metadata('iso3166-updates')['keywords']))
+        self.assertEqual(metadata('iso3166-updates')['home-page'], "https://github.com/amckenna41/iso3166-updates", 
+            "iso3166-updates home page url is not correct, got: {}".format(metadata('iso3166-updates')['home-page']))
+        self.assertEqual(metadata('iso3166-updates')['maintainer'], "AJ McKenna", 
+            "iso3166-updates maintainer is not correct, got: {}".format(metadata('iso3166-updates')['maintainer']))
+        self.assertEqual(metadata('iso3166-updates')['license'], "MIT", 
+            "iso3166-updates license type is not correct, got: {}".format(metadata('iso3166-updates')['license']))
 
     @unittest.skip("Skipping to not overload Wiki servers on test suite run.")
     def test_wiki_url(self):

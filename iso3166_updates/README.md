@@ -15,9 +15,9 @@ import iso3166_updates as iso3166_updates
 **Input parameters to get_updates function:**
 ```python
   # -alpha2 ALPHA2, --alpha2 ALPHA2
-  #                       Alpha-2 code/s of ISO3166 countries to check for updates.
+  #                       Alpha-2 code/s of ISO 3166 countries to check for updates.
   # -export_filename EXPORT_FILENAME, --export_filename EXPORT_FILENAME
-  #                       Filename for exported ISO3166 updates for CSV and JSON files.
+  #                       Filename for exported ISO 3166 updates for CSV and JSON files.
   # -export_folder EXPORT_FOLDER, --export_folder EXPORT_FOLDER
   #                       Folder where to store exported ISO files.
   # -export_json, --export_json
@@ -25,62 +25,76 @@ import iso3166_updates as iso3166_updates
   # -export_csv, --export_csv
   #                       Whether to export all found updates to csv files in export folder.
   # -year YEAR, --year YEAR
-  #                       Selected year to check for updates.
+  #                       Selected year/years, year ranges or year to check for updates greater
+  #                       than or less than specified year
   # -concat_updates, --concat_updates
   #                       Whether to concatenate updates of individual countrys into the same json file or seperate.
 ```
 
-**Get all listed changes/updates for all countries which happens by default if no alpha-2 codes specified in input param, export csv and json to folder "iso3166-updates":**
+**Get all listed changes/updates for all countries and years which happens by default if no alpha-2 codes or years specified in input paramaters, export csv and json to folder "iso3166-updates", print progress via verbose flag:**
 ```python
-iso3166_updates.get_updates(export_folder="iso3166-updates", export_json=1, export_csv=1)
-#exported files: /iso3166-updates/iso3166-updates.json and /iso3166-updates/iso3166-updates.csv
+iso3166_updates.get_updates(export_folder="iso3166-updates", export_json=1, export_csv=1, verbose=1)
+#exported files: /iso3166-updates.json and /iso3166-updates/iso3166-updates.csv
 ```
 
-**Get all listed changes/updates for Andorra from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:AD), export csv and json to folder "iso3166-updates":**
+**Get all listed ISO 3166-2 changes/updates for Andorra, export csv and json to folder "iso3166-updates":**
 ```python
 iso3166_updates.get_updates("AD", export_folder="iso3166-updates", export_json=1, export_csv=1)
-#exported files: /iso3166-updates/iso3166-updates-AD.json and /iso3166-updates/iso3166-updates-AD.csv
+#exported files: /iso3166-updates-AD.json and /iso3166-updates/iso3166-updates-AD.csv
 ```
 
-**Get all listed changes/updates for BA, DE, FR, HU, PY, export only JSON of updates to export folder "iso3166-updates":**
+**Get all listed ISO 3166-2 changes/updates for BA, DE, FR, HU, PY, export only JSON of updates to export folder "iso3166-updates", print progress using verbose flag:**
 ```python
-iso3166_updates.get_updates(["BA","DE","FR","HU","PY"], export_folder="iso3166-updates", export_json=1, export_csv=0)
+iso3166_updates.get_updates(["BA","DE","FR","HU","PY"], export_folder="iso3166-updates", export_json=1, export_csv=0, verbose=1)
 #exported files: /iso3166-updates/iso3166-updates-BA,DE,FR,HU,PY.json
 ```
 
-**Get any listed changes/updates for HU, IT, JA, KE from wiki, in the year 2018, export only to JSON with filename "iso3166-updates.json" and seperate updates into sepetate JSON files:**
+**Get any listed ISO 3166-2 changes/updates for HU, IT, JA, KE, in the year 2018, export only to JSON with filename "iso3166-updates.json" and seperate updates into sepetate JSON files (concat_updates=False):**
 ```python
 iso3166_updates.get_updates("HU, IT, JA, KE", year="2018", export_json=1, export_csv=0, export_filename="iso3166-updates", concat_updates=0)
 #exported files: /iso3166-updates/iso3166-updates-HU,IT,JA,KE-2018.json
 ```
 
-**Get any listed changes/updates for Ireland from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:IE), between years of 2012 and 2021, use default parameters:**
+**Get any listed ISO 3166-2 changes/updates for Ireland, between years 2012 and 2021, use default parameters (export to json but not csv):**
 ```python
 iso3166_updates.get_updates("IE", year="2012-2021")
 #exported files: /iso3166-updates/iso3166-updates-IE_2012-2021.json
 ```
 
-**Get any listed changes/updates for Tanzania from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:TZ), with updates years >=2015, export only to CSV with filename iso3166-output":**
+**Get any listed ISO 3166-2 changes/updates for Tanzania, with updates with year >=2015, export only to CSV with filename iso3166-output":**
 ```python
 iso3166_updates.get_updates("TA", year=">2015", export_filename="iso3166-output", export_json=0, export_csv=1)
 #exported files: /iso3166-updates/iso3166-output-TA_>2015.csv
 ```
 
-**Get any listed changes/updates for Yemen from wiki (https://en.wikipedia.org/wiki/ISO_3166-2:YE), with updates years < 2010, use default parameters:**
+**Get any listed ISO 3166-2 changes/updates for Yemen, with updates with year < 2010, use default parameters (export to json but not csv):**
 ```python
 iso3166_updates.get_updates("YE", year="<2010")
 #exported files: /iso3166-updates/iso3166-output-YE_<2010.json
 ```
+## Terminal/Command Line
 
-The output to the above functions for the updates/changes to a ISO 3166-2 country returns 4 columns: 
-<b>Edition/Newsletter, Date Issued, Code/Subdivision change</b> and <b>Description of change in newsletter.</b> 
+The software functions can also be run from the cmd/terminal interface, when the script is called the get_updates() function will be called. The script accepts the same parameter names as the get_updates() function.
 
-* Edition/Newsletter: Name and or edition of newsletter that ISO 3166-2 change/update was communicated in.
+**Get all listed ISO 3166-2 changes/updates for all countries, export csv and json to folder "iso3166-updates", print progress using verbose flag:** 
+```bash
+python3 iso3166_updates.py --export_folder="iso3166-updates" --export_csv --export_json --verbose
+```
+
+**Get all listed ISO 3166-2 changes/updates for BY, DJ, ET, LY, PA for year range 2005-2010, export only CSV of updates to export folder "iso3166-updates", print progress using verbose flag:**
+```bash
+python3 iso3166_updates.py --alpha2="BY, DJ, ET, LY, PA" --year="2005-2010" --export_folder="iso3166-updates" --export_csv --no-export_json --verbose
+```
+
+The output to the above functions for the updates/changes to an ISO 3166-2 country returns 4 columns: 
+<b>Edition/Newsletter, Date Issued, Code/Subdivision change</b> and <b>Description of change in newsletter.</b> For the CSV export, if more than one country input, then an additional primary key column <b>Country Code</b> will be prepended to the first column, which will be the 2 letter ISO 3166-1 country code. 
+
+* Edition/Newsletter: Name and or edition of newsletter that the ISO 3166-2 change/update was communicated in.
 * Date Issued: Date that the change was communicated.
 * Code/Subdivision change: Overall summary of change/update made.
 * Description of change in newsletter: More in-depth info about the change/update that was made.
 
-E.g. The output format of the exported CSV for AD (Andorra) is:
+E.g. The output format of the exported <b>CSV</b> for AD (Andorra) is:
 
 | Edition/Newsletter | Date Issued | Code/Subdivision change | Description of change in newsletter |   
 |:-------------------|:------------|------------------------------------:|------------------------:|
@@ -88,7 +102,7 @@ E.g. The output format of the exported CSV for AD (Andorra) is:
 | Online Browsing Platform (OBP) | 2014-11-03 | No subdivision changes listed | Update List Source |
 | Online Browsing Platform (OBP) | 2015-11-27 | No subdivision changes listed | Update List Source | 
 
-E.g. The output format of the exported JSON for AD (Andorra) is:
+E.g. The output format of the exported <b>JSON</b> for AD (Andorra) is:
 ```javascript
 {
   AD: [

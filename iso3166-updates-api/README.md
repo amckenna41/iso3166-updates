@@ -2,7 +2,23 @@
 
 ![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=iso3166-updates-frontend)
 
-As well as the Python software package, an API is also available to access any updates to a country's ISO 3166-2 codes via a URL endpoint. You can search for a particular country using its 2 letter alpha-2 code or 3 letter alpha-3 code (e.g EG, FR, DE or EGY, FRA, DEU) via the 'alpha2' query parameter appended to the API URL. Additionally, the 'year' query parameter allows you to search for updates to 1 or more countries for a selected year, multiple years or a year range (e.g 2008, 2000-2010, <2016). The 'month' query parameter accepts an integer representing the number of months of past updates to be returned (e.g 6, 9, 24) from the current date. If no query parameters are included then the whole dataset with all updates for all countries will be returned. 
+An API is available that can be used to extract any applicable updates for a country via a URL. The API is available at the URL:
+
+> https://www.iso3166-updates.com/api
+
+Three query string parameters are available in the API - `alpha2`, `year` and `months`. 
+
+* The 2 letter alpha-2 country code can be appended to the url as a query string parameter or as its own path ("?alpha2=JP" or /alpha2/JP). A single alpha-2 or list of them can be passed to the API (e.g "?alpha2="FR, DE, HU, ID, MA" or /alpha2/FR,DE,HU,ID,MA). The 3 letter alpha-3 counterpart for each country's alpha-2 code can also be passed into the `alpha2` parameter (e.g "?alpha2="FRA, DEU, HUN, IDN, MAR" or /alpha2/FRA,DEU,HUN,IDN,MAR). 
+
+* The year parameter can be a specific year, year range, or a cut-off year to get updates less than/more than a year (e.g "/year/2017", "2010-2015", "<2009", ">2002"). 
+
+* Finally, the months parameter will gather all updates for 1 or more alpha-2 codes from a number of months from the present day (e.g "?months=2", "/months/6", "/months/48").
+
+* If no input parameter values specified then all ISO 3166-2 updates for all countries and years will be gotten.
+
+The API was hosted and built using GCP, with a Cloud Function being used in the backend which is fronted by an api gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON where all ISO 3166 updates are stored. A complete diagram of the architecture is shown below. Although, due to the cost of infrastructure the hosting was switched to Vercel (https://vercel.com/).
+
+The API documentation and usage with all useful commands and examples to the API is available on the [README](https://github.com/amckenna41/iso3166-updates/blob/main/iso3166-updates-api/README.md) of the iso3166-updates-api folder. 
 
 The main API endpoint is:
 
@@ -198,8 +214,8 @@ function getData() {
 var data = JSON.parse(this.response)
 ```
 
-Get updates for a specific country for specified year e.g Andorra, Dominica for 2007
-------------------------------------------------------------------------------------
+Get updates for a specific country for a specified year e.g Andorra, Dominica for 2007
+--------------------------------------------------------------------------------------
 
 ### Request
 `GET /alpha2/AD/year/2007`
@@ -258,8 +274,8 @@ function getData() {
 var data = JSON.parse(this.response)
 ```
 
-Get updates for a specific country for specified year range e.g Bosnia, Haiti for 2009-2015
--------------------------------------------------------------------------------------------
+Get updates for a specific country for a specified year range e.g Bosnia, Haiti for 2009-2015
+---------------------------------------------------------------------------------------------
 
 ### Request
 `GET /alpha2/BA/year/2009-2015`
@@ -318,8 +334,8 @@ function getData() {
 var data = JSON.parse(this.response)
 ```
 
-Get updates for a specific country less than/greater than specified year e.g Israel, Lithuania <2010 or >2012
--------------------------------------------------------------------------------------------------------------
+Get updates for a specific country less than/greater than a specified year e.g Israel, Lithuania <2010 or >2012
+---------------------------------------------------------------------------------------------------------------
 
 ### Request
 `GET /alpha2/IL/year/<2010`

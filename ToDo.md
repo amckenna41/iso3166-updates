@@ -191,12 +191,11 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Add /year/alpha2 path to api repo, currently just has alpha2/year path e.g https://iso3166-updates.com/api/year/2027/alpha2/ie.
 - [X] Add params arg to requests.get()
 - [X] In unit tests, change test_request var to name more appropriate to test case.
-- [ ] Brings up api error: https://iso3166-updates.com/api/alpha2/tr/year/
 - [X] Add "gt" or "lt" to any vars/requests that are using greater than/less than years etc.
 - [X] In unit tests, change datetime.datetime to datetime.
 - [X] Remove any instance of "test_request" var in unit tests.
 - [X] Change arrow from → to -> in api unit tests after reupload.
-- [ ] Reupload iso3166-updates.json - empty dicts e.g AX not showing up in output.
+- [X] Reupload iso3166-updates.json - empty dicts e.g AX not showing up in output.
 <!-- 
 Create new config, update config file
 gcloud api-gateway api-configs create NEW_CONFIG_ID --api=MY_API --openapi-spec=openapi2-functions.yaml 

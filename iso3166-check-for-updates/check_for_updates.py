@@ -275,8 +275,10 @@ def check_iso3166_updates_main(request):
         updates_found, filtered_updates = update_json(latest_iso3166_updates_after_date_filter)
     if (updates_found):
         create_issue(filtered_updates, months)
+        print("ISO 3166-2 updates found and successfully exported.")
         success_message["message"] = "ISO 3166-2 updates found and successfully exported."
     else:
+        print("No ISO 3166-2 updates found.")
         success_message["message"] = "No ISO 3166-2 updates found."
 
     return jsonify(success_message), 200

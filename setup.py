@@ -8,7 +8,7 @@ import sys
 
 #software metadata
 __name__ = 'iso3166-updates'
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 __description__ = "A Python package that pulls the latest updates & changes to all ISO3166 listed countries."
 __author__ = 'AJ McKenna, https://github.com/amckenna41'
 __authorEmail__ = 'amckenna41@qub.ac.uk'
@@ -50,7 +50,6 @@ setup(name=__name__,
         'License :: OSI Approved :: MIT License',
         'License :: Free For Educational Use',
         'Natural Language :: English',
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
