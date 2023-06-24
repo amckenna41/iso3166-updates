@@ -80,7 +80,8 @@ jobs:
     #upload to Code Coverage
     - name: Upload Coverage Report to Codecov
       uses: codecov/codecov-action@v3
-      env: CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      env: 
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
         flags: iso3166_updates_workflow
 

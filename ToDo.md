@@ -196,6 +196,7 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Remove any instance of "test_request" var in unit tests.
 - [X] Change arrow from → to -> in api unit tests after reupload.
 - [X] Reupload iso3166-updates.json - empty dicts e.g AX not showing up in output.
+- [ ] Double check images on repo appear after changing from private to public.
 <!-- 
 Create new config, update config file
 gcloud api-gateway api-configs create NEW_CONFIG_ID --api=MY_API --openapi-spec=openapi2-functions.yaml 
