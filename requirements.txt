@@ -3,3 +3,4 @@ pandas
 numpy
 requests>=2.28.1
 iso3166
+iso3166-updates
