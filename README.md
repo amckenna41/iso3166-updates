@@ -15,7 +15,7 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/ISO_Logo_%28Red_square%29.svg" alt="iso" height="200" width="300"/>
 </div>
 
-> Automated scripts and API that check for any updates/changes to the ISO 3166-1 and ISO 3166-2 country codes and naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui). Available via a Python software package and API; a demo of both is available [here][demo].
+> Automated scripts and API that check for any updates/changes to the ISO 3166-1 and ISO 3166-2 country codes and subdivision naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui). Available via a lightweight Python software package and API; a demo of both is available [here][demo].
 
 Table of Contents
 -----------------
@@ -64,7 +64,7 @@ Three query string parameters are available in the API - `alpha2`, `year` and `m
 
 * If no input parameter values specified then all ISO 3166-2 updates for all countries and years will be gotten.
 
-The API was hosted and built using GCP, with a Cloud Function being used in the backend which is fronted by an api gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON where all ISO 3166 updates are stored. A complete diagram of the architecture is shown below. Although, due to the cost of infrastructure the hosting was switched to Vercel (https://vercel.com/).
+The API was hosted and built using GCP, with a Cloud Function being used in the backend which is fronted by an api gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON where all ISO 3166 updates are stored. A complete diagram of the architecture is shown below. Although, due to the cost of infrastructure, the hosting was switched to Vercel (https://vercel.com/).
 
 The API documentation and usage with all useful commands and examples to the API is available on the [README](https://github.com/amckenna41/iso3166-updates/blob/main/iso3166-updates-api/README.md) of the iso3166-updates-api folder. 
 
@@ -74,21 +74,18 @@ The API documentation and usage with all useful commands and examples to the API
 
 Staying up to date
 ------------------
-The list of ISO 3166-2 updates was last updated on <strong>Nov 2022</strong>. 
-The object storing all updates, both locally (iso3166-updates.json) and on the API, are consistenly checked for the latest updates using a Google Cloud Function ([iso3166-check-for-updates](https://github.com/amckenna41/iso3166-updates/tree/main/iso3166-check-for-updates)). The function uses the `iso3166-updates` Python software to pull all the latest updates/changes from all ISO 3166-2 wiki's to check for the latest updates within a certain period e.g. the past 3-6 months. The function compares the generated output with that of the updates json currently in the Google Cloud Storage bucket and will replace this json to integrate the latest updates found such that the API will have the most up-to-date data.
+The list of ISO 3166-2 updates was last updated on <strong>Nov 2022</strong>.
+
+The object storing all updates, both locally (iso3166-updates.json) and on the API, are consistenly checked for the latest updates using a Google Cloud Run microservice ([iso3166-check-for-updates](https://github.com/amckenna41/iso3166-updates/tree/main/iso3166-check-for-updates)). The application is built using a custom Docker container that uses the `iso3166-updates` Python software to pull all the latest updates/changes, from all ISO 3166-2 wiki's and each country's ISO website page, to check for the latest updates within a certain period e.g. the past 3-6 months. The app compares the generated output with that of the updates json currently in the Google Cloud Storage bucket and will replace this json to integrate the latest updates found such that the API will have the most up-to-date data. A Cloud Scheduler is used to periodically call the application.
 
 Additionally, a GitHub Issue in the custom-built `iso3166-updates`, `iso3166-2` and `iso3166-flag-icons` repositories will be automatically created that outlines all updates/changes that need to be implemented into the `iso3166-updates`, `iso3166-2` and `iso3166-flag-icons` JSONs and repos.
 
-Ultimately, this Cloud Function ensures that the software and assoicated APIs are up-to-date with the latest ISO 3166-2 information for all countries/territories/subdivisions etc.
+Ultimately, this Cloud Run microservice ensures that the software and assoicated APIs are up-to-date with the latest ISO 3166-2 information for all countries/territories/subdivisions etc.
 
 Requirements
 ------------
-* [python][python] >= 3.7
-* [pandas][pandas] >= 1.4.3
-* [numpy][numpy] >= 1.23.2
-* [requests][requests] >= 2.28.1
-* [beautifulsoup4][beautifulsoup4] >= 4.11.1
-* [iso3166][iso3166] >= 2.1.1
+* [python][python] >= 3.8
+* [iso3166][iso3166] >= 2.1.1 
 
 Installation
 ------------
@@ -105,12 +102,66 @@ cd iso3166_updates
 python3 setup.py install
 ```
 
-Usage
------
+Usage (iso3166-updates Python package)
+--------------------------------------
+Below are some examples of using the custom-built iso3166-updates Python package. 
+
 **Import package:**
 ```python
-import iso3166_updates as iso3166_updates
+import iso3166_updates as iso
 ```
+
+**Get all listed changes/updates for all countries and years:**
+```python
+iso.updates.all
+```
+
+**Get all listed ISO 3166-2 changes/updates for Andorra (AD):**
+```python
+iso.updates.AD
+```
+
+**Get all listed ISO 3166-2 changes/updates for BA, DE, FR, HU, PY:**
+```python
+iso.updates["BA","DE","FR","HU","PY"]
+```
+
+**Get any listed ISO 3166-2 changes/updates for Ireland, between years 2012 and 2021:**
+```python
+iso.updates.year("2012-2021")["IE"]
+```
+
+**Get any listed ISO 3166-2 changes/updates for Tanzania, with updates with year >=2015":**
+```python
+iso.updates.year(">2015")["TA"]
+```
+
+**Get any listed ISO 3166-2 changes/updates for Yemen, with updates with year < 2010:**
+```python
+iso.updates.year("<2010")["YE"]
+```
+Usage get_all_iso3166_updates.py script
+---------------------------------------
+Below are some examples of using the get_all_iso3166_updates.py script which is used to pull all the ISO 3166 updates
+from the various data sources.
+
+**Requirements:**
+* [python][python] >= 3.8
+* [iso3166-updates][iso3166-updates] >= 1.3.0
+* [pandas][pandas] >= 1.4.3
+* [numpy][numpy] >= 1.23.2
+* [requests][requests] >= 2.28.1
+* [beautifulsoup4][beautifulsoup4] >= 4.11.1
+* [iso3166][iso3166] >= 2.1.1
+* [google-auth][google-auth] >= 2.17.3
+* [google-cloud-storage][google-cloud-storage] >= 2.8.0
+* [google-api-python-client][google-api-python-client] >= 2.86.0
+* [emoji-country-flag][emoji-country-flag] == 1.3.0
+* [selenium][seleniumn] >= 4.10.0
+* [flask][flask] >= 2.3.2
+* [gunicorn][gunicorn] >= 21.2.0
+<!-- * [webdriver-manager][webdriver-manager] >= 3.8.6 -->
+<!-- * [lxml][lxml] >=  4.9.3 -->
 
 **Input parameters to get_updates function:**
 ```python
@@ -129,18 +180,26 @@ import iso3166_updates as iso3166_updates
   #                       than or less than specified year
   # -concat_updates, --concat_updates
   #                       Whether to concatenate updates of individual countrys into the same json file or seperate.
+  # -verbose, --verbose
+  #                       Set to 1 to print out progress of updates function, 0 will not print progress.
+  # -use_selenium, --use_selenium
+  #                       Gather all data for each country from its official page on the ISO website which 
+  #                       requires Python Selenium and chromedriver. If False then just use country data
+  #                       from its wiki page.
+```
+**Get all the latest updates for all ISO 3166 countries**
+```bash
+./get_all_updates.sh 
+
+'''
+--export_filename     Filename for exported JSON/CSVs files containing updates data (default="iso3166-updates.json").
+--export_folder       Folder name to store exported JSON/CSVs files containing updates data (default="test-iso3166-updates).
+'''
 ```
 
-**Get all listed changes/updates for all countries and years which happens by default if no alpha-2 codes or years specified in input paramaters, export csv and json to folder "iso3166-updates", print progress via verbose flag:**
+**Import module:**
 ```python
-iso3166_updates.get_updates(export_folder="iso3166-updates", export_json=1, export_csv=1, verbose=1)
-#exported files: /iso3166-updates.json and /iso3166-updates/iso3166-updates.csv
-```
-
-**Get all listed ISO 3166-2 changes/updates for Andorra, export csv and json to folder "iso3166-updates":**
-```python
-iso3166_updates.get_updates("AD", export_folder="iso3166-updates", export_json=1, export_csv=1)
-#exported files: /iso3166-updates-AD.json and /iso3166-updates/iso3166-updates-AD.csv
+import get_all_iso3166_updates as iso3166_updates
 ```
 
 **Get all listed ISO 3166-2 changes/updates for BA, DE, FR, HU, PY, export only JSON of updates to export folder "iso3166-updates", print progress using verbose flag:**
@@ -171,19 +230,6 @@ iso3166_updates.get_updates("TA", year=">2015", export_filename="iso3166-output"
 ```python
 iso3166_updates.get_updates("YE", year="<2010")
 #exported files: /iso3166-updates/iso3166-output-YE_<2010.json
-```
-## Terminal/Command Line
-
-The software functions can also be run from the cmd/terminal interface, when the script is called the get_updates() function will be called. The script accepts the same parameter names as the get_updates() function.
-
-**Get all listed ISO 3166-2 changes/updates for all countries, export csv and json to folder "iso3166-updates", print progress using verbose flag:** 
-```bash
-python3 iso3166_updates.py --export_folder="iso3166-updates" --export_csv --export_json --verbose
-```
-
-**Get all listed ISO 3166-2 changes/updates for BY, DJ, ET, LY, PA for year range 2005-2010, export only CSV of updates to export folder "iso3166-updates", print progress using verbose flag:**
-```bash
-python3 iso3166_updates.py --alpha2="BY, DJ, ET, LY, PA" --year="2005-2010" --export_folder="iso3166-updates" --export_csv --no-export_json --verbose
 ```
 
 The output to the above functions for the updates/changes to an ISO 3166-2 country returns 4 columns: 
@@ -235,10 +281,12 @@ Directories
 * `/iso3166-updates-api` - all code and files related to the serverless Google Cloud Function for the `iso3166-updates` API, including the main.py, requirements.txt and API config file.
 * `/iso3166-check-for-updates` - all code and files related to the serverless Google Cloud Function for the check-for-updates function which is a periodically called Cloud Function that uses the Python software to check for the latest updates for all country's, ensuring the API and jsons are reliable and up-to-date. Includes the main.py and requirements.txt files.
 * `/tests` - unit and integration tests for `iso3166-updates`.
+* `get_all_iso3166_updates.py` - python module that pulls and exports all the latest ISO 3166 data from the various data sources.
+* `get_all_iso3166-updates.sh` - shell script created to call the get_all..py script to introduce some pseudo randomness required when using Python Selenium. 
 
 Issues
 ------
-Any issues, errors or bugs can be raised via the [Issues](Issues) tab in the repository. Also if there are any missing or incorrect data in the updates json, this should also be raised by creating an issue. 
+Any issues, errors or bugs can be raised via the [Issues](Issues) tab in the repository.
 
 Contact
 -------
@@ -247,12 +295,12 @@ If you have any questions or comments, please contact amckenna41@qub.ac.uk or ra
 
 References
 ----------
-\[1\]: ISO3166-1: https://en.wikipedia.org/wiki/ISO_3166-1 <br>
-\[2\]: ISO3166-2: https://en.wikipedia.org/wiki/ISO_3166-2 <br>
+\[1\]: ISO 3166-1: https://en.wikipedia.org/wiki/ISO_3166-1 <br>
+\[2\]: ISO 3166-2: https://en.wikipedia.org/wiki/ISO_3166-2 <br>
 \[3\]: ISO Country Codes Collection: https://www.iso.org/publication/PUB500001 <br>
 \[4\]: ISO Country Codes: https://www.iso.org/iso-3166-country-codes.html <br>
-\[5\]: ISO3166-1 flag-icons repo: https://github.com/lipis/flag-icons <br>
-\[6\]: ISO3166-2 flag-icons repo: https://github.com/amckenna41/iso3166-flag-icons <br>
+\[5\]: ISO 3166-1 flag-icons repo: https://github.com/lipis/flag-icons <br>
+\[6\]: ISO 3166-2 flag-icons repo: https://github.com/amckenna41/iso3166-flag-icons <br>
 
 Support
 -------
@@ -262,10 +310,20 @@ Support
 
 [demo]: https://colab.research.google.com/drive/1oGF3j3_9b_g2qAmBtv3n-xO2GzTYRJjf?usp=sharing
 [python]: https://www.python.org/downloads/release/python-360/
+[iso3166-updates]: https://github.com/amckenna41/iso3166-updates
 [pandas]: https://pandas.pydata.org/
 [numpy]: https://numpy.org/
 [requests]: https://requests.readthedocs.io/
 [beautifulsoup4]: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+[google-auth]: https://cloud.google.com/python/docs/reference
+[google-cloud-storage]: https://cloud.google.com/python/docs/reference
+[google-api-python-client]: https://cloud.google.com/python/docs/reference
+[flask]: https://flask.palletsprojects.com/en/2.3.x/
+[emoji-country-flag]: https://pypi.org/project/emoji-country-flag/
+[gunicorn]: https://pypi.org/project/gunicorn/
+[selenium]: https://selenium-python.readthedocs.io/index.html
+[webdriver-manager]: https://pypi.org/project/webdriver-manager/
+[lxml]: https://lxml.de/
 [iso3166]: https://github.com/deactivated/python-iso3166
 [PyPi]: https://pypi.org/project/iso3166-updates/
 [Issues]: https://github.com/amckenna41/iso3166-updates/issues

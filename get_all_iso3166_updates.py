@@ -1,29 +1,21 @@
-from flask import Flask
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.support.wait import WebDriverWait 
-import random
 from itertools import product
+import argparse
 import pandas as pd
+import requests
 import iso3166
-from bs4 import BeautifulSoup, Tag
-import re
-from importlib import metadata
 import os
 import getpass
 import json
+import re
+from bs4 import BeautifulSoup, Tag
+from importlib import metadata
 import time
-import flag
-from datetime import datetime
-from operator import itemgetter
-from dateutil.relativedelta import relativedelta
-import requests
-from google.cloud import storage
-from flask import jsonify
-
-#initialise Flask app
-app = Flask(__name__)
+import datetime
+import random
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+# from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support.wait import WebDriverWait 
 
 #get current software version
 __version__ = metadata.metadata('iso3166_updates')['version']
@@ -36,38 +28,15 @@ USER_AGENT_HEADER = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(__versio
 wiki_base_url = "https://en.wikipedia.org/wiki/ISO_3166-2:"
 iso_base_url = "https://www.iso.org/obp/ui/#iso:code:3166:"
 
-#json object storing the error message and status code 
-error_message = {}
-error_message["status"] = 400
-
-#json object storing the success message and status code
-success_message = {}
-success_message["status"] = 200
-
-#get current date and time on function execution
-current_datetime = datetime.strptime(datetime.today().strftime('%Y-%m-%d'), "%Y-%m-%d")
-
 def create_driver():
     """
-    Create instance of Selenium chromedriver for each country's individual page on the 
-    official ISO website. The site requires a session to be created and Javascript to
-    be ran so the page's data cannot be directly webscraped. For some countries their
-    ISO page contains extra data not on the country's wiki page. 
-
-    Parameters
-    ----------
-    None
-
-    Returns
-    -------
-    :driver : selenium.webdriver.chrome.webdriver.WebDriver
-        instance of Python Selenium using chromedriver webdriver.
+    
     """
     #create instance of Service class and get executeable path of chromedriver
     service = Service(executable_path='/usr/lib/chromium-browser/chromedriver')
 
     #create instance of Options class, add below options to ensure everything works as desired
-    chrome_options = Options()
+    chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument("--disable-gpu")
@@ -96,265 +65,6 @@ def create_driver():
 
     return driver
 
-@app.route("/")
-def check_for_updates_main():
-    """
-    Google Cloud Run main entry script that checks for any updates within specified 
-    date range for the iso3166-updates API. It uses the get_all_iso3166_updates.py
-    script to web scrape all country's ISO 3166-2 data from the various data sources,
-    checking for any updates in a date range. The Cloud run app is built using a docker 
-    container that contains all the required dependancies and binaries required to run 
-    the script. 
-    
-    If any updates are found that are not already present in the JSON object
-    within the GCP Storage bucket then a GitHub Issue is automatically created in the 
-    iso3166-updates, iso3166-2 repository that itself stores all the latest info 
-    and data relating to the ISO3166-2 standard. A similar Issue will also be raised 
-    in the iso3166-flag-icons repo which is another custom repo that stores all the 
-    flag icons of all countries and subdivisions in the ISO 3166-1 and ISO 3166-2.
-    Additionally, if changes are found then the ISO 3166 updates JSON file in the 
-    GCP Storage bucket is updated which is the data source for the iso3166-updates 
-    Python package and accompanying API.
-
-    Parameters
-    ----------
-    None
-    
-    Returns
-    -------
-    :success_message/error_message : json
-       jsonified response indicating whether the application has completed successfully or
-       an error has arose during execution.
-    """
-    #default month cutoff for checking for updates
-    months = 6
-
-    #object containing current iso3166-2 updates after month range date filter applied
-    latest_iso3166_updates_after_date_filter = {}
-
-    #get list of all country's 2 letter alpha-2 codes
-    alpha2_codes = sorted(list(iso3166.countries_by_alpha2.keys()))
-
-    #sort codes in alphabetical order and uppercase
-    alpha2_codes.sort()
-    alpha2_codes = [code.upper() for code in alpha2_codes]
-
-    #call get_updates function to scrape all country updates from data sources
-    latest_iso3166_updates = get_updates(export_json=False, export_csv=False, verbose=True)
-
-    #iterate over all alpha-2 codes, check for any updates in specified months range in updates json 
-    for alpha2 in list(latest_iso3166_updates.keys()):
-        latest_iso3166_updates_after_date_filter[alpha2] = []
-        for row in range(0, len(latest_iso3166_updates[alpha2])):
-            if (latest_iso3166_updates[alpha2][row]["Date Issued"] != ""): #go to next iteration if no Date Issued in row
-                #convert str date into date object
-                row_date = (datetime.strptime(latest_iso3166_updates[alpha2][row]["Date Issued"], "%Y-%m-%d"))
-                #compare date difference from current row to current date
-                date_diff = relativedelta(current_datetime, row_date)
-                #calculate date difference in months
-                diff_months = date_diff.months + (date_diff.years * 12)
-
-                #if month difference is within months range, append to updates json object
-                if (diff_months <= months):
-                    latest_iso3166_updates_after_date_filter[alpha2].append(latest_iso3166_updates[alpha2][row])
-
-        #if current alpha-2 has no rows in date range, remove from temp object
-        if (latest_iso3166_updates_after_date_filter[alpha2] == []):
-            latest_iso3166_updates_after_date_filter.pop(alpha2, None)
-
-    #bool to track if any ISO 3166 updates found
-    updates_found = False
-    
-    #if update object not empty (i.e there are updates), call update_json and create_issue functions
-    if (latest_iso3166_updates_after_date_filter != {}):
-        updates_found, filtered_updates = update_json(latest_iso3166_updates_after_date_filter)
-    if (updates_found):
-        create_issue(filtered_updates, months)
-        print("ISO 3166-2 updates found and successfully exported.")
-        success_message["message"] = "ISO 3166-2 updates found and successfully exported to bucket and GitHub Issues created."
-    else:
-        print("No ISO 3166-2 updates found.")
-        success_message["message"] = "No ISO 3166-2 updates found."
-
-    return jsonify(success_message), 200
-
-def update_json(latest_iso3166_updates_after_date_filter):
-    """
-    If changes have been found for any countrys in the ISO3166-2 within the
-    specified date range using the check_iso3166_updates_main function then 
-    the JSON in the storage bucket is updated with the new JSON and the old 
-    one is stored in an archive folder on the same bucket.
-
-    Parameters
-    ----------
-    :latest_iso3166_updates_after_date_filter : json
-        json object with all listed iso3166-2 updates after month date filter
-        applied.
-
-    Returns
-    -------
-    :updates_found : bool
-        bool to track if updates/changes have been found in JSON object.
-    individual_updates_json: dict
-        dictionary of individual ISO 3166 updates that aren't in existing 
-        updates object on JSON.
-    """
-    #initialise storage client
-    storage_client = storage.Client()
-    try:
-        #create a bucket object for the bucket
-        bucket = storage_client.get_bucket(os.environ["BUCKET_NAME"])
-    except google.cloud.exceptions.NotFound:
-        error_message["message"] = "Error retrieving updates data json storage bucket: {}.".format(os.environ["BUCKET_NAME"])
-        return jsonify(error_message), 400
-    #create a blob object from the filepath
-    blob = bucket.blob(os.environ["BLOB_NAME"])  
-    
-    print("bucket-name", os.environ["BUCKET_NAME"])
-    print("bucket-name", os.environ["BLOB_NAME"])
-    print("blob", blob)
-
-    #raise error if updates file not found in bucket
-    if not (blob.exists()):
-        raise ValueError("Error retrieving updates data json: {}.".format(os.environ["BLOB_NAME"]))
-    
-    #download current ISO 3166 updates JSON file from storage bucket 
-    current_updates_data = json.loads(blob.download_as_string(client=None))
-
-    #set new json object to original one imported from gcp storage
-    updated_json = current_updates_data
-    updates_found = False
-
-    #seperate object that holds individual updates that were found, used in create_issue function
-    individual_updates_json = {}
-
-    #iterate over all updates in json, if update/row not found in original json, pulled from GCP storage, 
-    # append to new updated_json object
-    for code in latest_iso3166_updates_after_date_filter:   
-        individual_updates_json[code] = []
-        for update in latest_iso3166_updates_after_date_filter[code]:
-            if not (update in current_updates_data[code]):
-                updated_json[code].append(update)
-                updates_found = True
-                individual_updates_json[code].append(update)
-
-        #updates are appended to end of updates json, need to reorder by Date Issued, latest first
-        updated_json[code] = sorted(updated_json[code], key=itemgetter('Date Issued'), reverse=True)
-
-        #if current alpha-2 code has no updates associated with it, remove from temp object
-        if (individual_updates_json[code] == []):
-            individual_updates_json.pop(code, None)
-
-    #if updates found in new updates json compared to current one
-    if (updates_found):
-
-        #temp path for exported json
-        tmp_updated_json_path = os.path.join("/tmp", os.environ["BLOB_NAME"])
-        
-        #export updated json to temp folder
-        with open(tmp_updated_json_path, 'w', encoding='utf-8') as output_json:
-            json.dump(updated_json, output_json, ensure_ascii=False, indent=4)
-        
-        #create blob for updated JSON
-        blob = bucket.blob(os.environ["BLOB_NAME"])
-
-        #move current updates json in bucket to an archive folder, append datetime to it
-        archive_filepath = os.environ["ARCHIVE_FOLDER"] + "/" + os.path.splitext(os.environ["BLOB_NAME"])[0] \
-            + "_" + str(current_datetime.strftime('%Y-%m-%d')) + ".json"
-        
-        #create blob for archive updates json 
-        archive_blob = bucket.blob(archive_filepath)
-        
-        #upload old updates json to archive folder 
-        archive_blob.upload_from_filename(tmp_updated_json_path)
-
-        #upload new updated json using gcp sdk, replacing current updates json 
-        blob.upload_from_filename(tmp_updated_json_path)
-
-    return updates_found, individual_updates_json
-    
-def create_issue(latest_iso3166_updates_after_date_filter, month_range):
-    """
-    Create a GitHub issue on the iso3166-2, iso3166-updates and 
-    iso3166-flag-icons repository, using the GitHub api, if any updates/changes 
-    are made to any entries in the ISO 3166-2. The Issue will be formatted in 
-    a way to clearly outline any of the updates/changes to be made to the JSONs 
-    in the iso3166-2, iso3166-updates and iso3166-flag-icons repos. 
-
-    Parameters
-    ----------
-    :latest_iso3166_updates_after_date_filter : json
-        json object with all listed iso3166-2 updates after month date filter
-        applied.
-    :month_range : int
-        number of past months updates were pulled from.
-
-    Returns
-    -------
-    :message : str
-        response message from GitHub api post request.
-
-    References
-    ----------
-    [1]: https://developer.github.com/v3/issues/#create-an-issue
-    """
-    issue_json = {}
-    issue_json["title"] = "ISO 3166-2 Updates: " + str(current_datetime.strftime('%Y-%m-%d')) + " (" + ', '.join(list(latest_iso3166_updates_after_date_filter)) + ")" 
-    
-    #body of Github Issue
-    body = "# ISO 3166-2 Updates\n"
-
-    #get total sum of updates for all countrys in json
-    total_updates = sum([len(latest_iso3166_updates_after_date_filter[code]) for code in latest_iso3166_updates_after_date_filter])
-    total_countries = len(latest_iso3166_updates_after_date_filter)
-    
-    #change body text if more than 1 country 
-    if (total_countries == 1):
-        body += "### " + str(total_updates) + " updates found for " + str(total_countries) + " country between the "
-    else:
-        body += "### " + str(total_updates) + " updates found for " + str(total_countries) + " countries between the "
-
-    #display number of updates for countrys and the date period
-    body += "### " + str(total_updates) + " updates found for " + str(total_countries) + " countries between the " + str(month_range) + " month period of " + \
-        str((current_datetime + relativedelta(months=-month_range)).strftime('%Y-%m-%d')) + " to " + str(current_datetime.strftime('%d-%m-%Y')) + ".\n"
-
-    #iterate over updates in json, append to updates object
-    for code in list(latest_iso3166_updates_after_date_filter.keys()):
-        
-        #header displaying current country name, code and flag icon using emoji-country-flag library
-        body += "\n### " + "Country - " + iso3166.countries_by_alpha2[code].name + " (" + code + ") " + flag.flag(code) + ":\n"
-
-        row_count = 0
-
-        #iterate over all update rows for each country in object, appending to html body
-        for row in latest_iso3166_updates_after_date_filter[code]:
-            
-            #increment row count which numbers each country's updates if more than 1
-            if (len(latest_iso3166_updates_after_date_filter[code]) > 1):
-                row_count = row_count + 1
-                body += str(row_count) + ".)"
-
-            #output all row field values 
-            for key, val in row.items():
-                body += "<ins>" + str(key) + ":</ins> " + str(val) + "<br>"
-
-    #add attributes to data json 
-    issue_json["body"] = body
-    issue_json["assignee"] = "amckenna41"
-    issue_json["labels"] = ["iso3166-updates", "iso3166", "iso366-2", "subdivisions", "iso3166-flag-icons", str(current_datetime.strftime('%Y-%m-%d'))]
-
-    #api url and headers
-    issue_url = "https://api.github.com/repos/" + os.environ["github-owner"] + "/" + os.environ["github-repo-1"] + "/issues"
-    issue_url_2 = "https://api.github.com/repos/" + os.environ["github-owner"] + "/" + os.environ["github-repo-2"] + "/issues"
-    issue_url_3 = "https://api.github.com/repos/" + os.environ["github-owner"] + "/" + os.environ["github-repo-3"] + "/issues"
-    headers = {'Content-Type': "application/vnd.github+json", 
-        "Authorization": "token " + os.environ["github-api-token"]}
-
-    #make post request to github repos using api
-    requests.post(issue_url, data=json.dumps(issue_json), headers=headers)
-    requests.post(issue_url_2, data=json.dumps(issue_json), headers=headers)
-    requests.post(issue_url_3, data=json.dumps(issue_json), headers=headers)
-    
 def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", export_folder="test_iso3166-updates", 
         concat_updates=True, export_json=True, export_csv=False, verbose=True, use_selenium=True):
     """
@@ -406,9 +116,9 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
         export all ISO 3166 updates for inputted countries into json format in export folder. 
     :export_csv : bool (default=False)
         export all ISO 3166 updates for inputted countries into csv format in export folder. 
-    :verbose: bool (default=False)
+    :verbose: bool (default=True)
         Set to 1 to print out progress of updates functionality, 0 will not print progress.
-    :use_selenium : bool (default=True)
+    :use_selenium: bool (default=True)
         Gather all data for each country from its official page on the ISO website which 
         requires Python Selenium and chromedriver. If False then just use country data
         from its wiki page.
@@ -600,6 +310,8 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
         
         #skip to next iteration if alpha-2 not valid, add XK (Kosovo manually to object)
         if (alpha2 not in list(iso3166.countries_by_alpha2.keys())):
+            if (alpha2 == "XK"):
+                all_changes[alpha2] = {}
             continue
 
         #print out progress of function
@@ -611,9 +323,6 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
         #web scrape country's wiki data, convert html table/2D array to dataframe 
         iso3166_df_wiki = get_updates_df_wiki(alpha2, year, year_range, less_than, greater_than)
         
-        print("alpha2", alpha2)
-        # print("iso3166_df_wiki")
-        # print(iso3166_df_wiki)
         #use Selenium Chromedriver to parse country's updates data from official ISO website
         if (use_selenium):
             iso_website_df = get_updates_df_selenium(alpha2, year, year_range, less_than, greater_than)
@@ -623,23 +332,20 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
         else:
             iso3166_df = iso3166_df_wiki
 
-        # print("iso3166_df")
-        # print(iso3166_df)
-        # if not (iso3166_df is None):
+        #remove any duplicate rows using Date Issued column
+        iso3166_df = iso3166_df.drop_duplicates("Date Issued", keep='first')
+    
+        #set Edition/Newsletter to OBP if no value/empty string
+        if ((iso3166_df["Edition/Newsletter"] == "").any()):
+            iso3166_df["Edition/Newsletter"] = iso3166_df["Edition/Newsletter"].replace('', 
+                "Online Browsing Platform (OBP).", regex=True)
+
+        #seperate 'Browsing' and 'Platform' string if they are concatenated in column
+        iso3166_df["Edition/Newsletter"] = iso3166_df["Edition/Newsletter"].str.replace('BrowsingPlatform', "Browsing Platform")
+
         #only export non-empty dataframes         
         if not (iso3166_df.empty):
-
-            #remove any duplicate rows using Date Issued column
-            iso3166_df = iso3166_df.drop_duplicates("Date Issued", keep='first')
-        
-            #set Edition/Newsletter to OBP if no value/empty string
-            if ((iso3166_df["Edition/Newsletter"] == "").any()):
-                iso3166_df["Edition/Newsletter"] = iso3166_df["Edition/Newsletter"].replace('', 
-                    "Online Browsing Platform (OBP).", regex=True)
-
-            #seperate 'Browsing' and 'Platform' string if they are concatenated in column
-            iso3166_df["Edition/Newsletter"] = iso3166_df["Edition/Newsletter"].str.replace('BrowsingPlatform', "Browsing Platform")
-                        
+            
             #convert date column to datetime object
             iso3166_df['Date Issued'] = pd.to_datetime(iso3166_df["Date Issued"])
             #sort and order by date, newest to oldest
@@ -812,7 +518,7 @@ def get_updates_df_selenium(alpha2, year=[], year_range=False, less_than=False, 
     #parse Changes section table on webpage, using the header of the section
     changes_html = ""   
     for h3 in soup.find_all('h3'):
-        if ('change history of country code' or 'historique des modifications des Codes de pays' in h3.text.lower()):
+        if ('Change history of country code' or 'Historique des modifications des Codes de pays' in h3.text):
             changes_html = str(soup).split(str(h3))[1]
             break
 
@@ -820,23 +526,15 @@ def get_updates_df_selenium(alpha2, year=[], year_range=False, less_than=False, 
     changes_table_soup = BeautifulSoup(changes_html, "lxml")
     changes_table = changes_table_soup.find('table')
 
-    #if no Changes section with updates found in wiki, return empty dataframe
-    if (changes_table is None):
-        driver.quit()
-        return pd.DataFrame()
-    
-    # print("changes_table")
-    # print(changes_table)
     #convert html table into 2d array
     changes_table_converted = table_to_array(changes_table)
 
-    # print("changes_table_converted")
-    # print(changes_table_converted)
     #convert 2d array of updates into dataframe, fix columns, remove duplicate rows etc
     iso3166_df_selenium = parse_updates_table(changes_table_converted, year, year_range, less_than, greater_than)
     
+    #delete chromedriver session
     driver.quit()
-
+    
     return iso3166_df_selenium
 
 def get_updates_df_wiki(alpha2, year=[], year_range=False, less_than=False, greater_than=False):
@@ -884,9 +582,9 @@ def get_updates_df_wiki(alpha2, year=[], year_range=False, less_than=False, grea
     #get Changes Section/Heading from soup 
     changesSection = soup.find("span", {"id": "Changes"})
 
-    #if no Changes section with updates found in wiki, return empty dataframe
+    #skip to next iteration if no changes for ISO code found
     if (changesSection is None):
-        return pd.DataFrame()
+        return None
 
     #get table element in Changes Section 
     table = changesSection.findNext('table')
@@ -911,7 +609,7 @@ def get_updates_df_wiki(alpha2, year=[], year_range=False, less_than=False, grea
             temp_iso3166_df_wiki = parse_updates_table(temp_iso3166_table, year, year_range, less_than, greater_than)
             #concat two dataframes together
             iso3166_df_wiki = pd.concat([iso3166_df_wiki, temp_iso3166_df_wiki], axis=0)
-        
+
     return iso3166_df_wiki
 
 def parse_updates_table(iso3166_updates_table, year, year_range, less_than, greater_than):
@@ -1163,3 +861,38 @@ def table_to_array(table_tag):
                 table[row][col] = table[row][col].replace('\n', "")
 
     return table
+
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(description='Get latest changes/updates for all countries in the ISO 3166-1/3166-2 standard.')
+    parser.add_argument('-alpha2', '--alpha2', type=str, required=False, default="", 
+        help='2 letter alpha-2 code(s) of ISO 3166-1 countries to check for updates.')
+    parser.add_argument('-year', '--year', type=str, required=False, default="", 
+        help='Selected year(s) to check for updates, can also be a year range or greater than/less than specific year.')
+    parser.add_argument('-export_filename', '--export_filename', type=str, required=False, default="iso3166-updates", 
+        help='Filename for exported ISO 3166 updates CSV and JSON files.')
+    parser.add_argument('-export_folder', '--export_folder', type=str, required=False, default="test-iso3166-updates", 
+        help='Folder where to store exported ISO files.')
+    parser.add_argument('-export_json', '--export_json', required=False, action=argparse.BooleanOptionalAction, default=1,
+        help='Whether to export all found updates to json.')
+    parser.add_argument('-export_csv', '--export_csv', required=False, action=argparse.BooleanOptionalAction, default=0,
+        help='Whether to export all found updates to csv files in export folder.')
+    parser.add_argument('-concat_updates', '--concat_updates', required=False, action=argparse.BooleanOptionalAction, default=1,
+        help='Whether to concatenate updates of individual countrys into the same json or csv files or individual files.')
+    parser.add_argument('-verbose', '--verbose', type=int, required=False, action=argparse.BooleanOptionalAction, default=1, 
+        help='Set to 1 to print out progress of updates function, 0 will not print progress.')
+
+    #parse input args
+    args = parser.parse_args()
+    alpha2_codes = args.alpha2
+    export_folder = args.export_folder
+    concat_updates = args.concat_updates
+    export_json = args.export_json
+    export_csv = args.export_csv
+    year = args.year
+    verbose = args.verbose
+    export_filename = args.export_filename
+    
+    #output ISO 3166 updates/changes for selected alpha-2 code(s) and year(s)
+    get_updates(alpha2_codes, year, export_filename, export_folder, 
+        concat_updates, export_json, export_csv, verbose)

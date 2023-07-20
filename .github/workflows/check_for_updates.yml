@@ -1,4 +1,4 @@
-name: Checking for ISO3166 Updates
+name: Checking for ISO 3166 Updates
 
 on:
   schedule:
@@ -9,13 +9,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  #upload all artifacts to GCP
   check_updates:
     runs-on: ubuntu-latest
     steps:  
       - uses: actions/checkout@v3 #checkout repo 
       
-      #setup python env for 
+      #setup python env 
       - name: Setup python
         uses: actions/setup-python@v4
         with:
@@ -35,14 +34,25 @@ jobs:
             # service_account_email: ${{ secrets.GCP_SA_EMAIL }}
             # service_account_key: ${{ secrets.GCP_SA_KEY }}
             export_default_credentials: true
-      
-      #call Cloud Func using gcloud cli
-      - name: Call Updates Func
-        run: |
-          gcloud functions call check-for-iso3166-updates --region us-central1
 
+      - name: Creat Cloud Run
+        run: |
+          cd iso3166-check-for-updates
+          docker build -t check_for_updates .
+          gcloud builds submit --tag gcr.io/iso3166-updates/check_for_updates
+          gcloud beta run deploy ${{ secrets.CLOUD_RUN_NAME }} --image gcr.io/iso3166-updates/check_for_updates \
+            --region ${{ secrets.REGION }}  --platform managed --memory 1024Mi --timeout 1800 --allow-unauthenticated \
+            --update-env-vars BUCKET_NAME=${{ secrets.BUCKET_NAME }},BLOB_NAME=${{ secrets.BLOB_NAME }},\
+            ARCHIVE_FOLDER=${{ secrets.ARCHIVE_FOLDER }},github-owner=${{ secrets.GITHUB_OWNER }},\
+            github-repo-1=${{ secrets.GITHUB_REPO_1 }},github-repo-2=${{ secrets.GITHUB_REPO_2 }},\
+            github-repo-3=${{ secrets.GITHUB_REPO_3 }},github-api-token=${{ secrets.GITHUB_API_TOKEN }} 
+          curl $(gcloud run services describe check-for-updates --platform managed --region ${{ secrets.REGION }} --format 'value(status.url)')
+          gcloud run services delete check-for-updates
+          
 # gcloud functions add-iam-policy-binding iso3166-updates --member=serviceAccount:${{ secrets.GCP_SA_EMAIL }} --role=roles/cloudfunctions.invoker
 # curl -H "Authorization: bearer $(gcloud auth print-identity-token)" ${{ secrets.GCP_CHECK_FOR_UPDATES_URL }}
+# curl -H "Authorization: bearer $(gcloud auth print-identity-token)" \
+# $(gcloud run services describe check-for-updates --platform managed --region us-central1 --format 'value(status.url)')
 
 # curl -m 460 -X POST https://us-central1-iso3166-updates.cloudfunctions.net/check-for-iso3166-updates \
 # -H "Authorization: bearer $(gcloud auth print-identity-token)" \
@@ -55,3 +65,38 @@ jobs:
 # -H "Authorization: bearer $(gcloud auth print-identity-token)" \
 # -H "Content-Type: application/json" \
 # -d '{}'
+
+#look up how to run docker container on github action
+
+#1.) Build Cloud run app using pre-built docker container on registry.
+
+#1.) If changes made in iso3166-check-for-updates repo then resubmit container to and rebuild.
+
+# - cd into check-for-updates and build docker container from there.
+
+#docker build -t check_for_updates .
+#docker run --rm -p 8080:8080 -e PORT=8080 check_for_updates
+#gcloud builds submit --tag gcr.io/iso3166-updates/check_for_updates
+#gcloud beta run deploy check-for-updates --image gcr.io/iso3166-updates/check_for_updates --region us-central1 --platform managed
+
+# Build Docker container using Dockerfile and Python image:
+#   ```bash
+#   docker build -t check_for_updates .
+#   ```
+  
+#   Submit Docker container to GCP container registry:
+#   ```bash
+#   gcloud builds submit --tag gcr.io/iso3166-updates/check_for_updates
+#   ```
+  
+#   Build and deploy Cloud Run application using Docker container:
+#   ```bash
+#   gcloud beta run deploy check-for-updates --image gcr.io/iso3166-updates/check_for_updates --region us-central1 --platform managed --memory 1024Mi --update-env-vars BUCKET_NAME="",BLOB_NAME="",ARCHIVE_FOLDER="",github-owner="",github-repo-1="",github-repo-2="",github-repo-3="",github-api-token=""
+#   ```
+  
+#   Delete Cloud Run application:
+#   ```bash
+#   gcloud run services delete check-for-updates
+#   ```
+
+# gcloud run services describe check-for-updates --platform managed --region us-central1 --format 'value(status.url)'

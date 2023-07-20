@@ -11,26 +11,7 @@ Usage
 -----
 **Import package:**
 ```python
-import iso3166_updates as iso3166_updates
-```
-
-**Input parameters to get_updates function:**
-```python
-  # -alpha2 ALPHA2, --alpha2 ALPHA2
-  #                       Alpha-2 code/s of ISO 3166 countries to check for updates.
-  # -export_filename EXPORT_FILENAME, --export_filename EXPORT_FILENAME
-  #                       Filename for exported ISO 3166 updates for CSV and JSON files.
-  # -export_folder EXPORT_FOLDER, --export_folder EXPORT_FOLDER
-  #                       Folder where to store exported ISO files.
-  # -export_json, --export_json
-  #                       Whether to export all found updates to json.
-  # -export_csv, --export_csv
-  #                       Whether to export all found updates to csv files in export folder.
-  # -year YEAR, --year YEAR
-  #                       Selected year/years, year ranges or year to check for updates greater
-  #                       than or less than specified year
-  # -concat_updates, --concat_updates
-  #                       Whether to concatenate updates of individual countrys into the same json file or seperate.
+import iso3166_updates as iso
 ```
 
 **Get all listed changes/updates for all countries and years which happens by default if no alpha-2 codes or years specified in input paramaters, export csv and json to folder "iso3166-updates", print progress via verbose flag:**

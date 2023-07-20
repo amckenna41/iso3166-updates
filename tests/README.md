@@ -4,6 +4,7 @@ All of the modules and functionalities of iso3166-updates are thoroughly tested 
 ## Module tests:
 
 * `test_iso3166_updates` - tests for iso3166-updates package.
+* `test_get_all_iso3166_updates` - tests for script that pulls all updates from data sources.
 * `test_iso3166_updates_api` - tests for iso3166-updates api.
 
 ## Running Tests

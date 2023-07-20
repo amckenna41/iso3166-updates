@@ -17,7 +17,7 @@ paths:
   #default path which will return all iso3166 updates
   /:
     get:
-      summary: Get updates per alpha2
+      summary: Get updates per alpha-2
       operationId: getAll
       x-google-backend:
         address: https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates
@@ -29,16 +29,16 @@ paths:
           schema:
             type: string
         '400':
-          description: Invalid alpha2 country code
+          description: Invalid alpha-2 country code
         '404': 
           description: Not found.
         '5XX':
           description: Unexpected error
 
-  #default alpha2 path which returns all iso3166 updates
+  #default alpha-2 path which returns all iso3166 updates
   /alpha2:
     get:
-      summary: Get updates per alpha2
+      summary: Get updates per alpha-2
       operationId: getAllAlpha2
       x-google-backend:
         address: https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates
@@ -50,16 +50,16 @@ paths:
           schema:
             type: string
         '400':
-          description: Bad request. Invalid alpha2 country code input.
+          description: Bad request. Invalid alpha-2 country code input.
         '404': 
           description: Not found.
         '5XX':
           description: Unexpected error.
 
-  #path for passing in 2 letter alpha2 country code
+  #path for passing in 2 letter alpha-2 country code
   /alpha2/{alpha2}:
     get:
-      summary: Get updates per alpha2
+      summary: Get updates per alpha-2
       operationId: getAlpha2
       x-google-backend:
         address: https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates
@@ -71,14 +71,14 @@ paths:
           in: path
           required: true
           type: string
-          description: The 2 letter alpha2 country code
+          description: The 2 letter alpha-2 country code
       responses:
         '200':
           description: Ok
           schema:
             type: object
         '400':
-          description: Bad request. Invalid alpha2 country code input.
+          description: Bad request. Invalid alpha-2 country code input.
         '404': 
           description: Not found.
         '5XX':
@@ -112,10 +112,10 @@ paths:
         '5XX':
           description: Unexpected error.
 
-  #path for passing in a 2 letter alpha2 country code and year of sought updates
+  #path for passing in a 2 letter alpha-2 country code and year of sought updates
   /alpha2/{alpha2}/year/{year}:
     get:
-      summary: Get updates for specific alpha2 for specific year
+      summary: Get updates for specific alpha-2 for specific year
       operationId: getAlpha2Year
       x-google-backend:
         address: https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates
@@ -132,18 +132,46 @@ paths:
           in: path
           required: true
           type: string
-          description: The 2 letter alpha2 country code
+          description: The 2 letter alpha-2 country code
       responses:
         '200':
           description: Ok
           schema:
             type: object
         '400':
-          description: Invalid alpha2 and or year parameters input.
+          description: Invalid alpha-2 and or year parameters input.
         '404': 
           description: Not found.
         '5XX':
           description: Unexpected error.
 
+  #path for passing in a number of months to get latest updates
+  /month/{month}:
+    get:
+      summary: Get updates from past number of months
+      operationId: getMonth
+      x-google-backend:
+        address: https://us-central1-iso3166-updates.cloudfunctions.net/iso3166-updates
+        path_translation: [ CONSTANT_ADDRESS ] 
+      produces:
+        - application/json
+      parameters:
+        - name: month
+          in: path
+          required: true
+          description: The number of months to retrieve updates for
+          type: string
+      responses:
+        '200':
+          description: Ok
+          schema:
+            type: object
+        '400':
+          description: Bad request. Invalid month param input.
+        '404': 
+          description: Not found.
+        '5XX':
+          description: Unexpected error.
+          
 #https://cloud.google.com/api-gateway/docs/passing-data
 #https://cloud.google.com/api-gateway/docs/using-custom-domains

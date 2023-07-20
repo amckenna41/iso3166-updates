@@ -1,5 +1,16 @@
 iso3166-updates>=1.3.0
 iso3166
+pandas
+beautifulsoup4
 google-cloud-storage
 requests
 emoji-country-flag
+selenium
+lxml
+webdriver-manager
+gunicorn==19.9.0
+Flask
+# chromedriver-binary==77.0.3865.40.0
+# requests==2.9.1
+# urllib3>=1.26.15,<2
+#webdriver-manager

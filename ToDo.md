@@ -181,8 +181,8 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] If no updates found, export empty json but don't export empty csv, even if export_csv=True
 - [X] python3 iso3166_updates.py --alpha2=ES,IE,FR --no-concat_updates --year=2011 --export_csv : exports empty CSVs. /iso3166_updates/test-iso3166-updates/iso3166-updates-ES-2011.csv 
 - [X] If  no updates found for singular country export, export {} rather than "ES" : {} 
-- [ ] Include unit tests for json, open each json, validate keys and length.
-- [ ] Validate API returns {} when single alpha-2 input and no updates found e.g /alpha2/DE should return {} not "DE": {}.
+- [X] Include unit tests for json, open each json, validate keys and length.
+- [X] Validate API returns {} when single alpha-2 input and no updates found e.g /alpha2/DE should return {} not "DE": {}.
 - [X] Update iso3166-updates.json on repo and GCP with new updated functionality.
 - [X] In unit tests, don't append alpha-2 codes to filename, this should automatically be done in code (export_filename +).
 - [X] Update filename when Year input parameter input with greater than/less than or year range.
@@ -197,7 +197,39 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Change arrow from → to -> in api unit tests after reupload.
 - [X] Reupload iso3166-updates.json - empty dicts e.g AX not showing up in output.
 - [ ] Double check images on repo appear after changing from private to public.
-<!-- 
+- [X] Add test cases comments to test class.
+- [X] Fix spacing in wikis: e.g "Subdivisions added:7 parishes" should be "Subdivisions added: 7 parishes". Find newline character.
+- [X] Add '.' to end of each json key.
+- [ ] Note that for Date Issued column, corrected date is taken on not original for an update, if applicable.
+- [X] Issue for https://en.wikipedia.org/wiki/ISO_3166-2:TR update 2011-12-13, link to Newsletter is .pdff not .pdf, need to manually change this.
+- [X] May need to use both data sources of wiki and ISO, ISO only contains "Short Description of change" column, wiki contains that + the "Code/Subdivision Change" and "Edition/Newsletter" columns which provides some extra info. 
+- [ ] In demo, have selenium install script in a cell.
+- [X] Mention in reamde that ISO website and wiki have seperate columns and data sometimes hence this project combines the 2 data sources.
+- [X] Move selenium stuff to own script.
+- [X] Fix bot detection on ISO website.
+- [X] Change software approach, iso3166-updates package shouldn't pull all the updates data from the various sources each time, the software should just be used to access the upates json file. Move updates functionality to a get_updates.py script outside of pacakge. 
+- [X] Randomise user-agent.
+- [X] Might need to execute the script one by one for all countries. Make a bash script that executes the Python script with a random allocted pause in between each alpha-2.
+- [ ] Ignore any auxilary files using MANIFEST file.
+- [ ] Ensure correct file are included/excluded from pypi package.
+- [X] Change unit tests to test exported json file itself.
+- [X] Shell script currently exporting combined jsons wrapped in an array, should just be a dict.
+- [X] Json not concatenating properly
+- [X] Add XK manually to JSON.
+- [X] Some countries missing from JSON, e.g MZ - rerun shell script. MZ, PY, SK, VU, XK.
+- [X] Might need to change up GCP Cloud arch to incorporate running selenium on cloud. Put check-for-updates func in Docker container. Test process using a simple app.
+- [X] Update api.md file, need to add example of using /name path. Update readme about list of endpoints to include /name.
+- [X] Add unit tests for name endpoint - can take from iso3166-2 unit tests for name.
+- [ ] Create notebook for get_all script, easier to run and follow - download notebook and put in repo.
+- [ ] Remove double spacing from string: import re, re.sub(' +', ' ', 'The     quick brown    fox').
+- [X] Try recreating the driver on each iteration - https://stackoverflow.com/questions/58968078/max-retries-exceeded-with-url-selenium.
+- [X] Add use_selenium flag to just get wiki data not selenium, add to check-for-updates func.
+- [X] Add get_driver() function from check-for-updates to main file on repo.
+- [X] Mention check-for-updates microservice in readme.
+- [ ] Rerun get all script to remove some instances of double spacing, e.g "AZ".
+- [ ] Mention selenium required as a session is needed for ISO website and both data sources in readme.
+- [ ] Outstanding error in check-for-updates, new updates not being uploaded.
+<!--
 Create new config, update config file
 gcloud api-gateway api-configs create NEW_CONFIG_ID --api=MY_API --openapi-spec=openapi2-functions.yaml 
 Update gateway with config
