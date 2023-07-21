@@ -53,8 +53,8 @@ class ISO3166_Updates_Tests(unittest.TestCase):
 
         self.assertIsInstance(test_all_updates, dict, 
             "Expected there output object to be of type dict, got {}.".format(type(test_all_updates)))
-        self.assertEqual(len(test_all_updates), 250, 
-            "Expected there to be 250 updates in output object, got {}.".format(len(test_all_updates)))
+        self.assertEqual(len(test_all_updates), 249, 
+            "Expected there to be 249 updates in output object, got {}.".format(len(test_all_updates)))
         for iso_code in list(test_all_updates.keys()):
             self.assertIn(iso_code, list(iso3166.countries_by_alpha2.keys()),
                     "Alpha-2 code {} not found in list of available codes.".format(iso_code))

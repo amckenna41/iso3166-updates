@@ -18,7 +18,7 @@ __download_url__ = "https://github.com/amckenna41/iso3166-updates/archive/refs/h
 __status__ = 'Development'
 __maintainer__ = "AJ McKenna"
 __keywords__ = ["iso", "iso3166", "beautifulsoup", "python", "pypi", "countries", "country codes", "csv", \
-            "iso3166-2", "iso3166-1", "alpha-2", "alpha-3"]
+            "iso3166-2", "iso3166-1", "alpha-2", "alpha-3", "selenium", "chromedriver"]
 __test_suite__ = "tests"
  
 #ensure python version is greater than 3

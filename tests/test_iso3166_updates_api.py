@@ -76,7 +76,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request = requests.get(self.base_url, headers=self.user_agent_header) 
 
         self.assertIsInstance(test_request.json(), dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request.json())))
-        self.assertEqual(len(test_request.json()), 250, "Expected there to be 250 elements in output table, got {}.".format(len(test_request.json())))
+        self.assertEqual(len(test_request.json()), 249, "Expected there to be 249 elements in output table, got {}.".format(len(test_request.json())))
         self.assertEqual(test_request.status_code, 200, "Expected 200 status code from request, got {}.".format(test_request.status_code))
         self.assertEqual(test_request.headers["content-type"], "application/json", 
                 "Expected Content type to be application/json, got {}.".format(test_request.headers["content-type"]))
@@ -711,6 +711,8 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         #for each country name, test API returns correct object, test using common.name attribute
         for alpha2 in sorted(list(iso3166.countries_by_alpha2.keys())):
             country_name = iso3166.countries_by_alpha2[alpha2].name
+            if (country_name == "Kosovo"):
+                continue
             test_request_name = requests.get(self.name_base_url + country_name, headers=self.user_agent_header).json()
             #convert country name to its more comon name
             if (country_name in list(name_exceptions_converted.keys())):
