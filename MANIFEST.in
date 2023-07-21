@@ -1,0 +1,14 @@
+include iso3166_updates/iso3166-updates.json
+include iso3166_updates/README.md
+include iso3166_updates/README.md
+include README.md
+exclude get_all_iso3166_updates.py
+exclude get_all_iso3166_updates.sh
+exclude ToDo.md
+exclude .gitignore
+recursive-exclude .github *
+recursive-exclude .circleci *
+recursive-exclude __pycache__ *
+recursive-exclude iso3166-check-for-updates *
+recursive-exclude iso3166-updates-api *
+recursive-exclude tests *

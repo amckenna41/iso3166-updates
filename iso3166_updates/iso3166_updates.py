@@ -55,7 +55,8 @@ class ISO3166_Updates():
         
         #raise error if iso3166-upates json doesnt exist in folder
         if not (os.path.isfile(os.path.join(self.iso3166_updates_module_path, self.iso3166_updates_json_filename))):
-            raise OSError("Issue finding iso3166-updates.json in dir.")
+            raise OSError("Issue finding iso3166-updates.json in dir: {}".format(
+                os.path.join(self.iso3166_updates_module_path, self.iso3166_updates_json_filename)))
 
         #open iso3166-updates json file and load it into class variable
         with open(os.path.join(self.iso3166_updates_module_path, self.iso3166_updates_json_filename)) as iso3166_updates_json:

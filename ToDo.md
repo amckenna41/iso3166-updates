@@ -227,8 +227,9 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Add get_driver() function from check-for-updates to main file on repo.
 - [X] Mention check-for-updates microservice in readme.
 - [ ] Rerun get all script to remove some instances of double spacing, e.g "AZ".
-- [ ] Mention selenium required as a session is needed for ISO website and both data sources in readme.
+- [X] Mention selenium required as a session is needed for ISO website and both data sources in readme.
 - [ ] Outstanding error in check-for-updates, new updates not being uploaded.
+- [ ] updates.json not importing correctly in module.
 <!--
 Create new config, update config file
 gcloud api-gateway api-configs create NEW_CONFIG_ID --api=MY_API --openapi-spec=openapi2-functions.yaml 

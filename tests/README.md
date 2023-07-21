@@ -9,13 +9,13 @@ All of the modules and functionalities of iso3166-updates are thoroughly tested 
 
 ## Running Tests
 
-To run all unittests, make sure you are in the main iso3166-updates directory and from a terminal/cmd-line run:
+To run all unittests, make sure you are in the main `iso3166-updates` directory and from a terminal/cmd-line run:
 ```python
 python -m unittest discover tests -v
 #-v produces a more verbose and useful output
 ```
 
-To run a specific unit test, make sure you are in the main iso3166-updates directory and from a terminal/cmd-line run:
+To run a specific unit test, make sure you are in the main `iso3166-updates` directory and from a terminal/cmd-line run:
 ```python
 python -m unittest discover tests.test_iso3166_updates -v
 #-v produces a more verbose and useful output

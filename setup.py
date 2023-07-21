@@ -8,7 +8,7 @@ import sys
 
 #software metadata
 __name__ = 'iso3166-updates'
-__version__ = "1.4.0"
+__version__ = "1.4.1"
 __description__ = "A Python package that pulls the latest updates & changes to all ISO3166 listed countries."
 __author__ = 'AJ McKenna, https://github.com/amckenna41'
 __authorEmail__ = 'amckenna41@qub.ac.uk'

@@ -2,27 +2,6 @@
 
 ![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=iso3166-updates-frontend)
 
-Four query string parameters are available in the API - `alpha2`, `name`, `year` and `months`. 
-
-* The 2 letter alpha-2 country code can be appended to the url as a query string parameter or as its own path ("?alpha2=JP" or /alpha2/JP). A single alpha-2 or list of them can be passed to the API (e.g "?alpha2="FR, DE, HU, ID, MA" or /alpha2/FR,DE,HU,ID,MA). The 3 letter alpha-3 counterpart for each country's alpha-2 code can also be passed into the `alpha2` parameter (e.g "?alpha2="FRA, DEU, HUN, IDN, MAR" or /alpha2/FRA,DEU,HUN,IDN,MAR). 
-
-* The name parameter takes in a country's name as it is commonly known in English (e.g France, Moldova, Benin). A closeness function is used to get the most approximate available country from the one the user input. If one not found then an error is raised.
-
-* The year parameter can be a specific year, year range, or a cut-off year to get updates less than/more than a year (e.g "/year/2017", "2010-2015", "<2009", ">2002"). 
-
-* Finally, the months parameter will gather all updates for 1 or more alpha-2 codes from a number of months from the present day (e.g "?months=2", "/months/6", "/months/48").
-
-* If no input parameter values specified then all ISO 3166-2 updates for all countries and years will be gotten.
-
-The API was hosted and built using GCP, with a Cloud Function being used in the backend which is fronted by an api gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON where all ISO 3166 updates are stored. A complete diagram of the architecture is shown below. Although, due to the cost of infrastructure the hosting was switched to Vercel (https://vercel.com/).
-
-The API documentation and usage with all useful commands and examples to the API is available on the [README](https://github.com/amckenna41/iso3166-updates/blob/main/iso3166-updates-api/README.md). The full list of attributes available for each country are:
-
-* Edition/Newsletter: Name and or edition of newsletter that the ISO 3166-2 change/update was communicated in.
-* Date Issued: Date that the change was communicated.
-* Code/Subdivision change: Overall summary of change/update made.
-* Description of change in newsletter: More in-depth info about the change/update that was made.
-
 The main API endpoint is:
 
 > https://iso3166-updates.com/api
@@ -31,8 +10,29 @@ The other endpoints available in the API are:
 * https://iso3166-updates.com/api/alpha2/<input_alpha2>
 * https://iso3166-updates.com/api/name/<input_name>
 * https://iso3166-updates.com/api/year/<year>
-* https://iso3166-updates.com/api/alpha2/<input_alpha2>/year/<year>
+* https://iso3166-updates.com/api/alpha2/<input_alpha2>/year/<input_year>
 * https://iso3166-updates.com/api/month/<month>
+
+Four query string parameters/paths are available in the API - `alpha2`, `name`, `year` and `months`. 
+
+* The 2 letter `alpha2` country code can be appended to the url as a query string parameter or as its own path (e.g ?alpha2=JP or /alpha2/JP). A single alpha-2 or list of them can be passed to the API (e.g ?alpha2=FR, DE, HU, ID, MA or /alpha2/FR,DE,HU,ID,MA). For redudancy, the 3 letter alpha-3 counterpart for each country's alpha-2 code can also be passed into the `alpha2` parameter (e.g ?alpha2=FRA, DEU, HUN, IDN, MAR or /alpha2/FRA,DEU,HUN,IDN,MAR). 
+
+* The `name` parameter takes in a country's name as it is commonly known in English (e.g France, Moldova, Benin). A closeness function is used to get the most approximate available country from the one the user input. If one is not found then an error is raised.
+
+* The `year` parameter can be a specific year, year range, or a cut-off year to get updates less than/more than a year (e.g /year/2017, /year/2010-2015, /year/<2009, /year/>2002). 
+
+* Finally, the `months` parameter will gather all updates for 1 or more alpha-2 codes from a number of months from the present day (e.g /months/2, /months/6, /months/48).
+
+* If no input parameter values specified then all ISO 3166-2 updates for all countries and years will be returned.
+
+The API was hosted and built using GCP, with a Cloud Function being used in the backend which is fronted by an api gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON where all ISO 3166 updates are stored. A complete diagram of the architecture is shown below. <i>Although, due to the cost of infrastructure, the hosting was switched to Vercel (https://vercel.com/).</i>
+
+The API documentation and usage with all useful commands and examples to the API is available below. The full list of attributes available for each country are:
+
+* Edition/Newsletter: Name and or edition of newsletter that the ISO 3166-2 change/update was communicated in.
+* Date Issued: Date that the change was communicated.
+* Code/Subdivision change: Overall summary of change/update made.
+* Description of change in newsletter: More in-depth info about the change/update that was made.
 
 Get All ISO 3166-2 updates for all countries
 -------------------------------------------
@@ -421,7 +421,7 @@ Get all ISO 3166 updates data for a specific country, using country name, e.g. T
 ### Request
 `GET /name/Uganda`
 
-    curl -i https://iso3166-updates.com/api?name=Ugandda
+    curl -i https://iso3166-updates.com/api?name=Uganda
     curl -i https://iso3166-updates.com/api/name/Uganda
 
 ### Response
