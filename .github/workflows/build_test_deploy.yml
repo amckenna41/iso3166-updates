@@ -64,18 +64,11 @@ jobs:
         cat artifacts/bandit_output.txt
       continue-on-error: true
 
-    #unit tests using unittest and pytest
+    #unit tests using unittest
     - name: Testing with unittest
       run: |
         echo "Testing using unittest..."
         python3 -m unittest discover tests -v
-
-    - name: Test with pytest
-      run: |
-        echo "Testing using pytest..."
-        python3 -m pytest tests/
-        pytest --cov=./ --cov-report=xml -v
-        codecov
 
     #upload to Code Coverage
     - name: Upload Coverage Report to Codecov
