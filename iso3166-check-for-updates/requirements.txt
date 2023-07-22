@@ -13,4 +13,4 @@ Flask
 # chromedriver-binary==77.0.3865.40.0
 # requests==2.9.1
 # urllib3>=1.26.15,<2
-#webdriver-manager
+# webdriver-manager

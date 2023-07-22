@@ -22,6 +22,9 @@ class ISO3166_Updates():
     -----
     import iso3166_updates as iso
 
+    #get ALL listed changes/updates for ALL countries 
+    iso.updates.all
+
     #get ALL listed country updates/changes data for Ireland, Colombia, Denmark and Finland
     iso.updates['IE']
     iso.updates['CO']
@@ -62,6 +65,9 @@ class ISO3166_Updates():
         with open(os.path.join(self.iso3166_updates_module_path, self.iso3166_updates_json_filename)) as iso3166_updates_json:
             self.all = json.load(iso3166_updates_json)
 
+        #make all updates object subscriptable using Map class
+        self.all = Map(self.all)
+
         #get list of all countries by 2 letter alpha3 code
         self.alpha2 = sorted(list(iso3166.countries_by_alpha2.keys()))
         
@@ -85,20 +91,14 @@ class ISO3166_Updates():
         :country_output_dict : dict
             output dictionary of sought ISO 3166 updates for input year/years.
         """
-        #convert year str to array
-        if not (isinstance(input_year, list)):
-            input_year = [input_year]
-
-        country_output_dict = {}
-
-        #raise error if invalid data types input for year parameter
-        for year_ in input_year:
-            if not isinstance(year_, str):
-                raise TypeError("Invalid data type for year parameter, expected str, got {}.".format(type(year_)))
-
         #if single str of 1 or more years input then convert to array, remove whitespace, seperate using comma
         if (isinstance(input_year, str)):
             input_year = input_year.replace(' ', '').split(',')
+        else:
+            #raise error if invalid data type for year parameter
+            raise TypeError("Invalid data type for year parameter, expected str, got {}.".format(type(input_year)))
+        
+        country_output_dict = {}
 
         year_range = False
         greater_than = False
@@ -180,6 +180,9 @@ class ISO3166_Updates():
             #remove any empty objects from dict 
             country_output_dict = {i:j for i,j in country_output_dict.items() if j != []}
 
+        #make updates object subscritable using Map class
+        country_output_dict = Map(country_output_dict)
+
         return country_output_dict
 
     def __getitem__(self, alpha2_code):
@@ -192,7 +195,7 @@ class ISO3166_Updates():
         
         Parameters
         ----------
-        : alpha2_code : str
+        :alpha2_code : str
             one or more 2 letter alpha-2 code for sought country/territory e.g (AD, EG, DE). Can 
             also accept 3 letter alpha-3 code e.g (AND, EGT, DEU), this will be converted into 
             its alpha-2 counterpart.
@@ -290,7 +293,7 @@ class Map(dict):
 
     Parameters
     ----------
-    : dict
+    :dict
         input dictionary to convert into instance of map class so the keys/vals
         can be accessed via dot notation.
 

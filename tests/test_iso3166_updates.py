@@ -27,18 +27,18 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        # self.assertEqual(metadata('iso3166-updates')['version'], "1.4.1", 
-        #     "iso3166-updates version is not correct, got: {}".format(metadata('iso3166-updates')['version']))
+        self.assertEqual(metadata('iso3166-updates')['version'], "1.4.1", 
+            "iso3166-updates version is not correct, got: {}".format(metadata('iso3166-updates')['version']))
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             "iso3166-updates software name is not correct, got: {}".format(metadata('iso3166-updates')['name']))
-        # self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna, https://github.com/amckenna41", 
-        #     "iso3166-updates author is not correct, got: {}".format(metadata('iso3166-updates')['author']))
+        self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna, https://github.com/amckenna41", 
+            "iso3166-updates author is not correct, got: {}".format(metadata('iso3166-updates')['author']))
         self.assertEqual(metadata('iso3166-updates')['author-email'], "amckenna41@qub.ac.uk", 
             "iso3166-updates author email is not correct, got: {}".format(metadata('iso3166-updates')['author-email']))
         self.assertEqual(metadata('iso3166-updates')['summary'], "A Python package that pulls the latest updates & changes to all ISO3166 listed countries.", 
             "iso3166-updates package summary is not correct, got: {}".format(metadata('iso3166-updates')['summary']))
-        # self.assertEqual(metadata('iso3166-updates')['keywords'], "iso,iso3166,beautifulsoup,python,pypi,countries,country codes,csv,iso3166-2,iso3166-1,alpha-2,alpha-3", 
-        #     "iso3166-updates keywords are not correct, got: {}".format(metadata('iso3166-updates')['keywords']))
+        self.assertEqual(metadata('iso3166-updates')['keywords'], "iso,iso3166,beautifulsoup,python,pypi,countries,country codes,csv,iso3166-2,iso3166-1,alpha-2,alpha-3,selenium,chromedriver", 
+            "iso3166-updates keywords are not correct, got: {}".format(metadata('iso3166-updates')['keywords']))
         self.assertEqual(metadata('iso3166-updates')['home-page'], "https://github.com/amckenna41/iso3166-updates", 
             "iso3166-updates home page url is not correct, got: {}".format(metadata('iso3166-updates')['home-page']))
         self.assertEqual(metadata('iso3166-updates')['maintainer'], "AJ McKenna", 
@@ -172,6 +172,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         """ Testing year function that returns all ISO 3166 updates for input year/years, year range or greater than/less than input year. """
         test_year_2019 = "2019"
         test_year_2003 = "2003"
+        test_year_2000_2001_2002 = "2000,2001,2002"
         test_year_gt_2021 = ">2021"
         test_year_2004_2008 = "2004-2008"
         test_year_1999_2002 = "1999-2002"
@@ -204,7 +205,23 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             for row in range(0, len(test_year_2003_updates[update])):
                 self.assertEqual(datetime.strptime(test_year_2003_updates[update][row]["Date Issued"], '%Y-%m-%d').year, 2003, 
                     "Expected year of updates output to be 2003, got {}.".format(test_year_2003_updates[update][row]["Date Issued"]))    
-#3.)
+#3.) 
+        test_year_2000_2001_2002_updates = iso.updates.year(test_year_2000_2001_2002)
+        test_year_2000_2001_2002_expected_keys = ['AE', 'AL', 'AO', 'AZ', 'BD', 'BG', 'BI', 'BJ', 'BY', 'CA', 'CD', 'CN', 'CV', 'CZ', 
+                                                  'DO', 'EC', 'ER', 'ES', 'ET', 'FR', 'GB', 'GE', 'GN', 'GT', 'HR', 'ID', 'IN', 'IR', 
+                                                  'IT', 'KG', 'KH', 'KP', 'KR', 'KZ', 'LA', 'MA', 'MD', 'MO', 'MU', 'MW', 'NG', 'NI', 
+                                                  'PH', 'PL', 'PS', 'RO', 'RU', 'SI', 'TJ', 'TL', 'TM', 'TR', 'TW', 'UG', 'UZ', 'VE', 
+                                                  'VN', 'YE']
+        
+        self.assertEqual(len(test_year_2000_2001_2002_updates), 58, 
+            "Expected 58 updates in output object, got {}.".format(len(test_year_2000_2001_2002_updates)))
+        self.assertEqual(list(test_year_2000_2001_2002_updates),  test_year_2000_2001_2002_expected_keys, 
+            "Expected and observed list of country codes do not match:\n{}".format(list(test_year_2000_2001_2002_updates)))
+        for update in test_year_2000_2001_2002_updates:
+            for row in range(0, len(test_year_2000_2001_2002_updates[update])):
+                self.assertIn(datetime.strptime(test_year_2000_2001_2002_updates[update][row]["Date Issued"], '%Y-%m-%d').year, [2000,2001,2002], 
+                    "Expected year of updates output to be either 2000, 2001 or 2002, got {}.".format(test_year_2000_2001_2002_updates[update][row]["Date Issued"]))    
+#4.)
         test_year_gt_2021_updates = iso.updates.year(test_year_gt_2021)
         test_year_gt_2021_expected_keys = ["CI", "CN", "DZ", "ET", "FI", "FR", "GB", "GF", "GP", "GT", "HU", "ID", "IQ", "IS", "KH", "KP", 
                                            "KZ", "LT", "LV", "MQ", "MX", "NL", "NP", "NZ", "PA", "RE", "RU", "SI", "SS", "TR", "YT"]
@@ -217,7 +234,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             for row in range(0, len(test_year_gt_2021_updates[update])):
                 self.assertTrue(datetime.strptime(test_year_gt_2021_updates[update][row]["Date Issued"], '%Y-%m-%d').year >= 2021, 
                     "Expected year of updates output to be greater than or equal to 2021, got {}.".format(test_year_gt_2021_updates[update][row]["Date Issued"]))   
-#4.)
+#5.)
         test_year_2004_2008_updates = iso.updates.year(test_year_2004_2008)
 
         self.assertEqual(len(test_year_2004_2008_updates), 73, 
@@ -227,7 +244,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                 self.assertTrue((datetime.strptime(test_year_2004_2008_updates[update][row]["Date Issued"], '%Y-%m-%d').year >= 2004) and \
                                 (datetime.strptime(test_year_2004_2008_updates[update][row]["Date Issued"], '%Y-%m-%d').year <= 2008), 
                             "Expected year of updates output to be between 2004 and 2008, got {}.".format(test_year_2004_2008_updates[update][row]["Date Issued"])) 
-#5.)
+#6.)
         test_year_1999_2002_updates = iso.updates.year(test_year_1999_2002)
         
         self.assertEqual(len(test_year_1999_2002_updates), 58, 
@@ -237,11 +254,11 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                 self.assertTrue((datetime.strptime(test_year_1999_2002_updates[update][row]["Date Issued"], '%Y-%m-%d').year >= 1999) and \
                                 (datetime.strptime(test_year_1999_2002_updates[update][row]["Date Issued"], '%Y-%m-%d').year <= 2002), 
                             "Expected year of updates output to be between 1999 and 2002, got {}.".format(test_year_1999_2002_updates[update][row]["Date Issued"])) 
-#6.)    
+#7.)    
         with self.assertRaises(ValueError):
             test_year_error1_updates = iso.updates.year(test_year_error1)
             test_year_error2_updates = iso.updates.year(test_year_error2)
-#7.)    
+#8.)    
         with self.assertRaises(TypeError):
             test_year_error3_updates = iso.updates.year(test_year_error3)
             test_year_error4_updates = iso.updates.year(test_year_error4)

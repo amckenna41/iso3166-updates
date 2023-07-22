@@ -195,7 +195,7 @@ def update_json(latest_iso3166_updates_after_date_filter):
     -------
     :updates_found : bool
         bool to track if updates/changes have been found in JSON object.
-    individual_updates_json: dict
+    :individual_updates_json: dict
         dictionary of individual ISO 3166 updates that aren't in existing 
         updates object on JSON.
     """

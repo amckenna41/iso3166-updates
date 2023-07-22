@@ -9,9 +9,10 @@ The main API endpoint is:
 The other endpoints available in the API are:
 * https://iso3166-updates.com/api/alpha2/<input_alpha2>
 * https://iso3166-updates.com/api/name/<input_name>
-* https://iso3166-updates.com/api/year/<year>
+* https://iso3166-updates.com/api/year/<input_year>
 * https://iso3166-updates.com/api/alpha2/<input_alpha2>/year/<input_year>
-* https://iso3166-updates.com/api/month/<month>
+* https://iso3166-updates.com/api/name/<input_name>/year/<input_year>
+* https://iso3166-updates.com/api/month/<input_month>
 
 Four query string parameters/paths are available in the API - `alpha2`, `name`, `year` and `months`. 
 
@@ -265,14 +266,14 @@ function getData() {
 var data = JSON.parse(this.response)
 ```
 
-Get updates for a specific country for a specified year range e.g Bosnia, Haiti for 2009-2015
----------------------------------------------------------------------------------------------
+Get updates for a specific country for a specified year range e.g Bosnia, Haiti for 2009-2015, using country name
+-----------------------------------------------------------------------------------------------------------------
 
 ### Request
-`GET /alpha2/BA/year/2009-2015`
+`GET /name/Bosnia/year/2009-2015`
 
-    curl -i https://iso3166-updates.com/api?alpha2=BA&year=2009-2015
-    curl -i https://iso3166-updates.com/api/alpha2/BA/year/2009-2015
+    curl -i https://iso3166-updates.com/api?name=Bosnia&year=2009-2015
+    curl -i https://iso3166-updates.com/api/name/Bosnia/year/2009-2015
 
 ### Response
     HTTP/2 200 
@@ -284,10 +285,10 @@ Get updates for a specific country for a specified year range e.g Bosnia, Haiti 
     {"BA":[{"Code/Subdivision change":"","Date Issued":"2015-11-27"...}
 
 ### Request
-`GET /alpha2/HT/year/2009-2015`
+`GET /name/Haiti/year/2009-2015`
 
-    curl -i https://iso3166-updates.com/api?alpha2=HT&year=2009-2015
-    curl -i https://iso3166-updates.com/api/alpha2/HT/year/2009-2015
+    curl -i https://iso3166-updates.com/api?name=haiti&year=2009-2015
+    curl -i https://iso3166-updates.com/api/name/haiti/year/2009-2015
 
 ### Response
     HTTP/2 200 
@@ -304,8 +305,8 @@ import requests
 
 base_url = "https://iso3166-updates.com/api"
 
-all_request = requests.get(base_url, params={"alpha2": "BA", "year": "2009-2015"}) 
-# all_request = requests.get(base_url, params={"alpha2": "HT", "year": "2009-2015"}) 
+all_request = requests.get(base_url, params={"name": "Bosnia", "year": "2009-2015"}) 
+# all_request = requests.get(base_url, params={"name": "Haiti", "year": "2009-2015"}) 
 all_request.json() 
 ```
 
@@ -315,7 +316,7 @@ function getData() {
   const response = 
     await fetch('https://iso3166-updates.com/api' + 
         new URLSearchParams({
-            alpha2: 'BA',
+            name: 'Bosnia',
             year: '2009-2015'
   }));
   const data = await response.json()

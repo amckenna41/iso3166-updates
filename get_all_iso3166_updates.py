@@ -30,7 +30,19 @@ iso_base_url = "https://www.iso.org/obp/ui/#iso:code:3166:"
 
 def create_driver():
     """
-    
+    Create instance of Selenium chromedriver for each country's individual page on the 
+    official ISO website. The site requires a session to be created and Javascript to
+    be ran so the page's data cannot be directly webscraped. For some countries their
+    ISO page contains extra data not on the country's wiki page. 
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    :driver : selenium.webdriver.chrome.webdriver.WebDriver
+        instance of Python Selenium using chromedriver webdriver.
     """
     #create instance of Service class and get executeable path of chromedriver
     service = Service(executable_path='/usr/lib/chromium-browser/chromedriver')

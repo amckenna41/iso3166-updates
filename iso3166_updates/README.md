@@ -23,7 +23,7 @@ iso.updates.all
 
 **Get all listed ISO 3166-2 changes/updates for Andorra (AD):**
 ```python
-iso.updates.AD
+iso.updates["AD"]
 ```
 
 **Get all listed ISO 3166-2 changes/updates for BA, DE, FR, HU, PY:**
@@ -33,12 +33,17 @@ iso.updates["BA","DE","FR","HU","PY"]
 
 **Get any listed ISO 3166-2 changes/updates for Ireland, between years 2012 and 2021:**
 ```python
-iso.updates.year("2012-2021")["IE"]
+iso.updates.year("2012-2021").IE
 ```
 
 **Get any listed ISO 3166-2 changes/updates for Tanzania, with updates with year >= 2015:**
 ```python
-iso.updates.year(">2015")["TA"]
+iso.updates.year(">2015").TA
+```
+
+**Get any listed ISO 3166-2 changes/updates for Romania, with updates with year < 2007:**
+```python
+iso.updates.year("<2007").RO
 ```
 
 **Get any listed ISO 3166-2 changes/updates for Yemen, with updates with year < 2010:**

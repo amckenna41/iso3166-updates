@@ -230,6 +230,9 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Mention selenium required as a session is needed for ISO website and both data sources in readme.
 - [ ] Outstanding error in check-for-updates, new updates not being uploaded.
 - [ ] updates.json not importing correctly in module.
+- [ ] Make output of .year() function subscriptable, using Map class.
+- [ ] Remove space after colon in Parameters & Returns comments in each function.
+- [X] Add API path /name/input_name/year/2015. Add unit tests.
 <!--
 Create new config, update config file
 gcloud api-gateway api-configs create NEW_CONFIG_ID --api=MY_API --openapi-spec=openapi2-functions.yaml 
