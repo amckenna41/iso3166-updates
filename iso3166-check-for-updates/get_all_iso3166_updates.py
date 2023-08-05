@@ -1,20 +1,21 @@
 from itertools import product
-import argparse
-import requests
+import pandas as pd
 import iso3166
-import os
-import getpass
-import json
-import re
 from bs4 import BeautifulSoup, Tag
-from importlib import metadata
+import re
 import time
-import datetime
-import random
+import json
+import os
+from datetime import datetime
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-# from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.wait import WebDriverWait 
+import random
+from importlib import metadata
+import getpass
+import random
+import requests
 import pandas as pd
 pd.options.mode.chained_assignment = None
 
@@ -49,7 +50,7 @@ def create_driver():
     service = Service(executable_path='/usr/lib/chromium-browser/chromedriver')
 
     #create instance of Options class, add below options to ensure everything works as desired
-    chrome_options = webdriver.ChromeOptions()
+    chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument("--disable-gpu")
@@ -129,9 +130,9 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
         export all ISO 3166 updates for inputted countries into json format in export folder. 
     :export_csv : bool (default=False)
         export all ISO 3166 updates for inputted countries into csv format in export folder. 
-    :verbose: bool (default=True)
+    :verbose: bool (default=False)
         Set to 1 to print out progress of updates functionality, 0 will not print progress.
-    :use_selenium: bool (default=True)
+    :use_selenium : bool (default=True)
         Gather all data for each country from its official page on the ISO website which 
         requires Python Selenium and chromedriver. If False then just use country data
         from its wiki page.
@@ -323,8 +324,6 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
         
         #skip to next iteration if alpha-2 not valid, add XK (Kosovo manually to object)
         if (alpha2 not in list(iso3166.countries_by_alpha2.keys())):
-            if (alpha2 == "XK"):
-                all_changes[alpha2] = {}
             continue
 
         #print out progress of function
@@ -336,6 +335,9 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
         #web scrape country's wiki data, convert html table/2D array to dataframe 
         iso3166_df_wiki = get_updates_df_wiki(alpha2, year, year_range, less_than, greater_than)
         
+        print("alpha2", alpha2)
+        # print("iso3166_df_wiki")
+        # print(iso3166_df_wiki)
         #use Selenium Chromedriver to parse country's updates data from official ISO website
         if (use_selenium):
             iso_website_df = get_updates_df_selenium(alpha2, year, year_range, less_than, greater_than)
@@ -345,6 +347,9 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
         else:
             iso3166_df = iso3166_df_wiki
 
+        # print("iso3166_df")
+        # print(iso3166_df)
+        # if not (iso3166_df is None):
         #only export non-empty dataframes         
         if not (iso3166_df.empty):
 
@@ -358,7 +363,7 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
 
             #seperate 'Browsing' and 'Platform' string if they are concatenated in column
             iso3166_df["Edition/Newsletter"] = iso3166_df["Edition/Newsletter"].str.replace('BrowsingPlatform', "Browsing Platform")
-
+                        
             #convert date column to datetime object
             iso3166_df['Date Issued'] = pd.to_datetime(iso3166_df["Date Issued"])
             #sort and order by date, newest to oldest
@@ -531,7 +536,7 @@ def get_updates_df_selenium(alpha2, year=[], year_range=False, less_than=False, 
     #parse Changes section table on webpage, using the header of the section
     changes_html = ""   
     for h3 in soup.find_all('h3'):
-        if (('change history of country code' in h3.text.lower()) or ('historique des modifications des codes de pays' in h3.text.lower())):
+        if (('change history of country code' in h3.text.lower()) or ('historique des modifications des Codes de pays' in h3.text.lower())):
             changes_html = str(soup).split(str(h3))[1]
             break
 
@@ -539,15 +544,23 @@ def get_updates_df_selenium(alpha2, year=[], year_range=False, less_than=False, 
     changes_table_soup = BeautifulSoup(changes_html, "lxml")
     changes_table = changes_table_soup.find('table')
 
+    #if no Changes section with updates found in wiki, return empty dataframe
+    if (changes_table is None):
+        driver.quit()
+        return pd.DataFrame()
+    
+    # print("changes_table")
+    # print(changes_table)
     #convert html table into 2d array
     changes_table_converted = table_to_array(changes_table)
-
+    
+    # print("changes_table_converted")
+    # print(changes_table_converted)
     #convert 2d array of updates into dataframe, fix columns, remove duplicate rows etc
     iso3166_df_selenium = parse_updates_table(changes_table_converted, year, year_range, less_than, greater_than)
     
-    #delete chromedriver session
     driver.quit()
-    
+
     return iso3166_df_selenium
 
 def get_updates_df_wiki(alpha2, year=[], year_range=False, less_than=False, greater_than=False):
@@ -595,7 +608,7 @@ def get_updates_df_wiki(alpha2, year=[], year_range=False, less_than=False, grea
     #get Changes Section/Heading from soup 
     changesSection = soup.find("span", {"id": "Changes"})
 
-    #skip to next iteration if no changes for ISO code found
+    #if no Changes section with updates found in wiki, return empty dataframe
     if (changesSection is None):
         return pd.DataFrame()
 
@@ -622,7 +635,7 @@ def get_updates_df_wiki(alpha2, year=[], year_range=False, less_than=False, grea
             temp_iso3166_df_wiki = parse_updates_table(temp_iso3166_table, year, year_range, less_than, greater_than)
             #concat two dataframes together
             iso3166_df_wiki = pd.concat([iso3166_df_wiki, temp_iso3166_df_wiki], axis=0)
-
+        
     return iso3166_df_wiki
 
 def parse_updates_table(iso3166_updates_table, year, year_range, less_than, greater_than):
@@ -874,41 +887,3 @@ def table_to_array(table_tag):
                 table[row][col] = table[row][col].replace('\n', "")
 
     return table
-
-if __name__ == '__main__':
-
-    parser = argparse.ArgumentParser(description='Get latest changes/updates for all countries in the ISO 3166-1/3166-2 standard.')
-    parser.add_argument('-alpha2', '--alpha2', type=str, required=False, default="", 
-        help='2 letter alpha-2 code(s) of ISO 3166-1 countries to check for updates.')
-    parser.add_argument('-year', '--year', type=str, required=False, default="", 
-        help='Selected year(s) to check for updates, can also be a year range or greater than/less than specific year.')
-    parser.add_argument('-export_filename', '--export_filename', type=str, required=False, default="iso3166-updates", 
-        help='Filename for exported ISO 3166 updates CSV and JSON files.')
-    parser.add_argument('-export_folder', '--export_folder', type=str, required=False, default="test-iso3166-updates", 
-        help='Folder where to store exported ISO files.')
-    parser.add_argument('-export_json', '--export_json', required=False, action=argparse.BooleanOptionalAction, default=1,
-        help='Whether to export all found updates to json.')
-    parser.add_argument('-export_csv', '--export_csv', required=False, action=argparse.BooleanOptionalAction, default=0,
-        help='Whether to export all found updates to csv files in export folder.')
-    parser.add_argument('-concat_updates', '--concat_updates', required=False, action=argparse.BooleanOptionalAction, default=1,
-        help='Whether to concatenate updates of individual countrys into the same json or csv files or individual files.')
-    parser.add_argument('-verbose', '--verbose', type=int, required=False, action=argparse.BooleanOptionalAction, default=1, 
-        help='Set to 1 to print out progress of updates function, 0 will not print progress.')
-    parser.add_argument('-use_selenium', '--use_selenium', type=int, required=False, action=argparse.BooleanOptionalAction, default=1, 
-        help='Gather updates from official ISO website for each country using Selenium package, if False just gather data from wiki data source.')
-    
-    #parse input args
-    args = parser.parse_args()
-    alpha2_codes = args.alpha2
-    year = args.year
-    export_filename = args.export_filename
-    export_folder = args.export_folder
-    concat_updates = args.concat_updates
-    export_json = args.export_json
-    export_csv = args.export_csv
-    verbose = args.verbose
-    use_selenium = args.use_selenium
-
-    #output ISO 3166 updates/changes for selected alpha-2 code(s) and year(s)
-    get_updates(alpha2_codes, year, export_filename, export_folder, 
-        concat_updates, export_json, export_csv, verbose, use_selenium)
