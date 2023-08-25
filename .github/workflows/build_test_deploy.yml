@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest        
     strategy:
       matrix:
-        python-version: ["3.9", "3.10"]   #testing on multiple python versions
+        python-version: ["3.8", "3.9", "3.10"]   #testing on multiple python versions
         # os: [ubuntu-latest, macos-latest] #testing on ubuntu and mac os's
     steps:
     - uses: actions/checkout@v3

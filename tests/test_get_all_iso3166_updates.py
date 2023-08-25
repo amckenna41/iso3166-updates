@@ -13,7 +13,7 @@ from importlib.metadata import metadata
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 
-# @unittest.skip("Skipping tests for get_all_iso3166_updates.py scipt to not overload servers and test runners.")
+@unittest.skip("Skipping tests for get_all_iso3166_updates.py scipt to not overload servers and test runners.")
 class ISO3166_Updates_Tests(unittest.TestCase):
     """
     Test suite for testing the get_all_iso3166_updates script that gathers and parses all ISO 3166-2 
