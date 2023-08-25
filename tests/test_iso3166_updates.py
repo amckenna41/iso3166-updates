@@ -37,7 +37,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             "iso3166-updates author email is not correct, got: {}".format(metadata('iso3166-updates')['author-email']))
         self.assertEqual(metadata('iso3166-updates')['summary'], "A Python package that pulls the latest updates & changes to all ISO 3166 listed countries.", 
             "iso3166-updates package summary is not correct, got: {}".format(metadata('iso3166-updates')['summary']))
-        self.assertEqual(metadata('iso3166-updates')['keywords'], "iso,iso3166,beautifulsoup,python,pypi,countries,country codes,csv,iso3166-2,iso3166-1,alpha-2,alpha-3,selenium,chromedriver", 
+        self.assertEqual(metadata('iso3166-updates')['keywords'], "iso,iso3166,beautifulsoup,python,pypi,countries,country codes,csv,iso3166-2,subdivisions,iso3166-1,alpha-2,alpha-3,selenium,chromedriver", 
             "iso3166-updates keywords are not correct, got: {}".format(metadata('iso3166-updates')['keywords']))
         self.assertEqual(metadata('iso3166-updates')['home-page'], "https://github.com/amckenna41/iso3166-updates", 
             "iso3166-updates home page url is not correct, got: {}".format(metadata('iso3166-updates')['home-page']))
