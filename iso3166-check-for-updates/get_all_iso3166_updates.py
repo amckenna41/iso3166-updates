@@ -224,7 +224,6 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
 
     #var to keep track of original alpha-2 and year parameter inputs
     input_alpha2_codes = alpha2_codes
-    input_year = year
 
     #use all ISO 3166-1 codes if no input alpha-2 parameter input
     if ((alpha2_codes == [''] or alpha2_codes == [])):

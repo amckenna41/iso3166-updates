@@ -17,20 +17,37 @@ GCP Cloud Architecture
   <img src="https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166-updates-api/gcp_architecture.png?raw=true" alt="gcp_arch" height="500" width="750"/>
 </p>
 
+Requirements
+------------
+* [python][python] >= 3.8
+* [iso3166-updates][iso3166-updates] >= 1.3.0
+* [pandas][pandas] >= 1.4.3
+* [numpy][numpy] >= 1.23.2
+* [requests][requests] >= 2.28.1
+* [beautifulsoup4][beautifulsoup4] >= 4.11.1
+* [iso3166][iso3166] >= 2.1.1
+* [google-auth][google-auth] >= 2.17.3
+* [google-cloud-storage][google-cloud-storage] >= 2.8.0
+* [google-api-python-client][google-api-python-client] >= 2.86.0
+* [emoji-country-flag][emoji-country-flag] == 1.3.0
+* [selenium][selenium] >= 4.10.0
+* [flask][flask] >= 2.3.2
+* [gunicorn][gunicorn] >= 21.2.0
+* [lxml][lxml] >=  4.9.3
 Create check-for-updates microservice
 -------------------------------------
 
-Build Docker container using Dockerfile and Python image:
+**Build Docker container using Dockerfile and Python image:**
 ```bash
 docker build -t {CONTAINER_NAME} .
 ```
 
-Submit Docker container to GCP container registry:
+**Submit Docker container to GCP container registry:**
 ```bash
 gcloud builds submit --tag gcr.io/iso3166-updates/{CONTAINER_NAME}
 ```
 
-Build and deploy Cloud Run application using Docker container (need to set the env vars):
+**Build and deploy Cloud Run application using Docker container (need to set the env vars):**
 ```bash
 gcloud beta run deploy {APP_NAME} --image gcr.io/iso3166-updates/{CONTAINER_NAME} \
   --region {REGION_NAME} --platform managed --memory 1024Mi --timeout 2700 --update-env-vars BUCKET_NAME="",\
@@ -38,7 +55,7 @@ gcloud beta run deploy {APP_NAME} --image gcr.io/iso3166-updates/{CONTAINER_NAME
   GITHUB_REPO_3="",GITHUB_API_TOKEN="",MONTH_RANGE="",CREATE_ISSUE=1
 ```
 
-Delete Cloud Run application:
+**Delete Cloud Run application:**
 ```bash
 gcloud run services delete {APP_NAME} --region {REGION_NAME}
 ```
@@ -49,3 +66,19 @@ https://www.youtube.com/watch?v=mOJiWrjFVKY
 https://www.youtube.com/watch?v=LxHiCZCKwa8
 https://stackoverflow.com/questions/53073411/selenium-webdriverexceptionchrome-failed-to-start-crashed-as-google-chrome-is 
 -->
+
+[python]: https://www.python.org/downloads/release/python-360/
+[iso3166-updates]: https://github.com/amckenna41/iso3166-updates
+[pandas]: https://pandas.pydata.org/
+[numpy]: https://numpy.org/
+[requests]: https://requests.readthedocs.io/
+[beautifulsoup4]: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+[google-auth]: https://cloud.google.com/python/docs/reference
+[google-cloud-storage]: https://cloud.google.com/python/docs/reference
+[google-api-python-client]: https://cloud.google.com/python/docs/reference
+[flask]: https://flask.palletsprojects.com/en/2.3.x/
+[emoji-country-flag]: https://pypi.org/project/emoji-country-flag/
+[gunicorn]: https://pypi.org/project/gunicorn/
+[selenium]: https://selenium-python.readthedocs.io/index.html
+[lxml]: https://lxml.de/
+[iso3166]: https://github.com/deactivated/python-iso3166

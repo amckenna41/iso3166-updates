@@ -16,13 +16,13 @@ The other endpoints available in the API are:
 
 Four query string parameters/paths are available in the API - `alpha2`, `name`, `year` and `months`. 
 
-* The 2 letter `alpha2` country code can be appended to the url as a query string parameter or as its own path (e.g ?alpha2=JP or /alpha2/JP). A single alpha-2 or list of them can be passed to the API (e.g ?alpha2=FR, DE, HU, ID, MA or /alpha2/FR,DE,HU,ID,MA). For redudancy, the 3 letter alpha-3 counterpart for each country's alpha-2 code can also be passed into the `alpha2` parameter (e.g ?alpha2=FRA, DEU, HUN, IDN, MAR or /alpha2/FRA,DEU,HUN,IDN,MAR). 
+* The 2 letter `alpha2` country code can be appended to the URL as a query string parameter or as its own path (e.g ?alpha2=JP or /alpha2/JP). A single alpha-2 or list of them can be passed to the API (e.g ?alpha2=FR, DE, HU, ID, MA or /alpha2/FR,DE,HU,ID,MA). For redudancy, the 3 letter alpha-3 counterpart for each country's alpha-2 code can also be passed into the `alpha2` parameter (e.g ?alpha2=FRA, DEU, HUN, IDN, MAR or /alpha2/FRA,DEU,HUN,IDN,MAR). 
 
-* The `name` parameter takes in a country's name as it is commonly known in English (e.g France, Moldova, Benin). A closeness function is used to get the most approximate available country from the one the user input. If one is not found then an error is raised.
+* The `name` parameter takes in a country's name as it is commonly known in English. The country name can be appended to the URL as a query string parameter or as its own path (e.g ?name=France or /name/France). A single country name or list of them can be passed into the API (e.g ?name=France,Moldova,Benin or /name/France,Moldova,Benin). A closeness function is used to get the most approximate available country from the one the user input; if one is not found then an error is raised.
 
-* The `year` parameter can be a specific year, year range, or a cut-off year to get updates less than/more than a year (e.g /year/2017, /year/2010-2015, /year/<2009, /year/>2002). 
+* The `year` parameter can be a specific year, year range, or a cut-off year to get updates less than/more than a year. The year value can be appended to the URL as a query string parameter or as its own path (e.g ?year=2017 or /year/2017, ?year=2010-2015 or /year/2010-2015, ?year=<2009 or /year/<2009, ?year=2002 or /year/>2002). 
 
-* Finally, the `months` parameter will gather all updates for 1 or more alpha-2 codes from a number of months from the present day (e.g /months/2, /months/6, /months/48).
+* Finally, the `months` parameter will gather all updates for 1 or more alpha-2 codes from a number of months from the present day. The month value can be appended to the URL as a query string parameter or as its own path (e.g ?months=2 or /months/12, ?months=24 or /months/24).
 
 * If no input parameter values specified then all ISO 3166-2 updates for all countries and years will be returned.
 
@@ -139,6 +139,8 @@ function getData() {
     await fetch('https://iso3166-updates/api' + 
         new URLSearchParams({
             alpha2: 'FR'
+            // alpha2: 'DE'
+            // alpha2: 'HN'
   }));
   const data = await response.json()
 }
@@ -198,6 +200,7 @@ function getData() {
     await fetch('https://iso3166-updates/api' + 
         new URLSearchParams({
             year: '2004'
+            // year: '2007'
   }));
   const data = await response.json()
 }
@@ -258,6 +261,7 @@ function getData() {
         new URLSearchParams({
             alpha2: 'AD',
             year: '2007'
+            // alpha2: 'DM', year: '2007
   }));
   const data = await response.json()
 }
@@ -318,6 +322,7 @@ function getData() {
         new URLSearchParams({
             name: 'Bosnia',
             year: '2009-2015'
+            // name: 'Haiti', year: '2009-2015
   }));
   const data = await response.json()
 }
@@ -378,6 +383,7 @@ function getData() {
         new URLSearchParams({
             alpha2: 'IL',
             year: '<2010'
+            // alpha2: 'LT', year: '>2012
   }));
   const data = await response.json()
 }
@@ -453,6 +459,7 @@ function getData() {
     await fetch('https://iso3166-updates.com/api?' + 
         new URLSearchParams({
             name: 'Tajikistan'
+            // name: 'Uganda'
   }));
   const data = await response.json()
 }

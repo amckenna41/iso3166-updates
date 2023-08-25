@@ -236,13 +236,13 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Test check-for-updates with use_selenium=False.
 - [ ] Add link to medium article on readme.
 - [X] In check-for-updates for AD, earlier table being pulled.
-- [ ] Test check-for-updates on get_latest_updates notebook.
+- [X] Test check-for-updates on get_latest_updates notebook.
 - [ ] Have a look over varnames and see if some can be changed into more intutive names.
-- [ ] In check-for-updates readme mention how long it takes to execute Cloud Run app.
+- [X] In check-for-updates readme mention how long it takes to execute Cloud Run app.
 - [X] Currently check-for-updates app only checks for any updates in the month range, but add functionality that returns missing/old updates that should be in object.
 - [X] Create new var called missing_historical_data, seperate these updates from ones in date range. Have section at bottom of GitHub Issue highlighting these historical missing data.
-- [ ] Double check colab example again.
-- [ ] Rerun notebook example once new updates json added to software.
+- [X] Double check colab example again.
+- [X] Rerun notebook example once new updates json added to software.
 - [X] Create notebook for get_all script, easier to run and follow - download notebook and put in repo.
 - [X] test check-for-updates with subsample of alpha-2 codes including FJ.
 - [X] Update object in bucket regardless of new date range changes but keep var that tracks object for create_issue func.
@@ -251,35 +251,19 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Mention in check-for-updates readme/comments that the app doesnt just check for udpates in month range but also overall missing data/updates and that outputs are tabulated for each country.
 - [X] In check-for-updates, output all missing/new updates into a table.
 - [X] Rerun get_all script and update object is main source code dir.
-- [ ] Remove duplicate rows by Date Issued column, remove the one where Code/Subdivision Change & Description of change... is empty == "".
 - [X] In check-for-updates: validate env var exists (if environ.get('Foo') is not None), if not then skip command etc.
 - [X] Apply double-spacing removal func to each column in dataframe rather than at the table_to_array level.
-- [ ] Double check success message in check-for-updates.
+- [X] Double check success message in check-for-updates.
 - [X] Outstanding error in check-for-updates: object not exporting correctly.
-- [ ] GitHub issue not being created - double check request size limit for post request.
+- [X] GitHub issue not being created - double check request size limit for post request.
 - [X] Double check no entires have both Subdivision Change & Descripton of change == "", if so then remove entry - KN.
 - [X] Updates with date corrected in Date Issued column. Add "Corrected" to Date Issued col, need to update api and software etc to remove "corrected" when searching for update. Searching for year will return both original and corrected.
 - [X] Replace dateColName var with hard coded "Date Issued".
 - [X] Any Date Issued with "corrected" in them will return the original date not corrected one.
 - [X] Create new col called CorrectedDateIssued, add to every update. After function to sort each update by Date Issued go through all CorrectedDateIssued columns, if empty drop column else append date to Date Issued col. 
 - [X] If Description of change, Code/Subdivion Change and Date Issued are similar, drop duplicate e.g Hondurus.
-- [ ] Year param in get_updates() func not working.
+- [X] Year param in get_updates() func not working.
 - [X] Go through all unit tests, any tests that are wrapped in with.selfAssertRaises()... , remove var assignment and just call function.
 - [X] Comment out binary_location in get_all script.
-- [ ] Test empty table error by getting MZ from https://www.iso.org/obp/ui/#iso:code:3166:MZ (no updates listed), fix error in parse_updates_table func (IndexError: list index out of range).
-- [ ] When correcting date using re.sub, can just use that on all Date Issud values as it wont effect the outcome.
-- [ ] Test check-for-updates functionality on Colab notebook - updates don't seem to be propagating - don't need to run get_all updates cell, just upload json from iso3166_updates/iso3166-updates.json file.
-<!--
-Create new config, update config file
-gcloud api-gateway api-configs create NEW_CONFIG_ID --api=MY_API --openapi-spec=openapi2-functions.yaml 
-Update gateway with config
-gcloud api-gateway gateways update MY-GATEWAY --api=MY-API --api-config=NEW_CONFIG_ID --location=YOUR_LOCATION 
-Update existing config
-gcloud api-gateway api-configs update my-config --api=my-api --display-name="New Display Name"
-Delete config
-gcloud api-gateway api-configs delete CONFIG_ID --api=API_ID --project=PROJECT_ID
-Need to enable Cloud Engine & Cloud Domains API to access LB services:
-gcloud services enable ""
-Connect LB to api gateway:
-https://cloud.google.com/api-gateway/docs/gateway-serverless-neg
--->
+- [X] When correcting date using re.sub, can just use that on all Date Issud values as it wont effect the outcome.
+- [X] Go over main readme's.

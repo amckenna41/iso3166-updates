@@ -41,6 +41,24 @@
     ],
     "AF": [
         {
+            "Date Issued": "2020-11-24",
+            "Edition/Newsletter": "Online Browsing Platform (OBP).",
+            "Code/Subdivision Change": "",
+            "Description of Change in Newsletter": "Correction of the Code Source."
+        },
+        {
+            "Date Issued": "2018-11-26",
+            "Edition/Newsletter": "Online Browsing Platform (OBP).",
+            "Code/Subdivision Change": "",
+            "Description of Change in Newsletter": "Correction of the romanization system label."
+        },
+        {
+            "Date Issued": "2015-11-27",
+            "Edition/Newsletter": "Online Browsing Platform (OBP).",
+            "Code/Subdivision Change": "",
+            "Description of Change in Newsletter": "Correction of the local short name; change romanization system; change of spelling of categories of pus and fas; change of spelling of AF-KNR; update List Source."
+        },
+        {
             "Date Issued": "2011-12-13 (corrected 2011-12-15)",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf).",
             "Code/Subdivision Change": "Codes: AF-LOW Lowgar -> AF-LOG Lōgar AF-ORU Orūzgān -> AF-URU Uruzgān.",

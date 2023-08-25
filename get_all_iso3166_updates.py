@@ -97,7 +97,7 @@ def create_driver():
 
     return driver
 
-def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", export_folder="test_iso3166-updates",
+def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", export_folder="iso3166-updates-output",
         concat_updates=True, export_json=True, export_csv=False, verbose=True, use_selenium=True):
     """
     Get all listed changes/updates to a country/country's ISO 3166-2 subdivision codes/names.
@@ -137,7 +137,7 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
         less than or greater than that specified year (e.g >2007, <2021).
     :export_filename : str (default="iso3166-updates")
         filename for JSON and CSV output files of inputted country's ISO 3166-2 updates.
-    :export_folder : str (default="../iso3166-updates")
+    :export_folder : str (default="iso3166-updates-output")
         folder name to store all csv and json outputs for all country's ISO 3166-2 updates.
     :concat_updates : bool (default=True)
         if multiple alpha-2 codes input, concatenate updates into one JSON and or CSV file
