@@ -296,8 +296,6 @@ Directories
 * `/tests` - unit and integration tests for `iso3166-updates` software and API.
 * `get_all_iso3166_updates.py` - python module that pulls and exports all the latest ISO 3166 data from the various data sources.
 * `get_all_iso3166-updates.sh` - shell script created to call the get_all_iso3166_updates.py script to introduce some pseudo randomness required when using Python Selenium. 
-* `iso3166_updates_demo.ipynb` - demo Python Colab notebook with a demo of the `iso3166-updates` software and accompanying API. The demo is also available on Google Colab [here][demo_iso3166_updates].
-* `get_latest_iso3166_updates_demo.ipynb` -  demo Python Colab notebook with a demo of the get_all_iso3166_updates.py script that pulls all the latest ISO 3166 updates/changes from the data sources. The demo is also available on Google Colab [here][demo_get_all_iso3166_updates].
 
 Issues
 ------
