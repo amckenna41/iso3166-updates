@@ -88,9 +88,9 @@ Staying up to date
 ------------------
 The list of ISO 3166-2 updates was last updated on <strong>Nov 2022</strong>.
 
-The object storing all updates, both locally (iso3166_updates/iso3166-updates.json) and on the API, are consistenly checked for the latest updates using a Google Cloud Run microservice ([iso3166-check-for-updates](https://github.com/amckenna41/iso3166-updates/tree/main/iso3166-check-for-updates)). The application is built using a custom Docker container that uses the `iso3166-updates` Python software to pull all the latest updates/changes, from all ISO 3166-2 wiki's and each country's ISO website page, to check for the latest updates within a certain period e.g. the past 3-6 months. The app compares the generated output with that of the updates JSON currently in the Google Cloud Storage bucket and will replace this json to integrate the latest updates found, such that the API will have the most up-to-date data. A Cloud Scheduler is used to periodically call the application.
+The object storing all updates, both locally (iso3166_updates/iso3166-updates.json) and on the API, are consistenly checked for the latest updates using a Google Cloud Run microservice ([iso3166-check-for-updates](https://github.com/amckenna41/iso3166-updates/tree/main/iso3166-check-for-updates)). The application is built using a custom Docker container that uses the `iso3166-updates` Python software to pull all the latest updates/changes, from all ISO 3166-2 wiki's and each country's ISO website page, to check for the latest updates within a certain period e.g. the past 6-12 months (this month range is used as the ISO usually publishes their newsletter at the end of the year with occasional mid-year updates published). The app compares the generated output with that of the updates JSON currently in the Google Cloud Storage bucket and will replace this json to integrate the latest updates found, such that the API will have the most up-to-date data. A Cloud Scheduler is used to periodically call the application.
 
-Additionally, a GitHub Issue in the custom-built `iso3166-updates`, `iso3166-2` and `iso3166-flag-icons` repositories will be automatically created that outlines all updates/changes that need to be implemented into the `iso3166-updates`, `iso3166-2` and `iso3166-flag-icons` JSONs and repos.
+Additionally, a GitHub Issue in the custom-built `iso3166-updates`, `iso3166-2` and `iso3166-flag-icons` repositories will be automatically created that formats and tabulates all updates/changes that need to be implemented into the `iso3166-updates`, `iso3166-2` and `iso3166-flag-icons` JSONs and repos.
 
 Ultimately, this Cloud Run microservice ensures that the software and assoicated APIs are up-to-date with the latest ISO 3166-2 information for all countries/territories/subdivisions etc.
 
@@ -251,16 +251,16 @@ iso3166_updates.get_updates("YE", year="<2010")
 ```
 
 The output to the above functions for the updates/changes to an ISO 3166-2 country returns 4 columns: 
-<b>Edition/Newsletter, Date Issued, Code/Subdivision change</b> and <b>Description of change in newsletter.</b> For the CSV export, if more than one country input, then an additional primary key column <b>Country Code</b> will be prepended to the first column, which will be the 2 letter ISO 3166-1 country code. 
+<b>Edition/Newsletter, Date Issued, Code/Subdivision Change</b> and <b>Description of Change in Newsletter.</b> For the CSV export, if more than one country input, then an additional primary key column <b>Country Code</b> will be prepended to the first column, which will be the 2 letter ISO 3166-1 country code. 
 
 * Edition/Newsletter: Name and or edition of newsletter that the ISO 3166-2 change/update was communicated in.
 * Date Issued: Date that the change was communicated.
-* Code/Subdivision change: Overall summary of change/update made.
-* Description of change in newsletter: More in-depth info about the change/update that was made.
+* Code/Subdivision Change: Overall summary of change/update made.
+* Description of Change in Newsletter: More in-depth info about the change/update that was made.
 
 E.g. The output format of the exported <b>CSV</b> for AD (Andorra) is:
 
-| Edition/Newsletter | Date Issued | Code/Subdivision change | Description of change in newsletter |   
+| Edition/Newsletter | Date Issued | Code/Subdivision Change | Description of Change in Newsletter |   
 |:-------------------|:------------|------------------------------------:|------------------------:|
 | Newsletter I-8.    | 2007-04-17  | Subdivisions added: 7 parishes.   | Addition of the administrative subdivisions and of their code elements.                 | 
 | Online Browsing Platform (OBP). | 2014-11-03 | | Update List Source |
@@ -271,21 +271,21 @@ E.g. The output format of the exported <b>JSON</b> for AD (Andorra) is:
 {
   AD: [
       {
-        "Code/Subdivision change": "",
+        "Code/Subdivision Change": "",
         "Date Issued": "2015-11-27",
-        "Description of change in newsletter": "Update List Source",
+        "Description of Change in Newsletter": "Update List Source",
         "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:AD)"
       },
       {
-        "Code/Subdivision change": "",
+        "Code/Subdivision Change": "",
         "Date Issued": "2014-11-03",
-        "Description of change in newsletter": "Update List Source",
+        "Description of Change in Newsletter": "Update List Source",
         "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:AD)"
       },
       {
-        "Code/Subdivision change:" "Subdivisions added:7 parishes",
+        "Code/Subdivision Change:" "Subdivisions added:7 parishes",
         "Date Issued": "2007-04-17",
-        "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements",
+        "Description of Change in Newsletter": "Addition of the administrative subdivisions and of their code elements",
         "Edition/Newsletter": "Newsletter I-8 (https://web.archive.org/web/20120330105926/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf)"
       }
   ]
@@ -327,7 +327,7 @@ Support
 [Back to top](#TOP)
 
 [demo]: https://colab.research.google.com/drive/1oGF3j3_9b_g2qAmBtv3n-xO2GzTYRJjf?usp=sharing
-[demo_2]: https://colab.research.google.com/drive/1oGF3j3_9b_g2qAmBtv3n-xO2GzTYRJjf?usp=sharing
+[demo_2]: https://colab.research.google.com/drive/161aclDjGkWQJhis7KxBO1e6H_ghQOPRG?usp=sharing
 [python]: https://www.python.org/downloads/release/python-360/
 [iso3166-updates]: https://github.com/amckenna41/iso3166-updates
 [pandas]: https://pandas.pydata.org/

@@ -1,6 +1,7 @@
 import unittest
 import iso3166
 import requests
+import re
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 import getpass
@@ -9,8 +10,7 @@ unittest.TestLoader.sortTestMethodsUsing = None
 
 class ISO3166_Updates_Api_Tests(unittest.TestCase):
     """
-    Test suite for testing ISO 3166 Updates api created to accompany
-    the iso3166-updates Python software package. 
+    Test suite for testing ISO 3166 Updates API created to accompany the iso3166-updates Python software package. 
 
     Test Cases
     ----------
@@ -45,7 +45,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                                        'https://github.com/amckenna41/iso3166-updates', getpass.getuser())}
     
         #correct column/key names for dict returned from api
-        self.expected_output_columns = ["Code/Subdivision change", "Date Issued", "Description of change in newsletter", "Edition/Newsletter"]
+        self.expected_output_columns = ["Code/Subdivision Change", "Date Issued", "Description of Change in Newsletter", "Edition/Newsletter"]
 
     @unittest.skip("Skipping to not overload API endpoints on test suite run.")
     def test_api_endpoints(self):
@@ -66,7 +66,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Expected Content type to be application/json for alpha-2 code {}, got {}.".format(alpha2, test_request.headers["content-type"]))
 
     def test_updates_alpha2(self):
-        """ Testing single, multiple and invalid alpha-2 codes for expected ISO3166 updates. """
+        """ Testing single, multiple and invalid alpha-2 codes for expected ISO 3166 updates. """
         test_alpha2_ad = "AD" #Andorra 
         test_alpha2_bo = "BO" #Bolivia
         test_alpha2_co = "CO" #Colombia
@@ -88,20 +88,20 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         
         #expected test outputs
         test_alpha2_ad_expected1 = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2015-11-27",
-                "Description of change in newsletter": "Update List Source.",
+                "Description of Change in Newsletter": "Update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:AD)."
                 }
         test_alpha2_ad_expected2 = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2014-11-03",
-                "Description of change in newsletter": "Update List Source.",
+                "Description of Change in Newsletter": "Update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:AD)."
                 }
 
         self.assertIsInstance(test_request_ad, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_ad)))
-        self.assertIsInstance(test_request_ad[test_alpha2_ad], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_ad[test_alpha2_ad])))
+        self.assertIsInstance(test_request_ad[test_alpha2_ad], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_ad[test_alpha2_ad])))
         self.assertEqual(list(test_request_ad.keys()), [test_alpha2_ad], "Expected parent key does not match output, got {}.".format(list(test_request_ad.keys())))
         for row in test_request_ad[test_alpha2_ad]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
@@ -113,24 +113,24 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         
         #expected test outputs
         test_alpha2_bo_expected1 = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2014-12-18",
-                "Description of change in newsletter": "Alignment of the English and French short names upper and lower case with UNTERM.",
+                "Description of Change in Newsletter": "Alignment of the English and French short names upper and lower case with UNTERM.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
         test_alpha2_bo_expected2 = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2014-11-03",
-                "Description of change in newsletter": "Update List Source.",
+                "Description of Change in Newsletter": "Update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
         
         self.assertIsInstance(test_request_bo, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_bo)))
-        self.assertIsInstance(test_request_bo[test_alpha2_bo], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_bo[test_alpha2_bo])))
+        self.assertIsInstance(test_request_bo[test_alpha2_bo], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_bo[test_alpha2_bo])))
         self.assertEqual(list(test_request_bo.keys()), [test_alpha2_bo], "Expected parent key does not match output, got {}.".format(list(test_request_bo.keys())))
         for row in test_request_bo[test_alpha2_bo]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
-        self.assertEqual(len(test_request_bo[test_alpha2_bo]), 4, "Expected there to be 4 elements in output object, got {}.".format(len(test_request_bo[test_alpha2_bo])))
+        self.assertEqual(len(test_request_bo[test_alpha2_bo]), 5, "Expected there to be 5 elements in output object, got {}.".format(len(test_request_bo[test_alpha2_bo])))
         self.assertEqual(test_request_bo[test_alpha2_bo][0], test_alpha2_bo_expected1, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_bo[test_alpha2_bo][1], test_alpha2_bo_expected2, "Expected and observed outputs do not match.")
 #4.)
@@ -138,20 +138,20 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 
         #expected test outputs
         test_alpha2_co_expected1 = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2016-11-15",
-                "Description of change in newsletter": "Addition of local variation of CO-DC, CO-SAP, CO-VAC; update list source.",
+                "Description of Change in Newsletter": "Addition of local variation of CO-DC, CO-SAP, CO-VAC; update list source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:CO)."
                 }
         test_alpha2_co_expected2 = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2004-03-08",
-                "Description of change in newsletter": "Change of name of CO-DC.",
+                "Description of Change in Newsletter": "Change of name of CO-DC.",
                 "Edition/Newsletter": "Newsletter I-6 (https://web.archive.org/web/20120112041245/http://www.iso.org/iso/iso_3166-2_newsletter_i-6_en.pdf)."
                 }       
 
         self.assertIsInstance(test_request_co, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_co)))
-        self.assertIsInstance(test_request_co[test_alpha2_co], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_co[test_alpha2_co])))
+        self.assertIsInstance(test_request_co[test_alpha2_co], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_co[test_alpha2_co])))
         self.assertEqual(list(test_request_co.keys()), [test_alpha2_co], "Expected parent key does not match output, got {}.".format(list(test_request_co.keys())))
         for row in test_request_co[test_alpha2_co]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
@@ -164,31 +164,31 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         
         #expected test outputs
         test_alpha2_bo_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2014-12-18",
-                "Description of change in newsletter": "Alignment of the English and French short names upper and lower case with UNTERM.",
+                "Description of Change in Newsletter": "Alignment of the English and French short names upper and lower case with UNTERM.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }  
         test_alpha2_co_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2016-11-15",
-                "Description of change in newsletter": "Addition of local variation of CO-DC, CO-SAP, CO-VAC; update list source.",
+                "Description of Change in Newsletter": "Addition of local variation of CO-DC, CO-SAP, CO-VAC; update list source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:CO)."
                 }  
         test_alpha2_dm_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2015-11-27",
-                "Description of change in newsletter": "Update List Source.",
+                "Description of Change in Newsletter": "Update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }     
 
         self.assertIsInstance(test_request_bo_co_dm, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_bo_co_dm)))
         self.assertEqual(list(test_request_bo_co_dm.keys()), test_alpha2_list, "Expected columns do not match output, got {}.".format(list(test_request_bo_co_dm.keys())))
         for alpha2 in test_alpha2_list:
-                self.assertIsInstance(test_request_bo_co_dm[alpha2], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_bo_co_dm[alpha2])))
+                self.assertIsInstance(test_request_bo_co_dm[alpha2], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_bo_co_dm[alpha2])))
                 for row in test_request_bo_co_dm[alpha2]:
                         self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
-        self.assertEqual(len(test_request_bo_co_dm['BO']), 4, "Expected there to be 4 rows of updates for BO, got {}.".format(len(test_request_bo_co_dm['BO'])))
+        self.assertEqual(len(test_request_bo_co_dm['BO']), 5, "Expected there to be 5 rows of updates for BO, got {}.".format(len(test_request_bo_co_dm['BO'])))
         self.assertEqual(len(test_request_bo_co_dm['CO']), 2, "Expected there to be 2 rows of updates for CO, got {}.".format(len(test_request_bo_co_dm['CO'])))
         self.assertEqual(len(test_request_bo_co_dm['DM']), 3, "Expected there to be 3 rows of updates for DM, got {}.".format(len(test_request_bo_co_dm['DM'])))
         self.assertEqual(test_request_bo_co_dm['BO'][0], test_alpha2_bo_expected, "Expected and observed outputs do not match.")
@@ -199,15 +199,15 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 
         #expected test outputs
         test_alpha2_ke_expected1 = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2016-11-15",
-                "Description of change in newsletter": "Update Code Source.",
+                "Description of Change in Newsletter": "Update Code Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:KE)."
                 } 
         test_alpha2_ke_expected2 = {
-                "Code/Subdivision change": "Deleted codes: KE-110, KE-200, KE-300, KE-400, KE-500, KE-600, KE-700, KE-800 Added codes: KE-01 through KE-47.",
+                "Code/Subdivision Change": "Deleted codes: KE-110, KE-200, KE-300, KE-400, KE-500, KE-600, KE-700, KE-800 Added codes: KE-01 through KE-47.",
                 "Date Issued": "2014-10-30",
-                "Description of change in newsletter": "Delete provinces; add 47 counties; update List Source.",
+                "Description of Change in Newsletter": "Delete provinces; add 47 counties; update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:KE)."
                 }       
         
@@ -244,7 +244,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_error3["status"], 400, "Error status code incorrect: {}.".format(test_request_error3["status"]))
         self.assertEqual(test_request_error3["path"], self.alpha2_base_url + error_test_alpha2_3, "Error path incorrect: {}.".format(test_request_error3["path"]))
 
-    def test_updates_year(self):
+    def test_updates_year(self): 
         """ Testing single and multiple years, year ranges and greater than/less than and invalid years. """
         test_year_2016 = "2016"
         test_year_2007 = "2007"
@@ -259,27 +259,27 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 
         #expected test outputs
         test_au_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2016-11-15",
-                "Description of change in newsletter": "Update List Source; update Code Source.",
+                "Description of Change in Newsletter": "Update List Source; update Code Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
         test_dz_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2016-11-15",
-                "Description of change in newsletter": "Change of spelling of DZ-28; Update list source.",
+                "Description of Change in Newsletter": "Change of spelling of DZ-28; Update list source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
         test_mv_expected = {
-                "Code/Subdivision change": "Spelling change: MV-05.",
+                "Code/Subdivision Change": "Spelling change: MV-05.",
                 "Date Issued": "2016-11-15",
-                "Description of change in newsletter": "Change of spelling of MV-05.",
+                "Description of Change in Newsletter": "Change of spelling of MV-05.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:MV)."
                 }
         test_pw_expected = {
-                "Code/Subdivision change": "Name changed: PW-050 Hatobohei -> Hatohobei.",
+                "Code/Subdivision Change": "Name changed: PW-050 Hatobohei -> Hatohobei.",
                 "Date Issued": "2016-11-15",
-                "Description of change in newsletter": "Change of spelling of PW-050 in eng, pau; update list source.",
+                "Description of Change in Newsletter": "Change of spelling of PW-050 in eng, pau; update list source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:PW)."
                 }
 
@@ -306,27 +306,27 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         
         #expected test outputs
         test_ag_expected = {
-                "Code/Subdivision change": "Subdivisions added: 6 parishes, 1 dependency.",
+                "Code/Subdivision Change": "Subdivisions added: 6 parishes, 1 dependency.",
                 "Date Issued": "2007-04-17",
-                "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements.",
+                "Description of Change in Newsletter": "Addition of the administrative subdivisions and of their code elements.",
                 "Edition/Newsletter": "Newsletter I-8 (https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf)."
                 }
         test_bh_expected = {
-                "Code/Subdivision change": "Subdivision layout: 12 regions (see below) -> 5 governorates.",
+                "Code/Subdivision Change": "Subdivision layout: 12 regions (see below) -> 5 governorates.",
                 "Date Issued": "2007-04-17",
-                "Description of change in newsletter": "Modification of the administrative structure.",
+                "Description of Change in Newsletter": "Modification of the administrative structure.",
                 "Edition/Newsletter": "Newsletter I-8 (https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf)."
                 }
         test_gd_expected = {
-                "Code/Subdivision change": "Subdivisions added: 6 parishes, 1 dependency.",
+                "Code/Subdivision Change": "Subdivisions added: 6 parishes, 1 dependency.",
                 "Date Issued": "2007-04-17",
-                "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements.",
+                "Description of Change in Newsletter": "Addition of the administrative subdivisions and of their code elements.",
                 "Edition/Newsletter": "Newsletter I-8 (https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf)."
                 }
         test_sm_expected = {
-                "Code/Subdivision change": "Subdivisions added: 9 municipalities.",
+                "Code/Subdivision Change": "Subdivisions added: 9 municipalities.",
                 "Date Issued": "2007-04-17",
-                "Description of change in newsletter": "Addition of the administrative subdivisions and of their code elements.",
+                "Description of Change in Newsletter": "Addition of the administrative subdivisions and of their code elements.",
                 "Edition/Newsletter": "Newsletter I-8 (https://web.archive.org/web/20120330105926/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf)."
                 }
 
@@ -353,27 +353,27 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 
         #expected test outputs
         test_cn_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2021-11-25",
-                "Description of change in newsletter": "Change of spelling of CN-NX; Update List Source.",
+                "Description of Change in Newsletter": "Change of spelling of CN-NX; Update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
         test_et_expected = {
-                "Code/Subdivision change": "Subdivisions added: ET-SI Sidama.",
+                "Code/Subdivision Change": "Subdivisions added: ET-SI Sidama.",
                 "Date Issued": "2021-11-25",
-                "Description of change in newsletter": "Addition of regional state ET-SI; Update List Source.",
+                "Description of Change in Newsletter": "Addition of regional state ET-SI; Update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:ET)."
                 }
         test_np_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2021-11-25",
-                "Description of change in newsletter": "Change of spelling of NP-P5; Modification of remark part 2; Update List Source.",
+                "Description of Change in Newsletter": "Change of spelling of NP-P5; Modification of remark part 2; Update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:NP)."
                 }
         test_ss_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2021-11-25",
-                "Description of change in newsletter": "Typographical correction of SS-BW (deletion of the extra space between el and Ghazal).",
+                "Description of Change in Newsletter": "Typographical correction of SS-BW (deletion of the extra space between el and Ghazal).",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
 
@@ -394,31 +394,31 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_2021['NP'][0], test_np_expected, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_year_2021['SS'][0], test_ss_expected, "Expected and observed outputs do not match.")
 #4.)
-        test_request_year_2004_2009 = requests.get(self.year_base_url + test_year_2004_2009, headers=self.user_agent_header).json() #2004 (updated 2004-2009)
+        test_request_year_2004_2009 = requests.get(self.year_base_url + test_year_2004_2009, headers=self.user_agent_header).json() #2004-2009
 
         #expected test outputs
         test_af_expected = {
-                "Code/Subdivision change": "Subdivisions added: AF-DAY Dāykondī AF-PAN Panjshīr.",
+                "Code/Subdivision Change": "Subdivisions added: AF-DAY Dāykondī AF-PAN Panjshīr.",
                 "Date Issued": "2005-09-13",
-                "Description of change in newsletter": "Addition of 2 provinces. Update of list source.",
+                "Description of Change in Newsletter": "Addition of 2 provinces. Update of list source.",
                 "Edition/Newsletter": "Newsletter I-7 (https://web.archive.org/web/20081218103217/http://www.iso.org/iso/iso_3166-2_newsletter_i-7_en.pdf)."
                 }
         test_co_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2004-03-08",
-                "Description of change in newsletter": "Change of name of CO-DC.",
+                "Description of Change in Newsletter": "Change of name of CO-DC.",
                 "Edition/Newsletter": "Newsletter I-6 (https://web.archive.org/web/20120112041245/http://www.iso.org/iso/iso_3166-2_newsletter_i-6_en.pdf)."
                 }
         test_kp_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2004-03-08",
-                "Description of change in newsletter": "Spelling correction in header of list source.",
+                "Description of Change in Newsletter": "Spelling correction in header of list source.",
                 "Edition/Newsletter": "Newsletter I-6 (https://web.archive.org/web/20120112041245/http://www.iso.org/iso/iso_3166-2_newsletter_i-6_en.pdf)."
                 }
         test_za_expected = {
-                "Code/Subdivision change": "Codes: Gauteng: ZA-GP -> ZA-GT KwaZulu-Natal: ZA-ZN -> ZA-NL.",
+                "Code/Subdivision Change": "Codes: Gauteng: ZA-GP -> ZA-GT KwaZulu-Natal: ZA-ZN -> ZA-NL.",
                 "Date Issued": "2007-12-13",
-                "Description of change in newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter).",
+                "Description of Change in Newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter).",
                 "Edition/Newsletter": "ISO 3166-2:2007 (http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718)."
                 }
 
@@ -447,27 +447,27 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 
         #expected test outputs
         test_cl_expected = {
-                "Code/Subdivision change": "Subdivisions added: CL-NB Ñuble.",
+                "Code/Subdivision Change": "Subdivisions added: CL-NB Ñuble.",
                 "Date Issued": "2018-11-26",
-                "Description of change in newsletter": "Addition of region CL-NB; Update List Source.",
+                "Description of Change in Newsletter": "Addition of region CL-NB; Update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:CL)."
                 }
         test_gh_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2020-11-24",
-                "Description of change in newsletter": "Correction of the Code Source.",
+                "Description of Change in Newsletter": "Correction of the Code Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
         test_sa_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2018-11-26",
-                "Description of change in newsletter": "Change of subdivision category from province to region.",
+                "Description of Change in Newsletter": "Change of subdivision category from province to region.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:SA)."
                 }
         test_ve_expected = {
-                "Code/Subdivision change": "Subdivisions renamed: VE-X Vargas -> La Guaira.",
+                "Code/Subdivision Change": "Subdivisions renamed: VE-X Vargas -> La Guaira.",
                 "Date Issued": "2020-11-24",
-                "Description of change in newsletter": "Change of subdivision name of VE-X; Update List Source; Correction of the Code Source.",
+                "Description of Change in Newsletter": "Change of subdivision name of VE-X; Update List Source; Correction of the Code Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:VE)."
                 }
 
@@ -499,36 +499,36 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 
         #expected test outputs
         test_ca_expected = {
-                "Code/Subdivision change": "Subdivisions added: CA-NU Nunavut.",
+                "Code/Subdivision Change": "Subdivisions added: CA-NU Nunavut.",
                 "Date Issued": "2000-06-21",
-                "Description of change in newsletter": "Addition of 1 new territory.",
+                "Description of Change in Newsletter": "Addition of 1 new territory.",
                 "Edition/Newsletter": "Newsletter I-1 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_i-1_en.pdf)."
                 }
         test_it_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2000-06-21",
-                "Description of change in newsletter": "Correction of spelling mistakes of names of 2 provinces.",
+                "Description of Change in Newsletter": "Correction of spelling mistakes of names of 2 provinces.",
                 "Edition/Newsletter": "Newsletter I-1 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_i-1_en.pdf)."
                 }
         test_ro_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2000-06-21",
-                "Description of change in newsletter": "Correction of spelling mistake of subdivision category in header.",
+                "Description of Change in Newsletter": "Correction of spelling mistake of subdivision category in header.",
                 "Edition/Newsletter": "Newsletter I-1 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_i-1_en.pdf)."
                 }
         test_tr_expected = {
-                "Code/Subdivision change": "Subdivisions added: TR-80 Osmaniye.",
+                "Code/Subdivision Change": "Subdivisions added: TR-80 Osmaniye.",
                 "Date Issued": "2000-06-21",
-                "Description of change in newsletter": "Addition of 1 new province. Correction of 2 spelling errors.",
+                "Description of Change in Newsletter": "Addition of 1 new province. Correction of 2 spelling errors.",
                 "Edition/Newsletter": "Newsletter I-1 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_i-1_en.pdf)."
                 }
 
         #expected key outputs
-        test_year_lt_2002_keys = ['BY', 'CA', 'DO', 'ER', 'ES', 'IT', 'KR', 'NG', 'PL', 'RO', 'RU', 'TR', 'VN']
+        test_year_lt_2002_keys = ['BY', 'CA', 'DO', 'ER', 'ES', 'IT', 'KR', 'NG', 'PL', 'RO', 'RU', 'TR', 'VA', 'VN']
 
         self.assertIsInstance(test_request_year_lt_2002, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_year_lt_2002)))
         self.assertEqual(list(test_request_year_lt_2002), test_year_lt_2002_keys, "Expected keys of output dict from API do not match, got {}.".format(list(test_request_year_lt_2002)))
-        self.assertEqual(len(list(test_request_year_lt_2002)), 13, "Expected there to be 13 output objects from API call, got {}.".format(len(list(test_request_year_lt_2002))))
+        self.assertEqual(len(list(test_request_year_lt_2002)), 14, "Expected there to be 14 output objects from API call, got {}.".format(len(list(test_request_year_lt_2002))))
         for alpha2 in list(test_request_year_lt_2002):
                 for row in range(0, len(test_request_year_lt_2002[alpha2])):
                         self.assertEqual(list(test_request_year_lt_2002[alpha2][row].keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(test_request_year_lt_2002[alpha2][row].keys())))
@@ -570,9 +570,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         
         #expected test outputs
         test_ad_2015_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2015-11-27",
-                "Description of change in newsletter": "Update List Source.",
+                "Description of Change in Newsletter": "Update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:AD)."
                 }
 
@@ -592,9 +592,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 
         #expected test outputs
         test_es_2002_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2002-12-10",
-                "Description of change in newsletter": "Error correction: Regional subdivision indicator corrected in ES-PM.",
+                "Description of Change in Newsletter": "Error correction: Regional subdivision indicator corrected in ES-PM.",
                 "Edition/Newsletter": "Newsletter I-4 (https://web.archive.org/web/20081218103210/http://www.iso.org/iso/iso_3166-2_newsletter_i-4_en.pdf)."
                 }
 
@@ -614,9 +614,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 
         #expected test outputs
         test_hr_2011_expected = {
-                "Code/Subdivision change": "",
-                "Date Issued": "2011-12-15",
-                "Description of change in newsletter": "Alphabetical re-ordering.",
+                "Code/Subdivision Change": "",
+                "Date Issued": "2011-12-13 (corrected 2011-12-15)",
+                "Description of Change in Newsletter": "Alphabetical re-ordering.",
                 "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)."
                 }
 
@@ -627,8 +627,8 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 for row in range(0, len(test_hr_2011_request[alpha2])):
                         self.assertEqual(list(test_hr_2011_request[alpha2][row].keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(test_hr_2011_request[alpha2][row].keys())))
                         self.assertIsInstance(test_hr_2011_request[alpha2][row], dict, "Expected output row of object of API to be of type dict, got {}.".format(type(test_hr_2011_request[alpha2][row])))
-                        self.assertEqual(datetime.strptime(test_hr_2011_request[alpha2][row]["Date Issued"], "%Y-%m-%d").year, 2011, 
-                                "Year in Date Issued column does not match expected 2011, got {}.".format(datetime.strptime(test_hr_2011_request[alpha2][row]["Date Issued"], "%Y-%m-%d").year))
+                        self.assertEqual(datetime.strptime(re.sub("[(].*[)]", "", test_hr_2011_request[alpha2][row]["Date Issued"]).replace(' ', "").replace(".", ''), "%Y-%m-%d").year, 2011, 
+                                "Year in Date Issued column does not match expected 2011, got {}.".format(datetime.strptime(re.sub("[(].*[)]", "", test_hr_2011_request[alpha2][row]["Date Issued"]).replace(' ', "").replace(".", ''), "%Y-%m-%d").year))
         self.assertIsInstance(test_hr_2011_request[test_hr_2011[0]], list, "Expected output object of API to be of type list, got {}.".format(type(test_hr_2011_request[test_hr_2011[0]])))
         self.assertEqual(test_hr_2011_expected, test_hr_2011_request[test_hr_2011[0]][0], "Observed and expected outputs of API do not match.")
 #4.) 
@@ -636,9 +636,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 
         #expected test outputs
         test_ma_lt_2019_expected = {
-                "Code/Subdivision change": "Spelling change: MA-05 Béni-Mellal-Khénifra -> Béni Mellal-Khénifra Location change: MA-ESM Es-Semara (EH) -> Es-Semara (EH-partial).",
+                "Code/Subdivision Change": "Spelling change: MA-05 Béni-Mellal-Khénifra -> Béni Mellal-Khénifra Location change: MA-ESM Es-Semara (EH) -> Es-Semara (EH-partial).",
                 "Date Issued": "2018-11-26",
-                "Description of change in newsletter": "",
+                "Description of Change in Newsletter": "Change of spelling of MA-05; Change of (EH) to (EH-partial) for MA-ESM; Correction of the romanization system label.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:MA)."
                 }
         
@@ -649,8 +649,8 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 for row in range(0, len(test_ma_lt_2019_request[alpha2])):
                         self.assertEqual(list(test_ma_lt_2019_request[alpha2][row].keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(test_ma_lt_2019_request[alpha2][row].keys())))
                         self.assertIsInstance(test_ma_lt_2019_request[alpha2][row], dict, "Expected output row of object of API to be of type dict, got {}.".format(type(test_ma_lt_2019_request[alpha2][row])))
-                        self.assertTrue(datetime.strptime(test_ma_lt_2019_request[alpha2][row]["Date Issued"], '%Y-%m-%d').year < 2019, 
-                                "Expected year of updates output to be less than 2019, got {}.".format(test_ma_lt_2019_request[alpha2][row]["Date Issued"]))        
+                        self.assertTrue(datetime.strptime(re.sub("[(].*[)]", "", test_ma_lt_2019_request[alpha2][row]["Date Issued"]).replace(' ', "").replace(".", ''), '%Y-%m-%d').year < 2019, 
+                                "Expected year of updates output to be less than 2019, got {}.".format(re.sub("[(].*[)]", "", test_ma_lt_2019_request[alpha2][row]["Date Issued"]).replace(' ', "").replace(".", '')))        
         self.assertIsInstance(test_ma_lt_2019_request[test_ma_2019[0]], list, "Expected output object of API to be of type list, got {}".format(type(test_ma_lt_2019_request[test_ma_2019[0]])))
         self.assertEqual(test_ma_lt_2019_expected, test_ma_lt_2019_request[test_ma_2019[0]][0], "Observed and expected outputs of API do not match.")
 #5.) 
@@ -658,9 +658,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         
         #expected test outputs 
         test_tr_gt_2002_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2022-07-11",
-                "Description of change in newsletter": "Change of the short and full name.",
+                "Description of Change in Newsletter": "Change of the short and full name.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
 
@@ -671,7 +671,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 for row in range(0, len(test_tr_gt_2002_request[alpha2])):
                         self.assertEqual(list(test_tr_gt_2002_request[alpha2][row].keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(test_tr_gt_2002_request[alpha2][row].keys())))
                         self.assertIsInstance(test_tr_gt_2002_request[alpha2][row], dict, "Expected output row of object of API to be of type dict, got {}.".format(type(test_tr_gt_2002_request[alpha2][row])))
-                        self.assertTrue(datetime.strptime(test_tr_gt_2002_request[alpha2][row]["Date Issued"], '%Y-%m-%d').year >= 2002, 
+                        self.assertTrue(datetime.strptime(re.sub("[(].*[)]", "", test_tr_gt_2002_request[alpha2][row]["Date Issued"]).replace(' ', "").replace(".", ''), '%Y-%m-%d').year >= 2002, 
                                 "Expected year of updates output to be greater than 2002, got {}.".format(test_tr_gt_2002_request[alpha2][row]["Date Issued"]))  
         self.assertIsInstance(test_tr_gt_2002_request[test_tr_2002[0]], list, "Expected output object of API to be of type list, got {}.".format(type(test_tr_gt_2002_request[test_tr_2002[0]])))
         self.assertEqual(test_tr_gt_2002_expected, test_tr_gt_2002_request[test_tr_2002[0]][0], "Observed and expected outputs of API do not match.")
@@ -698,6 +698,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_name_mali_nicaragua = "Mali, Nicaragua"
         test_name_error1 = "ABCDEF"
         test_name_error2 = "12345"
+        #need to convert country names from iso3166 package to their more conventional names
         name_exceptions_converted = {"Brunei Darussalam": "Brunei", "Bolivia, Plurinational State of": "Bolivia", 
                                      "Bonaire, Sint Eustatius and Saba": "Caribbean Netherlands", "Congo, Democratic Republic of the": "DR Congo",
                                      "Congo": "Republic of the Congo", "Côte d'Ivoire": "Ivory Coast", "Cabo Verde": "Cape Verde", "Falkland Islands (Malvinas)": 
@@ -726,14 +727,14 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_bj = requests.get(self.name_base_url + test_name_benin, headers=self.user_agent_header).json() #Benin
 
         test_name_bj_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2020-11-24",
-                "Description of change in newsletter": "Correction of the Code Source.",
+                "Description of Change in Newsletter": "Correction of the Code Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
 
         self.assertIsInstance(test_request_bj, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_bj)))
-        self.assertIsInstance(test_request_bj["BJ"], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_bj["BJ"])))
+        self.assertIsInstance(test_request_bj["BJ"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_bj["BJ"])))
         self.assertEqual(list(test_request_bj.keys()), ["BJ"], "Expected parent key does not match output, got {}.".format(list(test_request_bj.keys())))
         for row in test_request_bj["BJ"]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
@@ -743,14 +744,14 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_tj = requests.get(self.name_base_url + test_name_tajikistan, headers=self.user_agent_header).json() #Tajikistan
 
         test_name_tj_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2020-11-24",
-                "Description of change in newsletter": "Correction of the Code Source.",
+                "Description of Change in Newsletter": "Correction of the Code Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
         
         self.assertIsInstance(test_request_tj, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_tj)))
-        self.assertIsInstance(test_request_tj["TJ"], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_tj["TJ"])))
+        self.assertIsInstance(test_request_tj["TJ"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_tj["TJ"])))
         self.assertEqual(list(test_request_tj.keys()), ["TJ"], "Expected parent key does not match output, got {}.".format(list(test_request_tj.keys())))
         for row in test_request_tj["TJ"]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
@@ -760,38 +761,38 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_sd = requests.get(self.name_base_url + test_name_sudan, headers=self.user_agent_header).json() #Sudan
 
         test_name_sd_expected = {
-                "Code/Subdivision change": "Spelling changes: SD-DC Wasaţ Dārfūr Zālinjay -> Wasaţ Dārfūr SD-KN Shiamāl Kurdufān -> Shamāl Kurdufān.",
+                "Code/Subdivision Change": "Spelling changes: SD-DC Wasaţ Dārfūr Zālinjay -> Wasaţ Dārfūr SD-KN Shiamāl Kurdufān -> Shamāl Kurdufān.",
                 "Date Issued": "2020-11-24",
-                "Description of change in newsletter": "Typographical correction of subdivision name of SD-KN, SD-DC; Addition of local variation of SD-DC.",
+                "Description of Change in Newsletter": "Typographical correction of subdivision name of SD-KN, SD-DC; Addition of local variation of SD-DC.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:SD)."
                 }
         
         self.assertIsInstance(test_request_sd, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_sd)))
-        self.assertIsInstance(test_request_sd["SD"], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_sd["SD"])))
+        self.assertIsInstance(test_request_sd["SD"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_sd["SD"])))
         self.assertEqual(list(test_request_sd.keys()), ["SD"], "Expected parent key does not match output, got {}.".format(list(test_request_sd.keys())))
         for row in test_request_sd["SD"]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
-        self.assertEqual(len(test_request_sd["SD"]), 7, "Expected there to be 7 elements in output object, got {}.".format(len(test_request_sd["SD"])))
+        self.assertEqual(len(test_request_sd["SD"]), 6, "Expected there to be 7 elements in output object, got {}.".format(len(test_request_sd["SD"])))
         self.assertEqual(test_request_sd["SD"][0], test_name_sd_expected, "Expected and observed outputs do not match.")
 #5.)
         test_request_ml_ni = requests.get(self.name_base_url + test_name_mali_nicaragua, headers=self.user_agent_header).json() #Mali, Nicaragua 
 
         test_name_ml_ni_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2017-11-23",
-                "Description of change in newsletter": "Addition of regions ML-9, ML-10; update List Source.",
+                "Description of Change in Newsletter": "Addition of regions ML-9, ML-10; update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
         test_name_ml_ni_expected_2 = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2020-11-24",
-                "Description of change in newsletter": "Correction of the Code Source.",
+                "Description of Change in Newsletter": "Correction of the Code Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
         
         self.assertIsInstance(test_request_ml_ni, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_ml_ni)))
-        self.assertIsInstance(test_request_ml_ni["ML"], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_ml_ni["ML"])))
-        self.assertIsInstance(test_request_ml_ni["NI"], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_ml_ni["NI"])))
+        self.assertIsInstance(test_request_ml_ni["ML"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_ml_ni["ML"])))
+        self.assertIsInstance(test_request_ml_ni["NI"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_ml_ni["NI"])))
         self.assertEqual(list(test_request_ml_ni.keys()), ["ML", "NI"], "Expected parent key does not match output, got {}.".format(list(test_request_ml_ni.keys())))
         for code in test_request_ml_ni:
                 for row in test_request_ml_ni[code]:
@@ -831,14 +832,14 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_egypt_2014 = requests.get(self.name_base_url + test_name_egypt_2014[0] + "/year/" + test_name_egypt_2014[1], headers=self.user_agent_header).json() #Egypt 2014
 
         test_name_egypt_2014_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2014-10-29",
-                "Description of change in newsletter": "Delete EG-HU and EG-SU; update List Source.",
+                "Description of Change in Newsletter": "Delete EG-HU and EG-SU; update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
         
         self.assertIsInstance(test_request_egypt_2014, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_egypt_2014)))
-        self.assertIsInstance(test_request_egypt_2014["EG"], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_egypt_2014["EG"])))
+        self.assertIsInstance(test_request_egypt_2014["EG"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_egypt_2014["EG"])))
         self.assertEqual(list(test_request_egypt_2014.keys()), ["EG"], "Expected parent key does not match output, got {}.".format(list(test_request_egypt_2014.keys())))
         for code in test_request_egypt_2014:
                 for row in test_request_egypt_2014[code]:
@@ -849,14 +850,14 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_indonesia_2022 = requests.get(self.name_base_url + test_name_indonesia_2022[0] + "/year/" + test_name_indonesia_2022[1], headers=self.user_agent_header).json() #Indonesia 2022
 
         test_name_indonesia_2022_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2022-11-29",
-                "Description of change in newsletter": "Addition of provinces ID-PE, ID-PS and ID-PT; Update List Source.",
+                "Description of Change in Newsletter": "Addition of provinces ID-PE, ID-PS and ID-PT; Update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
 
         self.assertIsInstance(test_request_indonesia_2022, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_indonesia_2022)))
-        self.assertIsInstance(test_request_indonesia_2022["ID"], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_indonesia_2022["ID"])))
+        self.assertIsInstance(test_request_indonesia_2022["ID"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_indonesia_2022["ID"])))
         self.assertEqual(list(test_request_indonesia_2022.keys()), ["ID"], "Expected parent key does not match output, got {}.".format(list(test_request_indonesia_2022.keys())))
         for code in test_request_indonesia_2022:
                 for row in test_request_indonesia_2022[code]:
@@ -867,14 +868,14 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_japan_gt_2018 = requests.get(self.name_base_url + test_name_japan_gt_2018[0] + "/year/" + test_name_japan_gt_2018[1], headers=self.user_agent_header).json() #Japan >2018
 
         test_name_japan_gt_2018_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2018-11-26",
-                "Description of change in newsletter": "Correction of the romanization system label.",
+                "Description of Change in Newsletter": "Correction of the romanization system label.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
 
         self.assertIsInstance(test_request_japan_gt_2018, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_japan_gt_2018)))
-        self.assertIsInstance(test_request_japan_gt_2018["JP"], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_japan_gt_2018["JP"])))
+        self.assertIsInstance(test_request_japan_gt_2018["JP"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_japan_gt_2018["JP"])))
         self.assertEqual(list(test_request_japan_gt_2018.keys()), ["JP"], "Expected parent key does not match output, got {}.".format(list(test_request_japan_gt_2018.keys())))
         for code in test_request_japan_gt_2018:
                 for row in test_request_japan_gt_2018[code]:
@@ -885,54 +886,54 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_kiribati_lesotho_lt_2012 = requests.get(self.name_base_url + test_name_kiribati_lesotho_lt_2012[0] + "/year/" + test_name_kiribati_lesotho_lt_2012[1], headers=self.user_agent_header).json() #Kiribati, Lesotho <2012
 
         test_name_kiribati_lesotho_lt_2012_expected = {
-                "Code/Subdivision change": "",
+                "Code/Subdivision Change": "",
                 "Date Issued": "2009-03-03",
-                "Description of change in newsletter": "Addition of administrative language Gilbertese (-, gil).",
+                "Description of Change in Newsletter": "Addition of administrative language Gilbertese (-, gil).",
                 "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
         test_name_kiribati_lesotho_lt_2012_expected_2 = {
-                "Code/Subdivision change": "",
-                "Date Issued": "2011-12-15",
-                "Description of change in newsletter": "Addition of local generic administrative term, update of the official languages according to ISO 3166-2 and source list update.",
+                "Code/Subdivision Change": "",
+                "Date Issued": "2011-12-13 (corrected 2011-12-15)",
+                "Description of Change in Newsletter": "Addition of local generic administrative term, update of the official languages according to ISO 3166-2 and source list update.",
                 "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)."
                 }
         
         self.assertIsInstance(test_request_kiribati_lesotho_lt_2012, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_kiribati_lesotho_lt_2012)))
-        self.assertIsInstance(test_request_kiribati_lesotho_lt_2012["KI"], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_kiribati_lesotho_lt_2012["KI"])))
-        self.assertIsInstance(test_request_kiribati_lesotho_lt_2012["LS"], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_kiribati_lesotho_lt_2012["LS"])))
+        self.assertIsInstance(test_request_kiribati_lesotho_lt_2012["KI"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_kiribati_lesotho_lt_2012["KI"])))
+        self.assertIsInstance(test_request_kiribati_lesotho_lt_2012["LS"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_kiribati_lesotho_lt_2012["LS"])))
         self.assertEqual(list(test_request_kiribati_lesotho_lt_2012.keys()), ["KI", "LS"], "Expected parent key does not match output, got {}.".format(list(test_request_kiribati_lesotho_lt_2012.keys())))
         for code in test_request_kiribati_lesotho_lt_2012:
                 for row in test_request_kiribati_lesotho_lt_2012[code]:
                         self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
         self.assertEqual(len(test_request_kiribati_lesotho_lt_2012["KI"]), 1, "Expected there to be 1 element in output object, got {}.".format(len(test_request_kiribati_lesotho_lt_2012["KI"])))
-        self.assertEqual(len(test_request_kiribati_lesotho_lt_2012["LS"]), 2, "Expected there to be 3 elements in output object, got {}.".format(len(test_request_kiribati_lesotho_lt_2012["LS"])))
+        self.assertEqual(len(test_request_kiribati_lesotho_lt_2012["LS"]), 1, "Expected there to be 3 elements in output object, got {}.".format(len(test_request_kiribati_lesotho_lt_2012["LS"])))
         self.assertEqual(test_request_kiribati_lesotho_lt_2012["KI"][0], test_name_kiribati_lesotho_lt_2012_expected, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_kiribati_lesotho_lt_2012["LS"][0], test_name_kiribati_lesotho_lt_2012_expected_2, "Expected and observed outputs do not match.")
 #5.)
         test_request_malta_nepal_2007_2011 = requests.get(self.name_base_url + test_name_malta_nepal_2007_2011[0] + "/year/" + test_name_malta_nepal_2007_2011[1], headers=self.user_agent_header).json() #Malta, Nepal 2007-2011
 
         test_name_malta_nepal_2007_2011_expected = {
-                "Code/Subdivision change": "Subdivisions added: 68 local councils.",
+                "Code/Subdivision Change": "Subdivisions added: 68 local councils.",
                 "Date Issued": "2007-11-28",
-                "Description of change in newsletter": "Addition of administrative subdivisions and of their code elements.",
+                "Description of Change in Newsletter": "Addition of administrative subdivisions and of their code elements.",
                 "Edition/Newsletter": "Newsletter I-9 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/newsletter_i-9.pdf)."
                 }
         test_name_malta_nepal_2007_2011_expected_2 = {
-                "Code/Subdivision change": "",
-                "Date Issued": "2011-12-15",
-                "Description of change in newsletter": "First level prefix addition, language adjustment, comment addition, deletion of the romanization system and source list update.",
+                "Code/Subdivision Change": "",
+                "Date Issued": "2011-12-13 (corrected 2011-12-15)",
+                "Description of Change in Newsletter": "First level prefix addition, language adjustment, comment addition, deletion of the romanization system and source list update.",
                 "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)."
                 }
         
         self.assertIsInstance(test_request_malta_nepal_2007_2011, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_malta_nepal_2007_2011)))
-        self.assertIsInstance(test_request_malta_nepal_2007_2011["MT"], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_malta_nepal_2007_2011["MT"])))
-        self.assertIsInstance(test_request_malta_nepal_2007_2011["NP"], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_malta_nepal_2007_2011["NP"])))
+        self.assertIsInstance(test_request_malta_nepal_2007_2011["MT"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_malta_nepal_2007_2011["MT"])))
+        self.assertIsInstance(test_request_malta_nepal_2007_2011["NP"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_malta_nepal_2007_2011["NP"])))
         self.assertEqual(list(test_request_malta_nepal_2007_2011.keys()), ["MT", "NP"], "Expected parent key does not match output, got {}.".format(list(test_request_malta_nepal_2007_2011.keys())))
         for code in test_request_malta_nepal_2007_2011:
                 for row in test_request_malta_nepal_2007_2011[code]:
                         self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
         self.assertEqual(len(test_request_malta_nepal_2007_2011["MT"]), 1, "Expected there to be 1 element in output object, got {}.".format(len(test_request_malta_nepal_2007_2011["MT"])))
-        self.assertEqual(len(test_request_malta_nepal_2007_2011["NP"]), 4, "Expected there to be 3 elements in output object, got {}.".format(len(test_request_malta_nepal_2007_2011["NP"])))
+        self.assertEqual(len(test_request_malta_nepal_2007_2011["NP"]), 4, "Expected there to be 4 elements in output object, got {}.".format(len(test_request_malta_nepal_2007_2011["NP"])))
         self.assertEqual(test_request_malta_nepal_2007_2011["MT"][0], test_name_malta_nepal_2007_2011_expected, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_malta_nepal_2007_2011["NP"][0], test_name_malta_nepal_2007_2011_expected_2, "Expected and observed outputs do not match.")
 #6.)

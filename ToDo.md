@@ -40,7 +40,7 @@
 - [X] Update get_updates comments.
 - [X] In code & comments change any var refereneces to "iso" to "iso3166" for clarification.
 - [X] API can accept year input with greater or less than symbol.
-- [ ] Main software can accept year input with greater or less than symbol.
+- [X] Main software can accept year input with greater or less than symbol.
 - [X] Date missing from some elements of json in API.
 - [X] Incorporate fix that takes into account multiple changes tables: e.g https://en.wikipedia.org/wiki/ISO_3166-2:PA
 - [X] Some files saving as e.g "iso3166-updates-AD-[].csv" or "iso3166-updates-AD-.csv"
@@ -54,7 +54,7 @@
 - [X] AM, GM, GH, ZM, AT, BN, BT, CG, CU, CY, DZ, EE, FM, IQ, IS, KI, KP, KZ, LT, NA, SI, SM, ST, SZ, TJ, TT missing 
 Edition/Newsletter - should be OBP.
 - [X] QA missing Edition/Newsletter - should be OBP.
-- [ ] AF, BW, CZ - ensure that newlines in a column are not being concatted into one.
+- [X] AF, BW, CZ - ensure that newlines in a column are not being concatted into one.
 - [X] Add demo link to Colab to readme
 - [X] Remove info about ISO3166-1 from intro on readme
 - [X] Go over year input parameter in software. 
@@ -66,7 +66,7 @@ Edition/Newsletter - should be OBP.
 - [X] For all unit tests add country name beside alpha2 code & change e.g test_alpha1_code -> test_ad_code
 - [X] Add how to use API using Python requests in ReadMe of api folder.
 - [X] In API, for year param, if country has rows for selected year/year range, remove from output, rather than having [ ].
-- [ ] Add space between colon and next char, e.g KE - "Deleted codes:KE-110, KE-200, KE-3" (has negative effect on some other update entries, destructive action)
+- [X] Add space between colon and next char, e.g KE - "Deleted codes:KE-110, KE-200, KE-3" (has negative effect on some other update entries, destructive action)
 - [X] For unit tests: output single row of expected dataframe to array (e.g sn_updates_df.iloc[1].to_numpy()).
 - [ ] Add Code Coverage.
 - [ ] Add green MIT logo to Readme (https://shields.io/category/license).
@@ -155,7 +155,7 @@ Edition/Newsletter - should be OBP.
 - [X] Convert alpha2/alpha3 to alpha-2/alpha-3 in test modules.
 - [X] Update and add some more examples to api.md.
 - [X] Run vulture library to search package and remove any unused code/vars.
-- [ ] Pull request for django-countries (https://github.com/SmileyChris/django-countries/tree/main). Update data.py and __init__.py using iso3166_2.json to get list of subdivision names and flags.
+- [X] Pull request for django-countries (https://github.com/SmileyChris/django-countries/tree/main). Update data.py and __init__.py using iso3166_2.json to get list of subdivision names and flags.
 - [X] For tableToArray test, pass in wrong data type, int, bool etc.
 - [X] Combine error tests of same type into one Test case.
 - [X] In get_updates_df(), provide validation if input array parameter isnt array/list.
@@ -220,28 +220,55 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Might need to change up GCP Cloud arch to incorporate running selenium on cloud. Put check-for-updates func in Docker container. Test process using a simple app.
 - [X] Update api.md file, need to add example of using /name path. Update readme about list of endpoints to include /name.
 - [X] Add unit tests for name endpoint - can take from iso3166-2 unit tests for name.
-- [ ] Create notebook for get_all script, easier to run and follow - download notebook and put in repo.
 - [X] Remove double spacing from string: import re, re.sub(' +', ' ', 'The     quick brown    fox').
 - [X] Try recreating the driver on each iteration - https://stackoverflow.com/questions/58968078/max-retries-exceeded-with-url-selenium.
 - [X] Add use_selenium flag to just get wiki data not selenium, add to check-for-updates func.
 - [X] Add get_driver() function from check-for-updates to main file on repo.
 - [X] Mention check-for-updates microservice in readme.
-- [ ] Rerun get all script to remove some instances of double spacing, e.g "AZ".
+- [X] Rerun get all script to remove some instances of double spacing, e.g "AZ".
 - [X] Mention selenium required as a session is needed for ISO website and both data sources in readme.
-- [ ] Outstanding error in check-for-updates, new updates not being uploaded.
+- [X] Outstanding error in check-for-updates, new updates not being uploaded.
 - [X] updates.json not importing correctly in module.
 - [X] Make output of .year() function subscriptable, using Map class.
 - [X] Remove space after colon in Parameters & Returns comments in each function.
 - [X] Add API path /name/input_name/year/2015. Add unit tests.
 - [ ] Add GitHub release of software once repo is public.
-- [ ] Test check-for-updates with use_selenium=False.
+- [X] Test check-for-updates with use_selenium=False.
 - [ ] Add link to medium article on readme.
 - [X] In check-for-updates for AD, earlier table being pulled.
 - [ ] Test check-for-updates on get_latest_updates notebook.
 - [ ] Have a look over varnames and see if some can be changed into more intutive names.
 - [ ] In check-for-updates readme mention how long it takes to execute Cloud Run app.
-- [ ] Currently check-for-updates app only checks for any updates in the month range, but add functionality that returns missing/old updates that should be in object.
-- [ ] Create new var called missing_historical_data, seperate these updates from ones in date range. Have section at bottom of GitHub Issue highlighting these historical missing data.
+- [X] Currently check-for-updates app only checks for any updates in the month range, but add functionality that returns missing/old updates that should be in object.
+- [X] Create new var called missing_historical_data, seperate these updates from ones in date range. Have section at bottom of GitHub Issue highlighting these historical missing data.
+- [ ] Double check colab example again.
+- [ ] Rerun notebook example once new updates json added to software.
+- [X] Create notebook for get_all script, easier to run and follow - download notebook and put in repo.
+- [X] test check-for-updates with subsample of alpha-2 codes including FJ.
+- [X] Update object in bucket regardless of new date range changes but keep var that tracks object for create_issue func.
+- [X] https://en.wikipedia.org/wiki/ISO_3166-2:NO has "Changes Made" column instead of "" 
+- [X] For env vars in gcloud beta run, change "github-repo" to "github_repo"
+- [X] Mention in check-for-updates readme/comments that the app doesnt just check for udpates in month range but also overall missing data/updates and that outputs are tabulated for each country.
+- [X] In check-for-updates, output all missing/new updates into a table.
+- [X] Rerun get_all script and update object is main source code dir.
+- [ ] Remove duplicate rows by Date Issued column, remove the one where Code/Subdivision Change & Description of change... is empty == "".
+- [X] In check-for-updates: validate env var exists (if environ.get('Foo') is not None), if not then skip command etc.
+- [X] Apply double-spacing removal func to each column in dataframe rather than at the table_to_array level.
+- [ ] Double check success message in check-for-updates.
+- [X] Outstanding error in check-for-updates: object not exporting correctly.
+- [ ] GitHub issue not being created - double check request size limit for post request.
+- [X] Double check no entires have both Subdivision Change & Descripton of change == "", if so then remove entry - KN.
+- [X] Updates with date corrected in Date Issued column. Add "Corrected" to Date Issued col, need to update api and software etc to remove "corrected" when searching for update. Searching for year will return both original and corrected.
+- [X] Replace dateColName var with hard coded "Date Issued".
+- [X] Any Date Issued with "corrected" in them will return the original date not corrected one.
+- [X] Create new col called CorrectedDateIssued, add to every update. After function to sort each update by Date Issued go through all CorrectedDateIssued columns, if empty drop column else append date to Date Issued col. 
+- [X] If Description of change, Code/Subdivion Change and Date Issued are similar, drop duplicate e.g Hondurus.
+- [ ] Year param in get_updates() func not working.
+- [X] Go through all unit tests, any tests that are wrapped in with.selfAssertRaises()... , remove var assignment and just call function.
+- [X] Comment out binary_location in get_all script.
+- [ ] Test empty table error by getting MZ from https://www.iso.org/obp/ui/#iso:code:3166:MZ (no updates listed), fix error in parse_updates_table func (IndexError: list index out of range).
+- [ ] When correcting date using re.sub, can just use that on all Date Issud values as it wont effect the outcome.
+- [ ] Test check-for-updates functionality on Colab notebook - updates don't seem to be propagating - don't need to run get_all updates cell, just upload json from iso3166_updates/iso3166-updates.json file.
 <!--
 Create new config, update config file
 gcloud api-gateway api-configs create NEW_CONFIG_ID --api=MY_API --openapi-spec=openapi2-functions.yaml 

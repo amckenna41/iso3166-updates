@@ -2,7 +2,7 @@ import os
 import sys
 import json
 import re
-import datetime
+from datetime import datetime
 import iso3166
 
 class ISO3166_Updates():
@@ -10,8 +10,8 @@ class ISO3166_Updates():
     This class is used to access all the ISO-3166 updates/changes data from it's respecrtive json
     created from the two data sources used in the get_all_iso3166_updates.py script. All of the 
     keys and objects in the JSON are accessible via dot notation using the Map class. Each
-    country has the attributes: Date Issued, Edition/Newsletter, Code/Subdivision change and
-    Description of change in newsletter. Currently there are 250 country's listed in the 
+    country has the attributes: Date Issued, Edition/Newsletter, Code/Subdivision Change and
+    Description of Change in Newsletter. Currently there are 250 country's listed in the 
     updates json with X of these having any changes/updates data.
     
     Parameters
@@ -153,9 +153,13 @@ class ISO3166_Updates():
                 country_output_dict[code] = []
                 for update in range(0, len(self.all[code])):
 
-                    #get year from Date Issued column of current ISO 3166 update, convert to str
-                    current_updates_year = str(datetime.datetime.strptime(self.all[code][update]["Date Issued"], '%Y-%m-%d').year)
-                    
+                    #convert year in Date Issued column to string of year, remove "corrected" date if applicable
+                    if ("corrected" in self.all[code][update]["Date Issued"]):
+                        current_updates_year = str(datetime.strptime(re.sub("[(].*[)]", "", self.all[code][update]["Date Issued"]).replace(' ', "").
+                                                        replace(".", '').replace('\n', ''), '%Y-%m-%d').year)
+                    else:
+                        current_updates_year = str(datetime.strptime(self.all[code][update]["Date Issued"].replace('\n', ''), '%Y-%m-%d').year)
+                        
                     #drop all rows in dict that are less than input year
                     if (greater_than):
                         if not (current_updates_year < input_year[0]):

@@ -24,7 +24,7 @@ jobs:
       - name: Export CLOUDSDK_PYTHON
         run: export CLOUDSDK_PYTHON="/usr/bin/python3"
 
-      #setup gcloud SDK with env vars
+      #setup and authenticate GCP SDK
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v0.2.0
         with:
@@ -34,69 +34,20 @@ jobs:
             # service_account_email: ${{ secrets.GCP_SA_EMAIL }}
             # service_account_key: ${{ secrets.GCP_SA_KEY }}
             export_default_credentials: true
-
-      - name: Creat Cloud Run
+        
+      #create Google Cloud Run app using Dockerfile that pulls all the latest ISO 3166 updates data and compares with existing object in GCP bucket,
+      #if updates are found after month date filter applied that aren't in object then they will be appended to it, delete Cloud Run app after
+      #execution to save on resources
+      - name: Create Cloud Run
         run: |
           cd iso3166-check-for-updates
-          docker build -t check_for_updates .
-          gcloud builds submit --tag gcr.io/iso3166-updates/check_for_updates
-          gcloud beta run deploy ${{ secrets.CLOUD_RUN_NAME }} --image gcr.io/iso3166-updates/check_for_updates \
-            --region ${{ secrets.REGION }}  --platform managed --memory 1024Mi --timeout 1800 --allow-unauthenticated \
-            --update-env-vars BUCKET_NAME=${{ secrets.BUCKET_NAME }},BLOB_NAME=${{ secrets.BLOB_NAME }},\
-            ARCHIVE_FOLDER=${{ secrets.ARCHIVE_FOLDER }},github-owner=${{ secrets.GITHUB_OWNER }},\
-            github-repo-1=${{ secrets.GITHUB_REPO_1 }},github-repo-2=${{ secrets.GITHUB_REPO_2 }},\
-            github-repo-3=${{ secrets.GITHUB_REPO_3 }},github-api-token=${{ secrets.GITHUB_API_TOKEN }} 
-          curl $(gcloud run services describe check-for-updates --platform managed --region ${{ secrets.REGION }} --format 'value(status.url)')
-          gcloud run services delete check-for-updates
-          
-# gcloud functions add-iam-policy-binding iso3166-updates --member=serviceAccount:${{ secrets.GCP_SA_EMAIL }} --role=roles/cloudfunctions.invoker
-# curl -H "Authorization: bearer $(gcloud auth print-identity-token)" ${{ secrets.GCP_CHECK_FOR_UPDATES_URL }}
-# curl -H "Authorization: bearer $(gcloud auth print-identity-token)" \
-# $(gcloud run services describe check-for-updates --platform managed --region us-central1 --format 'value(status.url)')
-
-# curl -m 460 -X POST https://us-central1-iso3166-updates.cloudfunctions.net/check-for-iso3166-updates \
-# -H "Authorization: bearer $(gcloud auth print-identity-token)" \
-# -H "Content-Type: application/json" \
-# -d '{}'
-
-#1.) https://cloud.google.com/functions/docs/securing/authenticating#functions-bearer-token-example-python
-#2.) curl -H "Authorization: bearer $(gcloud auth print-identity-token)" https://us-central1-iso3166-updates.cloudfunctions.net/check-for-iso3166-updates
-#3.)curl -m 460 -X POST https://us-central1-iso3166-updates.cloudfunctions.net/check-for-iso3166-updates \
-# -H "Authorization: bearer $(gcloud auth print-identity-token)" \
-# -H "Content-Type: application/json" \
-# -d '{}'
-
-#look up how to run docker container on github action
-
-#1.) Build Cloud run app using pre-built docker container on registry.
-
-#1.) If changes made in iso3166-check-for-updates repo then resubmit container to and rebuild.
-
-# - cd into check-for-updates and build docker container from there.
-
-#docker build -t check_for_updates .
-#docker run --rm -p 8080:8080 -e PORT=8080 check_for_updates
-#gcloud builds submit --tag gcr.io/iso3166-updates/check_for_updates
-#gcloud beta run deploy check-for-updates --image gcr.io/iso3166-updates/check_for_updates --region us-central1 --platform managed
-
-# Build Docker container using Dockerfile and Python image:
-#   ```bash
-#   docker build -t check_for_updates .
-#   ```
-  
-#   Submit Docker container to GCP container registry:
-#   ```bash
-#   gcloud builds submit --tag gcr.io/iso3166-updates/check_for_updates
-#   ```
-  
-#   Build and deploy Cloud Run application using Docker container:
-#   ```bash
-#   gcloud beta run deploy check-for-updates --image gcr.io/iso3166-updates/check_for_updates --region us-central1 --platform managed --memory 1024Mi --update-env-vars BUCKET_NAME="",BLOB_NAME="",ARCHIVE_FOLDER="",github-owner="",github-repo-1="",github-repo-2="",github-repo-3="",github-api-token=""
-#   ```
-  
-#   Delete Cloud Run application:
-#   ```bash
-#   gcloud run services delete check-for-updates
-#   ```
-
-# gcloud run services describe check-for-updates --platform managed --region us-central1 --format 'value(status.url)'
+          docker build -t ${{ secrets.CONTAINER_NAME }} .
+          gcloud builds submit --tag gcr.io/iso3166-updates/${{ secrets.CONTAINER_NAME }}
+          gcloud beta run deploy ${{ secrets.CLOUD_RUN_NAME }} --image gcr.io/iso3166-updates/${{ secrets.CONTAINER_NAME }} --region ${{ secrets.REGION }} \
+            --platform managed --memory 1024Mi --timeout 2700 --allow-unauthenticated --service-account ${{ secrets.GCP_SA_EMAIL}} \
+            --update-env-vars BUCKET_NAME=${{ secrets.BUCKET_NAME }},BLOB_NAME=${{ secrets.BLOB_NAME }}, \
+            ARCHIVE_FOLDER=${{ secrets.ARCHIVE_FOLDER }},GITHUB_OWNER=${{ secrets.GITHUB_OWNER }},\
+            GITHUB_REPO_1=${{ secrets.GITHUB_REPO_1 }},GITHUB_REPO_2=${{ secrets.GITHUB_REPO_2 }},\
+            GITHUB_REPO_3=${{ secrets.GITHUB_REPO_3 }},GITHUB_API_TOKEN=${{ secrets.GITHUB_API_TOKEN }},MONTH_RANGE=12,CREATE_ISSUE=1
+          curl $(gcloud run services describe ${{ secrets.CLOUD_RUN_NAME }} --platform managed --region ${{ secrets.REGION }} --format 'value(status.url)')
+          gcloud run services delete ${{ secrets.CLOUD_RUN_NAME }}
