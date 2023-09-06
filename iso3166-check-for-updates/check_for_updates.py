@@ -74,7 +74,7 @@ def check_for_updates_main():
     #get list of all country's 2 letter alpha-2 codes
     alpha2_codes = sorted(list(iso3166.countries_by_alpha2.keys()))
 
-    #sort codes in alphabetical order and uppercase
+    #sort codes into alphabetical order and uppercase
     alpha2_codes.sort()
     alpha2_codes = [code.upper() for code in alpha2_codes]
     
@@ -104,18 +104,18 @@ def check_for_updates_main():
     #bool to track if any ISO 3166 updates found
     updates_found = False
     
-    #if update object not empty (i.e there are updates), call update_json and create_github_issue functions
+    #if update object not empty (i.e there are changes/updates), call update_json and create_github_issue functions
     updates_found, date_filtered_updates, missing_filtered_updates = update_json(latest_iso3166_updates, latest_iso3166_updates_after_date_filter)
     if (updates_found):
         if (create_issue):
             create_github_issue(date_filtered_updates, missing_filtered_updates, months)
-            success_message["message"] = "ISO 3166-2 updates found and successfully exported to bucket and GitHub Issues created."
+            success_message["message"] = "New ISO 3166-2 updates found and successfully exported to bucket and GitHub Issues created."
             print(success_message["message"])
         else:
-            success_message["message"] = "ISO 3166-2 updates found and successfully exported to bucket."
+            success_message["message"] = "New ISO 3166-2 updates found and successfully exported to bucket."
             print(success_message["message"])
     else:
-        success_message["message"] = "No ISO 3166-2 updates found."
+        success_message["message"] = "No new ISO 3166-2 updates found."
         print(success_message["message"])
 
     return jsonify(success_message), 200
@@ -223,30 +223,36 @@ def update_json(latest_iso3166_updates, latest_iso3166_updates_after_date_filter
     #if updates found in new updates json compared to current one in bucket
     if (updates_found):
 
-        #temp path for exported json
-        tmp_updated_json_path = os.path.join("/tmp", os.environ["BLOB_NAME"])
-        
-        #export updated json to temp folder
-        with open(tmp_updated_json_path, 'w', encoding='utf-8') as output_json:
-            json.dump(updated_json, output_json, ensure_ascii=False, indent=4)
-        
-        #create blob for updated JSON
-        blob = bucket.blob(os.environ["BLOB_NAME"])
-
         #move current updates json in bucket to an archive folder, append datetime to it
         if (os.environ.get("ARCHIVE_FOLDER") is None or os.environ.get("ARCHIVE_FOLDER") == ""):
             os.environ["ARCHIVE_FOLDER"] = "archive_iso3166_updates"
-        archive_filepath = os.environ["ARCHIVE_FOLDER"] + "/" + os.path.splitext(os.environ["BLOB_NAME"])[0] \
+
+        #filepath to archive folder
+        archive_filepath = os.path.splitext(os.environ["BLOB_NAME"])[0] \
             + "_" + str(current_datetime.strftime('%Y-%m-%d')) + ".json"
-        
+
+        #export updated json to temp folder
+        with open(os.path.join("/tmp", archive_filepath), 'w', encoding='utf-8') as output_json:
+            json.dump(json.loads(blob.download_as_string(client=None)), output_json, ensure_ascii=False, indent=4)
+
         #create blob for archive updates json 
-        archive_blob = bucket.blob(archive_filepath)
+        archive_blob = bucket.blob(os.path.join(os.environ["ARCHIVE_FOLDER"], archive_filepath))
         
         #upload old updates json to archive folder 
-        archive_blob.upload_from_filename(tmp_updated_json_path)
+        archive_blob.upload_from_filename(os.path.join("/tmp", archive_filepath))
 
-        #upload new updated json using gcp sdk, replacing current updates json 
-        blob.upload_from_filename(tmp_updated_json_path)
+    #temp path for exported json
+    tmp_updated_json_path = os.path.join("/tmp", os.environ["BLOB_NAME"])
+    
+    #export updated json to temp folder
+    with open(tmp_updated_json_path, 'w', encoding='utf-8') as output_json:
+        json.dump(updated_json, output_json, ensure_ascii=False, indent=4)
+    
+    #create blob for updated JSON
+    blob = bucket.blob(os.environ["BLOB_NAME"])
+
+    #upload new updated json using gcp sdk, replacing current updates json 
+    blob.upload_from_filename(tmp_updated_json_path)
 
     return updates_found, individual_updates_json, missing_individual_updates_json
     
@@ -281,9 +287,9 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
     """
     issue_json = {}
     issue_json["title"] = "ISO 3166-2 Updates: " + str(current_datetime.strftime('%Y-%m-%d')) + " (" + \
-        ', '.join(list(latest_iso3166_updates_after_date_filter.keys()) + list(missing_filtered_updates.keys())) + ")"
+        (', '.join(set(list(latest_iso3166_updates_after_date_filter.keys()) + list(missing_filtered_updates.keys())))) + ")"
 
-    #body of Github Issue
+    #body of GitHub Issue
     body = "# ISO 3166-2 Updates\n"
 
     #get total sum of updates for all countrys in json
@@ -295,7 +301,7 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
 
         #display number of updates for countrys and the date period
         body += "<h2>" + str(total_updates) + " update(s) found for " + str(total_countries) + " country/countries between the " + str(month_range) + " month period of " + \
-            str((current_datetime + relativedelta(months=-month_range)).strftime('%Y-%m-%d')) + " to " + str(current_datetime.strftime('%Y-%m-%d')) + ".</h2>"
+            str((current_datetime + relativedelta(months=-month_range)).strftime('%Y-%m-%d')) + " to " + str(current_datetime.strftime('%Y-%m-%d')) + "</h2>"
 
         #iterate over updates in json, append to updates object
         for code in list(latest_iso3166_updates_after_date_filter.keys()):
@@ -348,7 +354,7 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
     #add attributes to data json 
     issue_json["body"] = body
     issue_json["assignee"] = "amckenna41"
-    issue_json["labels"] = ["iso3166-updates", "iso3166", "iso366-2", "subdivisions", "iso3166-flag-icons", str(current_datetime.strftime('%Y-%m-%d'))]
+    issue_json["labels"] = ["iso3166-updates", "iso", "iso3166", "iso366-2", "subdivisions", "iso3166-flag-icons", str(current_datetime.strftime('%Y-%m-%d'))]
 
     #raise error if GitHub related env vars not set
     if (os.environ.get("GITHUB_OWNER") is None or os.environ.get("GITHUB_OWNER") == "" or \
@@ -359,14 +365,22 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
     #http request headers for GitHub API
     headers = {'Content-Type': "application/vnd.github+json", 
         "Authorization": "token " + os.environ["GITHUB_API_TOKEN"]}
+    github_repos = os.environ.get("GITHUB_REPOS")
+    
+    #make post request to create issue in repos using GitHub api url and headers, if github_repo env vars set
+    if not (github_repos is None and github_repos != ""): 
+        #split into list of repos 
+        github_repos = github_repos.replace(' ', '').split(',')
 
-    #make post request to create issue in repos using github api url and headers, if github_repo env vars set
-    if not (os.environ.get("GITHUB_REPO_1") is None and os.environ.get("GITHUB_REPO_1") != ""): 
-        issue_url = "https://api.github.com/repos/" + os.environ["GITHUB_OWNER"] + "/" + os.environ["GITHUB_REPO_1"] + "/issues"
-        requests.post(issue_url, data=json.dumps(issue_json), headers=headers)
-    if not (os.environ.get("GITHUB_REPO_2") is None and os.environ.get("GITHUB_REPO_2") != ""): 
-        issue_url_2 = "https://api.github.com/repos/" + os.environ["GITHUB_OWNER"] + "/" + os.environ["GITHUB_REPO_2"] + "/issues"
-        requests.post(issue_url_2, data=json.dumps(issue_json), headers=headers)
-    if not (os.environ.get("GITHUB_REPO_3") is None and os.environ.get("GITHUB_REPO_3") != ""): 
-        issue_url_3 = "https://api.github.com/repos/" + os.environ["GITHUB_OWNER"] + "/" + os.environ["GITHUB_REPO_3"] + "/issues"
-        requests.post(issue_url_3, data=json.dumps(issue_json), headers=headers)
+        #iterate over each repo listed in env var, making post request with issue_json data 
+        for repo in github_repos:
+            
+            issue_url = "https://api.github.com/repos/" + os.environ["GITHUB_OWNER"] + "/" + repo + "/issues"
+            github_request = requests.post(issue_url, data=json.dumps(issue_json), headers=headers)    
+
+            #print error message if success status code not returned            
+            if (github_request.status_code != 200):  
+                if (github_request.status_code == 401):
+                    print("Authorisation issue when creating GitHub Issue in repository {}, could be an issue with the GitHub PAT.".format(repo))
+                else:
+                    print("Issue when creating GitHub Issue in repository {}, got status code {}.".format(repo, github_request.status_code))   

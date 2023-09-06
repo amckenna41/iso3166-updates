@@ -267,3 +267,7 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Comment out binary_location in get_all script.
 - [X] When correcting date using re.sub, can just use that on all Date Issud values as it wont effect the outcome.
 - [X] Go over main readme's.
+- [X] In check-for-updates check that archive_folder is actually storing archive json and not duplicate of one on main folder **.
+- [X] In check-for-updates double check archive functionality still works.
+- [X] When mentioning any repo secrets relating to GCP, prefix with GCP_
+- [X] In check-for-updates look into different status codes, return message if request gets status code.

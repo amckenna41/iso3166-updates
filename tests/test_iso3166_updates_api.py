@@ -694,7 +694,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         """ Testing name endpoint, return all ISO 3166 updates data from input alpha-2 name/names. """
         test_name_benin = "Benin"
         test_name_tajikistan = "Tajikistan"
-        test_name_sudan = "Sudan"
+        test_name_moldova = "Moldova"
         test_name_mali_nicaragua = "Mali, Nicaragua"
         test_name_error1 = "ABCDEF"
         test_name_error2 = "12345"
@@ -758,22 +758,22 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(len(test_request_tj["TJ"]), 7, "Expected there to be 7 elements in output object, got {}.".format(len(test_request_tj["TJ"])))
         self.assertEqual(test_request_tj["TJ"][0], test_name_tj_expected, "Expected and observed outputs do not match.")
 #4.)
-        test_request_sd = requests.get(self.name_base_url + test_name_sudan, headers=self.user_agent_header).json() #Sudan
+        test_request_md = requests.get(self.name_base_url + test_name_moldova, headers=self.user_agent_header).json() #Moldova
 
-        test_name_sd_expected = {
-                "Code/Subdivision Change": "Spelling changes: SD-DC Wasaţ Dārfūr Zālinjay -> Wasaţ Dārfūr SD-KN Shiamāl Kurdufān -> Shamāl Kurdufān.",
-                "Date Issued": "2020-11-24",
-                "Description of Change in Newsletter": "Typographical correction of subdivision name of SD-KN, SD-DC; Addition of local variation of SD-DC.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:SD)."
+        test_name_md_expected = {
+                "Code/Subdivision Change": "",
+                "Date Issued": "2019-02-15",
+                "Description of Change in Newsletter": "Modification of the French short name lower case.",
+                "Edition/Newsletter": "Online Browsing Platform (OBP)."
                 }
         
-        self.assertIsInstance(test_request_sd, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_sd)))
-        self.assertIsInstance(test_request_sd["SD"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_sd["SD"])))
-        self.assertEqual(list(test_request_sd.keys()), ["SD"], "Expected parent key does not match output, got {}.".format(list(test_request_sd.keys())))
-        for row in test_request_sd["SD"]:
+        self.assertIsInstance(test_request_md, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_md)))
+        self.assertIsInstance(test_request_md["MD"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_md["MD"])))
+        self.assertEqual(list(test_request_md.keys()), ["MD"], "Expected parent key does not match output, got {}.".format(list(test_request_md.keys())))
+        for row in test_request_md["MD"]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
-        self.assertEqual(len(test_request_sd["SD"]), 6, "Expected there to be 7 elements in output object, got {}.".format(len(test_request_sd["SD"])))
-        self.assertEqual(test_request_sd["SD"][0], test_name_sd_expected, "Expected and observed outputs do not match.")
+        self.assertEqual(len(test_request_md["MD"]), 11, "Expected there to be 11 elements in output object, got {}.".format(len(test_request_md["MD"])))
+        self.assertEqual(test_request_md["MD"][0], test_name_md_expected, "Expected and observed outputs do not match.")
 #5.)
         test_request_ml_ni = requests.get(self.name_base_url + test_name_mali_nicaragua, headers=self.user_agent_header).json() #Mali, Nicaragua 
 

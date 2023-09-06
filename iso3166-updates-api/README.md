@@ -2,6 +2,9 @@
 
 ![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=iso3166-updates-frontend)
 
+The ISO 3166 Updates API is stored in a seperate repo:
+https://github.com/amckenna41/iso3166-updates-api
+
 The main API endpoint is:
 
 > https://iso3166-updates.com/api

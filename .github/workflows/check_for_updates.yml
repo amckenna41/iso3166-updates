@@ -29,25 +29,22 @@ jobs:
         uses: google-github-actions/setup-gcloud@v0.2.0
         with:
             service_account_email: ${{ secrets.GCP_SA_EMAIL }} 
-            service_account_key: ${{ secrets.GCP_SA_KEY }} 
+            # service_account_key: ${{ secrets.GCP_SA_KEY }} 
             project_id: ${{ secrets.GCP_PROJECT }}
-            # service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-            # service_account_key: ${{ secrets.GCP_SA_KEY }}
             export_default_credentials: true
         
       #create Google Cloud Run app using Dockerfile that pulls all the latest ISO 3166 updates data and compares with existing object in GCP bucket,
       #if updates are found after month date filter applied that aren't in object then they will be appended to it, delete Cloud Run app after
       #execution to save on resources
-      - name: Create Cloud Run
+      - name: Create Cloud Run application
         run: |
           cd iso3166-check-for-updates
-          docker build -t ${{ secrets.CONTAINER_NAME }} .
-          gcloud builds submit --tag gcr.io/iso3166-updates/${{ secrets.CONTAINER_NAME }}
-          gcloud beta run deploy ${{ secrets.CLOUD_RUN_NAME }} --image gcr.io/iso3166-updates/${{ secrets.CONTAINER_NAME }} --region ${{ secrets.REGION }} \
-            --platform managed --memory 1024Mi --timeout 2700 --allow-unauthenticated --service-account ${{ secrets.GCP_SA_EMAIL}} \
-            --update-env-vars BUCKET_NAME=${{ secrets.BUCKET_NAME }},BLOB_NAME=${{ secrets.BLOB_NAME }}, \
-            ARCHIVE_FOLDER=${{ secrets.ARCHIVE_FOLDER }},GITHUB_OWNER=${{ secrets.GITHUB_OWNER }},\
-            GITHUB_REPO_1=${{ secrets.GITHUB_REPO_1 }},GITHUB_REPO_2=${{ secrets.GITHUB_REPO_2 }},\
-            GITHUB_REPO_3=${{ secrets.GITHUB_REPO_3 }},GITHUB_API_TOKEN=${{ secrets.GITHUB_API_TOKEN }},MONTH_RANGE=12,CREATE_ISSUE=1
-          curl $(gcloud run services describe ${{ secrets.CLOUD_RUN_NAME }} --platform managed --region ${{ secrets.REGION }} --format 'value(status.url)')
-          gcloud run services delete ${{ secrets.CLOUD_RUN_NAME }}
+          docker build -t ${{ secrets.GCP_CONTAINER_NAME }} .
+          gcloud builds submit --tag gcr.io/iso3166-updates/${{ secrets.GCP_CONTAINER_NAME }}
+          gcloud beta run deploy ${{ secrets.GCP_CLOUD_RUN_NAME }} --image gcr.io/iso3166-updates/${{ secrets.GCP_CONTAINER_NAME }} \
+          --region ${{ secrets.GCP_REGION }} --platform managed --memory 1024M --timeout 2700 --allow-unauthenticated \
+          --service-account ${{ secrets.GCP_SA_EMAIL}} --update-env-vars BUCKET_NAME=${{ secrets.GCP_BUCKET_NAME }},BLOB_NAME=${{ secrets.GCP_BLOB_NAME }}, \
+            ARCHIVE_FOLDER=${{ secrets.GCP_ARCHIVE_FOLDER }},GITHUB_OWNER=${{ secrets.REPO_OWNER }},GITHUB_REPOS=test_readme,\
+            GITHUB_API_TOKEN=${{ secrets.REPO_API_TOKEN }},MONTH_RANGE=12,CREATE_ISSUE=1
+          curl $(gcloud run services describe ${{ secrets.GCP_CLOUD_RUN_NAME }} --platform managed --region ${{ secrets.GCP_REGION }} --format 'value(status.url)')
+          gcloud run services delete ${{ secrets.GCP_CLOUD_RUN_NAME }}

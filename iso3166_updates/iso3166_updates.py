@@ -105,7 +105,7 @@ class ISO3166_Updates():
         less_than = False
         
         #a '-' seperating 2 years implies a year range of sought country updates, validate format of years in range
-        #a ',' seperating 2 year implies a list of years
+        #a ',' seperating 2 years implies a list of years
         #a '>' before year means get all country updates greater than or equal to specified year
         #a '<' before year means get all country updates less than specified year
         if (input_year != []):

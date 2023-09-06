@@ -238,7 +238,7 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
         alpha2_codes.remove("XK")
 
     #a '-' seperating 2 years implies a year range of sought country updates, validate format of years in range
-    #a ',' seperating 2 year implies a list of years
+    #a ',' seperating 2 years implies a list of years
     #a '>' before year means get all country updates greater than or equal to specified year
     #a '<' before year means get all country updates less than specified year
     if (year != []):
