@@ -10,7 +10,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     Test suite for testing the iso3166-updates Python software package. 
 
     Test Cases
-    ----------
+    ==========
     test_iso3166_updates_metadata:
         testing correct software metdata for the iso3166-updates package. 
     test_updates_all:
@@ -27,7 +27,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        self.assertEqual(metadata('iso3166-updates')['version'], "1.4.3", 
+        self.assertEqual(metadata('iso3166-updates')['version'], "1.4.4", 
             "iso3166-updates version is not correct, got: {}.".format(metadata('iso3166-updates')['version']))
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             "iso3166-updates software name is not correct, got: {}.".format(metadata('iso3166-updates')['name']))

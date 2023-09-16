@@ -15,12 +15,12 @@ def iso3166_updates_main(request):
     the relevant ISO 3166 updates for 1 or more input countries.
 
     Parameters
-    ----------
+    ==========
     :request : (flask.Request)
        HTTP request object.
     
     Returns
-    -------
+    =======
     :iso3166_updates : json
       jsonified response of iso3166 updates for selected country/alpha-2 ISO code.
     """
@@ -92,12 +92,12 @@ def iso3166_updates_main(request):
         alpha-2 counterpart. 
 
         Parameters 
-        ----------
+        ==========
         :alpha3_code: str
             3 letter ISO 3166 country code.
         
         Returns
-        -------
+        =======
         :iso3166.countries_by_alpha3[alpha3_code].alpha2: str
             2 letter ISO 3166 country code. 
         """

@@ -15,11 +15,20 @@ class ISO3166_Updates():
     updates json with X of these having any changes/updates data.
     
     Parameters
-    ----------
+    ==========
     None
 
+    Methods
+    =======
+    year(input_year):
+        get all listed updates/changes in the updates json object for an input year, set of years,
+        year range or greater than/less than year.
+    __getitem__(alpha2_code):
+        get all listed updates/changes in the updates json object for an input country/countries,
+        using the 2 letter ISO 3166-1 code by making the class subscriptable.
+
     Usage
-    -----
+    =====
     import iso3166_updates as iso
 
     #get ALL listed changes/updates for ALL countries 
@@ -77,17 +86,17 @@ class ISO3166_Updates():
     def year(self, input_year):
         """
         Get all listed updates/changes in the updates json object for an input year, set of years,
-        year range or greater than less than year. The json object will be iterated over and
+        year range or greater than/less than year. The json object will be iterated over and
         any matching updates from the "Date Issued" column will be appended to the output dict.
 
         Parameters
-        ----------
+        ==========
         :input_year: str/list
             single or list of multiple years. Can also accept a year range or a year to get updates
             greater than or less than. 
 
         Returns
-        -------
+        =======
         :country_output_dict : dict
             output dictionary of sought ISO 3166 updates for input year/years.
         """
@@ -198,14 +207,14 @@ class ISO3166_Updates():
         counterpart.
         
         Parameters
-        ----------
+        ==========
         :alpha2_code : str
             one or more 2 letter alpha-2 code for sought country/territory e.g (AD, EG, DE). Can 
             also accept 3 letter alpha-3 code e.g (AND, EGT, DEU), this will be converted into 
             its alpha-2 counterpart.
 
         Returns
-        -------
+        =======
         :country_updates_dict: dict
             dict object of country updates info for inputted code/codes.
 
@@ -294,15 +303,15 @@ class Map(dict):
     """
     Class that accepts a dict and allows you to use dot notation to access
     members of the dictionary. 
-
+    
     Parameters
-    ----------
+    ==========
     :dict
         input dictionary to convert into instance of map class so the keys/vals
         can be accessed via dot notation.
 
     Usage
-    -----
+    =====
     # create instance of map class
     m = Map({'first_name': 'Eduardo'}, last_name='Pool', age=24, sports=['Soccer'])
     # Add new key
@@ -319,7 +328,7 @@ class Map(dict):
     del m['new_key']
 
     References
-    ----------
+    ==========
     [1]: https://stackoverflow.com/questions/2352181/how-to-use-a-dot-to-access-members-of-dictionary
     """
     def __init__(self, *args, **kwargs):

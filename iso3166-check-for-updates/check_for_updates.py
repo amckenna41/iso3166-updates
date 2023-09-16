@@ -47,11 +47,11 @@ def check_for_updates_main():
     which is the data source for the iso3166-updates Python package and accompanying API.
 
     Parameters
-    ----------
+    ==========
     None
     
     Returns
-    -------
+    =======
     :success_message/error_message : json
        jsonified response indicating whether the application has completed successfully or
        an error has arose during execution.
@@ -130,7 +130,7 @@ def update_json(latest_iso3166_updates, latest_iso3166_updates_after_date_filter
     date range, if so then these will similarly be appended to object.
 
     Parameters
-    ----------
+    ==========
     :latest_iso3166_updates : json
         json object with all listed iso3166-2 updates, without date filter
         applied.
@@ -139,7 +139,7 @@ def update_json(latest_iso3166_updates, latest_iso3166_updates_after_date_filter
         applied. 
 
     Returns
-    -------
+    =======
     :updates_found : bool
         bool to track if updates/changes have been found in JSON object.
     :individual_updates_json: dict
@@ -266,7 +266,7 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
     repos. 
 
     Parameters
-    ----------
+    ==========
     :latest_iso3166_updates_after_date_filter : dict
         dict object with all listed ISO 3166-2 updates after month date filter
         applied.
@@ -276,13 +276,13 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
         number of past months updates were pulled from.
 
     Returns
-    -------
+    =======
     :create_issue_success : bool
         bool tracking if GitHub Issues were created successfully using the status 
         code of the post request.
 
     References
-    ----------
+    ==========
     [1]: https://developer.github.com/v3/issues/#create-an-issue
     """
     issue_json = {}

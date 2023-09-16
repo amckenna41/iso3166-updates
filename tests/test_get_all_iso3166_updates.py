@@ -20,7 +20,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     updates from the data sources.
     
     Test Cases
-    ----------
+    ==========
     test_data_sources_url:
         testing that each ISO 3166-1 alpha-2 country code has a corresponding wiki page and ISO page 
         which is the data source for the updates.

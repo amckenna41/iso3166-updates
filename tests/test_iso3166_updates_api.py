@@ -13,7 +13,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
     Test suite for testing ISO 3166 Updates API created to accompany the iso3166-updates Python software package. 
 
     Test Cases
-    ----------
+    ==========
     test_api_endpoints:
         testing main api endpoints/paths validating they return correct response type.
     test_updates_alpha2:

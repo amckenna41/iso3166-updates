@@ -41,16 +41,16 @@ def create_driver():
     their ISO page contains extra data not on the country's wiki page. 
 
     Parameters
-    ----------
+    ==========
     None
 
     Returns
-    -------
+    =======
     :driver : selenium.webdriver.chrome.webdriver.WebDriver
         instance of Python Selenium using chromedriver webdriver.
     
     References
-    ----------
+    ==========
     [1]: https://chromedriver.chromium.org/getting-started
     [2]: https://www.geeksforgeeks.org/how-to-install-selenium-in-python/
     [3]: https://www.scrapingbee.com/webscraping-questions/selenium/chromedriver-executable-needs-to-be-in-path/
@@ -124,7 +124,7 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
     ISO 3166-1 country code and exported to a JSON and or CSV file.
 
     Parameters
-    ----------
+    ==========
     :alpha2_codes : str/list (default=[])
         single string or list of alpha-2 ISO 3166-1 codes to get the latest ISO 3166-2 updates
         from. If a single alpha-2 code passed in then it is converted to an iterable list. If
@@ -155,7 +155,7 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
         from its wiki page.
 
     Returns
-    -------
+    =======
     :all_changes : dict
         dictionary of all found ISO 3166 updates from user's inputted alpha-2 codes and or year
         parameter values.
@@ -196,12 +196,12 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
         alpha-2 counterpart.
 
         Parameters
-        ----------
+        ==========
         :alpha3_code: str
             3 letter ISO 3166-1 country code.
 
         Returns
-        -------
+        =======
         :iso3166.countries_by_alpha3[alpha3_code].alpha2: str
             2 letter ISO 3166 country code.
         """
@@ -530,7 +530,7 @@ def get_updates_df_selenium(alpha2, year=[], year_range=False, less_than=False, 
     parsed and, converted into a 2D table and then a DataFrame.
 
     Parameters
-    ----------
+    ==========
     :alpha2 : str/list
         single string of an alpha-2 ISO 3166-1 codes to get the latest ISO 3166-2 updates for.
     :year : array
@@ -548,7 +548,7 @@ def get_updates_df_selenium(alpha2, year=[], year_range=False, less_than=False, 
         Function will remove all rows in Dataframe that are less than specified year.
 
     Returns
-    -------
+    =======
     :iso3166_df_selenium : pd.DataFrame
         converted pandas dataframe of all ISO 3166-2 changes for particular country/countries
         from official ISO website.
@@ -609,7 +609,7 @@ def get_updates_df_wiki(alpha2, year=[], year_range=False, less_than=False, grea
     parsed html table, from the Changes/Updates Section into a pandas dataframe. 
 
     Parameters
-    ----------
+    ==========
     :alpha2 : str/list
         single string of an alpha-2 ISO 3166-1 codes to get the latest ISO 3166-2 updates for.
     :year : array
@@ -627,7 +627,7 @@ def get_updates_df_wiki(alpha2, year=[], year_range=False, less_than=False, grea
         Function will remove all rows in Dataframe that are less than specified year.
 
     Returns
-    -------
+    =======
     :iso3166_df_wiki : pd.DataFrame
         converted pandas dataframe of all ISO 3166-2 changes for particular country/countries
         from respective wiki pages.
@@ -687,7 +687,7 @@ def parse_updates_table(iso3166_updates_table, year, year_range, less_than, grea
     year, respectively.
 
     Parameters
-    ----------
+    ==========
     :iso3166_updates_table : list
         2D array updates/changes table from wiki page or official ISO website.
     :year : array
@@ -703,8 +703,9 @@ def parse_updates_table(iso3166_updates_table, year, year_range, less_than, grea
     :greater_than: bool
         set to True if greater than symbol is input into year parameter e.g ">2005" etc.
         Function will remove all rows in Dataframe that are less than specified year.
+    
     Returns
-    -------
+    =======
     :iso3166_df : pd.DataFrame
         converted pandas dataframe of all ISO 3166-2 changes for particular country/countries
         from respective wiki or ISO pages.
@@ -821,12 +822,12 @@ def correct_columns(cols):
     "Edition/Newsletter", "Code/Subdivision Change", "Description of Change in Newsletter"].
 
     Parameters
-    ----------
+    ==========
     :cols : list
         list of column names from header of parsed Changes table on wiki.
     
     Returns
-    -------
+    =======
     :cols : list
         list of columns updated to correct naming conventions. 
     """
@@ -854,17 +855,17 @@ def table_to_array(table_tag):
     colspans. 
 
     Parameters
-    ----------
+    ==========
     :table_tag : bs4.element.Tag
       BS4 Tag object of table element.
     
     Returns
-    -------
+    =======
     :table : tuple
       tuple of parsed data from html table in Changes section of ISO 3166 wiki.
     
     Reference
-    ---------
+    =========
     [1]: https://stackoverflow.com/questions/48393253/how-to-parse-table-with-rowspan-and-colspan
     """
     #if invalid table tag input return empty array

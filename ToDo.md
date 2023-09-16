@@ -271,3 +271,6 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] In check-for-updates double check archive functionality still works.
 - [X] When mentioning any repo secrets relating to GCP, prefix with GCP_
 - [X] In check-for-updates look into different status codes, return message if request gets status code.
+- [ ] On main API homepage with documentation etc, mention last updated. Could pull the latest date from the oject on GCP.
+- [X] Change all comment underlining from "------" to "=======", including on colab notebook.
+- [X] Add methods comments to iso3166-updates class.
