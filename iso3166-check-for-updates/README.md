@@ -34,6 +34,7 @@ Requirements
 * [flask][flask] >= 2.3.2
 * [gunicorn][gunicorn] >= 21.2.0
 * [lxml][lxml] >=  4.9.3
+
 Create check-for-updates microservice
 -------------------------------------
 

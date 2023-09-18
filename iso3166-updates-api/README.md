@@ -38,8 +38,8 @@ The API documentation and usage with all useful commands and examples to the API
 * Code/Subdivision change: Overall summary of change/update made.
 * Description of change in newsletter: More in-depth info about the change/update that was made.
 
-Get All ISO 3166-2 updates for all countries
--------------------------------------------
+Get All ISO 3166 updates for all countries
+------------------------------------------
 ### Request
 `GET /`
 

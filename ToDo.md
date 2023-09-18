@@ -274,3 +274,4 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [ ] On main API homepage with documentation etc, mention last updated. Could pull the latest date from the oject on GCP.
 - [X] Change all comment underlining from "------" to "=======", including on colab notebook.
 - [X] Add methods comments to iso3166-updates class.
+- [X] Add 🧪 to tests and desc.

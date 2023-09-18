@@ -969,7 +969,7 @@ def table_to_array(table_tag):
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser(description='Get latest changes/updates for all countries in the ISO 3166-1/3166-2 standard.')
+    parser = argparse.ArgumentParser(description='Get latest changes/updates for all countries in the ISO 3166-1/3166-2 standards.')
     parser.add_argument('-alpha2', '--alpha2', type=str, required=False, default="", 
         help='2 letter alpha-2 code(s) of ISO 3166-1 countries to check for updates.')
     parser.add_argument('-year', '--year', type=str, required=False, default="", 
