@@ -268,7 +268,7 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
                 year = []
                 less_than = False
         elif (',' in year[0]):
-            #split years into multiple years, if multiple are input
+            #split years into comma seperated list of multiple years if multiple years are input
             year = year[0].split(',')
     #validate each year's format using regex
     for year_ in year:

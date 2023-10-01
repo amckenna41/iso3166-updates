@@ -3,8 +3,8 @@
 [![iso3166_updates](https://img.shields.io/pypi/v/iso3166-updates)](https://pypi.org/project/iso3166-updates/)
 [![pytest](https://github.com/amckenna41/iso3166-updates/workflows/Building%20and%20Testing/badge.svg)](https://github.com/amckenna41/iso3166-updates/actions?query=workflowBuilding%20and%20Testing)
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/amckenna41/iso3166-updates/tree/main.svg?style=svg&circle-token=9b0c0a9f6cc032f255dc28842c95600401aa4426)](https://dl.circleci.com/status-badge/redirect/gh/amckenna41/iso3166-updates/tree/main)
-[![Platforms](https://img.shields.io/badge/platforms-linux%2C%20macOS%2C%20Windows-green)](https://pypi.org/project/iso3166-updates/)
 [![PythonV](https://img.shields.io/pypi/pyversions/iso3166-updates?logo=2)](https://pypi.org/project/iso3166-updates/)
+[![Platforms](https://img.shields.io/badge/platforms-linux%2C%20macOS%2C%20Windows-green)](https://pypi.org/project/iso3166-updates/)
 [![License: MIT](https://img.shields.io/github/license/amckenna41/iso3166-updates)](https://opensource.org/licenses/MIT)
 [![Issues](https://img.shields.io/github/issues/amckenna41/iso3166-updates)](https://github.com/amckenna41/iso3166-updates/issues)
 <!-- [![Size](https://img.shields.io/github/repo-size/amckenna41/iso3166-updates)](https://github.com/amckenna41/iso3166-updates) -->
@@ -40,9 +40,9 @@ The ISO 3166-1 was first published in 1974 and currently comprises 249 countries
 
 ### Problem Statement:
 
-The ISO is a very dynamic organisation and regularly change/update/remove entries within its library of standards, including the ISO 3166. Additions/changes/deletions to country/territorial codes occur less often in the ISO 3166-1, but changes are more frequent for the ISO 3166-2 codes due to there being thousands more entries, thus it can be difficult to keep up with any changes to these codes. These changes can occur for a variety of geopolitical and bureaucratic reasons and are usually communicated via Newsletters on the ISO platform, their Online Browsing Platform (OBP) or via a database, which usually costs money to subscribe to [[3]](#references). Typically these updates are conveyed at the end of the year, with amendments and updates occasionally published at various times throughout the year [[4]](#references). 
+The ISO is a very dynamic organisation and regularly change/update/remove entries within its library of standards, including the ISO 3166. Additions/changes/deletions to country/territorial codes occur less often in the ISO 3166-1, but changes are more frequent for the ISO 3166-2 codes due to there being thousands more entries, thus it can be difficult to keep up with and track these changes. These changes can occur for a variety of geopolitical and bureaucratic reasons and are usually communicated via Newsletters on the ISO platform, their Online Browsing Platform (OBP), or via a database, which usually costs money to subscribe to [[3]](#references). Usually these updates are conveyed at the end of the year, with amendments and updates occasionally published at various times throughout the year [[4]](#references). 
 
-This software and accompanying API makes it extremely easy to check for any new or historic updates to a country or set of country's ISO 3166-2 codes for free, with an easy-to-use interface and Python package and API, ensuring that you get the most up-to-date and accurate ISO 3166-2 codes and naming conventions.
+This software and accompanying API make it extremely easy to check for any new or historic updates to a country or set of country's ISO 3166-2 codes for free; with an easy-to-use interface and Python package and API, ensuring that you get the most up-to-date and accurate ISO 3166-2 codes and naming conventions.
 
 <strong> The earliest date for any ISO 3166-2 update is 2000-06-21, and the most recent is 2022-11-29. </strong>
 
@@ -52,38 +52,47 @@ This software and accompanying API is for anyone working with country data at th
 
 API
 ---
-An API is available that can be used to extract any applicable updates for a country via an API endpoint. The API is available at the URL:
+The main API endpoint is:
 
-> https://www.iso3166-updates.com/api
+> https://iso3166-updates.com/api
 
 The other endpoints available in the API are:
-
+* https://iso3166-updates.com/api/all
 * https://iso3166-updates.com/api/alpha2/<input_alpha2>
 * https://iso3166-updates.com/api/name/<input_name>
 * https://iso3166-updates.com/api/year/<input_year>
 * https://iso3166-updates.com/api/alpha2/<input_alpha2>/year/<input_year>
 * https://iso3166-updates.com/api/name/<input_name>/year/<input_year>
-* https://iso3166-updates.com/api/month/<input_month>
+* https://iso3166-updates.com/api/months/<input_month>
 
-Four query string parameters/paths are available in the API - `alpha2`, `name`, `year` and `months`. 
+The paths/endpoints available in the API are - `/api/all`, `/api/alpha2`, `/api/name`, `/api/year` and `/api/months`. 
 
-* The 2 letter `alpha2` country code can be appended to the URL as a query string parameter or as its own path (e.g ?alpha2=JP or /alpha2/JP). A single alpha-2 or list of them can be passed to the API (e.g ?alpha2=FR, DE, HU, ID, MA or /alpha2/FR,DE,HU,ID,MA). For redudancy, the 3 letter alpha-3 counterpart for each country's alpha-2 code can also be passed into the `alpha2` parameter (e.g ?alpha2=FRA, DEU, HUN, IDN, MAR or /alpha2/FRA,DEU,HUN,IDN,MAR). 
+* The `/api/all` path/endpoint returns all of the ISO 3166-2 updates/changes data for all countries.
 
-* The `name` parameter takes in a country's name as it is commonly known in English. The country name can be appended to the URL as a query string parameter or as its own path (e.g ?name=France or /name/France). A single country name or list of them can be passed into the API (e.g ?name=France,Moldova,Benin or /name/France,Moldova,Benin). A closeness function is used to get the most approximate available country from the one the user input; if one is not found then an error is raised.
+* The 2 letter alpha-2 country code can be appended to the **alpha2** path/endpoint e.g <i>/api/alpha2/JP</i>. A single alpha-2 code or a list of them can be passed to the API e.g <i>/api/alpha2/FR,DE,HU,ID,MA</i>. For redundancy, the 3 letter alpha-3 counterpart for each country's alpha-2 code can also be appened to the path e.g <i>/api/alpha2/FRA,DEU,HUN,IDN,MAR</i>. The **alpha2** endpoint can be used in conjunction with the **year** endpoint to get the country updates for a specific country and year, in the format `api/alpha2/<input_alpha2>/year/<input_year>` or `api/year/<input_year>/alpha2/<input_alpha2>`. If an invalid alpha-2 code is input then an error will be returned.
 
-* The `year` parameter can be a specific year, year range, or a cut-off year to get updates less than/more than a year. The year value can be appended to the URL as a query string parameter or as its own path (e.g ?year=2017 or /year/2017, ?year=2010-2015 or /year/2010-2015, ?year=<2009 or /year/<2009, ?year=2002 or /year/>2002). 
+* The name parameter can be a country name as it is most commonly known in English, according to the ISO 3166-1. The name can similarly be appended to the **name** path/endpoint e.g <i>/api/name/Denmark</i>. A single country name or list of them can be passed into the API e.g <i>/name/France,Moldova,Benin</i>. A closeness function is used to get the most approximate available country from the one input, e.g Sweden will be used if the input is <i>/api/name/Swede</i>. The **name** endpoint can be used in conjunction with the **year** endpoint to get the country updates for a specific country name and year, in the format `api/name/<input_name>/year/<input_year>`. If no country is found from the closeness function or an invalid name is input then an error will be returned.
 
-* Finally, the `months` parameter will gather all updates for 1 or more alpha-2 codes from a number of months from the present day. The month value can be appended to the URL as a query string parameter or as its own path (e.g ?months=2 or /months/12, ?months=24 or /months/24).
+* The **year** parameter can be a specific year, year range, or a cut-off year to get updates less than/more than a year. The year value can be appended to the **year** path/endpoint e.g <i>/api/year/2017, /api/year/2010-2015, /api/year/<2009, /api/year/>2002</i>. The **year** endpoint can be used in conjunction with the **alpha2** and **name** endpoints to get the country updates for a specific country and year, in the format `api/alpha2/<input_alpha2>/year/<input_year>` and `api/name/<input_name>/year/<input_year>`, respectively. If an invalid year is input then an error will be returned. 
 
-* If no input parameter values specified then all ISO 3166-2 updates for all countries and years will be returned.
+* The **months** parameter will gather all updates for 1 or more countries from an input number of months from the present day. The month value can be appended to the **months** path/endpoint e.g <i>/api/months/12, /api/months/24</i>. If an invalid month value is input then an error will be returned.
 
-The API was hosted and built using GCP, with a Cloud Function being used in the backend which is fronted by an api gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON where all ISO 3166 updates are stored. A complete diagram of the architecture is shown below. <i>Although, due to the cost of infrastructure, the hosting was switched to Vercel (https://vercel.com/).</i>
+* The main API endpoint (`/` or `/api`) will return the homepage and API documentation.
 
-The API documentation and usage with all useful commands and examples to the API is available on the [README](https://github.com/amckenna41/iso3166-updates/blob/main/iso3166-updates-api/README.md) of the iso3166-updates-api folder. 
+The API was hosted and built using GCP, with a Cloud Function being used in the backend which is fronted by an api gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON where all ISO 3166 updates are stored. <i>Although, due to the cost of infrastructure, the hosting was switched to Vercel (https://vercel.com/).</i>
 
-<p align="center">
+The full list of attributes available for each country are:
+
+* Edition/Newsletter: Name and or edition of newsletter that the ISO 3166-2 change/update was communicated in.
+* Date Issued: Date that the change was communicated.
+* Code/Subdivision change: Overall summary of change/update made.
+* Description of change in newsletter: More in-depth info about the change/update that was made.
+
+The API documentation and usage with all useful commands and examples to the API is available below. A demo of the software and API are available [here][demo_iso3166_updates].
+
+<!-- <p align="center">
   <img src="https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166-updates-api/gcp_architecture.png?raw=true" alt="gcp_arch" height="500" width="750"/>
-</p>
+</p> -->
 
 Staying up to date
 ------------------
@@ -91,9 +100,9 @@ The list of ISO 3166-2 updates was last updated on <strong>Nov 2022</strong>.
 
 The object storing all updates, both locally (iso3166-updates.json) for the software pacakge and on the API in GCP Storage bucket, are consistenly checked for the latest updates using a Google Cloud Run microservice ([iso3166-check-for-updates](https://github.com/amckenna41/iso3166-updates/tree/main/iso3166-check-for-updates)). The application is built using a custom Docker container that uses the `iso3166-updates` Python software to pull all the latest updates/changes, from all ISO 3166-2 wiki's and each country's ISO website page, to check for the latest updates within a certain period e.g. the past 6-12 months (this month range is used as the ISO usually publishes their newsletter at the end of the year with occasional mid-year updates published). The app compares the generated output with that of the updates JSON currently in the Google Cloud Storage bucket and will replace this json to integrate the latest updates found, such that the API will have the most up-to-date data. A Cloud Scheduler is used to periodically call the application.
 
-Additionally, a GitHub Issue in the custom-built `iso3166-updates`, `iso3166-2` and `iso3166-flag-icons` repositories will be automatically created that formats and tabulates all updates/changes that need to be implemented into the `iso3166-updates`, `iso3166-2` and `iso3166-flag-icons` JSONs and repos.
+Additionally, a GitHub Issue in the custom-built `iso3166-updates`, [`iso3166-2`](https://github.com/amckenna41/iso3166-2) and [`iso3166-flag-icons`](https://github.com/amckenna41/iso3166-flag-icons) repositories will be automatically created that formats and tabulates all updates/changes that need to be implemented into the `iso3166-updates`, [`iso3166-2`](https://github.com/amckenna41/iso3166-2) and [`iso3166-flag-icons`](https://github.com/amckenna41/iso3166-flag-icons) JSONs and repos.
 
-Ultimately, this Cloud Run microservice ensures that the software and assoicated APIs are up-to-date with the latest ISO 3166-2 information for all countries/territories/subdivisions etc.
+Ultimately, this Cloud Run microservice ensures that the software and assoicated APIs are up-to-date with the latest and most accurate ISO 3166-2 information for all countries/territories/subdivisions etc.
 
 Requirements
 ------------
@@ -166,7 +175,7 @@ from the various data sources.
 **Requirements:**
 * [python][python] >= 3.8
 * [iso3166-updates][iso3166-updates] >= 1.3.0
-* [pandas][pandas] >= 1.4.3
+* [pandas][pandas] >= 1.4.4
 * [numpy][numpy] >= 1.23.2
 * [requests][requests] >= 2.28.1
 * [beautifulsoup4][beautifulsoup4] >= 4.11.1
@@ -174,11 +183,9 @@ from the various data sources.
 * [selenium][selenium] >= 4.10.0
 * [flask][flask] >= 2.3.2
 
-def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", export_folder="test_iso3166-updates",
-        concat_updates=True, export_json=True, export_csv=False, verbose=True, use_selenium=True):
 **Input parameters to get_updates function:**
 ```python
-  # -alpha2 ALPHA2, --alpha2 ALPHA2
+  # -alpha2_codes ALPHA2_CODES, --alpha2_codes ALPHA2_CODES
   #                       Alpha-2 code/s of ISO 3166 countries to check for updates (default=[]).
   # -year YEAR, --year YEAR
   #                       Selected year/years, year ranges or year to check for updates greater

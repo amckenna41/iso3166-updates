@@ -1241,7 +1241,7 @@
         {
             "Date Issued": "2016-11-15",
             "Edition/Newsletter": "Online Browsing Platform (OBP).",
-            "Code/Subdivision Change": "Change of subdivision code: CZ-621 -> CZ-641 CZ-624 -> CZ-644 CZ-622 -> CZ-642 CZ-623 -> CZ-643 CZ-611 -> CZ-631 CZ-612 -> CZ-632 CZ-613 -> CZ-633 CZ-10A -> CZ-110 CZ-10B -> CZ-111 CZ-10C -> CZ-112 CZ-10D -> CZ-113 CZ-0E -> CZ-114 CZ-10F5 -> CZ-115 CZ-614 -> CZ-634 CZ-626 -> CZ-646 CZ-615 -> CZ-635 CZ-627 -> CZ-647 CZ-PR -> CZ-10.",
+            "Code/Subdivision Change": "Change of subdivision code: CZ-621 -> CZ-641 CZ-624 -> CZ-644 CZ-622 -> CZ-642 CZ-623 -> CZ-643 CZ-611 -> CZ-631 CZ-612 -> CZ-632 CZ-613 -> CZ-633 CZ-10A -> CZ-110 CZ-10B -> CZ-111 CZ-10C -> CZ-112 CZ-10D -> CZ-113 CZ-0E -> CZ-114 CZ-10F -> CZ-115 CZ-614 -> CZ-634 CZ-626 -> CZ-646 CZ-615 -> CZ-635 CZ-627 -> CZ-647 CZ-PR -> CZ-10.",
             "Description of Change in Newsletter": "Addition of category name of “capital city” in eng, fra, ces; change of subdivision category of CZ-10 from region to capital city; change of spelling of CZ-802, CZ-806, CZ-63; typographical correction of CZ-615; addition of districts CZ-116 to CZ-122; change of parent subdivision from CZ-JC to CZ-31, CZ-JM to CZ-64, CZ-KA to CZ-41, CZ-KR to CZ-52, CZ-LI to CZ-51, Z-O to CZ-80, CZ-OL to CZ-71, CZ-PA to CZ-53, CZ-PL to CZ-32, CZ-ST to CZ-20, CZ-US to CZ-42, CZ-VY to CZ-63, CZ-ZL to CZ-72; change of subdivision code from CZ-621 to CZ 641, CZ-624 to CZ 644; CZ-622 to CZ 642, CZ-623 to CZ 643, CZ-611 to CZ 631, CZ-612 to CZ 632, CZ-613 to CZ 633, CZ-10A to CZ 110, CZ-10B to CZ 111, CZ-10C to CZ 112, CZ-10D to CZ 113, CZ-0E to CZ 114, CZ-10F to CZ 115, CZ-614 to CZ 634, CZ-626 to CZ 646, CZ-615 to CZ 635, CZ-627 to CZ 647, CZ-PR to CZ-10; update List Source."
         },
         {
@@ -5572,7 +5572,7 @@
         {
             "Date Issued": "2007-11-28",
             "Edition/Newsletter": "Newsletter I-9 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/newsletter_i-9.pdf).",
-            "Code/Subdivision Change": "Subdivisions added: UG-317 Abim UG-314 Amolatar UG-216 Amuria UG-319 Amuru UG-217 Budaka UG-218 Bukwa UG-419 Bulisa UG-219 Butaleja UG-318 Dokolo UG-416 Ibanda UG-417 Isingiro UG-315 Kaabong UG-220 Kaliro UG-418 Kiruhura UG-316 Koboko UG-221 Manafwa UG-320 Maracha UG-114 Mityana UG-115 Nakaseke UG-222 Namutumba UG-321 Oyam.",
+            "Code/Subdivision Change": "Subdivisions added: UG-317 Abim UG-314 Amolatar UG-216 Amuria UG-319 Amuru UG-217 Budaka UG-218 Bukwo UG-419 Bulisa UG-219 Butaleja UG-318 Dokolo UG-416 Ibanda UG-417 Isingiro UG-315 Kaabong UG-220 Kaliro UG-418 Kiruhura UG-316 Koboko UG-221 Manafwa UG-320 Maracha UG-114 Mityana UG-115 Nakaseke UG-222 Namutumba UG-321 Oyam.",
             "Description of Change in Newsletter": "Addition of administrative divisions and their codes."
         },
         {

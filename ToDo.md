@@ -29,7 +29,7 @@
 - [X] Add in readme/demo how to use API with requests library.
 - [X] Return multiple updates if array of iso_codes applied.
 - [X] Replace any null columns with empty string.
-- [ ] Go through each country and respective ISO3166-2 wiki URL to verify if it's all correct in json.
+- [X] Go through each country and respective ISO3166-2 wiki URL to verify if it's all correct in json.
 - [X] Change iso_code to alpha2_code
 - [X] Implement GCP in workflow - https://sha.ws/automatic-upload-to-google-cloud-storage-with-github-actions.html
 - [X] Dict keys in API output not ordered in correct way - reindex
@@ -90,8 +90,7 @@ Edition/Newsletter - should be OBP.
 - [X] Add month param to software.
 - [X] Mention the earliest Date Issued was 2000-06-21.
 - [ ] Add readthedocs badge - [![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](http://ansicolortags.readthedocs.io/?badge=latest)
-- [ ] Implemenet API gateway and endpoints for Cloud Func - update cloud arch image to include gateway, endpoints, load balancer, instance group, template etc.
-- [ ] https://cloud.google.com/api-gateway/docs/passing-data
+- [X] Implemenet API gateway and endpoints for Cloud Func - update cloud arch image to include gateway, endpoints, load balancer, instance group, template etc.
 - [X] Test concat_updates param in unit tests.
 - [X] Add path-ignore keywords to GitHub Action.
 - [X] Update api/readme to incorporate new api gateway.
@@ -112,7 +111,7 @@ Edition/Newsletter - should be OBP.
 - [X] Make bucket and iso3166-updates.json file publicly accessible.
 - [X] When updating file in bucket, ensure it is publicy accessible.
 - [X] Create vercel deployment pipeline in Github workflow.
-- [ ] Create API endpoint for https://iso3166-updates.com/api and make main https://iso3166-updates.com a more visual frontend for the app with a dropdown of available countries, years etc.
+- [X] Create API endpoint for https://iso3166-updates.com/api and make main https://iso3166-updates.com a more visual frontend for the app with a dropdown of available countries, years etc.
 - [X] Fix pytest badge on readme.
 - [X] Unit test new api to double check invalid responses are returning correct message and status.
 - [X] When check-for-updates is called and updates are found, programmatically raise an issue in the relevant repositories with a formatted description of the updates found (https://stackoverflow.com/questions/31767596/github-is-there-a-way-to-programmatically-file-an-issue). Instead of creating a new Issue each time, could update the same Issue with new data (https://gist.github.com/JeffPaine/3145490?permalink_comment_id=2558013).
@@ -139,7 +138,7 @@ Edition/Newsletter - should be OBP.
 - [X] Rename vars in check-for-updates to make more clear the current and old updates jsons.
 - [X] Update return message in check-for-updates to be flask error message response.
 - [X] Update software to be able to accept alpha-3 codes.
-- [ ] Update API cloud arch to incorporate new archive folder and Create Issue functionality.
+- [X] Update API cloud arch to incorporate new archive folder and Create Issue functionality.
 - [X] Create Issue seems to add all updates from month range rather than just those updates that aren't in json.
 - [X] check-for-updates not working: need to publish new version of software, updates using d-m-Y format addtionally being appended with updates in format Y-m-d.
 - [X] Unit tests to check all Date Issued in correct format. 
@@ -160,7 +159,7 @@ Edition/Newsletter - should be OBP.
 - [X] Combine error tests of same type into one Test case.
 - [X] In get_updates_df(), provide validation if input array parameter isnt array/list.
 - [X] Double check year_range, greater_than and less_than need to be passed into get_updates_df.
-- [ ] Go through updates object country by country, comparing its output and that of wiki.
+- [X] Go through updates object country by country, comparing its output and that of wiki.
 - [X] Include tests for year param in iso3166.get_updates(year=[])
 - [X] If no alpha2 input param values input but year is then append year to filename, append list of years if less than 10 years input e.g iso3166-updates-RU-2011,2022.json, iso3166-updates-RU-2011,2022.csv
 - [X] Unit tests for testing above filename convention.
@@ -200,7 +199,7 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Add test cases comments to test class.
 - [X] Fix spacing in wikis: e.g "Subdivisions added:7 parishes" should be "Subdivisions added: 7 parishes". Find newline character.
 - [X] Add '.' to end of each json key.
-- [ ] Note that for Date Issued column, corrected date is taken on not original for an update, if applicable.
+- [X] Note that for Date Issued column, corrected date is taken on not original for an update, if applicable.
 - [X] Issue for https://en.wikipedia.org/wiki/ISO_3166-2:TR update 2011-12-13, link to Newsletter is .pdff not .pdf, need to manually change this.
 - [X] May need to use both data sources of wiki and ISO, ISO only contains "Short Description of change" column, wiki contains that + the "Code/Subdivision Change" and "Edition/Newsletter" columns which provides some extra info. 
 - [X] In demo, have selenium install script in a cell.
@@ -271,7 +270,7 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] In check-for-updates double check archive functionality still works.
 - [X] When mentioning any repo secrets relating to GCP, prefix with GCP_
 - [X] In check-for-updates look into different status codes, return message if request gets status code.
-- [ ] On main API homepage with documentation etc, mention last updated. Could pull the latest date from the oject on GCP.
 - [X] Change all comment underlining from "------" to "=======", including on colab notebook.
 - [X] Add methods comments to iso3166-updates class.
 - [X] Add 🧪 to tests and desc.
+- [X] In readme's, if mentioning other softwares, wrap in `` and add link to repo.

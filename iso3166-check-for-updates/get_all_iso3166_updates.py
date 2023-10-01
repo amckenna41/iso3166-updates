@@ -249,7 +249,7 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
             if (len(year) > 2):
                 year = []
                 year_range = False
-        #parse array for using greater than symbol
+        #parse array if using greater than symbol
         elif ('>' in year[0]):
             year = list(year[0].rpartition(">")[1:])
             greater_than = True
@@ -257,7 +257,7 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
             if (len(year) > 2):
                 year = []
                 greater_than = False
-        #parse array for using less than symbol
+        #parse array if using less than symbol
         elif ('<' in year[0]):
             year = list(year[0].rpartition("<")[1:])
             less_than = True
@@ -266,7 +266,7 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
                 year = []
                 less_than = False
         elif (',' in year[0]):
-            #split years into multiple years, if multiple are input
+            #split years into comma seperated list of multiple years if multiple years are input
             year = year[0].split(',')
     #validate each year's format using regex
     for year_ in year:

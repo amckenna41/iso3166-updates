@@ -8,7 +8,7 @@ import sys
 
 #software metadata
 __name__ = 'iso3166-updates'
-__version__ = "1.4.4"
+__version__ = "1.4.5"
 __description__ = "A Python package that pulls the latest updates & changes to all ISO 3166 listed countries."
 __author__ = 'AJ McKenna, https://github.com/amckenna41'
 __authorEmail__ = 'amckenna41@qub.ac.uk'
@@ -61,10 +61,6 @@ setup(name=__name__,
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
       install_requires=[
-          'beautifulsoup4>=4.11.1',
-          'pandas',
-          'numpy',
-          'requests>=2.28.1',
           'iso3166'
       ],
      test_suite=__test_suite__,
