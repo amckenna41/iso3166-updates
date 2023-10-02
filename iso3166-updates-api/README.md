@@ -25,7 +25,7 @@ The paths/endpoints available in the API are - `/api/all`, `/api/alpha2`, `/api/
 
 * The **year** parameter can be a specific year, year range, or a cut-off year to get updates less than/more than a year. The year value can be appended to the **year** path/endpoint e.g <i>/api/year/2017, /api/year/2010-2015, /api/year/<2009, /api/year/>2002</i>. The **year** endpoint can be used in conjunction with the **alpha2** and **name** endpoints to get the country updates for a specific country and year, in the format `api/alpha2/<input_alpha2>/year/<input_year>` and `api/name/<input_name>/year/<input_year>`, respectively. If an invalid year is input then an error will be returned. 
 
-* The **months** parameter will gather all updates for 1 or more countries from an input number of months from the present day. The month value can be appended to the **months** path/endpoint e.g <i>/api/months/12, /api/months/24</i>. If an invalid month value is input then an error will be returned.
+* The **months** parameter will gather all updates for 1 or more countries from an input number of months from the present day. The month value can be appended to the **months** path/endpoint, e.g <i>/api/months/12, /api/months/24</i> will return all updates/changes from the past 12 and 24 months, respectively. If an invalid month value is input then an error will be returned.
 
 * The main API endpoint (`/` or `/api`) will return the homepage and API documentation.
 

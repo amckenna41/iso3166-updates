@@ -68,7 +68,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(author, "AJ", "Expected author to be AJ, got {}.".format(author))
 #2.)
         section_list_menu = soup.find(id='section-list-menu').find_all('li')
-        correct_section_menu = ["About", "Attributes", "Endpoints", "All", "Alpha-2 Code", "Name", "Credits", "Contributing"]
+        correct_section_menu = ["About", "Attributes", "Endpoints", "All", "Alpha-2 Code", "Year", "Name", "Months", "Credits", "Contributing"]
         for li in section_list_menu:
             self.assertIn(li.text.strip(), correct_section_menu, "Expected list element {} to be in list.".format(li))
 
