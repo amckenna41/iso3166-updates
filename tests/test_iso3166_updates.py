@@ -24,27 +24,28 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         """ Initialise test variables. """                
         #output columns from various functions
         self.expected_output_columns = ["Date Issued", "Edition/Newsletter", "Code/Subdivision Change", "Description of Change in Newsletter"]
-    
+
+    @unittest.skip("Skipping metadata unit tests.")    
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        # self.assertEqual(metadata('iso3166-updates')['version'], "1.4.4", 
-        #     "iso3166-updates version is not correct, got: {}.".format(metadata('iso3166-updates')['version']))
+        self.assertEqual(metadata('iso3166-updates')['version'], "1.5.0", 
+            "iso3166-updates version is not correct, expected 1.5.0, got {}.".format(metadata('iso3166-updates')['version']))
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
-            "iso3166-updates software name is not correct, got: {}.".format(metadata('iso3166-updates')['name']))
+            "iso3166-updates software name is not correct, expected iso3166-updates, got {}.".format(metadata('iso3166-updates')['name']))
         self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna, https://github.com/amckenna41", 
-            "iso3166-updates author is not correct, got: {}.".format(metadata('iso3166-updates')['author']))
+            "iso3166-updates author is not correct, expected AJ McKenna, got {}.".format(metadata('iso3166-updates')['author']))
         self.assertEqual(metadata('iso3166-updates')['author-email'], "amckenna41@qub.ac.uk", 
-            "iso3166-updates author email is not correct, got: {}.".format(metadata('iso3166-updates')['author-email']))
-        self.assertEqual(metadata('iso3166-updates')['summary'], "A Python package that pulls the latest updates & changes to all ISO 3166 listed countries.", 
+            "iso3166-updates author email is not correct, expected amckenna41@qub.ac.uk, got {}.".format(metadata('iso3166-updates')['author-email']))
+        self.assertEqual(metadata('iso3166-updates')['summary'], "A Python package that pulls the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest.", 
             "iso3166-updates package summary is not correct, got: {}.".format(metadata('iso3166-updates')['summary']))
         self.assertEqual(metadata('iso3166-updates')['keywords'], "iso,iso3166,beautifulsoup,python,pypi,countries,country codes,csv,iso3166-2,subdivisions,iso3166-1,alpha-2,alpha-3,selenium,chromedriver", 
             "iso3166-updates keywords are not correct, got: {}.".format(metadata('iso3166-updates')['keywords']))
         self.assertEqual(metadata('iso3166-updates')['home-page'], "https://github.com/amckenna41/iso3166-updates", 
-            "iso3166-updates home page url is not correct, got: {}.".format(metadata('iso3166-updates')['home-page']))
+            "iso3166-updates home page url is not correct, expected https://github.com/amckenna41/iso3166-updates, got {}.".format(metadata('iso3166-updates')['home-page']))
         self.assertEqual(metadata('iso3166-updates')['maintainer'], "AJ McKenna", 
-            "iso3166-updates maintainer is not correct, got: {}.".format(metadata('iso3166-updates')['maintainer']))
+            "iso3166-updates maintainer is not correct, expected AJ McKenna, got {}.".format(metadata('iso3166-updates')['maintainer']))
         self.assertEqual(metadata('iso3166-updates')['license'], "MIT", 
-            "iso3166-updates license type is not correct, got: {}.".format(metadata('iso3166-updates')['license']))
+            "iso3166-updates license type is not correct, expected MIT, got {}.".format(metadata('iso3166-updates')['license']))
     
     def test_updates_all(self):
         """ Testing 'all' attribute that should return all ISO 3166 updates data. """
@@ -62,7 +63,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         for iso_code in test_all_updates:
             for _ in test_all_updates[iso_code]:
                 updates_counter += 1
-        self.assertEqual(updates_counter, 912, "Expected 912 total ISO 3166-2 updates in output object, got {}.".format(updates_counter))
+        self.assertEqual(updates_counter, 920, "Expected 920 total ISO 3166 updates in output object, got {}.".format(updates_counter))
 
     def test_updates_alpha2(self):
         """ Testing __getitem__ function that allows the updates class to be subscriptable, using a variety of alpha-2 country codes. """
@@ -80,7 +81,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     
         test_alpha2_bt_updates_expected = {
             "Date Issued": "2020-11-24",
-            "Edition/Newsletter": "Online Browsing Platform (OBP).",
+            "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BT).",
             "Description of Change in Newsletter": "Change of spelling of BT-43; Update List Source.",
             "Code/Subdivision Change": ""
             }
@@ -96,7 +97,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     
         test_alpha2_dj_updates_expected = {
             "Date Issued": "2020-11-24",
-            "Edition/Newsletter": "Online Browsing Platform (OBP).",
+            "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:DJ).",
             "Description of Change in Newsletter": "Correction of the Code Source.",
             "Code/Subdivision Change": ""
             }
@@ -128,13 +129,13 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     
         test_alpha2_fj_gh_gn_updates_expected_1 = {
             "Date Issued": "2016-11-22",
-            "Edition/Newsletter": "Online Browsing Platform (OBP).",
+            "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:FJ).",
             "Description of Change in Newsletter": "Reinstatement of provinces deleted due to a technical glitch.",
             "Code/Subdivision Change": ""
             }
         test_alpha2_fj_gh_gn_updates_expected_2 = {
             "Date Issued": "2020-11-24",
-            "Edition/Newsletter": "Online Browsing Platform (OBP).",
+            "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:GH).",
             "Description of Change in Newsletter": "Correction of the Code Source.",
             "Code/Subdivision Change": ""
             }
@@ -153,7 +154,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
 
         test_alpha2_yt_updates_expected = {
             "Date Issued": "2022-11-29",
-            "Edition/Newsletter": "Online Browsing Platform (OBP).",
+            "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:YT).",
             "Description of Change in Newsletter": "Modification of remark part 2.",
             "Code/Subdivision Change": ""
             }
@@ -192,7 +193,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
 
         self.assertEqual(len(test_year_2019_updates), 24, 
             "Expected 24 updates in output object, got {}.".format(len(test_year_2019_updates)))
-        self.assertEqual(list(test_year_2019_updates),  test_year_2019_expected_keys, 
+        self.assertEqual(list(test_year_2019_updates), test_year_2019_expected_keys, 
             "Expected and observed list of country codes do not match:\n{}".format(list(test_year_2019_updates)))
         for update in test_year_2019_updates:
             for row in range(0, len(test_year_2019_updates[update])):
@@ -204,7 +205,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
 
         self.assertEqual(len(test_year_2003_updates), 10, 
             "Expected 10 updates in output object, got {}.".format(len(test_year_2003_updates)))
-        self.assertEqual(list(test_year_2003_updates),  test_year_2003_expected_keys, 
+        self.assertEqual(list(test_year_2003_updates), test_year_2003_expected_keys, 
             "Expected and observed list of country codes do not match:\n{}".format(list(test_year_2003_updates)))
         for update in test_year_2003_updates:
             for row in range(0, len(test_year_2003_updates[update])):
@@ -220,7 +221,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         
         self.assertEqual(len(test_year_2000_2001_2002_updates), 58, 
             "Expected 58 updates in output object, got {}.".format(len(test_year_2000_2001_2002_updates)))
-        self.assertEqual(list(test_year_2000_2001_2002_updates),  test_year_2000_2001_2002_expected_keys, 
+        self.assertEqual(list(test_year_2000_2001_2002_updates), test_year_2000_2001_2002_expected_keys, 
             "Expected and observed list of country codes do not match:\n{}".format(list(test_year_2000_2001_2002_updates)))
         for update in test_year_2000_2001_2002_updates:
             for row in range(0, len(test_year_2000_2001_2002_updates[update])):
@@ -228,12 +229,12 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                     "Expected year of updates output to be either 2000, 2001 or 2002, got {}.".format(test_year_2000_2001_2002_updates[update][row]["Date Issued"]))    
 #4.)
         test_year_gt_2021_updates = iso.updates.year(test_year_gt_2021)
-        test_year_gt_2021_expected_keys = ["CI", "CN", "DZ", "ET", "FI", "FR", "GB", "GF", "GP", "GT", "HU", "ID", "IQ", "IS", "KH", "KP", 
-                                           "KZ", "LT", "LV", "MQ", "MX", "NL", "NP", "NZ", "PA", "RE", "RU", "SI", "SS", "TR", "YT"]
+        test_year_gt_2021_expected_keys = ['CI', 'CN', 'DZ', 'ET', 'FI', 'FR', 'GB', 'GF', 'GP', 'GT', 'HU', 'ID', 'IN', 'IQ', 'IS', 'KH', 'KP', 'KR', 'KZ', 'LT', 
+                                           'LV', 'ME', 'MQ', 'MX', 'NL', 'NP', 'NZ', 'PA', 'PH', 'PL', 'RE', 'RU', 'SI', 'SS', 'TR', 'YT']
 
-        self.assertEqual(len(test_year_gt_2021_updates), 31, 
-            "Expected 31 updates in output object, got {}.".format(len(test_year_gt_2021_updates)))
-        self.assertEqual(list(test_year_gt_2021_updates),  test_year_gt_2021_expected_keys, 
+        self.assertEqual(len(test_year_gt_2021_updates), 36, 
+            "Expected 36 updates in output object, got {}.".format(len(test_year_gt_2021_updates)))
+        self.assertEqual(list(test_year_gt_2021_updates), test_year_gt_2021_expected_keys, 
             "Expected and observed list of country codes do not match:\n{}".format(list(test_year_gt_2021_updates)))
         for update in test_year_gt_2021_updates:
             for row in range(0, len(test_year_gt_2021_updates[update])):

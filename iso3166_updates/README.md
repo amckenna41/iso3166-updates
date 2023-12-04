@@ -21,39 +21,54 @@ import iso3166_updates as iso
 iso.updates.all
 ```
 
-**Get all listed ISO 3166-2 changes/updates for Andorra (AD):**
+**Get all listed ISO 3166 changes/updates for Andorra (AD):**
 ```python
 iso.updates["AD"]
 ```
 
-**Get all listed ISO 3166-2 changes/updates for BA, DE, FR, HU, PY:**
+**Get all listed ISO 3166 changes/updates for BA, DE, FR, HU, PY:**
 ```python
 iso.updates["BA","DE","FR","HU","PY"]
 ```
 
-**Get any listed ISO 3166-2 changes/updates for Ireland, between years 2012 and 2021:**
+**Get all listed ISO 3166 changes/updates for all countries, for years 2002, 2003 and 2004:**
+```python
+iso.updates.year("2002, 2003, 2004")
+```
+
+**Get all listed ISO 3166 changes/updates for all countries, for year range 2013-2016:**
+```python
+iso.updates.year("2013-2016")
+```
+
+**Get all listed ISO 3166 changes/updates for all countries, for all years after 2017 inclusive:**
+```python
+iso.updates.year(">2017")
+```
+
+**Get any listed ISO 3166 changes/updates for Ireland, between years 2012 and 2021:**
 ```python
 iso.updates.year("2012-2021").IE
 ```
 
-**Get any listed ISO 3166-2 changes/updates for Tanzania, with updates with year >= 2015:**
+**Get any listed ISO 3166 changes/updates for Tanzania, with updates with year >= 2015:**
 ```python
 iso.updates.year(">2015").TA
 ```
 
-**Get any listed ISO 3166-2 changes/updates for Romania, with updates with year < 2007:**
+**Get any listed ISO 3166 changes/updates for Romania, with updates with year < 2007:**
 ```python
 iso.updates.year("<2007").RO
 ```
 
-**Get any listed ISO 3166-2 changes/updates for Yemen, with updates with year < 2010:**
+**Get any listed ISO 3166 changes/updates for Yemen, with updates with year < 2010:**
 ```python
 iso.updates.year("<2010")["YE"]
 ```
 
-The output to the above functions for the updates/changes to an ISO 3166-2 country returns 4 attributes: 
+The output to the above functions for the updates/changes to an ISO 3166 country returns 4 attributes: 
 
-* Edition/Newsletter: Name and or edition of newsletter that the ISO 3166-2 change/update was communicated in.
+* Edition/Newsletter: Name and or edition of newsletter that the ISO 3166 change/update was communicated in.
 * Date Issued: Date that the change was communicated.
 * Code/Subdivision change: Overall summary of change/update made.
 * Description of change in newsletter: More in-depth info about the change/update that was made.

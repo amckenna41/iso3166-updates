@@ -31,20 +31,21 @@ def check_for_updates_main():
     updates data within specified date range for the iso3166-updates API. It uses the 
     get_all_iso3166_updates.py script to web scrape all country's ISO 3166-2 data 
     from the various data sources, checking for any updates in a date range. This 
-    date range is usually set to the past 6-12 months, as the ISO3166 newsletter is 
-    published at the end of the year with occasional updates being made periodically
-    throughout the year. The Cloud run app is built using a custom docker container 
+    date range is normally set to the past 6-12 months, as the ISO 3166 is updated 
+    annually (except for 2001 and 2006), usually at the end of the year as well as 
+    periodically throughout. The Cloud run app is built using a custom docker container 
     that contains all the required dependancies and binaries required to run this script. 
     
-    If any updates are found that are not already present in the JSON object
-    within the GCP Storage bucket then a GitHub Issue is automatically created that 
-    tabulates and formats all the latest data in the iso3166-updates, iso3166-2 
-    repository that itself stores all the latest info and data relating to the 
-    ISO 3166-2 standard. A similar Issue will also be raised in the iso3166-flag-icons 
-    repo which is another custom repo that stores all the flag icons of all countries 
-    and subdivisions in the ISO 3166-1 and ISO 3166-2. Additionally, if changes are 
-    found then the ISO 3166 updates JSON file in the GCP Storage bucket is updated 
-    which is the data source for the iso3166-updates Python package and accompanying API.
+    If any updates are found that are not already present in the JSON object within 
+    the GCP Storage bucket then a GitHub Issue is automatically created that 
+    tabulates and formats all the latest data in the iso3166-updates and iso3166-2 
+    repositories that itself stores all the latest subdivision info and data relating 
+    to the ISO 3166-2 standard. A similar Issue will also be raised in the 
+    iso3166-flag-icons repo which is another custom repo that stores all the flag 
+    icons of all countries and subdivisions in the ISO 3166-1 and ISO 3166-2. 
+    Additionally, if changes are found then the ISO 3166 updates JSON file in the GCP 
+    Storage bucket is updated which is the data source for the iso3166-updates 
+    Python package and accompanying API.
 
     Parameters
     ==========
@@ -52,7 +53,7 @@ def check_for_updates_main():
     
     Returns
     =======
-    :success_message/error_message : json
+    :success_message/error_message: json
        jsonified response indicating whether the application has completed successfully or
        an error has arose during execution.
     """
@@ -63,13 +64,13 @@ def check_for_updates_main():
     if (os.environ.get("MONTH_RANGE") is None or os.environ.get("MONTH_RANGE") == ""):
         months = 12
     else:
-        months = os.environ["MONTH_RANGE"]
+        months = int(os.environ["MONTH_RANGE"]) #convert to int - months should be a whole number
 
     #get create_issue bool env var which determines if GitHub Issues are created each time new/missing ISO 3166 updates are found
     if (os.environ.get("CREATE_ISSUE") is None or os.environ.get("CREATE_ISSUE") == ""):
         create_issue = True
     else:
-        create_issue = os.environ["CREATE_ISSUE"]
+        create_issue = bool(os.environ["CREATE_ISSUE"]) #convert to bool - var should be 0 or 1
 
     #get list of all country's 2 letter alpha-2 codes
     alpha2_codes = sorted(list(iso3166.countries_by_alpha2.keys()))
@@ -109,20 +110,20 @@ def check_for_updates_main():
     if (updates_found):
         if (create_issue):
             create_github_issue(date_filtered_updates, missing_filtered_updates, months)
-            success_message["message"] = "New ISO 3166-2 updates found and successfully exported to bucket and GitHub Issues created."
+            success_message["message"] = "New ISO 3166 updates found and successfully exported to bucket and GitHub Issues created."
             print(success_message["message"])
         else:
-            success_message["message"] = "New ISO 3166-2 updates found and successfully exported to bucket."
+            success_message["message"] = "New ISO 3166 updates found and successfully exported to bucket."
             print(success_message["message"])
     else:
-        success_message["message"] = "No new ISO 3166-2 updates found."
+        success_message["message"] = "No new ISO 3166 updates found."
         print(success_message["message"])
 
     return jsonify(success_message), 200
 
 def update_json(latest_iso3166_updates, latest_iso3166_updates_after_date_filter):
     """
-    If changes have been found for any countries in the ISO 3166-2 within the
+    If changes have been found for any countries in the ISO 3166 within the
     specified date range using the check_iso3166_updates_main function then 
     the JSON in the storage bucket is updated with the new JSON and the old 
     one is stored in an archive folder on the same bucket. Additionally, the 
@@ -131,21 +132,21 @@ def update_json(latest_iso3166_updates, latest_iso3166_updates_after_date_filter
 
     Parameters
     ==========
-    :latest_iso3166_updates : json
+    :latest_iso3166_updates: json
         json object with all listed iso3166-2 updates, without date filter
         applied.
-    :latest_iso3166_updates_after_date_filter : json
+    :latest_iso3166_updates_after_date_filter: json
         json object with all listed iso3166-2 updates after month date filter
         applied. 
 
     Returns
     =======
-    :updates_found : bool
+    :updates_found: bool
         bool to track if updates/changes have been found in JSON object.
     :individual_updates_json: dict
         dictionary of individual ISO 3166 updates that aren't in existing 
         updates object on JSON, after date filter applied.
-    :missing_individual_updates_json : dict
+    :missing_individual_updates_json: dict
         dictionary of individual ISO 3166 updates that aren't in existing 
         updates object on JSON, with no date filter applied.
     """
@@ -174,7 +175,7 @@ def update_json(latest_iso3166_updates, latest_iso3166_updates_after_date_filter
     #download current ISO 3166 updates JSON file from storage bucket 
     current_updates_data = json.loads(blob.download_as_string(client=None))
 
-    #set new json object to original one imported from gcp storage
+    #set new json object to original one imported from GCP storage
     updated_json = current_updates_data
     updates_found = False
 
@@ -244,15 +245,19 @@ def update_json(latest_iso3166_updates, latest_iso3166_updates_after_date_filter
     #temp path for exported json
     tmp_updated_json_path = os.path.join("/tmp", os.environ["BLOB_NAME"])
     
-    #export updated json to temp folder
-    with open(tmp_updated_json_path, 'w', encoding='utf-8') as output_json:
-        json.dump(updated_json, output_json, ensure_ascii=False, indent=4)
-    
-    #create blob for updated JSON
-    blob = bucket.blob(os.environ["BLOB_NAME"])
+    #export updated json object to bucket if env var true - if env var not set then don't export to bucket
+    if (os.environ.get("EXPORT") is None):
+        if (os.environ["EXPORT"]):
 
-    #upload new updated json using gcp sdk, replacing current updates json 
-    blob.upload_from_filename(tmp_updated_json_path)
+            #export updated json to temp folder
+            with open(tmp_updated_json_path, 'w', encoding='utf-8') as output_json:
+                json.dump(updated_json, output_json, ensure_ascii=False, indent=4)
+            
+            #create blob for updated JSON
+            blob = bucket.blob(os.environ["BLOB_NAME"])
+
+            #upload new updated json using gcp sdk, replacing current updates json 
+            blob.upload_from_filename(tmp_updated_json_path)
 
     return updates_found, individual_updates_json, missing_individual_updates_json
     
@@ -260,24 +265,23 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
     """
     Create a GitHub issue on the iso3166-2, iso3166-updates and 
     iso3166-flag-icons repository, using the GitHub api, if any updates/changes 
-    were found in the ISO 3166-2 that aren't in the current object. The Issue will 
+    were found in the ISO 3166 that aren't in the current object. The Issue will 
     be formatted and tabulated in a way to clearly outline any of the updates/changes 
     to be made to the JSONs in the iso3166-2, iso3166-updates and iso3166-flag-icons 
     repos. 
 
     Parameters
     ==========
-    :latest_iso3166_updates_after_date_filter : dict
-        dict object with all listed ISO 3166-2 updates after month date filter
-        applied.
-    :missing_filtered_updates : dict
-        dict object with any missing ISO 3166-2 updates, regardless of date filter.
-    :month_range : int
-        number of past months updates were pulled from.
+    :latest_iso3166_updates_after_date_filter: dict
+        dict object with all listed ISO 3166 updates after month date filter applied.
+    :missing_filtered_updates: dict
+        dict object with any missing ISO 3166 updates, regardless of date filter.
+    :month_range: int
+        number of previous months updates were pulled from.
 
     Returns
     =======
-    :create_issue_success : bool
+    :create_issue_success: bool
         bool tracking if GitHub Issues were created successfully using the status 
         code of the post request.
 
@@ -286,20 +290,20 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
     [1]: https://developer.github.com/v3/issues/#create-an-issue
     """
     issue_json = {}
-    issue_json["title"] = "ISO 3166-2 Updates: " + str(current_datetime.strftime('%Y-%m-%d')) + " (" + \
+    issue_json["title"] = "ISO 3166 updates: " + str(current_datetime.strftime('%Y-%m-%d')) + " (" + \
         (', '.join(set(list(latest_iso3166_updates_after_date_filter.keys()) + list(missing_filtered_updates.keys())))) + ")"
 
     #body of GitHub Issue
-    body = "# ISO 3166-2 Updates\n"
+    body = "# ISO 3166 updates\n"
 
-    #get total sum of updates for all countrys in json
+    #get total sum of updates for all countries in json
     total_updates = sum([len(latest_iso3166_updates_after_date_filter[code]) for code in latest_iso3166_updates_after_date_filter])
     total_countries = len(latest_iso3166_updates_after_date_filter)
 
     #append any updates data to body
     if (total_countries != 0):
 
-        #display number of updates for countrys and the date period
+        #display number of updates for countries and the date period
         body += "<h2>" + str(total_updates) + " update(s) found for " + str(total_countries) + " country/countries between the " + str(month_range) + " month period of " + \
             str((current_datetime + relativedelta(months=-month_range)).strftime('%Y-%m-%d')) + " to " + str(current_datetime.strftime('%Y-%m-%d')) + "</h2>"
 
@@ -322,14 +326,14 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
             #close table element 
             body += "</table>"
 
-    #get total sum of any missing updates data for all countrys in json, regardless of date filter
+    #get total sum of any missing updates data for all countries in json, regardless of date filter
     total_missing_updates = sum([len(missing_filtered_updates[code]) for code in missing_filtered_updates])
     total_missing_countries = len(missing_filtered_updates)
 
     #append any missing updates data to body
     if (total_missing_countries != 0):
 
-        #display number of updates for countrys and the date period
+        #display number of updates for countries and the date period
         body += "<h2>" + str(total_missing_updates) + " missing update(s) found for " + str(total_missing_countries) + " country/countries</h2>"
 
         #iterate over updates in json, append to updates object
@@ -354,7 +358,7 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
     #add attributes to data json 
     issue_json["body"] = body
     issue_json["assignee"] = "amckenna41"
-    issue_json["labels"] = ["iso3166-updates", "iso", "iso3166", "iso366-2", "subdivisions", "iso3166-flag-icons", str(current_datetime.strftime('%Y-%m-%d'))]
+    issue_json["labels"] = ["iso3166-updates", "iso", "iso3166", "iso3166-1", "iso366-2", "subdivisions", "iso3166-flag-icons", str(current_datetime.strftime('%Y-%m-%d'))]
 
     #raise error if GitHub related env vars not set
     if (os.environ.get("GITHUB_OWNER") is None or os.environ.get("GITHUB_OWNER") == "" or \
@@ -364,13 +368,13 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
     
     #http request headers for GitHub API
     headers = {'Content-Type': "application/vnd.github+json", 
-        "Authorization": "token " + os.environ["GITHUB_API_TOKEN"]}
+               "Authorization": "token " + os.environ["GITHUB_API_TOKEN"]}
     github_repos = os.environ.get("GITHUB_REPOS")
     
     #make post request to create issue in repos using GitHub api url and headers, if github_repo env vars set
     if not (github_repos is None and github_repos != ""): 
         #split into list of repos 
-        github_repos = github_repos.replace(' ', '').split(',')
+        github_repos = github_repos.replace(' ', '').split(';')
 
         #iterate over each repo listed in env var, making post request with issue_json data 
         for repo in github_repos:

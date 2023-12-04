@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 '''
-Shell script that pulls all the latest ISO 3166-2 data for all countries using the two data sources. This script 
-calls the get_all_iso3166_updates.py Python script, individally passing in the 2 letter alpha-2 codes one by one.
+Shell script that pulls all the latest ISO 3166 updates data for all countries using the two data sources. This script 
+calls the get_all_iso3166_updates.py Python script, individually passing in the 2 letter alpha-2 codes one by one.
 A random delay is introduced between each script execution to introduce some randomness which is required when 
-using Python Selenium. Each countries individual updates are exported to a JSON and then concatenated into 
+using the Selenium Chromedriver. Each countrys individual updates are exported to a JSON and then concatenated into 
 one JSON. 
 '''
 

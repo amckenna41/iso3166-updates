@@ -70,7 +70,6 @@ Edition/Newsletter - should be OBP.
 - [X] For unit tests: output single row of expected dataframe to array (e.g sn_updates_df.iloc[1].to_numpy()).
 - [ ] Add Code Coverage.
 - [ ] Add green MIT logo to Readme (https://shields.io/category/license).
-- [ ] Documentation on readthedocs.
 - [ ] Create logo for API.
 - [X] If invalid input param put into URL then return empty dict instead.
 - [X] Example on reamde and demo of how to use API using JS axios library (https://www.taniarascia.com/how-to-connect-to-an-api-with-javascript/).
@@ -89,7 +88,6 @@ Edition/Newsletter - should be OBP.
 - [X] Add month unit tests to api tests.
 - [X] Add month param to software.
 - [X] Mention the earliest Date Issued was 2000-06-21.
-- [ ] Add readthedocs badge - [![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](http://ansicolortags.readthedocs.io/?badge=latest)
 - [X] Implemenet API gateway and endpoints for Cloud Func - update cloud arch image to include gateway, endpoints, load balancer, instance group, template etc.
 - [X] Test concat_updates param in unit tests.
 - [X] Add path-ignore keywords to GitHub Action.
@@ -274,3 +272,17 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Add methods comments to iso3166-updates class.
 - [X] Add 🧪 to tests and desc.
 - [X] In readme's, if mentioning other softwares, wrap in `` and add link to repo.
+- [X] Update latest changes data on readme.
+- [X] Rerun script
+- [X] Gcloud run script + call it and then delete it, all in one command.
+- [X] Remove space between colon in arguments/returns comments.
+- [X] Fix runtime error: RuntimeError: Runtime error that occurs when Selenium hasn't properly parsed ISO website, may need to rerun script again. Maybe increase minimum time before getting ISO website data.
+- [X] Mention on main readme that changes are mainly made to the ISO 3166-2 naming covnentions but some are occaisinally made to ISO 3166-1.
+- [X] For any Online Browsing Platform entries - append URL to it https://www.iso.org/obp/ui/#iso:code:3166:ET etc. Update readme and changes.md.
+- [X] Rerun script in notebook - export and create_issue = 1.
+- [X] Updates that already have OBP in their Edition/Newsletter - missing hyphen in between - rerun script.
+- [X] Change all references of ISO 3166-2 changes to ISO 3166 chabges.
+
+Future Additions
+----------------
+- [ ] Docs on readthedocs, readthedocs badge - [![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](http://ansicolortags.readthedocs.io/?badge=latest) 

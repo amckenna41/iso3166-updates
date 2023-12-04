@@ -4,11 +4,10 @@
 
 import pathlib
 from setuptools import setup, find_packages
-import sys
 
 #software metadata
 __name__ = 'iso3166-updates'
-__version__ = "1.4.5"
+__version__ = "1.5.0"
 __description__ = "A Python package that pulls the latest updates & changes to all ISO 3166 listed countries."
 __author__ = 'AJ McKenna, https://github.com/amckenna41'
 __authorEmail__ = 'amckenna41@qub.ac.uk'
@@ -21,10 +20,6 @@ __keywords__ = ["iso", "iso3166", "beautifulsoup", "python", "pypi", "countries"
             "iso3166-2", "subdivisions", "iso3166-1", "alpha-2", "alpha-3", "selenium", "chromedriver"]
 __test_suite__ = "tests"
  
-#ensure python version is greater than 3
-if (sys.version_info[0] < 3):
-    sys.exit('Python 3 is the minimum version requirement.')
-
 #get path to README file
 HERE = pathlib.Path(__file__).parent
 README = (HERE / 'README.md').read_text()

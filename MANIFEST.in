@@ -1,6 +1,5 @@
 include iso3166_updates/iso3166-updates.json
 include iso3166_updates/README.md
-include iso3166_updates/README.md
 include README.md
 exclude get_all_iso3166_updates.py
 exclude get_all_iso3166_updates.sh

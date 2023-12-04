@@ -82,26 +82,6 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_all.headers["content-type"], "application/json", 
                 "Expected Content type to be application/json, got {}.".format(test_request_all.headers["content-type"]))
 
-    @unittest.skip("Skipping to not overload API endpoints on test suite run.")
-    def test_api_endpoints(self):
-        """ Testing API endpoints are valid and return expected 200 status code for all alpha-2 codes. """
-#1.)
-        main_request = requests.get(self.base_url, headers=self.user_agent_header)
-        self.assertEqual(main_request.status_code, 200, 
-            "Expected 200 status code from request, got {}.".format(main_request.status_code))
-        self.assertEqual(main_request.headers["content-type"], "text/html; charset=utf-8", 
-            "Expected Content type to be text/html; charset=utf-8, got {}.".format(main_request.headers["content-type"]))
-#2.)
-        #for each alpha-2, test API returns valid response to it and correct json content type
-        for alpha2 in sorted(list(iso3166.countries_by_alpha2.keys())):
-            if (alpha2 == "XK"):
-               continue
-            test_request = requests.get(self.alpha2_base_url + alpha2, headers=self.user_agent_header)
-            self.assertEqual(test_request.status_code, 200, 
-                "Expected 200 status code from request for alpha-2 code {}, got {}.".format(alpha2, test_request.status_code))
-            self.assertEqual(test_request.headers["content-type"], "application/json", 
-                "Expected Content type to be application/json for alpha-2 code {}, got {}.".format(alpha2, test_request.headers["content-type"]))
-
     def test_alpha2_endpoint(self):
         """ Testing single, multiple and invalid alpha-2 codes for expected ISO 3166 updates. """
         test_alpha2_ad = "AD" #Andorra 
@@ -120,13 +100,13 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2015-11-27",
                 "Description of Change in Newsletter": "Update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:AD)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:AD)."
                 }
         test_alpha2_ad_expected2 = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2014-11-03",
                 "Description of Change in Newsletter": "Update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:AD)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:AD)."
                 }
 
         self.assertIsInstance(test_request_ad, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_ad)))
@@ -145,13 +125,13 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2014-12-18",
                 "Description of Change in Newsletter": "Alignment of the English and French short names upper and lower case with UNTERM.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BO)."
                 }
         test_alpha2_bo_expected2 = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2014-11-03",
                 "Description of Change in Newsletter": "Update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BO)."
                 }
         
         self.assertIsInstance(test_request_bo, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_bo)))
@@ -170,7 +150,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2016-11-15",
                 "Description of Change in Newsletter": "Addition of local variation of CO-DC, CO-SAP, CO-VAC; update list source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:CO)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CO)."
                 }
         test_alpha2_co_expected2 = {
                 "Code/Subdivision Change": "",
@@ -196,19 +176,19 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2014-12-18",
                 "Description of Change in Newsletter": "Alignment of the English and French short names upper and lower case with UNTERM.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BO)."
                 }  
         test_alpha2_co_expected = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2016-11-15",
                 "Description of Change in Newsletter": "Addition of local variation of CO-DC, CO-SAP, CO-VAC; update list source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:CO)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CO)."
                 }  
         test_alpha2_dm_expected = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2015-11-27",
                 "Description of Change in Newsletter": "Update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:DM)."
                 }     
 
         self.assertIsInstance(test_request_bo_co_dm, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_bo_co_dm)))
@@ -231,13 +211,13 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2016-11-15",
                 "Description of Change in Newsletter": "Update Code Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:KE)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:KE)."
                 } 
         test_alpha2_ke_expected2 = {
                 "Code/Subdivision Change": "Deleted codes: KE-110, KE-200, KE-300, KE-400, KE-500, KE-600, KE-700, KE-800 Added codes: KE-01 through KE-47.",
                 "Date Issued": "2014-10-30",
                 "Description of Change in Newsletter": "Delete provinces; add 47 counties; update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:KE)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:KE)."
                 }       
         
         self.assertIsInstance(test_request_ke, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_ke)))
@@ -291,25 +271,25 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2016-11-15",
                 "Description of Change in Newsletter": "Update List Source; update Code Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:AU)."
                 }
         test_dz_expected = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2016-11-15",
                 "Description of Change in Newsletter": "Change of spelling of DZ-28; Update list source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:DZ)."
                 }
         test_mv_expected = {
                 "Code/Subdivision Change": "Spelling change: MV-05.",
                 "Date Issued": "2016-11-15",
                 "Description of Change in Newsletter": "Change of spelling of MV-05.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:MV)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:MV)."
                 }
         test_pw_expected = {
                 "Code/Subdivision Change": "Name changed: PW-050 Hatobohei -> Hatohobei.",
                 "Date Issued": "2016-11-15",
                 "Description of Change in Newsletter": "Change of spelling of PW-050 in eng, pau; update list source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:PW)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:PW)."
                 }
 
         #expected output keys
@@ -385,25 +365,25 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2021-11-25",
                 "Description of Change in Newsletter": "Change of spelling of CN-NX; Update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CN)."
                 }
         test_et_expected = {
                 "Code/Subdivision Change": "Subdivisions added: ET-SI Sidama.",
                 "Date Issued": "2021-11-25",
                 "Description of Change in Newsletter": "Addition of regional state ET-SI; Update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:ET)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:ET)."
                 }
         test_np_expected = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2021-11-25",
                 "Description of Change in Newsletter": "Change of spelling of NP-P5; Modification of remark part 2; Update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:NP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:NP)."
                 }
         test_ss_expected = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2021-11-25",
                 "Description of Change in Newsletter": "Typographical correction of SS-BW (deletion of the extra space between el and Ghazal).",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:SS)."
                 }
 
         #expected key outputs
@@ -479,25 +459,25 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "Subdivisions added: CL-NB Ñuble.",
                 "Date Issued": "2018-11-26",
                 "Description of Change in Newsletter": "Addition of region CL-NB; Update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:CL)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CL)."
                 }
         test_gh_expected = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2020-11-24",
                 "Description of Change in Newsletter": "Correction of the Code Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:GH)."
                 }
         test_sa_expected = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2018-11-26",
                 "Description of Change in Newsletter": "Change of subdivision category from province to region.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:SA)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:SA)."
                 }
         test_ve_expected = {
                 "Code/Subdivision Change": "Subdivisions renamed: VE-X Vargas -> La Guaira.",
                 "Date Issued": "2020-11-24",
                 "Description of Change in Newsletter": "Change of subdivision name of VE-X; Update List Source; Correction of the Code Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:VE)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:VE)."
                 }
 
         #expected key outputs
@@ -602,7 +582,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2015-11-27",
                 "Description of Change in Newsletter": "Update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:AD)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:AD)."
                 }
 
         self.assertIsInstance(test_ad_2015_request, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_ad_2015_request)))
@@ -668,7 +648,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "Spelling change: MA-05 Béni-Mellal-Khénifra -> Béni Mellal-Khénifra Location change: MA-ESM Es-Semara (EH) -> Es-Semara (EH-partial).",
                 "Date Issued": "2018-11-26",
                 "Description of Change in Newsletter": "Change of spelling of MA-05; Change of (EH) to (EH-partial) for MA-ESM; Correction of the romanization system label.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:MA)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:MA)."
                 }
         
         self.assertIsInstance(test_ma_lt_2019_request, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_ma_lt_2019_request)))
@@ -690,7 +670,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2022-07-11",
                 "Description of Change in Newsletter": "Change of the short and full name.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:TR)."
                 }
 
         self.assertIsInstance(test_tr_gt_2002_request, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_tr_gt_2002_request)))
@@ -759,7 +739,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2020-11-24",
                 "Description of Change in Newsletter": "Correction of the Code Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BJ)."
                 }
 
         self.assertIsInstance(test_request_bj, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_bj)))
@@ -776,7 +756,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2020-11-24",
                 "Description of Change in Newsletter": "Correction of the Code Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:TJ)."
                 }
         
         self.assertIsInstance(test_request_tj, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_tj)))
@@ -793,7 +773,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2019-02-15",
                 "Description of Change in Newsletter": "Modification of the French short name lower case.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:MD)."
                 }
         
         self.assertIsInstance(test_request_md, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_md)))
@@ -810,13 +790,13 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2017-11-23",
                 "Description of Change in Newsletter": "Addition of regions ML-9, ML-10; update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:ML)."
                 }
         test_name_ml_ni_expected_2 = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2020-11-24",
                 "Description of Change in Newsletter": "Correction of the Code Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:NI)."
                 }
         
         self.assertIsInstance(test_request_ml_ni, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_ml_ni)))
@@ -864,7 +844,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2014-10-29",
                 "Description of Change in Newsletter": "Delete EG-HU and EG-SU; update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:EG)."
                 }
         
         self.assertIsInstance(test_request_egypt_2014, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_egypt_2014)))
@@ -882,7 +862,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2022-11-29",
                 "Description of Change in Newsletter": "Addition of provinces ID-PE, ID-PS and ID-PT; Update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:ID)."
                 }
 
         self.assertIsInstance(test_request_indonesia_2022, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_indonesia_2022)))
@@ -900,7 +880,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2018-11-26",
                 "Description of Change in Newsletter": "Correction of the romanization system label.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:JP)."
                 }
 
         self.assertIsInstance(test_request_japan_gt_2018, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_japan_gt_2018)))
@@ -918,7 +898,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Code/Subdivision Change": "",
                 "Date Issued": "2009-03-03",
                 "Description of Change in Newsletter": "Addition of administrative language Gilbertese (-, gil).",
-                "Edition/Newsletter": "Online Browsing Platform (OBP)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:KI)."
                 }
         test_name_kiribati_lesotho_lt_2012_expected_2 = {
                 "Code/Subdivision Change": "",

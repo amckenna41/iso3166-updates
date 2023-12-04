@@ -7,13 +7,21 @@ import iso3166
 
 class ISO3166_Updates():
     """
-    This class is used to access all the ISO-3166 updates/changes data from it's respecrtive json
-    created from the two data sources used in the get_all_iso3166_updates.py script. All of the 
+    This class is used to access all the ISO-3166 updates/changes data from its respective json
+    created from the data sources used in the get_all_iso3166_updates.py script. All of the 
     keys and objects in the JSON are accessible via dot notation using the Map class. Each
     country has the attributes: Date Issued, Edition/Newsletter, Code/Subdivision Change and
-    Description of Change in Newsletter. Currently there are 250 country's listed in the 
-    updates json with X of these having any changes/updates data.
+    Description of Change in Newsletter. 
     
+    Date Issued is the date at which the change was published by the ISO, the Edition/Newsletter
+    column is the name and or edition of newsletter that the ISO 3166 change/update was 
+    communicated in, Code/Subdivision Change column is the overall summary of change/update made
+    and "Description of Change in Newsletter" is more in-depth info about the change/update that 
+    was made.
+
+    Currently there are 250 country's listed in the updates json with updates dating from 2000 up
+    until the current year.
+
     Parameters
     ==========
     None
@@ -25,7 +33,8 @@ class ISO3166_Updates():
         year range or greater than/less than year.
     __getitem__(alpha2_code):
         get all listed updates/changes in the updates json object for an input country/countries,
-        using the 2 letter ISO 3166-1 code by making the class subscriptable.
+        using the 2 letter alpha-2 ISO 3166-1 code by making the class subscriptable. For redundancy, 
+        a country's 3 letter alpha-3 ISO 3166-1 code can also be accepted.
 
     Usage
     =====
@@ -62,7 +71,7 @@ class ISO3166_Updates():
         
         self.iso3166_updates_json_filename = "iso3166-updates.json"
         
-        #get module path
+        #get module path to access the json object
         self.iso3166_updates_module_path = os.path.dirname(os.path.abspath(sys.modules[self.__module__].__file__))
         
         #raise error if iso3166-upates json doesnt exist in folder
@@ -77,10 +86,10 @@ class ISO3166_Updates():
         #make all updates object subscriptable using Map class
         self.all = Map(self.all)
 
-        #get list of all countries by 2 letter alpha3 code
+        #get list of all countries by their 2 letter alpha-3 code
         self.alpha2 = sorted(list(iso3166.countries_by_alpha2.keys()))
         
-        #get list of all countries by 3 letter alpha3 code
+        #get list of all countries by their 3 letter alpha-3 code
         self.alpha3 = sorted(list(iso3166.countries_by_alpha3.keys()))
     
     def year(self, input_year):
@@ -93,11 +102,11 @@ class ISO3166_Updates():
         ==========
         :input_year: str/list
             single or list of multiple years. Can also accept a year range or a year to get updates
-            greater than or less than. 
+            greater than or less than e.g "2015", "2009,2019", ">2022", "<2004", "2005-2012".
 
         Returns
         =======
-        :country_output_dict : dict
+        :country_output_dict: dict
             output dictionary of sought ISO 3166 updates for input year/years.
         """
         #if single str of 1 or more years input then convert to array, remove whitespace, seperate using comma
@@ -193,7 +202,7 @@ class ISO3166_Updates():
             #remove any empty objects from dict 
             country_output_dict = {i:j for i,j in country_output_dict.items() if j != []}
 
-        #make updates object subscritable using Map class
+        #make updates object subscriptable using Map class
         country_output_dict = Map(country_output_dict)
 
         return country_output_dict
@@ -208,8 +217,8 @@ class ISO3166_Updates():
         
         Parameters
         ==========
-        :alpha2_code : str
-            one or more 2 letter alpha-2 code for sought country/territory e.g (AD, EG, DE). Can 
+        :alpha2_code: str
+            one or more 2 letter alpha-2 codes for sought country/territory e.g (AD, EG, DE). Can 
             also accept 3 letter alpha-3 code e.g (AND, EGT, DEU), this will be converted into 
             its alpha-2 counterpart.
 
@@ -239,14 +248,13 @@ class ISO3166_Updates():
         """
         #raise type error if input isn't a string
         if not (isinstance(alpha2_code, str)):
-            raise TypeError('Input parameter {} is not of correct datatype string, got {}.' \
-                .format(alpha2_code, type(alpha2_code)))       
+            raise TypeError('Input parameter {} is not of correct datatype string, got {}.'.format(alpha2_code, type(alpha2_code)))       
         
         #stripping input of whitespace, uppercasing, seperating multiple alpha-2 codes, if applicable and sort list
         alpha2_code = alpha2_code.strip().upper()
         alpha2_code = sorted(alpha2_code.replace(' ', '').split(','))
 
-        #object to store country data, dict if more than one country, list if only one country
+        #object to store country data, dict if more than one country or list if only one country
         country_updates_dict = {}
 
         #iterate over all input alpha-2 codes, appending all updates to country object, pass through Map class to access via dot notation
@@ -255,18 +263,18 @@ class ISO3166_Updates():
             #validate 2 letter alpha-2 code exists in ISO 3166-1, raise error if not found            
             if (len(code) == 2):
                 if not (code in self.alpha2):      
-                    raise ValueError("Alpha-2 Code {} not found in list of ISO 3166-1 codes.".format(code))            
+                    raise ValueError("Alpha-2 Code {} not found in list of ISO 3166-1 alpha-2 codes.".format(code))            
 
-            #if 3 letter code input, check it exists in ISO 3166-1, then convert into its 2 letter alpha-2 code, raise error if not found            
+            #if 3 letter alpha-3 code input, check it exists in ISO 3166-1, then convert into its 2 letter alpha-2 code, raise error if not found            
             if (len(code) == 3):
                 if (code in self.alpha3):      
                     code = iso3166.countries_by_alpha3[code].alpha2
                 else:
-                    raise ValueError("Alpha-3 Code {} not found in list of ISO 3166-1 codes.".format(code))        
+                    raise ValueError("Alpha-3 Code {} not found in list of ISO 3166-1 alpha-3 codes.".format(code))        
 
             #raise error if alpha-2 code not found in list of available codes
             if not (code in self.alpha2):
-                raise ValueError("Alpha-2 Code {} not found in list of ISO 3166-1 codes.".format(code))        
+                raise ValueError("Alpha-2 Code {} not found in list of ISO 3166-1 alpha-2 codes.".format(code))        
 
             #if only one alpha-2 code input, convert country object to list and append all country update to it
             if (len(alpha2_code) == 1):

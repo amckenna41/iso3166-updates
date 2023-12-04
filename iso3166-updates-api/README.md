@@ -19,13 +19,13 @@ The paths/endpoints available in the API are - `/api/all`, `/api/alpha2`, `/api/
 
 * The `/api/all` path/endpoint returns all of the ISO 3166-2 updates/changes data for all countries.
 
-* The 2 letter alpha-2 country code can be appended to the **alpha2** path/endpoint e.g <i>/api/alpha2/JP</i>. A single alpha-2 code or a list of them can be passed to the API e.g <i>/api/alpha2/FR,DE,HU,ID,MA</i>. For redundancy, the 3 letter alpha-3 counterpart for each country's alpha-2 code can also be appened to the path e.g <i>/api/alpha2/FRA,DEU,HUN,IDN,MAR</i>. The **alpha2** endpoint can be used in conjunction with the **year** endpoint to get the country updates for a specific country and year, in the format `api/alpha2/<input_alpha2>/year/<input_year>` or `api/year/<input_year>/alpha2/<input_alpha2>`. If an invalid alpha-2 code is input then an error will be returned.
+* The 2 letter alpha-2 country code can be appended to the **alpha2** path/endpoint e.g. <i>/api/alpha2/JP</i>. A single alpha-2 code or a list of them can be passed to the API e.g. <i>/api/alpha2/FR,DE,HU,ID,MA</i>. For redundancy, the 3 letter alpha-3 counterpart for each country's alpha-2 code can also be appened to the path e.g. <i>/api/alpha2/FRA,DEU,HUN,IDN,MAR</i>. The **alpha2** endpoint can be used in conjunction with the **year** endpoint to get the country updates for a specific country and year, in the format `api/alpha2/<input_alpha2>/year/<input_year>` or `api/year/<input_year>/alpha2/<input_alpha2>`. If an invalid alpha-2 code is input then an error will be returned.
 
-* The name parameter can be a country name as it is most commonly known in English, according to the ISO 3166-1. The name can similarly be appended to the **name** path/endpoint e.g <i>/api/name/Denmark</i>. A single country name or list of them can be passed into the API e.g <i>/name/France,Moldova,Benin</i>. A closeness function is used to get the most approximate available country from the one input, e.g Sweden will be used if the input is <i>/api/name/Swede</i>. The **name** endpoint can be used in conjunction with the **year** endpoint to get the country updates for a specific country name and year, in the format `api/name/<input_name>/year/<input_year>`. If no country is found from the closeness function or an invalid name is input then an error will be returned.
+* The name parameter can be a country name as it is most commonly known in English, according to the ISO 3166-1. The name can similarly be appended to the **name** path/endpoint e.g. <i>/api/name/Denmark</i>. A single country name or list of them can be passed into the API e.g. <i>/name/France,Moldova,Benin</i>. A closeness function is used to get the most approximate available country from the one input, e.g. Sweden will be used if the input is <i>/api/name/Swede</i>. The **name** endpoint can be used in conjunction with the **year** endpoint to get the country updates for a specific country name and year, in the format `api/name/<input_name>/year/<input_year>`. If no country is found from the closeness function or an invalid name is input then an error will be returned.
 
-* The **year** parameter can be a specific year, year range, or a cut-off year to get updates less than/more than a year. The year value can be appended to the **year** path/endpoint e.g <i>/api/year/2017, /api/year/2010-2015, /api/year/<2009, /api/year/>2002</i>. The **year** endpoint can be used in conjunction with the **alpha2** and **name** endpoints to get the country updates for a specific country and year, in the format `api/alpha2/<input_alpha2>/year/<input_year>` and `api/name/<input_name>/year/<input_year>`, respectively. If an invalid year is input then an error will be returned. 
+* The **year** parameter can be a specific year, year range, or a cut-off year to get updates less than/more than a year. The year value can be appended to the **year** path/endpoint e.g. <i>/api/year/2017, /api/year/2010-2015, /api/year/<2009, /api/year/>2002</i>. The **year** endpoint can be used in conjunction with the **alpha2** and **name** endpoints to get the country updates for a specific country and year, in the format `api/alpha2/<input_alpha2>/year/<input_year>` and `api/name/<input_name>/year/<input_year>`, respectively. If an invalid year is input then an error will be returned. 
 
-* The **months** parameter will gather all updates for 1 or more countries from an input number of months from the present day. The month value can be appended to the **months** path/endpoint, e.g <i>/api/months/12, /api/months/24</i> will return all updates/changes from the past 12 and 24 months, respectively. If an invalid month value is input then an error will be returned.
+* The **months** parameter will gather all updates for 1 or more countries from an input number of months from the present day. The month value can be appended to the **months** path/endpoint, e.g. <i>/api/months/12, /api/months/24</i> will return all updates/changes from the past 12 and 24 months, respectively. If an invalid month value is input then an error will be returned.
 
 * The main API endpoint (`/` or `/api`) will return the homepage and API documentation.
 
@@ -33,10 +33,10 @@ The API was hosted and built using GCP, with a Cloud Function being used in the 
 
 The full list of attributes available for each country are:
 
-* Edition/Newsletter: Name and or edition of newsletter that the ISO 3166-2 change/update was communicated in.
-* Date Issued: Date that the change was communicated.
-* Code/Subdivision change: Overall summary of change/update made.
-* Description of change in newsletter: More in-depth info about the change/update that was made.
+* Edition/Newsletter: name and or edition of newsletter that the ISO 3166 change/update was communicated in.
+* Date Issued: date that the change was communicated.
+* Code/Subdivision change: overall summary of change/update made.
+* Description of change in newsletter: more in-depth info about the change/update that was made.
 
 The API documentation and usage with all useful commands and examples to the API is available below. A demo of the software and API are available [here][demo_iso3166_updates].
 
@@ -84,7 +84,7 @@ function getData() {
 var data = JSON.parse(this.response)
 ```
 
-Get updates for a specific country e.g France, Germany, Hondurus
+Get updates for a specific country e.g. France, Germany, Hondurus
 ----------------------------------------------------------------
 
 ### Request
@@ -156,7 +156,7 @@ function getData() {
 var data = JSON.parse(this.response)
 ```
 
-Get all updates for a specified year e.g 2004, 2007
+Get all updates for a specified year e.g. 2004, 2007
 ---------------------------------------------------
 
 ### Request
@@ -214,7 +214,7 @@ function getData() {
 var data = JSON.parse(this.response)
 ```
 
-Get updates for a specific country for a specified year e.g Andorra, Dominica for 2007
+Get updates for a specific country for a specified year e.g. Andorra, Dominica for 2007
 --------------------------------------------------------------------------------------
 
 ### Request
@@ -274,7 +274,7 @@ function getData() {
 var data = JSON.parse(this.response)
 ```
 
-Get updates for a specific country for a specified year range e.g Bosnia, Haiti for 2009-2015, using country name
+Get updates for a specific country for a specified year range e.g. Bosnia, Haiti for 2009-2015, using country name
 -----------------------------------------------------------------------------------------------------------------
 
 ### Request
@@ -334,7 +334,7 @@ function getData() {
 var data = JSON.parse(this.response)
 ```
 
-Get updates for a specific country less than/greater than a specified year e.g Israel, Lithuania <2010 or >2012
+Get updates for a specific country less than/greater than a specified year e.g. Israel, Lithuania <2010 or >2012
 ---------------------------------------------------------------------------------------------------------------
 
 ### Request
@@ -393,7 +393,7 @@ function getData() {
 var data = JSON.parse(this.response)
 ```
 
-Get all ISO 3166 updates data for a specific country, using country name, e.g. Tajikistan, Seychelles, Uganda
+Get all ISO 3166 updates data for a specific country, using country name, e.g.. Tajikistan, Seychelles, Uganda
 -------------------------------------------------------------------------------------------------------------
 
 ### Request
