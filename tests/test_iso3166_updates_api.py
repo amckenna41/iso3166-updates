@@ -2,6 +2,7 @@ import unittest
 import iso3166
 import requests
 import re
+import os
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from bs4 import BeautifulSoup
@@ -54,6 +55,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         #correct column/key names for dict returned from api
         self.expected_output_columns = ["Code/Subdivision Change", "Date Issued", "Description of Change in Newsletter", "Edition/Newsletter"]
 
+        #turn off tqdm progress bar functionality when running tests
+        os.environ["TQDM_DISABLE"] = "1"
+
     def test_homepage_endpoint(self):
         """ Testing contents of main "/api" endpoint that returns the homepage and API documentation. """
         test_request_main = requests.get(self.base_url, headers=self.user_agent_header)
@@ -63,8 +67,8 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         last_updated = soup.find(id='last-updated').text.split(': ')[1]
         author = soup.find(id='author').text.split(': ')[1]
 
-        self.assertEqual(version, "1.4.4", "Expected API version to be 1.4.4, got {}.".format(version))
-        self.assertEqual(last_updated, "September 2023", "Expected last updated data to be September 2023, got {}.".format(last_updated))
+        self.assertEqual(version, "1.6.0", "Expected API version to be 1.6.0, got {}.".format(version))
+        self.assertEqual(last_updated, "December 2023", "Expected last updated data to be December 2023, got {}.".format(last_updated))
         self.assertEqual(author, "AJ", "Expected author to be AJ, got {}.".format(author))
 #2.)
         section_list_menu = soup.find(id='section-list-menu').find_all('li')

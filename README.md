@@ -18,9 +18,9 @@
 
 > Software and API that checks for any updates/changes to the ISO 3166-1 and ISO 3166-2 country codes and subdivision naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui). Available via a lightweight Python software package as well as an API. 
 
-* The front-end API is available [here][api].
-* A demo of the software and API is available [here][demo_iso3166_updates].
-* A demo of the script used to pull and export all the latest updates is available [here][demo_get_all_iso3166_updates].
+* The front-end <b>API</b> is available [here][api].
+* A <b>demo</b> of the software and API is available [here][demo_iso3166_updates].
+* A <b>demo</b> of the script used to pull and export all the latest updates is available [here][demo_get_all_iso3166_updates].
 * A <b>Medium</b> article that dives deeper into `iso3166-updates` is available [here][medium].
 
 Table of Contents
@@ -80,7 +80,7 @@ The paths/endpoints available in the API are - `/api/all`, `/api/alpha2`, `/api/
 
 * The 2 letter alpha-2 country code can be appended to the **alpha2** path/endpoint e.g. <i>/api/alpha2/JP</i>. A single alpha-2 code or a list of them can be passed to the API e.g. <i>/api/alpha2/FR,DE,HU,ID,MA</i>. For redundancy, the 3 letter alpha-3 counterpart for each country's alpha-2 code can also be appened to the path e.g. <i>/api/alpha2/FRA,DEU,HUN,IDN,MAR</i>. The **alpha2** endpoint can be used in conjunction with the **year** endpoint to get the country updates for a specific country and year, in the format `api/alpha2/<input_alpha2>/year/<input_year>` or `api/year/<input_year>/alpha2/<input_alpha2>`. If an invalid alpha-2 code is input then an error will be returned.
 
-* The name parameter can be a country name as it is most commonly known in English, according to the ISO 3166-1. The name can similarly be appended to the **name** path/endpoint e.g. <i>/api/name/Denmark</i>. A single country name or list of them can be passed into the API e.g. <i>/name/France,Moldova,Benin</i>. A closeness function is used to get the most approximate available country from the one input, e.g. Sweden will be used if the input is <i>/api/name/Swede</i>. The **name** endpoint can be used in conjunction with the **year** endpoint to get the country updates for a specific country name and year, in the format `api/name/<input_name>/year/<input_year>`. If no country is found from the closeness function or an invalid name is input then an error will be returned.
+* The <b>name</b> parameter can be a country name as it is most commonly known in English, according to the ISO 3166-1. The name can similarly be appended to the **name** path/endpoint e.g. <i>/api/name/Denmark</i>. A single country name or list of them can be passed into the API e.g. <i>/name/France,Moldova,Benin</i>. A closeness function is used to get the most approximate available country from the one input, e.g. Sweden will be used if the input is <i>/api/name/Swede</i>. The **name** endpoint can be used in conjunction with the **year** endpoint to get the country updates for a specific country name and year, in the format `api/name/<input_name>/year/<input_year>`. If no country is found from the closeness function or an invalid name is input then an error will be returned.
 
 * The **year** parameter can be a specific year, year range, or a cut-off year to get updates less than/more than a year. The year value can be appended to the **year** path/endpoint e.g. <i>/api/year/2017, /api/year/2010-2015, /api/year/<2009, /api/year/>2002</i>. The **year** endpoint can be used in conjunction with the **alpha2** and **name** endpoints to get the country updates for a specific country and year, in the format `api/alpha2/<input_alpha2>/year/<input_year>` and `api/name/<input_name>/year/<input_year>`, respectively. If an invalid year is input then an error will be returned. 
 
@@ -95,9 +95,9 @@ The full list of attributes available for each country are:
 * Edition/Newsletter: name and or edition of newsletter that the ISO 3166 change/update was communicated in.
 * Date Issued: date that the change was communicated.
 * Code/Subdivision change: overall summary of change/update made.
-* Description of change in newsletter: more in-depth info about the change/update that was made.
+* Description of change in newsletter: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
 
-The API documentation and usage with all useful commands and examples to the API is available below. A demo of the software and API are available [here][demo_iso3166_updates].
+The API documentation is available on the API [homepage](https://iso3166-updates.com/api). A demo of the software and API are available [here][demo_iso3166_updates].
 
 <!-- <p align="center">
   <img src="https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166-updates-api/gcp_architecture.png?raw=true" alt="gcp_arch" height="500" width="750"/>
@@ -109,7 +109,7 @@ The list of ISO 3166 updates was last updated on <strong>Nov 2023</strong>.
 
 The object storing all updates, both locally (iso3166-updates.json) for the software pacakge and on the API in GCP Storage bucket, are consistenly checked for the latest updates using a Google Cloud Run microservice ([iso3166-check-for-updates](https://github.com/amckenna41/iso3166-updates/tree/main/iso3166-check-for-updates)). The application is built using a custom Docker container that uses the `iso3166-updates` Python software to pull all the latest updates/changes from the various data sources, to check for the latest updates within a certain period e.g. the past 6-12 months (this month range is used as the ISO usually publishes their updates at the end of the year with occasional mid-year updates). The app compares the generated output with that of the updates JSON currently in the Google Cloud Storage bucket and will replace this json to integrate the latest updates found, such that the API will have the most up-to-date data. A Cloud Scheduler is used to call the application.
 
-Additionally, a GitHub Issue in the custom-built `iso3166-updates`, [`iso3166-2`](https://github.com/amckenna41/iso3166-2) and [`iso3166-flag-icons`](https://github.com/amckenna41/iso3166-flag-icons) repositories will be automatically created that formats and tabulates all updates/changes that need to be implemented into the JSONs on the aforementioned repos.
+Additionally, a GitHub Issue in the custom-built [`iso3166-updates`](https://github.com/amckenna41/iso3166-updates), [`iso3166-2`](https://github.com/amckenna41/iso3166-2) and [`iso3166-flag-icons`](https://github.com/amckenna41/iso3166-flag-icons) repositories will be automatically created that formats and tabulates all updates/changes that need to be implemented into the JSONs on the aforementioned repos.
 
 Ultimately, this Cloud Run microservice ensures that the software and assoicated APIs are up-to-date with the latest and most accurate ISO 3166-2 information for all countries/territories/subdivisions etc.
 
@@ -192,6 +192,7 @@ from the various data sources.
 * [iso3166][iso3166] >= 2.1.1
 * [selenium][selenium] >= 4.10.0
 * [flask][flask] >= 2.3.2
+* [tqdm][tqdm] >= 4.64.0
 
 **Input parameters to get_updates function:**
 ```python
@@ -269,7 +270,7 @@ The output files from the <i>get_all_iso3166_updates.py</i> script for the updat
 * Edition/Newsletter: name and or edition of newsletter that the ISO 3166 change/update was communicated in.
 * Date Issued: date that the change was communicated.
 * Code/Subdivision Change: overall summary of change/update made.
-* Description of Change in Newsletter: more in-depth info about the change/update that was made.
+* Description of change in newsletter: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
 
 E.g. The output format of the exported <b>CSV</b> for AD (Andorra) is:
 
@@ -348,6 +349,7 @@ Support
 [iso3166-updates]: https://github.com/amckenna41/iso3166-updates
 [pandas]: https://pandas.pydata.org/
 [numpy]: https://numpy.org/
+[tqdm]: https://github.com/tqdm/tqdm
 [requests]: https://requests.readthedocs.io/
 [beautifulsoup4]: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 [google-auth]: https://cloud.google.com/python/docs/reference

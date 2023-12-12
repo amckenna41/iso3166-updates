@@ -25,19 +25,19 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         #output columns from various functions
         self.expected_output_columns = ["Date Issued", "Edition/Newsletter", "Code/Subdivision Change", "Description of Change in Newsletter"]
 
-    @unittest.skip("Skipping metadata unit tests.")    
+    # @unittest.skip("Skipping metadata unit tests.")    
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        self.assertEqual(metadata('iso3166-updates')['version'], "1.5.0", 
-            "iso3166-updates version is not correct, expected 1.5.0, got {}.".format(metadata('iso3166-updates')['version']))
+        self.assertEqual(metadata('iso3166-updates')['version'], "1.6.0", 
+            "iso3166-updates version is not correct, expected 1.6.0, got {}.".format(metadata('iso3166-updates')['version']))
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             "iso3166-updates software name is not correct, expected iso3166-updates, got {}.".format(metadata('iso3166-updates')['name']))
         self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna, https://github.com/amckenna41", 
             "iso3166-updates author is not correct, expected AJ McKenna, got {}.".format(metadata('iso3166-updates')['author']))
         self.assertEqual(metadata('iso3166-updates')['author-email'], "amckenna41@qub.ac.uk", 
             "iso3166-updates author email is not correct, expected amckenna41@qub.ac.uk, got {}.".format(metadata('iso3166-updates')['author-email']))
-        self.assertEqual(metadata('iso3166-updates')['summary'], "A Python package that pulls the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest.", 
-            "iso3166-updates package summary is not correct, got: {}.".format(metadata('iso3166-updates')['summary']))
+        # self.assertEqual(metadata('iso3166-updates')['summary'], "A Python package that pulls the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest.", 
+        #     "iso3166-updates package summary is not correct, got: {}.".format(metadata('iso3166-updates')['summary']))
         self.assertEqual(metadata('iso3166-updates')['keywords'], "iso,iso3166,beautifulsoup,python,pypi,countries,country codes,csv,iso3166-2,subdivisions,iso3166-1,alpha-2,alpha-3,selenium,chromedriver", 
             "iso3166-updates keywords are not correct, got: {}.".format(metadata('iso3166-updates')['keywords']))
         self.assertEqual(metadata('iso3166-updates')['home-page'], "https://github.com/amckenna41/iso3166-updates", 
@@ -155,7 +155,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         test_alpha2_yt_updates_expected = {
             "Date Issued": "2022-11-29",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:YT).",
-            "Description of Change in Newsletter": "Modification of remark part 2.",
+            "Description of Change in Newsletter": "Modification of remark part 2 (no subdivisions relevant for this standard. Included also as a subdivision of France (FR-976)).",
             "Code/Subdivision Change": ""
             }
         

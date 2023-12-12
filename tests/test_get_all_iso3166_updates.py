@@ -70,6 +70,9 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         if not (os.path.isdir(self.export_folder)):
             os.mkdir(self.export_folder)
 
+        #turn off tqdm progress bar functionality when running tests
+        os.environ["TQDM_DISABLE"] = "1"
+
     @unittest.skip("Skipping to not overload Wiki or ISO servers on test suite run.")
     def test_data_sources_url(self):
         """ Test each ISO 3166-2 wiki URL and ISO endpoint to check valid status code 200 is returned. """

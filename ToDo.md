@@ -68,8 +68,8 @@ Edition/Newsletter - should be OBP.
 - [X] In API, for year param, if country has rows for selected year/year range, remove from output, rather than having [ ].
 - [X] Add space between colon and next char, e.g KE - "Deleted codes:KE-110, KE-200, KE-3" (has negative effect on some other update entries, destructive action)
 - [X] For unit tests: output single row of expected dataframe to array (e.g sn_updates_df.iloc[1].to_numpy()).
-- [ ] Add Code Coverage.
-- [ ] Add green MIT logo to Readme (https://shields.io/category/license).
+- [X] Add Code Coverage.
+- [X] Add green MIT logo to Readme (https://shields.io/category/license).
 - [ ] Create logo for API.
 - [X] If invalid input param put into URL then return empty dict instead.
 - [X] Example on reamde and demo of how to use API using JS axios library (https://www.taniarascia.com/how-to-connect-to-an-api-with-javascript/).
@@ -93,7 +93,6 @@ Edition/Newsletter - should be OBP.
 - [X] Add path-ignore keywords to GitHub Action.
 - [X] Update api/readme to incorporate new api gateway.
 - [X] Update api config / gateway if api config file changed. Documentation requires new one to be created. Create new one (iso3166-updates-config-2), delete old one (iso3166-updates), then create new one (iso3166-updates), delete old new one (iso3166-updates-config-2) 
-- [ ] Add api gateway permission to SA.
 - [ ] Add terraform script for cloud arch.
 - [X] Mention intended audience in readme.
 - [ ] Add api landing page with documentation, similar to restcountries.
@@ -101,7 +100,7 @@ Edition/Newsletter - should be OBP.
 - [X] Reorder software metadata in setup.py to be in order of main func, create __description__ var.
 - [X] Add download_url to setup.py - url of zipped package.
 - [X] Update api tests to reflect updated url. 
-- [ ] Mention schedule that check-for-updates is run and that it is appropriate to the general release of updates by the ISO3166.
+- [X] Mention schedule that check-for-updates is run and that it is appropriate to the general release of updates by the ISO 3166.
 - [ ] Remove all camel casing function names/vars, change to underscores and lowercase (https://peps.python.org/pep-0008/#function-and-variable-names).
 - [X] Move from GCP to vercel.
 - [X] Remove generate report from workflow
@@ -124,7 +123,7 @@ Edition/Newsletter - should be OBP.
 - [X] Comment that concat_updates only works for JSON outputs as wouldn't for csv.
 - [X] Actually return the json of updates from get_updates func. Update unit tests such that more of a focus on the output object than the json.
 - [X] Append list of alpha-2 codes with updates to ISO3166-2 Updates: 09-05-2023 (here).
-- [ ] https://github.com/codecov/codecov-action/issues/559
+- [X] https://github.com/codecov/codecov-action/issues/559
 - [X] Check for unit tests for passing in alpha3 code into API.
 - [X] Reconfigure date format to format Y-m-d. Will need to rerun software.
 - [X] Update check-for-updates API to use GCP Client library instead of requests after making storage bucket unpublic.
@@ -229,7 +228,6 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Make output of .year() function subscriptable, using Map class.
 - [X] Remove space after colon in Parameters & Returns comments in each function.
 - [X] Add API path /name/input_name/year/2015. Add unit tests.
-- [ ] Add GitHub release of software once repo is public.
 - [X] Test check-for-updates with use_selenium=False.
 - [ ] Add link to medium article on readme.
 - [X] In check-for-updates for AD, earlier table being pulled.
@@ -282,6 +280,16 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Rerun script in notebook - export and create_issue = 1.
 - [X] Updates that already have OBP in their Edition/Newsletter - missing hyphen in between - rerun script.
 - [X] Change all references of ISO 3166-2 changes to ISO 3166 chabges.
+- [ ] Add github release.
+- [X] Extract modification remarks part 1, 2 and 3.
+- [ ] Don't need two change/updates attributes in output object.
+- [X] Update readme with new column/attribute.
+- [X] Only add remark if update has "modification of remarks in the text".
+- [X] Mention in readme that pulling in from wiki as well, as it has some of the older updates, ones from earlier newsletters (e.g IM).
+- [ ] Change Descripton of change ... to just Descripton of change.
+- [X] Append remark to only latest updates entry. 
+- [X] When adding remark, lowercase the first letter of remark.
+- [X] Mention # of tests and test cases in test readme (20 + 3 skipped).
 
 Future Additions
 ----------------

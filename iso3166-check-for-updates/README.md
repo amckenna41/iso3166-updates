@@ -34,6 +34,7 @@ Requirements
 * [flask][flask] >= 2.3.2
 * [gunicorn][gunicorn] >= 21.2.0
 * [lxml][lxml] >=  4.9.3
+* [tqdm][tqdm] >= 4.64.0
 
 Create check-for-updates microservice
 -------------------------------------
@@ -110,3 +111,4 @@ https://stackoverflow.com/questions/53073411/selenium-webdriverexceptionchrome-f
 [selenium]: https://selenium-python.readthedocs.io/index.html
 [lxml]: https://lxml.de/
 [iso3166]: https://github.com/deactivated/python-iso3166
+[tqdm]: https://github.com/tqdm/tqdm

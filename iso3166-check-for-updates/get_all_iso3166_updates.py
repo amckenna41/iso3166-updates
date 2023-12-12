@@ -116,6 +116,9 @@ def get_updates(alpha2_codes=[], year=[], export_filename="iso3166-updates", exp
     Some countries have missing and or not up-to-date updates data on their wiki pages, so the 
     country data from the official ISO website is also gathered using Selenium Chromedriver, prior 
     to being scraped using BeautifulSoup, as the page requires Javascript to be run on page load.
+    Some country updates mention a change to their remarks which are additional notes/supplementary
+    info about changes to a country. These remarks are appended to the country description from 
+    the ISO page.
 
     The earliest available changes are from the year 2000 and the latest changes are from 2023.
 
@@ -601,26 +604,32 @@ def get_updates_df_selenium(alpha2, year=[], year_range=False, less_than=False, 
     #convert html table into 2D array
     changes_table_converted = table_to_array(changes_table)
 
+    #remarks table html, if applicable
+    country_summary_table = soup.find(class_='core-view-summary')
+
     #if changes table is empty, recursively recall the function, up to 3 times, if table still empty then raise error
     if (len(changes_table_converted) == 0):
         #recursively call the function up to 3 times
         while (recursive_selenium_count != 0):
+            #convert 2D array of updates into dataframe, fix columns, remove duplicate rows etc
             iso3166_df_selenium = parse_updates_table(alpha2, changes_table_converted, year, year_range, less_than, greater_than)
+            #get any listed remarks from ISO page, if applicable
+            iso3166_df_selenium = parse_remarks_table(iso3166_df_selenium, country_summary_table)
+            #decrement the recursive counter
             recursive_selenium_count-=1 
         #if recursive limit has been met then delete driver session and raise a runtime error
         if (recursive_selenium_count == 0):
             driver.quit()
             raise RuntimeError("Runtime error that occurs when Selenium hasn't properly parsed ISO website after 3 attempts, may need to rerun script again.")
-
-        #delete chromedriver session
-        driver.quit()
     else:
         #convert 2D array of updates into dataframe, fix columns, remove duplicate rows etc
         iso3166_df_selenium = parse_updates_table(alpha2, changes_table_converted, year, year_range, less_than, greater_than)
-        
-        #delete chromedriver session
-        driver.quit()
-    
+        #get any listed remarks from ISO page, if applicable
+        iso3166_df_selenium = parse_remarks_table(iso3166_df_selenium, country_summary_table)
+
+    #delete chromedriver session
+    driver.quit()
+
     return iso3166_df_selenium
 
 def get_updates_df_wiki(alpha2, year=[], year_range=False, less_than=False, greater_than=False):
@@ -696,6 +705,100 @@ def get_updates_df_wiki(alpha2, year=[], year_range=False, less_than=False, grea
             iso3166_df_wiki = pd.concat([iso3166_df_wiki, temp_iso3166_df_wiki], axis=0)
 
     return iso3166_df_wiki
+
+def parse_remarks_table(iso3166_df_, country_summary_table):
+    """
+    Parsing country summary table on ISO page which contains a selection of info 
+    about the country. Here we are just parsing the "Remarks" column which 
+    contains supplementary info/remarks about the ISO 3166 entry. The remarks
+    are split into remarks part 1, 2 and 3, with the majority only having part
+    1 and 2.
+    
+    For any countries that have remarks listed, they are appended to the country 
+    update's description. If the remark has been mentioned in multiple updates
+    then the remark will only be added to the latest entry. For any countries
+    that don't have any remarks listed the original input object will be 
+    returned.
+
+    Parameters
+    ==========
+    :iso3166_df_: pd.DataFrame
+        object with all the pulled ISO 3166 updates data for inputted country.
+    :country_summary_table: bs4.element.Tag
+        bs4 soup object for summary table element on country's ISO page. 
+
+    Returns
+    =======
+    :iso3166_df_: pd.DataFrame
+        object with all the pulled ISO 3166 updates data for inputted country,
+        with any remarks data appended to description. If no remarks are listed
+        for input country then the original input object will be returned.
+    """
+    #object to store all remarks - part 1, 2 and 3, if applicable
+    remarks_ = {"part1": "", "part2": "", "part3": ""}
+
+    #iterate through data columns on ISO summary table, append any remarks to object, if applicable
+    for elem in country_summary_table:
+        #check if html element is a bs4.Tag element, get its column name
+        if isinstance(elem, Tag):
+            column_name = elem.find(class_="core-view-field-name").text.lower()
+            
+            #parse and append remark part 1 column value to array 
+            if (column_name == "remark part 1"):
+                column_value = re.sub(' +', ' ', elem.find(class_="core-view-field-value").text.replace("\n", "").strip())
+                if (column_value != "" and column_value != None):
+                    #remove full stop at end of string, if applicable
+                    if (column_value[-1] == "."):
+                        column_value = column_value[:-1]
+                    remarks_["part1"] = column_value
+
+            #parse and append remark part 2 column value to array 
+            if (column_name == "remark part 2"):
+                column_value = re.sub(' +', ' ', elem.find(class_="core-view-field-value").text.replace("\n", "").strip())
+                if (column_value != "" and column_value != None):
+                    #remove full stop at end of string, if applicable
+                    if (column_value[-1] == "."):
+                        column_value = column_value[:-1]
+                    remarks_["part2"] = column_value
+
+            #parse and append remark part 3 column value to array 
+            if (column_name == "remark part 3"):
+                column_value = re.sub(' +', ' ', elem.find(class_="core-view-field-value").text.replace("\n", "").strip())
+                if (column_value != "" and column_value != None):
+                    #remove full stop at end of string, if applicable
+                    if (column_value[-1] == "."):
+                        column_value = column_value[:-1]
+                    remarks_["part3"] = column_value
+
+    #if no remarks found, return original input object
+    if (all(value == "" for value in remarks_.values())): 
+        return iso3166_df_
+    
+    #sort dataframe via the date column
+    iso3166_df_ = iso3166_df_.sort_values(by=['Date Issued'], ascending=False)
+    
+    #bools to check if remark has been appended to country updates description,
+    #which means the same remark isn't being added to multiple descriptions and only the most recent update
+    remark_part1_added = False 
+    remark_part2_added = False 
+    remark_part3_added = False 
+    
+    #iterate over all updates in dataframe, add remarks to description attribute, if applicable
+    for index, row in iso3166_df_.iterrows():
+        if ("remark part 1" in row["Description of Change in Newsletter"].lower() and not remark_part1_added):
+            if (remarks_["part1"] != ''):
+                iso3166_df_.at[index, "Description of Change in Newsletter"] = row["Description of Change in Newsletter"][:-1] + " (" + remarks_["part1"][0].lower() + remarks_["part1"][1:] + ")."
+                remark_part1_added = True
+        if ("remark part 2" in row["Description of Change in Newsletter"].lower() and not remark_part2_added):
+            if (remarks_["part2"] != ''):
+                iso3166_df_.at[index, "Description of Change in Newsletter"] = row["Description of Change in Newsletter"][:-1] + " (" + remarks_["part2"][0].lower() + remarks_["part2"][1:] + ")."
+                remark_part2_added = True
+        if ("remark part 3" in row["Description of Change in Newsletter"].lower() and not remark_part3_added):
+            if (remarks_["part3"] != ''):
+                iso3166_df_.at[index, "Description of Change in Newsletter"] = row["Description of Change in Newsletter"][:-1] + " (" + remarks_["part3"][0].lower() + remarks_["part3"][1:] + ")."
+                remark_part3_added = True
+
+    return iso3166_df_
 
 def parse_updates_table(alpha2, iso3166_updates_table, year, year_range, less_than, greater_than):
     """

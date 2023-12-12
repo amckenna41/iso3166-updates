@@ -20,8 +20,8 @@ jobs:
   # test job, waits for build job to complete
   test:
     name: Setup environment
+    timeout-minutes: 15
     runs-on: ${{ matrix.os }}
-
     strategy:
         matrix:
             # os: [ubuntu-latest, windows-latest] #testing on multiple OS's, macos-latest
