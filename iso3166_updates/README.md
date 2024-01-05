@@ -68,7 +68,7 @@ iso.updates.year("<2010")["YE"]
 
 The output to the above functions for the updates/changes to an ISO 3166 country returns 4 attributes: 
 
-* Edition/Newsletter: Name and or edition of newsletter that the ISO 3166 change/update was communicated in.
-* Date Issued: Date that the change was communicated.
-* Code/Subdivision change: Overall summary of change/update made.
+* Edition/Newsletter: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform page.
+* Date Issued: date that the change was communicated.
+* Code/Subdivision change: overall summary of change/update made.
 * Description of change in newsletter: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.

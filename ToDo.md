@@ -293,4 +293,4 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 
 Future Additions
 ----------------
-- [ ] Docs on readthedocs, readthedocs badge - [![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](http://ansicolortags.readthedocs.io/?badge=latest) 
+- [X] Docs on readthedocs, readthedocs badge - [![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](http://ansicolortags.readthedocs.io/?badge=latest) 

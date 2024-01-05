@@ -55,8 +55,11 @@ class ISO3166_Updates():
     #get ALL listed country updates/changes data for Fiji, Guyana, Haiti and Hungary
     iso.updates["FJ,GY,HI,HU"]
 
-    #get ALL listed country updates/changes data for year 2016
+    #get ALL listed country updates/changes data for 2016
     iso.updates.year("2016")
+
+    #get all listed country updates/changes data for 2002, 2009, 2023
+    iso.updates.year("2002,2009,2023")
 
     #get ALL listed country updates/changes data for years 2005 - 2010
     iso.updates.year("2005-2010")
@@ -64,8 +67,8 @@ class ISO3166_Updates():
     #get ALL listed country updates/changes data with year <2009
     iso.updates.year("<2009")
 
-    #get ALL listed country updates/changes data with years >2020
-    iso.updates.year(">2020")
+    #get ALL listed country updates/changes data with years >2020, for France
+    iso.updates.year(">2020").FR
     """
     def __init__(self):
         
