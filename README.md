@@ -23,7 +23,7 @@
 * A <b>demo</b> of the script used to pull and export all the latest updates is available [here][demo_get_all_iso3166_updates].
 * A <b>Medium</b> article that dives deeper into `iso3166-updates` is available [here][medium].
 * The front-end <b>API</b> is available [here][api].
-* The documentation for the software is available [here](https://iso3166-updates.readthedocs.io/en/latest/).
+* The **documentation** for the software is available [here](https://iso3166-updates.readthedocs.io/en/latest/).
 
 Table of Contents
 -----------------
@@ -196,12 +196,6 @@ iso.updates.year("<2007").RO
 ```python
 iso.updates.year("<2010")["YE"]
 ```
-
-Documentation
--------------
-Documentation for installation and usage of the software and API is availble on the readthedocs platform:
-
-**https://iso3166-updates.readthedocs.io/en/latest/**
 
 Usage (get_all_iso3166_updates.py script)
 -----------------------------------------
