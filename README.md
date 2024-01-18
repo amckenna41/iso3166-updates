@@ -19,24 +19,26 @@
 
 > Software and API that checks for any updates/changes to the ISO 3166-1 and ISO 3166-2 country codes and subdivision naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui). Available via a lightweight Python software package as well as an API. 
 
-* The front-end <b>API</b> is available [here][api].
 * A <b>demo</b> of the software and API is available [here][demo_iso3166_updates].
 * A <b>demo</b> of the script used to pull and export all the latest updates is available [here][demo_get_all_iso3166_updates].
 * A <b>Medium</b> article that dives deeper into `iso3166-updates` is available [here][medium].
+* The front-end <b>API</b> is available [here][api].
+* The documentation for the software is available [here](https://iso3166-updates.readthedocs.io/en/latest/).
 
 Table of Contents
 -----------------
-  * [Introduction](#introduction)
-  * [API](#api)
-  * [Staying up to date](#staying-up-to-date)
-  * [Requirements](#requirements)
-  * [Installation](#installation)
-  * [Usage (iso3166-updates)](#usage-iso3166-updates-Python-package)
-  * [Usage (get_all_iso3166_updates.py script)](#usage-get_all_iso3166_updates.py-script)
-  * [Directories](#Directories)
-  * [Issues](#Issues)
-  * [Contact](#contact)
-  * [References](#references)
+- [Introduction](#introduction)
+- [API](#api)
+- [Documentation](#documentation)
+- [Staying up to date](#staying-up-to-date)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage (iso3166-updates)](#usage-iso3166-updates-Python-package)
+- [Usage (get_all_iso3166_updates.py script)](#usage-get_all_iso3166_updates.py-script)
+- [Directories](#Directories)
+- [Issues](#Issues)
+- [Contact](#contact)
+- [References](#references)
 
 Introduction
 ------------
@@ -98,7 +100,9 @@ The full list of attributes available for each country are:
 * Code/Subdivision change: overall summary of change/update made.
 * Description of change in newsletter: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
 
-The API documentation is available on the API [homepage](https://iso3166-updates.com/api). A demo of the software and API are available [here][demo_iso3166_updates].
+Documentation
+-------------
+Documentation for the software and accompanying API is available on the software's [readthedocs](https://iso3166-updates.readthedocs.io/en/latest/) page. Additionally the API's documentation is available on the API [homepage](https://iso3166-updates.com/api). A demo of both is also available [here][demo_iso3166_updates].
 
 <!-- <p align="center">
   <img src="https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166-updates-api/gcp_architecture.png?raw=true" alt="gcp_arch" height="500" width="750"/>

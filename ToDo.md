@@ -93,15 +93,14 @@ Edition/Newsletter - should be OBP.
 - [X] Add path-ignore keywords to GitHub Action.
 - [X] Update api/readme to incorporate new api gateway.
 - [X] Update api config / gateway if api config file changed. Documentation requires new one to be created. Create new one (iso3166-updates-config-2), delete old one (iso3166-updates), then create new one (iso3166-updates), delete old new one (iso3166-updates-config-2) 
-- [ ] Add terraform script for cloud arch.
 - [X] Mention intended audience in readme.
-- [ ] Add api landing page with documentation, similar to restcountries.
+- [] Add api landing page with documentation, similar to restcountries.
 - [X] Add years to input param of get_updates func, use tupele of (alpha2, year)
 - [X] Reorder software metadata in setup.py to be in order of main func, create __description__ var.
 - [X] Add download_url to setup.py - url of zipped package.
 - [X] Update api tests to reflect updated url. 
 - [X] Mention schedule that check-for-updates is run and that it is appropriate to the general release of updates by the ISO 3166.
-- [ ] Remove all camel casing function names/vars, change to underscores and lowercase (https://peps.python.org/pep-0008/#function-and-variable-names).
+- [X] Remove all camel casing function names/vars, change to underscores and lowercase (https://peps.python.org/pep-0008/#function-and-variable-names).
 - [X] Move from GCP to vercel.
 - [X] Remove generate report from workflow
 - [X] Create Python Flask App -> Deploy to Vercel -> Connect to domain.
@@ -229,7 +228,7 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Remove space after colon in Parameters & Returns comments in each function.
 - [X] Add API path /name/input_name/year/2015. Add unit tests.
 - [X] Test check-for-updates with use_selenium=False.
-- [ ] Add link to medium article on readme.
+- [X] Add link to medium article on readme.
 - [X] In check-for-updates for AD, earlier table being pulled.
 - [X] Test check-for-updates on get_latest_updates notebook.
 - [ ] Have a look over varnames and see if some can be changed into more intutive names.
@@ -290,7 +289,5 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Append remark to only latest updates entry. 
 - [X] When adding remark, lowercase the first letter of remark.
 - [X] Mention # of tests and test cases in test readme (20 + 3 skipped).
-
-Future Additions
-----------------
+- [X] Update table of contents.
 - [X] Docs on readthedocs, readthedocs badge - [![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](http://ansicolortags.readthedocs.io/?badge=latest) 

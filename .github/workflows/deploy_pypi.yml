@@ -32,15 +32,17 @@ jobs:
         python3 -m pip install setuptools wheel twine
         python3 setup.py install
 
-    # Build package and upload to PyPI
-    - name: Build and upload to PyPI
+    # Build package 
+    - name: Build package
       run: |
-        python3 setup.py sdist bdist_wheel
-        twine check dist/*
-        twine upload dist/* --verbose
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        python -m build
+
+    # publish to pypi
+    - name: Publish package
+      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_TOKEN }}
 
      # sleep for 30 seconds to ensure that distribution package has successfully been uploaded to PyPI
     - name: Wait / Sleep

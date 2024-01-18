@@ -36,12 +36,14 @@ Last Updated
 The list of ISO 3166 updates was last updated on Nov 2023. A log of the latest ISO 3166 updates can be seen in the 
 `UPDATES.md <https://github.com/amckenna41/iso3166-updates/blob/main/UPDATES.md/>`_ file in the repository.
 
+License
+=======
+**iso3166-2** is distributed under the LGPL-2.1 license.
+
 .. note::
 
     A demo of the software and accompanying API is 
     available `here <https://colab.research.google.com/drive/1oGF3j3_9b_g2qAmBtv3n-xO2GzTYRJjf?usp=sharing/>`_!
-
-    
    
 .. Changelog
 .. =========
