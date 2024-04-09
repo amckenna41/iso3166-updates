@@ -1,6 +1,6 @@
 # To Do 
 - [X] Create CRON job that runs the script every few months using second cloud func, checking for updates on all the Wikis and exporting and updating the neccessary files (https://www.youtube.com/watch?v=2OwLb-aaiBQ). 
-- [ ] Check variable naming conventions (https://visualgit.readthedocs.io/en/latest/pages/naming_convention.html).
+- [X] Check variable naming conventions (https://visualgit.readthedocs.io/en/latest/pages/naming_convention.html).
 - [X] Check output of bandit and flake8 check.
 - [X] Export updates to csv, dataframe.
 - [X] Create API so each ISO3166-2 update info can be retrieved as json format, using GCP.
@@ -231,7 +231,7 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Add link to medium article on readme.
 - [X] In check-for-updates for AD, earlier table being pulled.
 - [X] Test check-for-updates on get_latest_updates notebook.
-- [ ] Have a look over varnames and see if some can be changed into more intutive names.
+- [X] Have a look over varnames and see if some can be changed into more intutive names.
 - [X] In check-for-updates readme mention how long it takes to execute Cloud Run app.
 - [X] Currently check-for-updates app only checks for any updates in the month range, but add functionality that returns missing/old updates that should be in object.
 - [X] Create new var called missing_historical_data, seperate these updates from ones in date range. Have section at bottom of GitHub Issue highlighting these historical missing data.
@@ -291,3 +291,49 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Mention # of tests and test cases in test readme (20 + 3 skipped).
 - [X] Update table of contents.
 - [X] Docs on readthedocs, readthedocs badge - [![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](http://ansicolortags.readthedocs.io/?badge=latest) 
+- [ ] Add directories subsection to main readme and Table of contents.
+- [X] Update class to be in the form from iso3166_updates import *, all_updates = ISO3166_Updates(), ad_updates = ISO3166_Updates("AD") etc.
+- [ ] Add error not found response section.
+- [X] Update check-for-updates cloud func as gcp storage no longer required.
+- [X] Update latest 2024 updates (no subdivision changes found).
+- [X] Update updates.md and API version.
+- [ ] Review demo, missing updates already in object being returned.
+- [ ] Review demo, check remarks are being appended.
+- [X] Switch to pyproject.toml - update workflows.
+- [ ] Update tests, API and documentation with new class import functionality.
+- [X] Update worklfow to account for failure of test workflow.
+- [ ] Refer to iso3166-2 docs to help with docs for this.
+- [X] Add license section to iso3166-updates docs main page.
+- [X] Raise custom error if trying to access alpha code that exists but isnt in object after custom parameter input to class 
+- [ ] Add more detail to examples in api.rst
+- [ ] Add backtotop button for docs.
+- [X] If Code/Subdivision change == "" then switch data in Description of change in newsletter to Code/Subdivison change attribute. 
+- [X] Implement alpha-3 and numeric support for get_all script.
+- [X] Change "Description of change in newsletter" -> "Description of change"
+- [X] Go over get_all script.
+- [X] python get_all_iso3166_updates.py --alpha=AD,AD - output file shouldn't be iso3166-updates-AD,AD.json - remove duplicate code.
+- [X] Introduce parameter typing into software and scripts.
+- [X] Double check spelling using code-spell-checker extension
+- [X] Update check-for-updates script with get_all script.
+- [X] In scripts, raise error if invalid year rather than skipping.
+- [ ] In check-for-updates, programmatically get date that object was last updated in repo.
+- [ ] Keep export functionality on check-for-updates. Set to true if wanting to export to bucket. Env vars not explicitly required, set create_issue=0 by default.
+- [X] For year range function, if lesser number is on right or left of '-', it should still return the year range updates.
+- [X] Update medium article with new endpoint updates etc.
+- [ ] Add bucket details back to check-for-updates for export functionality.
+- [X] Include return type for parameter typed functions.
+- [X] Add months functionality to software?
+- [X] In months functionality, add support for month range e.g /months/12-36, updates published over the past 12-36 months.
+- [ ] In software, months function can accept int or str.
+- [ ] Use github API to programtically print out when the object was last updated on the repo: https://stackoverflow.com/questions/50194241/get-when-the-file-was-last-updated-from-a-github-repository. Mention in readme.
+- [ ] In build_test workflow, split up build, test, linting into seperate sections. But need to install the required dependancies on each job as they are seperate and run on different machines. Combine build and test into one workflow?
+- [ ] Double check artifacts are being exported in workflow file.
+- [ ] Mention number of existing updates.
+- [X] Reword sections in api.rst and usage.rst.
+- [X] Split up years sections in usage.rst.
+- [ ] Switch string formatting to f string.
+- [ ] In check-for-updates, export_to_bucket and create_github_issue functions should return 1 or 0, and then this return value should be used to print out 
+the adaquate success/failure message. Script shouldn't fail if either of the funcs fail?
+
+Future addtions 
+- [ ] Programmatically push latest version of software and object to PyPI - can do this in specific workflow.

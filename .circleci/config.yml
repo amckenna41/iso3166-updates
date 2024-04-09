@@ -53,7 +53,7 @@ jobs:
       executor: python/default
       description: |
         Running package safety and bandit security check on package.
-      #install python dependancies and libraries, checkout repo
+      #install python dependencies and libraries, checkout repo
       steps:
         - checkout
         - python/install-packages:

@@ -2,8 +2,8 @@ from .iso3166_updates import *
 
 #software metadata
 __name__ = 'iso3166-updates'
-__version__ = "1.6.0"
-__description__ = "A Python package that pulls the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest."
+__version__ = "1.7.0"
+__description__ = "Get the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest."
 __author__ = 'AJ McKenna, https://github.com/amckenna41'
 __authorEmail__ = 'amckenna41@qub.ac.uk'
 __license__ = 'MIT'

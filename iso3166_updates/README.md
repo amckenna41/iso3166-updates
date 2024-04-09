@@ -13,57 +13,57 @@ Below are some examples of using the custom-built `iso3166-updates` Python packa
 
 **Import package:**
 ```python
-import iso3166_updates as iso
+from iso3166_updates import *
+```
+
+**Create instance of ISO3166_Updates() class**
+```python
+iso = ISO3166_Updates()
 ```
 
 **Get all listed changes/updates for all countries and years:**
 ```python
-iso.updates.all
+iso.all
 ```
 
 **Get all listed ISO 3166 changes/updates for Andorra (AD):**
 ```python
-iso.updates["AD"]
+iso["AD"]
 ```
 
-**Get all listed ISO 3166 changes/updates for BA, DE, FR, HU, PY:**
+**Get all listed ISO 3166 changes/updates for BA, DE, FRA, HUN, PY (600):**
 ```python
-iso.updates["BA","DE","FR","HU","PY"]
+iso["BA","DE","FRA","HUN","600"]
 ```
 
 **Get all listed ISO 3166 changes/updates for all countries, for years 2002, 2003 and 2004:**
 ```python
-iso.updates.year("2002, 2003, 2004")
+iso.year("2002, 2003, 2004")
 ```
 
 **Get all listed ISO 3166 changes/updates for all countries, for year range 2013-2016:**
 ```python
-iso.updates.year("2013-2016")
+iso.year("2013-2016")
 ```
 
 **Get all listed ISO 3166 changes/updates for all countries, for all years after 2017 inclusive:**
 ```python
-iso.updates.year(">2017")
+iso.year(">2017")
 ```
 
-**Get any listed ISO 3166 changes/updates for Ireland, between years 2012 and 2021:**
+**Get all listed ISO 3166 changes/updates for all countries, for all years before 2010:**
 ```python
-iso.updates.year("2012-2021").IE
+iso.year("<2010")
 ```
 
-**Get any listed ISO 3166 changes/updates for Tanzania, with updates with year >= 2015:**
+**Get all listed ISO 3166 changes/updates published from the past 12 months:**
 ```python
-iso.updates.year(">2015").TA
+iso.months("12")
 ```
 
-**Get any listed ISO 3166 changes/updates for Romania, with updates with year < 2007:**
+**Get all listed ISO 3166 changes/updates published from the past 36-48 months:**
 ```python
-iso.updates.year("<2007").RO
-```
-
-**Get any listed ISO 3166 changes/updates for Yemen, with updates with year < 2010:**
-```python
-iso.updates.year("<2010")["YE"]
+iso.months("36-48")
 ```
 
 The output to the above functions for the updates/changes to an ISO 3166 country returns 4 attributes: 
@@ -71,4 +71,4 @@ The output to the above functions for the updates/changes to an ISO 3166 country
 * Edition/Newsletter: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform page.
 * Date Issued: date that the change was communicated.
 * Code/Subdivision change: overall summary of change/update made.
-* Description of change in newsletter: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
+* Description of Change: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.

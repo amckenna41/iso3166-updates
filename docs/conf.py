@@ -7,9 +7,9 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'iso3166-updates'
-copyright = '2023, AJ McKenna'
+copyright = '2024, AJ McKenna'
 author = 'AJ McKenna'
-release = '1.6.0'
+release = '1.7.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

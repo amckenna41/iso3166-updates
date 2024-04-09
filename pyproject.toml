@@ -1,0 +1,45 @@
+[tool.poetry]
+name = "iso3166-updates"
+version = "1.7.0"
+description = "Get the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest." 
+authors = ["AJ Mckenna <amckenna41@qub.ac.uk>"]
+maintainers = ["AJ McKenna <amckenna41@qub.ac.uk>"]
+license = "MIT"
+readme = "README.md"
+classifiers = [
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Console",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "Intended Audience :: Information Technology",
+        "License :: OSI Approved :: MIT License",
+        "License :: Free For Educational Use",
+        "Natural Language :: English",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",	
+        "Programming Language :: Python :: Implementation :: PyPy",
+        "Programming Language :: Python :: 3 :: Only",
+        "Topic :: Scientific/Engineering",
+        "Topic :: Scientific/Engineering :: Information Analysis",
+        "Topic :: Software Development :: Libraries :: Python Modules"
+]
+keywords = ["iso", "iso3166", "beautifulsoup", "python", "pypi", "countries", "country codes", "csv", "iso3166-2", "subdivisions", "iso3166-1", "alpha-2", "alpha-3", "selenium", "chromedriver"]
+packages = [{include = "iso3166_updates"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+iso3166 = "^2.1.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.2"
+
+[tool.poetry.urls]
+homepage = "https://iso3166-updates.com/api/"
+repository = "https://github.com/amckenna41/iso3166-updates"
+documentation = "https://iso3166-updates.readthedocs.io/en/latest/"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

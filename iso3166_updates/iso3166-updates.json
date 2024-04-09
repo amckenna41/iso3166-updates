@@ -116,7 +116,7 @@
             "Date Issued": "2015-11-27",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:AL).",
             "Code/Subdivision Change": "",
-            "Description of Change in Newsletter": "Change of subdivision category from préfecture to comté in French ; deletion of all districts ; update List Source."
+            "Description of Change in Newsletter": "Change of subdivision category from préfecture to comté in French; deletion of all districts; update List Source."
         },
         {
             "Date Issued": "2014-04-03",
@@ -626,6 +626,12 @@
         }
     ],
     "BO": [
+        {
+            "Date Issued": "2024-02-29",
+            "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BO).",
+            "Code/Subdivision Change": "",
+            "Description of Change in Newsletter": "Change of short name upper case: replace the parentheses with a coma."
+        },
         {
             "Date Issued": "2014-12-18",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BO).",
@@ -1236,7 +1242,7 @@
             "Date Issued": "2018-11-26",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CZ).",
             "Code/Subdivision Change": "Deletion of subdivision code: CZ-101 CZ-102 CZ-103 CZ-104 CZ-105 CZ-106 CZ-107 CZ-108 CZ-109 CZ-110 CZ-111 CZ-112 CZ-113 CZ-114 CZ-115 CZ-116 CZ-117 CZ-118 CZ-119 CZ-120 CZ-121 CZ-122.",
-            "Description of Change in Newsletter": "Deletion of districts CZ-101, CZ-102, CZ-103, CZ-104, CZ-105, CZ-106, CZ-107, CZ-108, CZ-109, CZ-110, CZ-111, CZ-112, CZ-113, CZ-114, CZ-115, CZ-116, CZ-117, CZ-118, CZ-119, CZ-120, CZ-121, CZ-122 ; Update List Source."
+            "Description of Change in Newsletter": "Deletion of districts CZ-101, CZ-102, CZ-103, CZ-104, CZ-105, CZ-106, CZ-107, CZ-108, CZ-109, CZ-110, CZ-111, CZ-112, CZ-113, CZ-114, CZ-115, CZ-116, CZ-117, CZ-118, CZ-119, CZ-120, CZ-121, CZ-122; Update List Source."
         },
         {
             "Date Issued": "2016-11-15",
@@ -1408,7 +1414,7 @@
             "Date Issued": "2007-12-13",
             "Edition/Newsletter": "ISO 3166-2:2007 (http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718).",
             "Code/Subdivision Change": "Subdivisions added: DO-31 San José de Ocoa DO-32 Santo Domingo.",
-            "Description of Change in Newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1] (#cite_note-1)."
+            "Description of Change in Newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1] (#cite_note-2)."
         },
         {
             "Date Issued": "2000-06-21",
@@ -1734,6 +1740,12 @@
         }
     ],
     "FM": [
+        {
+            "Date Issued": "2024-02-29",
+            "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:FM).",
+            "Code/Subdivision Change": "",
+            "Description of Change in Newsletter": "Change of short name upper case: replace the parentheses with a coma and correct the remark in English of the entry of Micronesia Federate states (removing duplicated text)."
+        },
         {
             "Date Issued": "2015-11-27",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:FM).",
@@ -2214,7 +2226,7 @@
             "Date Issued": "2016-11-15",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:GR).",
             "Code/Subdivision Change": "",
-            "Description of Change in Newsletter": "Change of spelling of GR-M; deletion of subdivision category department; deletion of departments GR-01, GR-11, GR-12, GR-31, GR-A1, GR-64, GR-94, GR-85, GR-81, GR-52,GR-71, GR-05, GR-04, GR-63, GR-07, GR-06, GR-51, GR-14, GR-53, GR-33, GR-91, GR-41, GR-56, GR-55, GR-23, GR-22, GR-57, GR-15, GR-58, GR-82, GR-16, GR-42, GR-92, GR-24, GR-83, GR-43, GR-07, GR-59, GR-61, GR-34, GR-93, GR-73, GR-84, GR-62, GR-32, GR-54, GR-44, GR-03, GR-72, GR-21; update list source."
+            "Description of Change in Newsletter": "Change of spelling of GR-M; deletion of subdivision category department; deletion of departments GR-01, GR-11, GR-12, GR-31, GR-A1, GR-64, GR-94, GR-85, GR-81, GR-52, GR-71, GR-05, GR-04, GR-63, GR-07, GR-06, GR-51, GR-14, GR-53, GR-33, GR-91, GR-41, GR-56, GR-55, GR-23, GR-22, GR-57, GR-15, GR-58, GR-82, GR-16, GR-42, GR-92, GR-24, GR-83, GR-43, GR-07, GR-59, GR-61, GR-34, GR-93, GR-73, GR-84, GR-62, GR-32, GR-54, GR-44, GR-03, GR-72, GR-21; update list source."
         },
         {
             "Date Issued": "2015-11-27",
@@ -2390,7 +2402,7 @@
             "Date Issued": "2007-12-13",
             "Edition/Newsletter": "ISO 3166-2:2007 (http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718).",
             "Code/Subdivision Change": "Subdivisions added: HT-NI Nippes.",
-            "Description of Change in Newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1] (#cite_note-1)."
+            "Description of Change in Newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1] (#cite_note-2)."
         }
     ],
     "HU": [
@@ -2669,10 +2681,16 @@
     ],
     "IR": [
         {
+            "Date Issued": "2024-02-29",
+            "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:IR).",
+            "Code/Subdivision Change": "",
+            "Description of Change in Newsletter": "Change of short name upper case: replace the parentheses with a coma."
+        },
+        {
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:IR).",
             "Code/Subdivision Change": "",
-            "Description of Change in Newsletter": "Change of subdivision code from IR-01 to IR-03, IR-02 to IR-04, IR-03 to IR-24, IR-04 to IR-10, IR-05 to IR-16, IR-06 to IR-18, IR-07 to IR-23, IR-08 to IR-14, IR-10 to IR-06, IR-11 to IR-19, IR-12 to IR-20, IR-13 to IR-11, IR-14 to IR-07, IR-15 to IR-08, IR-16 to IR-12, IR-17 to IR-05, IR-18 to IR-17, IR-19 to IR-01, IR-20 to IR-15, IR-21 to IR-02, IR-22 to IR-00, IR-23 to IR-22, IR-24 to IR-13, IR-25 to IR-21, IR-26 to IR-25, IR-28 to IR-26, IR-30 to IR-09, IR-31 to IR-28, IR-32 to IR-30 ; Update Code Source."
+            "Description of Change in Newsletter": "Change of subdivision code from IR-01 to IR-03, IR-02 to IR-04, IR-03 to IR-24, IR-04 to IR-10, IR-05 to IR-16, IR-06 to IR-18, IR-07 to IR-23, IR-08 to IR-14, IR-10 to IR-06, IR-11 to IR-19, IR-12 to IR-20, IR-13 to IR-11, IR-14 to IR-07, IR-15 to IR-08, IR-16 to IR-12, IR-17 to IR-05, IR-18 to IR-17, IR-19 to IR-01, IR-20 to IR-15, IR-21 to IR-02, IR-22 to IR-00, IR-23 to IR-22, IR-24 to IR-13, IR-25 to IR-21, IR-26 to IR-25, IR-28 to IR-26, IR-30 to IR-09, IR-31 to IR-28, IR-32 to IR-30; Update Code Source."
         },
         {
             "Date Issued": "2018-11-26",
@@ -2760,13 +2778,13 @@
             "Date Issued": "2019-11-22",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:IT).",
             "Code/Subdivision Change": "Name changes: IT-36 Friuli-Venezia Giulia -> Friuli Venezia Giulia free communal consortia -> free municipal consortium Subdivisions deleted: IT-AO Aosta Category changes: IT-23, IT-32, IT-36, IT-82, IT-88: region -> autonomous region IT-BZ, IT-TN: province -> autonomous province.",
-            "Description of Change in Newsletter": "Change of spelling of IT-36; Deletion of province IT-AO; Change of spelling of category name in eng from free communal consortia to free municipal consortium; Change of spelling of category name in ita from libero consorzion communale [sic] to libero consorzio comunale ; Change of spelling of category name in ita from città metropolitan to città metropolitana; Addition of category name autonomous region and autonomous province; Change of category name from region to autonomous region for IT-23, IT-32, IT-36, IT-82, IT-88; Change of category name from province to autonomous province for IT-BZ, IT-TN; Update List Source."
+            "Description of Change in Newsletter": "Change of spelling of IT-36; Deletion of province IT-AO; Change of spelling of category name in eng from free communal consortia to free municipal consortium; Change of spelling of category name in ita from libero consorzion communale [sic] to libero consorzio comunale; Change of spelling of category name in ita from città metropolitan to città metropolitana; Addition of category name autonomous region and autonomous province; Change of category name from region to autonomous region for IT-23, IT-32, IT-36, IT-82, IT-88; Change of category name from province to autonomous province for IT-BZ, IT-TN; Update List Source."
         },
         {
             "Date Issued": "2019-04-09",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:IT).",
             "Code/Subdivision Change": "Subdivisions deleted: 8 provinces ()see below) Subdivisions added: IT-SD Sud Sardegna Category changes: IT-AG, IT-CL, IT-EN, IT-RG, IT-SR, IT-TP: province -> free communal consortia IT-BA, IT-BO, IT-CA, IT-CT, IT-FI, IT-GE, IT-ME, IT-MI, IT-NA, IT-PA, IT-RC, IT-RM, IT-TO, IT-VE: province -> metropolitan city.",
-            "Description of Change in Newsletter": "Addition of province IT-SD; Addition of category names free communal consortia and metropolitan cities in eng,fra and ita; Change of category name from province to free communal consortia for IT-AG, IT-CL, IT-EN, IT-RG, IT-SR, IT-TP; Change of category name from province to metropolitan city for IT-BA, IT-BO, IT-CA, IT-CT, IT-FI, IT-GE, IT-ME, IT-MI, IT-NA, IT-PA, IT-RC, IT-RM, IT-TO, IT-VE; Deletion of provinces IT-CI, IT-GO, IT-OG, IT-OT, IT-PN, IT-TS, IT-UD, IT-VS; Update List Source."
+            "Description of Change in Newsletter": "Addition of province IT-SD; Addition of category names free communal consortia and metropolitan cities in eng, fra and ita; Change of category name from province to free communal consortia for IT-AG, IT-CL, IT-EN, IT-RG, IT-SR, IT-TP; Change of category name from province to metropolitan city for IT-BA, IT-BO, IT-CA, IT-CT, IT-FI, IT-GE, IT-ME, IT-MI, IT-NA, IT-PA, IT-RC, IT-RM, IT-TO, IT-VE; Deletion of provinces IT-CI, IT-GO, IT-OG, IT-OT, IT-PN, IT-TS, IT-UD, IT-VS; Update List Source."
         },
         {
             "Date Issued": "2010-06-30",
@@ -3067,6 +3085,12 @@
     ],
     "KP": [
         {
+            "Date Issued": "2024-02-29",
+            "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:KP).",
+            "Code/Subdivision Change": "",
+            "Description of Change in Newsletter": "Change of short name upper case in eng: replace the parentheses with a coma."
+        },
+        {
             "Date Issued": "2022-11-29",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:KP).",
             "Code/Subdivision Change": "",
@@ -3164,7 +3188,7 @@
             "Date Issued": "2007-12-13",
             "Edition/Newsletter": "ISO 3166-2:2007 (http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718).",
             "Code/Subdivision Change": "Subdivisions added: KW-MU Mubārak al Kabīr.",
-            "Description of Change in Newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1] (#cite_note-1)."
+            "Description of Change in Newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1] (#cite_note-3)."
         }
     ],
     "KY": [
@@ -4465,7 +4489,7 @@
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:PH).",
             "Code/Subdivision Change": "Subdivisions renamed: PH-COM Compostela Valley -> Davao de Oro.",
-            "Description of Change in Newsletter": "Change of subdivision name of PH-COM in eng; Deletion of subdivision name of PH-COM in tgl; Update List Source ; Correction of the Code Source."
+            "Description of Change in Newsletter": "Change of subdivision name of PH-COM in eng; Deletion of subdivision name of PH-COM in tgl; Update List Source; Correction of the Code Source."
         },
         {
             "Date Issued": "2015-11-27",
@@ -4579,7 +4603,7 @@
             "Date Issued": "2013-02-06",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:PS).",
             "Code/Subdivision Change": "",
-            "Description of Change in Newsletter": "UN notification of full name[1][2] (#cite_note-1)."
+            "Description of Change in Newsletter": "UN notification of full name[1][2] (#cite_note-2)."
         },
         {
             "Date Issued": "2011-12-13 (corrected 2011-12-15)",
@@ -5758,6 +5782,12 @@
     ],
     "VE": [
         {
+            "Date Issued": "2024-02-29",
+            "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:VE).",
+            "Code/Subdivision Change": "",
+            "Description of Change in Newsletter": "Change of short name upper case: replace the parentheses with a coma."
+        },
+        {
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:VE).",
             "Code/Subdivision Change": "Subdivisions renamed: VE-X Vargas -> La Guaira.",
@@ -5936,7 +5966,7 @@
             "Date Issued": "2007-12-13",
             "Edition/Newsletter": "ISO 3166-2:2007 (http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718).",
             "Code/Subdivision Change": "Subdivisions added: YE-SA Şan‘ā' [city].",
-            "Description of Change in Newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1] (#cite_note-1)."
+            "Description of Change in Newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1] (#cite_note-3)."
         },
         {
             "Date Issued": "2002-12-10",
@@ -5963,14 +5993,14 @@
         {
             "Date Issued": "2020-03-02",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:ZA).",
-            "Code/Subdivision Change": "Change of subdivision code: ZA-GT -> ZA-GP ZA-NL -> ZA-KZN.",
+            "Code/Subdivision Change": "Codes: ZA-GT -> ZA-GP ZA-NL -> ZA-KZN.",
             "Description of Change in Newsletter": "Change of subdivision code from ZA-GT to ZA-GP, ZA-NL to ZA-KZN; Update Code Source."
         },
         {
             "Date Issued": "2007-12-13",
             "Edition/Newsletter": "ISO 3166-2:2007 (http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718).",
             "Code/Subdivision Change": "Codes: Gauteng: ZA-GP -> ZA-GT KwaZulu-Natal: ZA-ZN -> ZA-NL.",
-            "Description of Change in Newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter)."
+            "Description of Change in Newsletter": "Second edition of ISO 3166-2 (not announced in a newsletter)."
         },
         {
             "Date Issued": "2007-11-28",
@@ -5981,7 +6011,7 @@
         {
             "Date Issued": "2004-03-08",
             "Edition/Newsletter": "Newsletter I-6 (https://web.archive.org/web/20120112041245/http://www.iso.org/iso/iso_3166-2_newsletter_i-6_en.pdf).",
-            "Code/Subdivision Change": "Codes: ZA-NP Northern Province -> ZA-LP Limpopo.",
+            "Code/Subdivision Change": "Subdivision: ZA-NP Northern Province -> ZA-LP Limpopo.",
             "Description of Change in Newsletter": "Change of name of Northern Province to Limpopo."
         }
     ],

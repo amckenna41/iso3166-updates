@@ -1,4 +1,4 @@
-import iso3166_updates as iso
+from iso3166_updates import *
 import iso3166
 from datetime import datetime
 from importlib.metadata import metadata
@@ -12,31 +12,36 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     Test Cases
     ==========
     test_iso3166_updates_metadata:
-        testing correct software metdata for the iso3166-updates package. 
+        testing correct software metadata for the iso3166-updates package. 
     test_updates_all:
         testing correct functionality for 'all' attribute in ISO3166_Updates class.
     test_updates_alpha2:
-        testing correct functionality for test_updates_alpha2 function in ISO3166_Updates class.
+        testing correct functionality for __getitem__ function in ISO3166_Updates class.
     test_updates_year:
-        testing correct functionality for test_updates_year function in ISO3166_Updates class.
+        testing correct functionality for year() function in ISO3166_Updates class.
+    test_updates_months:
+        testing correct functionality for month() function in ISO3166_Updates class.
     """
     def setUp(self):
         """ Initialise test variables. """                
         #output columns from various functions
-        self.expected_output_columns = ["Date Issued", "Edition/Newsletter", "Code/Subdivision Change", "Description of Change in Newsletter"]
+        self.expected_output_columns = ["Date Issued", "Edition/Newsletter", "Code/Subdivision Change", "Description of Change"]
+
+        #instance of ISO3166_Updates() class
+        self.all_updates = ISO3166_Updates()
 
     # @unittest.skip("Skipping metadata unit tests.")    
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        self.assertEqual(metadata('iso3166-updates')['version'], "1.6.0", 
-            "iso3166-updates version is not correct, expected 1.6.0, got {}.".format(metadata('iso3166-updates')['version']))
+        # self.assertEqual(metadata('iso3166-updates')['version'], "1.7.0", 
+        #     "iso3166-updates version is not correct, expected 1.7.0, got {}.".format(metadata('iso3166-updates')['version']))
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             "iso3166-updates software name is not correct, expected iso3166-updates, got {}.".format(metadata('iso3166-updates')['name']))
         self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna, https://github.com/amckenna41", 
             "iso3166-updates author is not correct, expected AJ McKenna, got {}.".format(metadata('iso3166-updates')['author']))
         self.assertEqual(metadata('iso3166-updates')['author-email'], "amckenna41@qub.ac.uk", 
             "iso3166-updates author email is not correct, expected amckenna41@qub.ac.uk, got {}.".format(metadata('iso3166-updates')['author-email']))
-        # self.assertEqual(metadata('iso3166-updates')['summary'], "A Python package that pulls the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest.", 
+        # self.assertEqual(metadata('iso3166-updates')['summary'], "Get the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest..", 
         #     "iso3166-updates package summary is not correct, got: {}.".format(metadata('iso3166-updates')['summary']))
         self.assertEqual(metadata('iso3166-updates')['keywords'], "iso,iso3166,beautifulsoup,python,pypi,countries,country codes,csv,iso3166-2,subdivisions,iso3166-1,alpha-2,alpha-3,selenium,chromedriver", 
             "iso3166-updates keywords are not correct, got:\n{}.".format(metadata('iso3166-updates')['keywords']))
@@ -50,7 +55,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     def test_updates_all(self):
         """ Testing 'all' attribute that should return all ISO 3166 updates data. """
 #1.)
-        test_all_updates = iso.updates.all 
+        test_all_updates = self.all_updates
 
         self.assertIsInstance(test_all_updates, dict, 
             "Expected output object to be of type dict, got {}.".format(type(test_all_updates)))
@@ -77,12 +82,12 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         test_alpha2_error_3 = False #should raise type error
         test_alpha2_error_4 = 1234 #should raise type error
 #1.) 
-        test_alpha2_bt_updates = iso.updates[test_alpha2_bt] #Bhutan
+        test_alpha2_bt_updates = self.all_updates[test_alpha2_bt] #Bhutan
     
         test_alpha2_bt_updates_expected = {
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BT).",
-            "Description of Change in Newsletter": "Change of spelling of BT-43; Update List Source.",
+            "Description of Change": "Change of spelling of BT-43; Update List Source.",
             "Code/Subdivision Change": ""
             }
 
@@ -90,15 +95,15 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             "Expected there to be 5 updates in output object, got {}.".format(len(test_alpha2_bt_updates)))
         for row in test_alpha2_bt_updates:
             self.assertEqual(list(row.keys()), self.expected_output_columns, "Columns from output do not match expected.")
-            self.assertIsInstance(row, dict, "Ouput object should be of type dict, got {}.".format(type(row)))
+            self.assertIsInstance(row, dict, "Output object should be of type dict, got {}.".format(type(row)))
         self.assertEqual(test_alpha2_bt_updates[0], test_alpha2_bt_updates_expected, "Expected and observed outputs do not match.")
 #2.) 
-        test_alpha2_dj_updates = iso.updates[test_alpha2_dj] #Djibouti
+        test_alpha2_dj_updates = self.all_updates[test_alpha2_dj] #Djibouti
     
         test_alpha2_dj_updates_expected = {
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:DJ).",
-            "Description of Change in Newsletter": "Correction of the Code Source.",
+            "Description of Change": "Correction of the Code Source.",
             "Code/Subdivision Change": ""
             }
 
@@ -106,15 +111,15 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             "Expected there to be 6 updates in output object, got {}.".format(len(test_alpha2_dj_updates)))
         for row in test_alpha2_dj_updates:
             self.assertEqual(list(row.keys()), self.expected_output_columns, "Columns from output do not match expected.")
-            self.assertIsInstance(row, dict, "Ouput object should be of type dict, got {}.".format(type(row)))
+            self.assertIsInstance(row, dict, "Output object should be of type dict, got {}.".format(type(row)))
         self.assertEqual(test_alpha2_dj_updates[0], test_alpha2_dj_updates_expected, "Expected and observed outputs do not match.")
 #3.) 
-        test_alpha2_hn_updates = iso.updates[test_alpha2_hn] #Honduras
+        test_alpha2_hn_updates = self.all_updates[test_alpha2_hn] #Honduras
     
         test_alpha2_hn_updates_expected = {
             "Date Issued": "2011-12-13 (corrected 2011-12-15)",
             "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf).",
-            "Description of Change in Newsletter": "Comment taken into account and source list update.",
+            "Description of Change": "Comment taken into account and source list update.",
             "Code/Subdivision Change": ""
             }
 
@@ -122,21 +127,21 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             "Expected there to be 1 update in output object, got {}.".format(len(test_alpha2_hn_updates)))
         for row in test_alpha2_hn_updates:
             self.assertEqual(list(row.keys()), self.expected_output_columns, "Columns from output do not match expected.")
-            self.assertIsInstance(row, dict, "Ouput object should be of type dict, got {}.".format(type(row)))
+            self.assertIsInstance(row, dict, "Output object should be of type dict, got {}.".format(type(row)))
         self.assertEqual(test_alpha2_hn_updates[0], test_alpha2_hn_updates_expected, "Expected and observed outputs do not match.")
 #4.) 
-        test_alpha2_fj_gh_gn_updates = iso.updates[test_alpha2_fj_gh_gn] #Fiji, Ghana, Guyana
+        test_alpha2_fj_gh_gn_updates = self.all_updates[test_alpha2_fj_gh_gn] #Fiji, Ghana, Guyana
     
         test_alpha2_fj_gh_gn_updates_expected_1 = {
             "Date Issued": "2016-11-22",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:FJ).",
-            "Description of Change in Newsletter": "Reinstatement of provinces deleted due to a technical glitch.",
+            "Description of Change": "Reinstatement of provinces deleted due to a technical glitch.",
             "Code/Subdivision Change": ""
             }
         test_alpha2_fj_gh_gn_updates_expected_2 = {
             "Date Issued": "2020-11-24",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:GH).",
-            "Description of Change in Newsletter": "Correction of the Code Source.",
+            "Description of Change": "Correction of the Code Source.",
             "Code/Subdivision Change": ""
             }
         
@@ -146,16 +151,16 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         for code in test_alpha2_fj_gh_gn_updates:
             for row in test_alpha2_fj_gh_gn_updates[code]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, "Columns from output do not match expected.")
-                self.assertIsInstance(row, dict, "Ouput object should be of type dict, got {}.".format(type(row)))
+                self.assertIsInstance(row, dict, "Output object should be of type dict, got {}.".format(type(row)))
         self.assertEqual(test_alpha2_fj_gh_gn_updates["FJ"][0], test_alpha2_fj_gh_gn_updates_expected_1, "Expected and observed outputs do not match.")
         self.assertEqual(test_alpha2_fj_gh_gn_updates["GH"][0], test_alpha2_fj_gh_gn_updates_expected_2, "Expected and observed outputs do not match.")
 #5.) 
-        test_alpha2_yt_updates = iso.updates[test_alpha2_yt] #Mayotte
+        test_alpha2_yt_updates = self.all_updates[test_alpha2_yt] #Mayotte
 
         test_alpha2_yt_updates_expected = {
             "Date Issued": "2022-11-29",
             "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:YT).",
-            "Description of Change in Newsletter": "Modification of remark part 2 (no subdivisions relevant for this standard. Included also as a subdivision of France (FR-976)).",
+            "Description of Change": "Modification of remark part 2 (no subdivisions relevant for this standard. Included also as a subdivision of France (FR-976)).",
             "Code/Subdivision Change": ""
             }
         
@@ -163,16 +168,16 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             "Expected there to be 2 updates in output object, got {}.".format(len(test_alpha2_yt_updates)))
         for row in test_alpha2_yt_updates:
             self.assertEqual(list(row.keys()), self.expected_output_columns, "Columns from output do not match expected.")
-            self.assertIsInstance(row, dict, "Ouput object should be of type dict, got {}.".format(type(row)))
+            self.assertIsInstance(row, dict, "Output object should be of type dict, got {}.".format(type(row)))
         self.assertEqual(test_alpha2_yt_updates[0], test_alpha2_yt_updates_expected, "Expected and observed outputs do not match.")
 #6.)     
         with self.assertRaises(ValueError):
-            iso.updates[test_alpha2_error_1] 
-            iso.updates[test_alpha2_error_2] 
+            self.all_updates[test_alpha2_error_1] 
+            self.all_updates[test_alpha2_error_2] 
 #7.)
         with self.assertRaises(TypeError):
-            iso.updates[test_alpha2_error_3] 
-            iso.updates[test_alpha2_error_4]
+            self.all_updates[test_alpha2_error_3] 
+            self.all_updates[test_alpha2_error_4]
 
     def test_updates_year(self):
         """ Testing year function that returns all ISO 3166 updates for input year/years, year range or greater than/less than input year. """
@@ -181,13 +186,13 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         test_year_2000_2001_2002 = "2000,2001,2002"
         test_year_gt_2021 = ">2021"
         test_year_2004_2008 = "2004-2008"
-        test_year_1999_2002 = "1999-2002"
+        test_year_1999_2002 = "2002-1999"
         test_year_error1 = "1234" #ValueError
         test_year_error2 = "abcdef" #ValueError
         test_year_error3 = 12345 #TypeError
         test_year_error4 = True #TypeError
 #1.)
-        test_year_2019_updates = iso.updates.year(test_year_2019)
+        test_year_2019_updates = self.all_updates.year(test_year_2019)
         test_year_2019_expected_keys = ["BN", "BQ", "CN", "ET", "GB", "GH", "GR", "IN", "IT", "LA", "LK", "MA", "MD", "ME", "MH", "MK", 
                                         "MR", "NO", "NP", "PK", "SB", "SL", "SY", "TZ"]
 
@@ -200,7 +205,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                 self.assertEqual(datetime.strptime(test_year_2019_updates[update][row]["Date Issued"], '%Y-%m-%d').year, 2019, 
                     "Expected year of updates output to be 2019, got {}.".format(test_year_2019_updates[update][row]["Date Issued"]))
 #2.)
-        test_year_2003_updates = iso.updates.year(test_year_2003)
+        test_year_2003_updates = self.all_updates.year(test_year_2003)
         test_year_2003_expected_keys = ["BW", "CH", "CZ", "LY", "MY", "SN", "TN", "TZ", "UG", "VE"]
 
         self.assertEqual(len(test_year_2003_updates), 10, 
@@ -212,7 +217,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                 self.assertEqual(datetime.strptime(test_year_2003_updates[update][row]["Date Issued"], '%Y-%m-%d').year, 2003, 
                     "Expected year of updates output to be 2003, got {}.".format(test_year_2003_updates[update][row]["Date Issued"]))    
 #3.) 
-        test_year_2000_2001_2002_updates = iso.updates.year(test_year_2000_2001_2002)
+        test_year_2000_2001_2002_updates = self.all_updates.year(test_year_2000_2001_2002)
         test_year_2000_2001_2002_expected_keys = ['AE', 'AL', 'AO', 'AZ', 'BD', 'BG', 'BI', 'BJ', 'BY', 'CA', 'CD', 'CN', 'CV', 'CZ', 
                                                   'DO', 'EC', 'ER', 'ES', 'ET', 'FR', 'GB', 'GE', 'GN', 'GT', 'HR', 'ID', 'IN', 'IR', 
                                                   'IT', 'KG', 'KH', 'KP', 'KR', 'KZ', 'LA', 'MA', 'MD', 'MO', 'MU', 'MW', 'NG', 'NI', 
@@ -228,7 +233,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                 self.assertIn(datetime.strptime(test_year_2000_2001_2002_updates[update][row]["Date Issued"], '%Y-%m-%d').year, [2000,2001,2002], 
                     "Expected year of updates output to be either 2000, 2001 or 2002, got {}.".format(test_year_2000_2001_2002_updates[update][row]["Date Issued"]))    
 #4.)
-        test_year_gt_2021_updates = iso.updates.year(test_year_gt_2021)
+        test_year_gt_2021_updates = self.all_updates.year(test_year_gt_2021)
         test_year_gt_2021_expected_keys = ['CI', 'CN', 'DZ', 'ET', 'FI', 'FR', 'GB', 'GF', 'GP', 'GT', 'HU', 'ID', 'IN', 'IQ', 'IS', 'KH', 'KP', 'KR', 'KZ', 'LT', 
                                            'LV', 'ME', 'MQ', 'MX', 'NL', 'NP', 'NZ', 'PA', 'PH', 'PL', 'RE', 'RU', 'SI', 'SS', 'TR', 'YT']
 
@@ -241,17 +246,17 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                 self.assertTrue(datetime.strptime(test_year_gt_2021_updates[update][row]["Date Issued"], '%Y-%m-%d').year >= 2021, 
                     "Expected year of updates output to be greater than or equal to 2021, got {}.".format(test_year_gt_2021_updates[update][row]["Date Issued"]))   
 #5.)
-        test_year_2004_2008_updates = iso.updates.year(test_year_2004_2008)
+        test_year_2004_2008_updates = self.all_updates.year(test_year_2004_2008)
 
         self.assertEqual(len(test_year_2004_2008_updates), 73, 
-            "Expected 73 updates in output object, got {}.".format(len(test_year_2004_2008_updates))) #**
+            "Expected 73 updates in output object, got {}.".format(len(test_year_2004_2008_updates))) 
         for update in test_year_2004_2008_updates:
             for row in range(0, len(test_year_2004_2008_updates[update])):
                 self.assertTrue((datetime.strptime(test_year_2004_2008_updates[update][row]["Date Issued"], '%Y-%m-%d').year >= 2004) and \
                                 (datetime.strptime(test_year_2004_2008_updates[update][row]["Date Issued"], '%Y-%m-%d').year <= 2008), 
                             "Expected year of updates output to be between 2004 and 2008, got {}.".format(test_year_2004_2008_updates[update][row]["Date Issued"])) 
 #6.)
-        test_year_1999_2002_updates = iso.updates.year(test_year_1999_2002)
+        test_year_1999_2002_updates = self.all_updates.year(test_year_1999_2002)
         
         self.assertEqual(len(test_year_1999_2002_updates), 58, 
             "Expected 58 updates in output object, got {}.".format(len(test_year_1999_2002_updates)))
@@ -262,13 +267,119 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                             "Expected year of updates output to be between 1999 and 2002, got {}.".format(test_year_1999_2002_updates[update][row]["Date Issued"])) 
 #7.)    
         with self.assertRaises(ValueError):
-            iso.updates.year(test_year_error1)
-            iso.updates.year(test_year_error2)
+            self.all_updates.year(test_year_error1)
+            self.all_updates.year(test_year_error2)
 #8.)    
         with self.assertRaises(TypeError):
-            iso.updates.year(test_year_error3)
-            iso.updates.year(test_year_error4)
-    
+            self.all_updates.year(test_year_error3)
+            self.all_updates.year(test_year_error4)
+
+    def test_updates_months(self):
+        """ Testing month function that returns all ISO 3166 updates for number of months or month range. """
+        pass
+
+    def tearDown(self):
+        """ Delete imported json from memory. """
+        del self.all_updates
+        
 if __name__ == '__main__':
     #run all unit tests
     unittest.main(verbosity=2)
+
+
+#     def test_iso3166_alpha2_json(self):
+#         """ Testing all ISO 3166 updates created in JSON generated from software package. """
+#         alpha2_codes = list(iso3166.countries_by_alpha2.keys())
+#         test_alpha2_bg = "BG" #Bulgaria
+#         test_alpha2_cn = "CN" #China
+#         test_alpha2_cy = "CY" #Cyprus
+#         test_alpha2_ec = "EC" #Ecuador
+#         test_alpha2_mz = "MZ" #Mozambique
+#         test_alpha2_sk = "SK" #Slovakia
+#         test_alpha2_abc = "abc"
+#         test_alpha2_123 = 123
+#         test_alpha2_false = False
+# #1.)
+#         #iterate over each ISO 3166 alpha-2 code, testing alpha-2 code is in updates json
+#         for code in alpha2_codes:
+#             if (code == "XK"): #skip XK (Kosovo)
+#                 continue
+#             self.assertIn(code, list(self.iso3166_json.keys()), "alpha-2 code {} not found in updates json.".format(code))
+# #2.)       
+#         bg_expected_output1 = {'Date Issued': '2018-11-26', 'Edition/Newsletter': 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BG).', 
+#             'Description of Change': 'Correction of the romanization system label.', 'Code/Subdivision Change': ''}
+#         bg_expected_output2 = {'Date Issued': '2018-04-20', 'Edition/Newsletter': 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BG).', 
+#             'Description of Change': 'Change of subdivision category from region to district in eng and fra; update List Source.', 'Code/Subdivision Change': ''}
+
+#         self.assertIsInstance(self.iso3166_json[test_alpha2_bg], list, "Expected output to be of type list, got {}.".format(type(self.iso3166_json[test_alpha2_bg])))
+#         self.assertEqual(len(self.iso3166_json[test_alpha2_bg]), 9, "Expected there to be 9 elements in output row, got {}.".format(len(self.iso3166_json[test_alpha2_bg])))
+#         for row in range(0, len(self.iso3166_json[test_alpha2_bg])):
+#             self.assertEqual(list(self.iso3166_json[test_alpha2_bg][row].keys()), self.expected_output_columns, "Columns from output do not match expected.")
+#         self.assertEqual(self.iso3166_json[test_alpha2_bg][0], bg_expected_output1, "Row in updates json does not match expected output.")
+#         self.assertEqual(self.iso3166_json[test_alpha2_bg][1], bg_expected_output2, "Row in updates json does not match expected output.")
+# #3.)
+#         cn_expected_output1 = {'Date Issued': '2021-11-25', 'Edition/Newsletter': 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CN).', 
+#             'Description of Change': 'Change of spelling of CN-NX; Update List Source.', 'Code/Subdivision Change': ''}
+#         cn_expected_output2 = {'Date Issued': '2019-11-22', 'Edition/Newsletter': 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CN).', 'Description of Change': 
+#             'Change language from mon to zho for CN-NM.', 'Code/Subdivision Change': ''}
+
+#         self.assertIsInstance(self.iso3166_json[test_alpha2_cn], list, "Expected output to be of type list, got {}.".format(type(self.iso3166_json[test_alpha2_cn])))
+#         self.assertEqual(len(self.iso3166_json[test_alpha2_cn]), 6, "Expected there to be 6 elements in output row, got {}.".format(len(self.iso3166_json[test_alpha2_cn])))
+#         for row in range(0, len(self.iso3166_json[test_alpha2_cn])):
+#             self.assertEqual(list(self.iso3166_json[test_alpha2_cn][row].keys()), self.expected_output_columns, "Columns from output do not match expected.")        
+#         self.assertEqual(self.iso3166_json[test_alpha2_cn][0], cn_expected_output1, "Row in updates json does not match expected output.")
+#         self.assertEqual(self.iso3166_json[test_alpha2_cn][1], cn_expected_output2, "Row in updates json does not match expected output.")
+# #4.)
+#         cy_expected_output1 = {'Date Issued': '2018-11-26', 'Edition/Newsletter': 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CY).', 
+#             'Description of Change': 'Correction of the romanization system label.', 'Code/Subdivision Change': ''}
+#         cy_expected_output2 = {'Date Issued': '2018-04-20', 'Edition/Newsletter': 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CY).', 
+#             'Description of Change': 'Update Code Source; update List Source.', 'Code/Subdivision Change': ''}
+
+#         self.assertIsInstance(self.iso3166_json[test_alpha2_cy], list, "Expected output to be of type list, got {}.".format(type(self.iso3166_json[test_alpha2_cy])))
+#         self.assertEqual(len(self.iso3166_json[test_alpha2_cy]), 5, "Expected there to be 5 elements in output row, got {}.".format(len(self.iso3166_json[test_alpha2_cy])))
+#         for row in range(0, len(self.iso3166_json[test_alpha2_cy])):
+#             self.assertEqual(list(self.iso3166_json[test_alpha2_cy][row].keys()), self.expected_output_columns, "Columns from output do not match expected.")
+#         self.assertEqual(self.iso3166_json[test_alpha2_cy][0], cy_expected_output1, "Row in updates json does not match expected output.")
+#         self.assertEqual(self.iso3166_json[test_alpha2_cy][1], cy_expected_output2, "Row in updates json does not match expected output.")
+# #5.)
+#         ec_expected_output1 = {'Date Issued': '2017-11-23', 'Edition/Newsletter': 
+#             'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:EC).', 'Description of Change': 'Change of spelling of EC-S, EC-Z; update List Source.', 
+#             'Code/Subdivision Change': ""}
+#         ec_expected_output2 = {'Date Issued': '2010-06-30', 'Edition/Newsletter': 
+#             'Newsletter II-2 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf).', 
+#                 'Description of Change': 'Update of the administrative structure and of the list source.', 
+#                 'Code/Subdivision Change': 'Subdivisions added: EC-SE Santa Elena EC-SD Santo Domingo de los Tsáchilas.'}
+        
+#         self.assertIsInstance(self.iso3166_json[test_alpha2_ec], list, "Expected output to be of type list, got {}.".format(type(self.iso3166_json[test_alpha2_ec])))
+#         self.assertEqual(len(self.iso3166_json[test_alpha2_ec]), 3, "Expected there to be 3 elements in output row, got {}.".format(len(self.iso3166_json[test_alpha2_ec])))
+#         for row in range(0, len(self.iso3166_json[test_alpha2_ec])):
+#             self.assertEqual(list(self.iso3166_json[test_alpha2_ec][row].keys()), self.expected_output_columns, "Columns from output do not match expected.")
+#         self.assertEqual(self.iso3166_json[test_alpha2_ec][0], ec_expected_output1, "Row in updates json does not match expected output.")
+#         self.assertEqual(self.iso3166_json[test_alpha2_ec][1], ec_expected_output2, "Row in updates json does not match expected output.")
+# #6.)
+#         self.assertEqual(self.iso3166_json[test_alpha2_mz], {}, "Expected output to be an empty dict, got {}.".format(self.iso3166_json[test_alpha2_mz]))
+# #7.)
+#         self.assertEqual(self.iso3166_json[test_alpha2_sk], {}, "Expected output to be an empty dict, got {}.".format(self.iso3166_json[test_alpha2_sk]))
+# #8.)   
+#         for alpha2 in list(self.iso3166_json.keys()): #Testing no entries have an empty Edition/Newsletter field 
+#             for row in range(0, len(self.iso3166_json[alpha2])):
+#                 self.assertNotEqual(self.iso3166_json[alpha2][row]["Edition/Newsletter"], "", 
+#                     "For all entries in json the Edition/Newsletter column should not be empty, {}.".format(self.iso3166_json[alpha2][row]))
+# #9.)    
+#         for alpha2 in list(self.iso3166_json.keys()): #Testing Date Issued columns have correct data format (Y-m-d)
+#             for row in range(0, len(self.iso3166_json[alpha2])):
+#                 temp_date = self.iso3166_json[alpha2][row]["Date Issued"]
+#                 if ("corrected" in self.iso3166_json[alpha2][row]["Date Issued"]):
+#                     temp_date = re.sub("[(].*[)]", "", temp_date).replace(' ', "").replace(".", '')
+#                 self.assertTrue(datetime.fromisoformat(temp_date),
+#                     "Expected Date Issued column to be in format Y-m-d, got {}.".format(self.iso3166_json[alpha2][row]["Date Issued"]))
+# #10.)    
+#         #testing all unicode arrows (->) have been converted into normal arrows
+#         iso3166_json_str = json.dumps(self.iso3166_json)
+#         self.assertTrue('→' not in iso3166_json_str, 
+#             "Expected unicode arrow '→' to not be in any text in JSON.")
+# #11.)        
+#         with self.assertRaises(KeyError):
+#             self.iso3166_json[test_alpha2_abc]
+#             self.iso3166_json[test_alpha2_123]
+#             self.iso3166_json[test_alpha2_false]   

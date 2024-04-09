@@ -1,4 +1,4 @@
-iso3166-updates>=1.4.3
+iso3166-updates
 iso3166
 pandas
 beautifulsoup4
@@ -9,6 +9,8 @@ selenium
 lxml
 gunicorn==19.9.0
 Flask
+tqdm
+PyGithub
 # chromedriver-binary==77.0.3865.40.0
 # requests==2.9.1
 # urllib3>=1.26.15,<2

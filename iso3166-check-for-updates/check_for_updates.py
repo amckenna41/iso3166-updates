@@ -6,9 +6,11 @@ import flag
 from datetime import datetime
 from operator import itemgetter
 from dateutil.relativedelta import relativedelta
+from iso3166_updates import *
 import requests
-from google.cloud import storage
+from google.cloud import storage, exceptions
 from get_all_iso3166_updates import *
+from github import Github
 
 #initialise Flask app
 app = Flask(__name__)
@@ -24,28 +26,33 @@ success_message["status"] = 200
 #get current date and time on function execution
 current_datetime = datetime.strptime(datetime.today().strftime('%Y-%m-%d'), "%Y-%m-%d")
 
+#instance of ISO3166_Updates class to get all updates in current software version
+current_iso3166_updates = ISO3166_Updates()
+
 @app.route("/")
-def check_for_updates_main():
+def check_for_updates_main() -> tuple[dict, int]:
     """
     Google Cloud Run main entry script that checks for any latest/missing ISO 3166-2 
     updates data within specified date range for the iso3166-updates API. It uses the 
-    get_all_iso3166_updates.py script to web scrape all country's ISO 3166-2 data 
-    from the various data sources, checking for any updates in a date range. This 
-    date range is normally set to the past 6-12 months, as the ISO 3166 is updated 
-    annually (except for 2001 and 2006), usually at the end of the year as well as 
-    periodically throughout. The Cloud run app is built using a custom docker container 
-    that contains all the required dependancies and binaries required to run this script. 
+    get_all_iso3166_updates.py script to web scrape all country's ISO 3166-2 updates 
+    data from the various data sources (wiki and ISO), checking for any updates in a 
+    date range. This date range is normally set to the past 6-12 months, as the ISO 3166 
+    is updated annually (except for 2001 and 2006), usually at the end of the year as 
+    well as period updates published throughout the year. The Cloud run app is built 
+    using a custom docker container that contains all the required dependencies and 
+    binaries required to run this script. 
     
     If any updates are found that are not already present in the JSON object within 
-    the GCP Storage bucket then a GitHub Issue is automatically created that 
-    tabulates and formats all the latest data in the iso3166-updates and iso3166-2 
-    repositories that itself stores all the latest subdivision info and data relating 
-    to the ISO 3166-2 standard. A similar Issue will also be raised in the 
-    iso3166-flag-icons repo which is another custom repo that stores all the flag 
-    icons of all countries and subdivisions in the ISO 3166-1 and ISO 3166-2. 
-    Additionally, if changes are found then the ISO 3166 updates JSON file in the GCP 
-    Storage bucket is updated which is the data source for the iso3166-updates 
-    Python package and accompanying API.
+    the current version of the iso3166-updates software package then a GitHub Issue 
+    is automatically created that tabulates and formats all the latest data in the 
+    iso3166-updates and iso3166-2 repositories that itself stores all the latest 
+    subdivision info and data relating to the ISO 3166-2 standard. A similar Issue 
+    will also be raised in the iso3166-flag-icons repo which is another custom repo 
+    that stores all the flag icons of all countries and subdivisions in the 
+    ISO 3166-1 and ISO 3166-2. 
+
+    Additionally, if the EXPORT environment variable is set then the output object
+    will be exported to a GCP Storage bucket.
 
     Parameters
     ==========
@@ -56,38 +63,57 @@ def check_for_updates_main():
     :success_message/error_message: json
        jsonified response indicating whether the application has completed successfully or
        an error has arose during execution.
+    :success_code/error_code: int
+        successful or erroneous status code, 400 or 200, respectively. 
     """
     #object containing current iso3166-2 updates after month range date filter applied
     latest_iso3166_updates_after_date_filter = {}
     
-    #month range to get latest updates from, default of 12 months used if env var empty 
-    if (os.environ.get("MONTH_RANGE") is None or os.environ.get("MONTH_RANGE") == ""):
+    #month range to get latest updates from, default of 12 months used if env var empty or not a valid int
+    if ((os.environ.get("MONTH_RANGE") is None) or (os.environ.get("MONTH_RANGE") == "") or str(os.environ.get("MONTH_RANGE")).isdigit()):
         months = 12
     else:
         months = int(os.environ["MONTH_RANGE"]) #convert to int - months should be a whole number
 
     #get create_issue bool env var which determines if GitHub Issues are created each time new/missing ISO 3166 updates are found
     if (os.environ.get("CREATE_ISSUE") is None or os.environ.get("CREATE_ISSUE") == ""):
-        create_issue = True
+        create_issue = False
     else:
         create_issue = bool(os.environ["CREATE_ISSUE"]) #convert to bool - var should be 0 or 1
 
-    #get list of all country's 2 letter alpha-2 codes
-    alpha2_codes = sorted(list(iso3166.countries_by_alpha2.keys()))
+    #get export env var which determines if new updates data object is exported to GCP storage bucket
+    if (os.environ.get("EXPORT") is None or os.environ.get("EXPORT") == ""):
+        export = False
+    else:
+        export = bool(os.environ["EXPORT"]) #convert to bool - var should be 0 or 1
 
-    #sort codes into alphabetical order and uppercase
-    alpha2_codes.sort()
-    alpha2_codes = [code.upper() for code in alpha2_codes]
+    #get bucket name & blob details env vars for exporting object to GCP, these can be empty/None if export env var is set to False
+    bucket_name = os.environ.get("BUCKET_NAME")
+    blob_name = os.environ.get("BUCKET_NAME")
+    archive_folder = os.environ.get("ARCHIVE_FOLDER")
+
+    #get latest date that object was updated on the repo, using github client and library 
+    github_client = Github()
+    repo = github_client.get_repo("amckenna41/iso3166-updates")
+    commits = repo.get_commits(path='iso3166-updates.json')
+    if (commits.totalCount):
+        latest_commit_date = commits[0].commit.committer.date
+
+    #get month difference between current date and last updated date, print out the difference
+    # month_difference = latest_commit_date.months - current_datetime.months
+    print("latest_commit_date type", type(latest_commit_date))
+    # print(f"iso3166-updates.json object last updated {month_difference} months ago on: {latest_commit_date}.")
+    print(f"iso3166-updates.json object last updated months ago on: {latest_commit_date}.")
     
     #call get_updates function to scrape all latest country updates from data sources
-    latest_iso3166_updates = get_updates(alpha2_codes=alpha2_codes, export_json=False, export_csv=False, verbose=True)
+    latest_iso3166_updates = get_updates(export_json=False, export_csv=False, verbose=True)
     
     #iterate over all alpha-2 codes, check for any updates in specified months range in updates json 
     for alpha2 in list(latest_iso3166_updates.keys()):
         latest_iso3166_updates_after_date_filter[alpha2] = []
         for row in range(0, len(latest_iso3166_updates[alpha2])):
             if (latest_iso3166_updates[alpha2][row]["Date Issued"] != ""): #go to next iteration if no Date Issued in row
-                #convert str date into date object, remove "corrected" date if appliceable
+                #convert str date into date object, remove "corrected" date if applicable
                 row_date = (datetime.strptime(re.sub("[(].*[)]", "", latest_iso3166_updates[alpha2][row]["Date Issued"]).replace(' ', "").replace(".", ''), "%Y-%m-%d"))
                 #compare date difference from current row to current date
                 date_diff = relativedelta(current_datetime, row_date)
@@ -104,38 +130,54 @@ def check_for_updates_main():
 
     #bool to track if any ISO 3166 updates found
     updates_found = False
-    
-    #if update object not empty (i.e there are changes/updates), call update_json and create_github_issue functions
+        
+    #if update object not empty (i.e there are changes/updates), call update_json, create_github_issue and or export to bucket functions
     updates_found, date_filtered_updates, missing_filtered_updates = update_json(latest_iso3166_updates, latest_iso3166_updates_after_date_filter)
+    
+    #
     if (updates_found):
-        if (create_issue):
-            create_github_issue(date_filtered_updates, missing_filtered_updates, months)
-            success_message["message"] = "New ISO 3166 updates found and successfully exported to bucket and GitHub Issues created."
-            print(success_message["message"])
-        else:
-            success_message["message"] = "New ISO 3166 updates found and successfully exported to bucket."
-            print(success_message["message"])
+        #
+        if (create_issue and (export and not (bucket_name or blob_name) is None)):
+            create_github_issue_success_code = create_github_issue(date_filtered_updates, missing_filtered_updates, months)
+            export_to_bucket_success_code = export_to_bucket(latest_iso3166_updates)
+            if (create_github_issue_success_code != -1 and export_to_bucket_success_code != -1):
+                success_message["message"] = f"New ISO 3166 updates found and successfully exported to bucket {bucket_name} and GitHub Issues created."
+            elif (create_github_issue_success_code != -1):
+                success_message["message"] = "New ISO 3166 updates found and GitHub Issues created. There was an error exporting to the GCP storage bucket."
+            elif (export_to_bucket_success_code != -1):
+                success_message["message"] = f"New ISO 3166 updates found and successfully exported to bucket {bucket_name}. There was an error creating the GitHub Issues."
+        #
+        elif (export and (bucket_name or blob_name) is None):
+            success_message["message"] = f"New ISO 3166 updates found but could not export to bucket as the bucket environment variables \
+                  BUCKET and BLOB_NAME were not specified."
+        #
+        elif (create_issue):
+            create_github_issue_success_code = create_github_issue(date_filtered_updates, missing_filtered_updates, months)
+            if (create_github_issue_success_code != -1):
+                success_message["message"] = "New ISO 3166 updates found and GitHub Issues created."
+            else:
+                success_message["message"] = "New ISO 3166 updates found but there was an error creating the GitHub Issues."
     else:
         success_message["message"] = "No new ISO 3166 updates found."
-        print(success_message["message"])
+
+    print(success_message["message"])
 
     return jsonify(success_message), 200
 
-def update_json(latest_iso3166_updates, latest_iso3166_updates_after_date_filter):
+def update_json(latest_iso3166_updates: dict, latest_iso3166_updates_after_date_filter: dict) -> tuple[bool, dict, dict]:
     """
-    If changes have been found for any countries in the ISO 3166 within the
-    specified date range using the check_iso3166_updates_main function then 
-    the JSON in the storage bucket is updated with the new JSON and the old 
-    one is stored in an archive folder on the same bucket. Additionally, the 
-    current object is verified to not contain any missing data, regardless of
-    date range, if so then these will similarly be appended to object.
+    The most recent ISO 3166 changes object is compared to the object in 
+    the current version of the iso3166-updates software. Any differences
+    between the objects are tracked in another separate object and
+    returned from the function. Additionally, any missing data, regardless 
+    of date range is similarly tracked and returned from the function. 
 
     Parameters
     ==========
-    :latest_iso3166_updates: json
+    :latest_iso3166_updates: dict
         json object with all listed iso3166-2 updates, without date filter
         applied.
-    :latest_iso3166_updates_after_date_filter: json
+    :latest_iso3166_updates_after_date_filter: dictß
         json object with all listed iso3166-2 updates after month date filter
         applied. 
 
@@ -150,47 +192,21 @@ def update_json(latest_iso3166_updates, latest_iso3166_updates_after_date_filter
         dictionary of individual ISO 3166 updates that aren't in existing 
         updates object on JSON, with no date filter applied.
     """
-    #initialise storage client
-    storage_client = storage.Client()
-    try:
-        #create a bucket object for the bucket, raise error if env var not set or bucket not found
-        if (os.environ.get("BUCKET_NAME") is None or os.environ.get("BUCKET_NAME") == ""):
-            error_message["message"] = "Bucket name environment variable not set."
-            return jsonify(error_message), 400
-        bucket = storage_client.get_bucket(os.environ["BUCKET_NAME"])
-    except google.cloud.exceptions.NotFound:
-        error_message["message"] = "Error retrieving updates data json storage bucket: {}.".format(os.environ["BUCKET_NAME"])
-        return jsonify(error_message), 400
-    
-    #create a blob object from the filepath, raise error if env var not set
-    if (os.environ.get("BLOB_NAME") is None or os.environ.get("BLOB_NAME") == ""):
-        error_message["message"] = "Blob name environment variable not set."
-        return jsonify(error_message), 400
-    blob = bucket.blob(os.environ["BLOB_NAME"])  
-    
-    #raise error if updates file not found in bucket
-    if not (blob.exists()):
-        raise ValueError("Error retrieving updates data json: {}.".format(os.environ["BLOB_NAME"]))
-    
-    #download current ISO 3166 updates JSON file from storage bucket 
-    current_updates_data = json.loads(blob.download_as_string(client=None))
-
-    #set new json object to original one imported from GCP storage
-    updated_json = current_updates_data
+    #set new json object to original one imported from current software version
+    updated_json = current_iso3166_updates.all
     updates_found = False
 
-    #seperate object that holds individual updates that were found with and without date range applied (used in create_github_issue function)
+    #separate object that holds individual updates that were found with and without date range applied (used in create_github_issue function)
     individual_updates_json = {}
     missing_individual_updates_json = {}
     
     ## Appending any missing updates to object that were found after date range filter applied ##
      
-    #iterate over all updates in json, if update/row not found in original json, pulled from GCP storage, 
-    # append to new updated_json object 
+    #iterate over all updates in json, if update/row not found in original json in software version, append to new updated_json object 
     for code in latest_iso3166_updates_after_date_filter:   
         individual_updates_json[code] = []
         for update in latest_iso3166_updates_after_date_filter[code]:
-            if not (update in current_updates_data[code]):
+            if not (update in current_iso3166_updates[code]):
                 updated_json[code].append(update)
                 updates_found = True
                 individual_updates_json[code].append(update)
@@ -204,12 +220,11 @@ def update_json(latest_iso3166_updates, latest_iso3166_updates_after_date_filter
 
     ## Appending any missing updates to object that were found, regardless of date range filter ##
 
-    #iterate over all updates in json, if update/row not found in original json, pulled from GCP storage, 
-    # append to new updated_json object, with date range filter applied
+    #iterate over all updates in json, if update/row not found in original json, append to new updated_json object, with date range filter applied
     for code in latest_iso3166_updates:   
         missing_individual_updates_json[code] = []
         for update in latest_iso3166_updates[code]:
-            if not (update in current_updates_data[code]):
+            if not (update in current_iso3166_updates[code]):
                 updated_json[code].append(update)
                 updates_found = True
                 missing_individual_updates_json[code].append(update)
@@ -221,47 +236,9 @@ def update_json(latest_iso3166_updates, latest_iso3166_updates_after_date_filter
         if (missing_individual_updates_json[code] == []):
             missing_individual_updates_json.pop(code, None)
 
-    #if updates found in new updates json compared to current one in bucket
-    if (updates_found):
-
-        #move current updates json in bucket to an archive folder, append datetime to it
-        if (os.environ.get("ARCHIVE_FOLDER") is None or os.environ.get("ARCHIVE_FOLDER") == ""):
-            os.environ["ARCHIVE_FOLDER"] = "archive_iso3166_updates"
-
-        #filepath to archive folder
-        archive_filepath = os.path.splitext(os.environ["BLOB_NAME"])[0] \
-            + "_" + str(current_datetime.strftime('%Y-%m-%d')) + ".json"
-
-        #export updated json to temp folder
-        with open(os.path.join("/tmp", archive_filepath), 'w', encoding='utf-8') as output_json:
-            json.dump(json.loads(blob.download_as_string(client=None)), output_json, ensure_ascii=False, indent=4)
-
-        #create blob for archive updates json 
-        archive_blob = bucket.blob(os.path.join(os.environ["ARCHIVE_FOLDER"], archive_filepath))
-        
-        #upload old updates json to archive folder 
-        archive_blob.upload_from_filename(os.path.join("/tmp", archive_filepath))
-
-    #temp path for exported json
-    tmp_updated_json_path = os.path.join("/tmp", os.environ["BLOB_NAME"])
-    
-    #export updated json object to bucket if env var true - if env var not set then don't export to bucket
-    if (os.environ.get("EXPORT") is None):
-        if (os.environ["EXPORT"]):
-
-            #export updated json to temp folder
-            with open(tmp_updated_json_path, 'w', encoding='utf-8') as output_json:
-                json.dump(updated_json, output_json, ensure_ascii=False, indent=4)
-            
-            #create blob for updated JSON
-            blob = bucket.blob(os.environ["BLOB_NAME"])
-
-            #upload new updated json using gcp sdk, replacing current updates json 
-            blob.upload_from_filename(tmp_updated_json_path)
-
     return updates_found, individual_updates_json, missing_individual_updates_json
     
-def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filtered_updates, month_range):
+def create_github_issue(latest_iso3166_updates_after_date_filter: dict, missing_filtered_updates: dict, month_range: int) -> tuple[dict, dict, int]:
     """
     Create a GitHub issue on the iso3166-2, iso3166-updates and 
     iso3166-flag-icons repository, using the GitHub api, if any updates/changes 
@@ -281,9 +258,9 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
 
     Returns
     =======
-    :create_issue_success: bool
-        bool tracking if GitHub Issues were created successfully using the status 
-        code of the post request.
+    :success_code: int
+        return code to indicate if the GitHub issue was successfully created or 
+        there was an error during execution.
 
     References
     ==========
@@ -314,7 +291,7 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
             body += "<h3>" + iso3166.countries_by_alpha2[code].name + " (" + code + ") " + flag.flag(code) + ":</h3>"
 
             #create table element to store output data
-            body += "<table><tr><th>Date Issued</th><th>Edition/Newsletter</th><th>Code/Subdivision Change</th><th>Description of Change in Newsletter</th></tr>"
+            body += "<table><tr><th>Date Issued</th><th>Edition/Newsletter</th><th>Code/Subdivision Change</th><th>Description of Change</th></tr>"
 
             #iterate over all update rows for each country in object, appending to table row 
             for row in latest_iso3166_updates_after_date_filter[code]:
@@ -343,7 +320,7 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
             body += "<h3>" + iso3166.countries_by_alpha2[code].name + " (" + code + ") " + flag.flag(code) + ":</h3>"
 
             #create table element to store output data
-            body += "<table><tr><th>Date Issued</th><th>Edition/Newsletter</th><th>Code/Subdivision Change</th><th>Description of Change in Newsletter</th></tr>"
+            body += "<table><tr><th>Date Issued</th><th>Edition/Newsletter</th><th>Code/Subdivision Change</th><th>Description of Change</th></tr>"
 
             #iterate over all update rows for each country in object, appending to table element
             for row in missing_filtered_updates[code]:
@@ -363,8 +340,8 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
     #raise error if GitHub related env vars not set
     if (os.environ.get("GITHUB_OWNER") is None or os.environ.get("GITHUB_OWNER") == "" or \
         os.environ.get("GITHUB_API_TOKEN") is None or os.environ.get("GITHUB_API_TOKEN") == ""):
-        error_message["message"] = "GitHub owner name and or API token environment variables not set."
-        return jsonify(error_message), 400
+        print("GitHub owner name and or API token environment variables not set.")
+        return -1
     
     #http request headers for GitHub API
     headers = {'Content-Type': "application/vnd.github+json", 
@@ -376,15 +353,84 @@ def create_github_issue(latest_iso3166_updates_after_date_filter, missing_filter
         #split into list of repos 
         github_repos = github_repos.replace(' ', '').split(';')
 
-        #iterate over each repo listed in env var, making post request with issue_json data 
+        #iterate over each repo listed in env var, making post request with issue_json data
         for repo in github_repos:
             
+            #get url of repo and make post request
             issue_url = "https://api.github.com/repos/" + os.environ["GITHUB_OWNER"] + "/" + repo + "/issues"
             github_request = requests.post(issue_url, data=json.dumps(issue_json), headers=headers)    
 
             #print error message if success status code not returned            
             if (github_request.status_code != 200):  
                 if (github_request.status_code == 401):
-                    print("Authorisation issue when creating GitHub Issue in repository {}, could be an issue with the GitHub PAT.".format(repo))
+                    print(f"Authorisation issue when creating GitHub Issue in repository {repo}, could be an issue with the GitHub PAT.")
                 else:
-                    print("Issue when creating GitHub Issue in repository {}, got status code {}.".format(repo, github_request.status_code))   
+                    print(f"Issue when creating GitHub Issue in repository {repo}, got status code {github_request.status_code}.")
+                
+                return -1
+    
+    return 0
+
+def export_to_bucket(latest_iso3166_updates: dict) -> None:
+    """
+    If the export environment variable is set and changes are found that 
+    aren't present in the existing repo object, export the new object
+    to the specified GCP bucket. This can then be downloaded and 
+    incorporated into the software. 
+
+    Parameters
+    ==========
+    :latest_iso3166_updates: dict
+        json object with all listed iso3166-2 updates, without date filter
+        applied.        
+
+    Returns
+    =======
+    None
+    """
+    #initialise storage client
+    storage_client = storage.Client()
+    try:
+        # #create a bucket object for the bucket, raise error if bucket not found
+        bucket = storage_client.get_bucket(os.environ["BUCKET_NAME"])
+    except exceptions.NotFound:
+        error_message["message"] = f"Error retrieving updates data json storage bucket: {os.environ["BUCKET_NAME"]}."
+        return jsonify(error_message), 400
+
+    #create a blob object from the filepath
+    blob = bucket.blob(os.environ["BLOB_NAME"])  
+
+    if  (blob.exists()):
+
+
+        #move current updates json in bucket, if applicable, to an archive folder, append datetime to it
+        if (os.environ.get("ARCHIVE_FOLDER") is None or os.environ.get("ARCHIVE_FOLDER") == ""):
+            os.environ["ARCHIVE_FOLDER"] = "archive_iso3166_updates"
+            archive_filepath = os.environ["ARCHIVE_FOLDER"] + "/" + os.path.splitext(os.environ["BLOB_NAME"])[0] \
+                + "_" + str(current_datetime.strftime('%Y-%m-%d')) + ".json"
+
+            #export updated json to temp folder
+            with open(os.path.join("/tmp", archive_filepath), 'w', encoding='utf-8') as output_json:
+                json.dump(json.loads(blob.download_as_string(client=None)), output_json, ensure_ascii=False, indent=4)
+
+            #create blob for archive updates json 
+            archive_blob = bucket.blob(os.path.join(os.environ["ARCHIVE_FOLDER"], archive_filepath))
+            
+            #upload old updates json to archive folder 
+            archive_blob.upload_from_filename(os.path.join("/tmp", archive_filepath))
+
+    #temp path for exported json
+    tmp_updated_json_path = os.path.join("/tmp", os.environ["BLOB_NAME"])
+    
+    #export updated json to temp folder
+    with open(tmp_updated_json_path, 'w', encoding='utf-8') as output_json:
+        json.dump(latest_iso3166_updates, output_json, ensure_ascii=False, indent=4)
+
+    #create blob for updated JSON
+    blob = bucket.blob(os.environ["BLOB_NAME"])
+
+    #upload new updated json using gcp sdk, replacing current updates json 
+    blob.upload_from_filename(tmp_updated_json_path)
+
+    #upload new updated json using gcp sdk, replacing current updates json 
+    blob.upload_from_filename(os.environ["BLOB_NAME"])

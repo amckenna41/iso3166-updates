@@ -4,7 +4,6 @@ import requests
 import re
 import os
 from datetime import datetime, date
-from dateutil.relativedelta import relativedelta
 from bs4 import BeautifulSoup
 import getpass
 from importlib.metadata import metadata
@@ -19,39 +18,41 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
     test_homepage_endpoint:
         testing main endpoint that returns the homepage and API documentation. 
     test_api_endpoints:
-        testing main api endpoints/paths validating they return correct response type and status code.
+        testing main api endpoints/paths, validating they return correct response type and status code.
     test_all_endpoint:
-        testing /all endpoint that returns all updates data for all countries.
-    test_alpha2_endpoint:
-        testing /alpha2 endpoint validating correct data and output object returned, using a variety of alpha-2 codes.
+        testing /all endpoint, validating that it returns updates data for all countries.
+    test_alpha_endpoint:
+        testing /alpha2 endpoint, validating correct data and output object returned, using a variety of alpha-2 codes.
     test_year_endpoint:
-        testing /year endpoint validating correct data and output object returned, using a variety of years.
+        testing /year endpoint, validating correct data and output object returned, using a variety of years.
     test_name_endpoint:
-        testing /name endpoint validating correct data and output object returned, using a variety of country names.
+        testing /name endpoint, validating correct data and output object returned, using a variety of country names.
     test_name_year_endpoint:
-        testing /name/year endpoint validating correct data and output object returned, using a variety of country names
+        testing /name/year endpoint, validating correct data and output object returned, using a variety of country names
         and years.
-    test_alpha2_year_endpoint:
-        testing /alpha2/year endpoint validating correct data and output object returned, using a variety of alpha-2 codes
+    test_alpha_year_endpoint:
+        testing /alpha/year endpoint, validating correct data and output object returned, using a variety of alpha-2 codes
         and years.
-    test_month_endpoint:
-        testing /month endpoint validating correct data and output object returned, using a variety of month values.
+    test_months_endpoint:
+        testing /month endpoint, validating correct data and output object returned, using a variety of month values.
+    test_months_alpha_endpoint:
+        testing /month/alpha endpoint, validating correct data and output object returned, using a variety of month and
+        alpha code values.
     """     
     def setUp(self):
         """ Initialise test variables including base urls for API. """
-        # self.base_url = "https://iso3166-updates-frontend.vercel.app/api"
-        self.base_url = "https://iso3166-updates.com/api" 
+        self.base_url = "https://iso3166-updates-frontend-amckenna41.vercel.app/api"
+        # self.base_url = "https://iso3166-updates.com/api" 
 
         self.__version__ = metadata('iso3166_updates')['version']
-
-        self.alpha2_base_url = self.base_url + "/alpha2/"
+        self.user_agent_header = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(self.__version__,
+                                       'https://github.com/amckenna41/iso3166-updates', getpass.getuser())}
+        self.alpha_base_url = self.base_url + "/alpha/"
         self.year_base_url = self.base_url + '/year/'
         self.name_base_url = self.base_url + '/name/'
         self.all_base_url = self.base_url + '/all'
-        self.month_base_url = self.base_url + '/month/'
-        self.user_agent_header = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(self.__version__,
-                                       'https://github.com/amckenna41/iso3166-updates', getpass.getuser())}
-    
+        self.month_base_url = self.base_url + '/months/'
+
         #correct column/key names for dict returned from api
         self.expected_output_columns = ["Code/Subdivision Change", "Date Issued", "Description of Change in Newsletter", "Edition/Newsletter"]
 
@@ -59,25 +60,25 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         os.environ["TQDM_DISABLE"] = "1"
 
     def test_homepage_endpoint(self):
-        """ Testing contents of main "/api" endpoint that returns the homepage and API documentation. """
+        """ Testing contents of main '/api' endpoint that returns the homepage and API documentation. """
         test_request_main = requests.get(self.base_url, headers=self.user_agent_header)
         soup = BeautifulSoup(test_request_main.content, 'html.parser')
 #1.)
-        version = soup.find(id='version').text.split(': ')[1]
+        # version = soup.find(id='version').text.split(': ')[1]
         last_updated = soup.find(id='last-updated').text.split(': ')[1]
         author = soup.find(id='author').text.split(': ')[1]
 
-        self.assertEqual(version, "1.6.0", "Expected API version to be 1.6.0, got {}.".format(version))
-        self.assertEqual(last_updated, "December 2023", "Expected last updated data to be December 2023, got {}.".format(last_updated))
+        # self.assertEqual(version, "1.6.0", "Expected API version to be 1.6.0, got {}.".format(version))
+        self.assertEqual(last_updated, "April 2024", "Expected last updated data to be April 2024, got {}.".format(last_updated))
         self.assertEqual(author, "AJ", "Expected author to be AJ, got {}.".format(author))
 #2.)
         section_list_menu = soup.find(id='section-list-menu').find_all('li')
-        correct_section_menu = ["About", "Attributes", "Endpoints", "All", "Alpha-2 Code", "Year", "Name", "Months", "Credits", "Contributing"]
+        correct_section_menu = ["About", "Attributes", "Endpoints", "All", "Alpha Code", "Year", "Name", "Months", "Credits", "Contributing"]
         for li in section_list_menu:
             self.assertIn(li.text.strip(), correct_section_menu, "Expected list element {} to be in list.".format(li))
 
     def test_all_endpoint(self):
-        """ Testing /all endpoint that returns all updates data for all countries. """
+        """ Testing '/api/all' endpoint that returns all updates data for all countries. """
         test_request_all = requests.get(self.all_base_url, headers=self.user_agent_header)
 #1.)
         self.assertIsInstance(test_request_all.json(), dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_all.json())))
@@ -86,27 +87,27 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_all.headers["content-type"], "application/json", 
                 "Expected Content type to be application/json, got {}.".format(test_request_all.headers["content-type"]))
 
-    def test_alpha2_endpoint(self):
-        """ Testing single, multiple and invalid alpha-2 codes for expected ISO 3166 updates. """
-        test_alpha2_ad = "AD" #Andorra 
-        test_alpha2_bo = "BO" #Bolivia
-        test_alpha2_co = "CO" #Colombia
-        test_alpha2_bo_co_dm = "BO,CO,DM" 
-        test_alpha2_ke = "KEN" #Kenya (using alpha-3 code)
-        error_test_alpha2_1 = "blahblahblah"
-        error_test_alpha2_2 = "42"
-        error_test_alpha2_3 = "XYZ" #invalid alpha-3 code
+    def test_alpha_endpoint(self):
+        """ Testing '/api/alpha' endpoint using single, multiple and invalid alpha codes for expected ISO 3166 updates. """
+        test_alpha_ad = "AD" #Andorra 
+        test_alpha_bo = "BO" #Bolivia
+        test_alpha_co = "COL" #Colombia
+        test_alpha_bf = "854" #Burkina Faso
+        test_alpha_bn_cu_dm = "BN,CUB,262" #Brunei, Cuba, Djibouti 
+        error_test_alpha_1 = "blahblahblah"
+        error_test_alpha_2 = "42"
+        error_test_alpha_3 = "XYZ" #invalid alpha-3 code
 #1.)
-        test_request_ad = requests.get(self.alpha2_base_url + test_alpha2_ad, headers=self.user_agent_header).json() #AD
+        test_request_ad = requests.get(self.alpha_base_url + test_alpha_ad, headers=self.user_agent_header).json() #AD
         
         #expected test outputs
-        test_alpha2_ad_expected1 = {
+        test_alpha_ad_expected1 = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2015-11-27",
                 "Description of Change in Newsletter": "Update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:AD)."
                 }
-        test_alpha2_ad_expected2 = {
+        test_alpha_ad_expected2 = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2014-11-03",
                 "Description of Change in Newsletter": "Update List Source.",
@@ -114,24 +115,24 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 }
 
         self.assertIsInstance(test_request_ad, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_ad)))
-        self.assertIsInstance(test_request_ad[test_alpha2_ad], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_ad[test_alpha2_ad])))
-        self.assertEqual(list(test_request_ad.keys()), [test_alpha2_ad], "Expected parent key does not match output, got {}.".format(list(test_request_ad.keys())))
-        for row in test_request_ad[test_alpha2_ad]:
+        self.assertIsInstance(test_request_ad[test_alpha_ad], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_ad[test_alpha_ad])))
+        self.assertEqual(list(test_request_ad.keys()), [test_alpha_ad], "Expected parent key does not match output, got {}.".format(list(test_request_ad.keys())))
+        for row in test_request_ad[test_alpha_ad]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
-        self.assertEqual(len(test_request_ad[test_alpha2_ad]), 3, "Expected there to be 3 elements in output object, got {}.".format(len(test_request_ad[test_alpha2_ad])))
-        self.assertEqual(test_request_ad[test_alpha2_ad][0], test_alpha2_ad_expected1, "Expected and observed outputs do not match.")
-        self.assertEqual(test_request_ad[test_alpha2_ad][1], test_alpha2_ad_expected2, "Expected and observed outputs do not match.")
+        self.assertEqual(len(test_request_ad[test_alpha_ad]), 3, "Expected there to be 3 elements in output object, got {}.".format(len(test_request_ad[test_alpha_ad])))
+        self.assertEqual(test_request_ad[test_alpha_ad][0], test_alpha_ad_expected1, "Expected and observed outputs do not match.")
+        self.assertEqual(test_request_ad[test_alpha_ad][1], test_alpha_ad_expected2, "Expected and observed outputs do not match.")
 #2.)
-        test_request_bo = requests.get(self.alpha2_base_url + test_alpha2_bo, headers=self.user_agent_header).json() #BO
+        test_request_bo = requests.get(self.alpha_base_url + test_alpha_bo, headers=self.user_agent_header).json() #BO
         
         #expected test outputs
-        test_alpha2_bo_expected1 = {
+        test_alpha_bo_expected1 = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2014-12-18",
                 "Description of Change in Newsletter": "Alignment of the English and French short names upper and lower case with UNTERM.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BO)."
                 }
-        test_alpha2_bo_expected2 = {
+        test_alpha_bo_expected2 = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2014-11-03",
                 "Description of Change in Newsletter": "Update List Source.",
@@ -139,24 +140,24 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 }
         
         self.assertIsInstance(test_request_bo, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_bo)))
-        self.assertIsInstance(test_request_bo[test_alpha2_bo], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_bo[test_alpha2_bo])))
-        self.assertEqual(list(test_request_bo.keys()), [test_alpha2_bo], "Expected parent key does not match output, got {}.".format(list(test_request_bo.keys())))
-        for row in test_request_bo[test_alpha2_bo]:
+        self.assertIsInstance(test_request_bo[test_alpha_bo], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_bo[test_alpha_bo])))
+        self.assertEqual(list(test_request_bo.keys()), [test_alpha_bo], "Expected parent key does not match output, got {}.".format(list(test_request_bo.keys())))
+        for row in test_request_bo[test_alpha_bo]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
-        self.assertEqual(len(test_request_bo[test_alpha2_bo]), 5, "Expected there to be 5 elements in output object, got {}.".format(len(test_request_bo[test_alpha2_bo])))
-        self.assertEqual(test_request_bo[test_alpha2_bo][0], test_alpha2_bo_expected1, "Expected and observed outputs do not match.")
-        self.assertEqual(test_request_bo[test_alpha2_bo][1], test_alpha2_bo_expected2, "Expected and observed outputs do not match.")
+        self.assertEqual(len(test_request_bo[test_alpha_bo]), 5, "Expected there to be 5 elements in output object, got {}.".format(len(test_request_bo[test_alpha_bo])))
+        self.assertEqual(test_request_bo[test_alpha_bo][0], test_alpha_bo_expected1, "Expected and observed outputs do not match.")
+        self.assertEqual(test_request_bo[test_alpha_bo][1], test_alpha_bo_expected2, "Expected and observed outputs do not match.")
 #3.)
-        test_request_co = requests.get(self.alpha2_base_url + test_alpha2_co, headers=self.user_agent_header).json() #CO
+        test_request_co = requests.get(self.alpha_base_url + test_alpha_co, headers=self.user_agent_header).json() #COL
 
         #expected test outputs
-        test_alpha2_co_expected1 = {
+        test_alpha_co_expected1 = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2016-11-15",
                 "Description of Change in Newsletter": "Addition of local variation of CO-DC, CO-SAP, CO-VAC; update list source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CO)."
                 }
-        test_alpha2_co_expected2 = {
+        test_alpha_co_expected2 = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2004-03-08",
                 "Description of Change in Newsletter": "Change of name of CO-DC.",
@@ -164,104 +165,105 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 }       
 
         self.assertIsInstance(test_request_co, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_co)))
-        self.assertIsInstance(test_request_co[test_alpha2_co], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_co[test_alpha2_co])))
-        self.assertEqual(list(test_request_co.keys()), [test_alpha2_co], "Expected parent key does not match output, got {}.".format(list(test_request_co.keys())))
-        for row in test_request_co[test_alpha2_co]:
+        self.assertIsInstance(test_request_co["CO"], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_co["CO"])))
+        self.assertEqual(list(test_request_co.keys()), ["CO"], "Expected parent key does not match output, got {}.".format(list(test_request_co.keys())))
+        for row in test_request_co["CO"]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
-        self.assertEqual(len(test_request_co[test_alpha2_co]), 2, "Expected there to be 2 elements in output object, got {}.".format(len(test_request_co[test_alpha2_co])))
-        self.assertEqual(test_request_co[test_alpha2_co][0], test_alpha2_co_expected1, "Expected and observed outputs do not match.")
-        self.assertEqual(test_request_co[test_alpha2_co][1], test_alpha2_co_expected2, "Expected and observed outputs do not match.")
+        self.assertEqual(len(test_request_co["CO"]), 2, "Expected there to be 2 elements in output object, got {}.".format(len(test_request_co["CO"])))
+        self.assertEqual(test_request_co["CO"][0], test_alpha_co_expected1, "Expected and observed outputs do not match.")
+        self.assertEqual(test_request_co["CO"][1], test_alpha_co_expected2, "Expected and observed outputs do not match.")
 #4.)
-        test_request_bo_co_dm = requests.get(self.alpha2_base_url + test_alpha2_bo_co_dm, headers=self.user_agent_header).json() #BO,CO,DM
-        test_alpha2_list = ['BO', 'CO', 'DM']  
+        test_request_bf = requests.get(self.alpha_base_url + test_alpha_bf, headers=self.user_agent_header).json() #854
         
         #expected test outputs
-        test_alpha2_bo_expected = {
-                "Code/Subdivision Change": "",
-                "Date Issued": "2014-12-18",
-                "Description of Change in Newsletter": "Alignment of the English and French short names upper and lower case with UNTERM.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BO)."
-                }  
-        test_alpha2_co_expected = {
-                "Code/Subdivision Change": "",
+        test_alpha_bf_expected1 = {
+                "Code/Subdivision Change": "Spelling change: BF-TUI Tui -> Tuy.",
                 "Date Issued": "2016-11-15",
-                "Description of Change in Newsletter": "Addition of local variation of CO-DC, CO-SAP, CO-VAC; update list source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CO)."
+                "Description of Change in Newsletter": "Change of spelling of BF-TUI; update list source.",
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BF)."
+                }
+        test_alpha_bf_expected2 = {
+                "Code/Subdivision Change": "",
+                "Date Issued": "2014-04-15",
+                "Description of Change in Newsletter": "Correction of the short name lowercase in French.",
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BF)."
+                }         
+
+        self.assertIsInstance(test_request_bf, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_bf)))
+        self.assertIsInstance(test_request_bf["BF"], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_bf["BF"])))
+        self.assertEqual(list(test_request_bf.keys()), ["BF"], "Expected parent key does not match output, got {}.".format(list(test_request_bf.keys())))
+        for row in test_request_bf["BF"]:
+                self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
+        self.assertEqual(len(test_request_bf["BF"]), 3, "Expected there to be 3 elements in output object, got {}.".format(len(test_request_bf["BF"])))
+        self.assertEqual(test_request_bf["BF"][0], test_alpha_bf_expected1, "Expected and observed outputs do not match.")
+        self.assertEqual(test_request_bf["BF"][1], test_alpha_bf_expected2, "Expected and observed outputs do not match.")
+
+#4.)
+        test_request_bn_cu_dm = requests.get(self.alpha_base_url + test_alpha_bn_cu_dm, headers=self.user_agent_header).json() #BN, CUB, 262
+
+        test_alpha_list = ['BN', 'CU', 'DJ']  
+        
+        #expected test outputs
+        test_alpha_bn_expected = {
+                "Code/Subdivision Change": "Spelling change: BN-BM Brunei-Muara -> Brunei dan Muara (ms).",
+                "Date Issued": "2019-11-22",
+                "Description of Change in Newsletter": "Change of subdivision name of BN-BM; Update List Source.",
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BN)."
                 }  
-        test_alpha2_dm_expected = {
+        test_alpha_cu_expected = {
                 "Code/Subdivision Change": "",
                 "Date Issued": "2015-11-27",
                 "Description of Change in Newsletter": "Update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:DM)."
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CU)."
+                }  
+        test_alpha_dj_expected = {
+                "Code/Subdivision Change": "",
+                "Date Issued": "2020-11-24",
+                "Description of Change in Newsletter": "Correction of the Code Source.",
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:DJ)."
                 }     
 
-        self.assertIsInstance(test_request_bo_co_dm, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_bo_co_dm)))
-        self.assertEqual(list(test_request_bo_co_dm.keys()), test_alpha2_list, "Expected columns do not match output, got {}.".format(list(test_request_bo_co_dm.keys())))
-        for alpha2 in test_alpha2_list:
-                self.assertIsInstance(test_request_bo_co_dm[alpha2], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_bo_co_dm[alpha2])))
-                for row in test_request_bo_co_dm[alpha2]:
+        self.assertIsInstance(test_request_bn_cu_dm, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_bn_cu_dm)))
+        self.assertEqual(list(test_request_bn_cu_dm.keys()), test_alpha_list, "Expected columns do not match output, got {}.".format(list(test_request_bn_cu_dm.keys())))
+        for alpha2 in test_alpha_list:
+                self.assertIsInstance(test_request_bn_cu_dm[alpha2], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_bn_cu_dm[alpha2])))
+                for row in test_request_bn_cu_dm[alpha2]:
                         self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
-        self.assertEqual(len(test_request_bo_co_dm['BO']), 5, "Expected there to be 5 rows of updates for BO, got {}.".format(len(test_request_bo_co_dm['BO'])))
-        self.assertEqual(len(test_request_bo_co_dm['CO']), 2, "Expected there to be 2 rows of updates for CO, got {}.".format(len(test_request_bo_co_dm['CO'])))
-        self.assertEqual(len(test_request_bo_co_dm['DM']), 3, "Expected there to be 3 rows of updates for DM, got {}.".format(len(test_request_bo_co_dm['DM'])))
-        self.assertEqual(test_request_bo_co_dm['BO'][0], test_alpha2_bo_expected, "Expected and observed outputs do not match.")
-        self.assertEqual(test_request_bo_co_dm['CO'][0], test_alpha2_co_expected, "Expected and observed outputs do not match.")
-        self.assertEqual(test_request_bo_co_dm['DM'][0], test_alpha2_dm_expected, "Expected and observed outputs do not match.")
+        self.assertEqual(len(test_request_bn_cu_dm['BN']), 4, "Expected there to be 4 rows of updates for BO, got {}.".format(len(test_request_bn_cu_dm['BN'])))
+        self.assertEqual(len(test_request_bn_cu_dm['CU']), 2, "Expected there to be 2 rows of updates for CO, got {}.".format(len(test_request_bn_cu_dm['CU'])))
+        self.assertEqual(len(test_request_bn_cu_dm['DJ']), 6, "Expected there to be 6 rows of updates for DM, got {}.".format(len(test_request_bn_cu_dm['DJ'])))
+        self.assertEqual(test_request_bn_cu_dm['BN'][0], test_alpha_bn_expected, "Expected and observed outputs do not match.")
+        self.assertEqual(test_request_bn_cu_dm['CU'][0], test_alpha_cu_expected, "Expected and observed outputs do not match.")
+        self.assertEqual(test_request_bn_cu_dm['DJ'][0], test_alpha_dj_expected, "Expected and observed outputs do not match.")
 #5.)
-        test_request_ke = requests.get(self.alpha2_base_url + test_alpha2_ke, headers=self.user_agent_header).json() #KEN
-
-        #expected test outputs
-        test_alpha2_ke_expected1 = {
-                "Code/Subdivision Change": "",
-                "Date Issued": "2016-11-15",
-                "Description of Change in Newsletter": "Update Code Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:KE)."
-                } 
-        test_alpha2_ke_expected2 = {
-                "Code/Subdivision Change": "Deleted codes: KE-110, KE-200, KE-300, KE-400, KE-500, KE-600, KE-700, KE-800 Added codes: KE-01 through KE-47.",
-                "Date Issued": "2014-10-30",
-                "Description of Change in Newsletter": "Delete provinces; add 47 counties; update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:KE)."
-                }       
-        
-        self.assertIsInstance(test_request_ke, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_ke)))
-        self.assertIsInstance(test_request_ke["KE"], list, "Expected ouput object of API should be of type list, got {}.".format(type(test_request_ke["KE"])))
-        self.assertEqual(list(test_request_ke.keys()), ["KE"], "Expected output columns of API do not match, got {}.".format(list(test_request_ke.keys()))) 
-        for row in test_request_ke["KE"]:
-                self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
-        self.assertEqual(len(test_request_ke["KE"]), 4, "Expected there to be 4 rows of updates for BO, got {}.".format(len(test_request_ke["KE"])))
-        self.assertEqual(test_request_ke["KE"][0], test_alpha2_ke_expected1, "Expected and observed outputs do not match.")
-        self.assertEqual(test_request_ke["KE"][1], test_alpha2_ke_expected2, "Expected and observed outputs do not match.")
-#6.)
-        test_request_error1 = requests.get(self.alpha2_base_url + error_test_alpha2_1, headers=self.user_agent_header).json() #blahblahblah
+        test_request_error1 = requests.get(self.alpha_base_url + error_test_alpha_1, headers=self.user_agent_header).json() #blahblahblah
 
         self.assertIsInstance(test_request_error1, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_error1)))
         self.assertEqual(list(test_request_error1.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
-        self.assertEqual(test_request_error1["message"], "Invalid 2 letter alpha-2 code input: " + error_test_alpha2_1.upper() + ".", "Error message incorrect: {}.".format(test_request_error1["message"]))
+        self.assertEqual(test_request_error1["message"], "Invalid ISO 3166-1 alpha country code input, no corresponding alpha-2 code found: " + error_test_alpha_1.upper() + ".", "Error message incorrect: {}.".format(test_request_error1["message"]))
         self.assertEqual(test_request_error1["status"], 400, "Error status code incorrect: {}.".format(test_request_error1["status"]))
-        self.assertEqual(test_request_error1["path"], self.alpha2_base_url + error_test_alpha2_1, "Error path incorrect: {}.".format(test_request_error1["path"]))
-#7.)
-        test_request_error2 = requests.get(self.alpha2_base_url + error_test_alpha2_2, headers=self.user_agent_header).json() #42
+        self.assertEqual(test_request_error1["path"], self.alpha_base_url + error_test_alpha_1, "Error path incorrect: {}.".format(test_request_error1["path"]))
+#6.)
+        test_request_error2 = requests.get(self.alpha_base_url + error_test_alpha_2, headers=self.user_agent_header).json() #42
 
         self.assertIsInstance(test_request_error2, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_error2)))
         self.assertEqual(list(test_request_error2.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
-        self.assertEqual(test_request_error2["message"], "Invalid 2 letter alpha-2 code input: " + error_test_alpha2_2.upper() + ".", "Error message incorrect: {}.".format(test_request_error2["message"]))
+        self.assertEqual(test_request_error2["message"], "Invalid ISO 3166-1 alpha country code input, no corresponding alpha-2 code found: " + error_test_alpha_2.upper() + ".", "Error message incorrect: {}.".format(test_request_error2["message"]))
         self.assertEqual(test_request_error2["status"], 400, "Error status code incorrect: {}.".format(test_request_error2["status"]))
-        self.assertEqual(test_request_error2["path"], self.alpha2_base_url + error_test_alpha2_2, "Error path incorrect: {}.".format(test_request_error2["path"]))
-#8.)
-        test_request_error3 = requests.get(self.alpha2_base_url + error_test_alpha2_3, headers=self.user_agent_header).json() #xyz
+        self.assertEqual(test_request_error2["path"], self.alpha_base_url + error_test_alpha_2, "Error path incorrect: {}.".format(test_request_error2["path"]))
+#7.)
+        test_request_error3 = requests.get(self.alpha_base_url + error_test_alpha_3, headers=self.user_agent_header).json() #xyz
 
         self.assertIsInstance(test_request_error3, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_error3)))
         self.assertEqual(list(test_request_error3.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
-        self.assertEqual(test_request_error3["message"], "Invalid 3 letter alpha-3 code input: " + error_test_alpha2_3.upper() + ".", "Error message incorrect: {}.".format(test_request_error3["message"]))
+        self.assertEqual(test_request_error3["message"], "Invalid ISO 3166-1 alpha-3 country code input, cannot convert into corresponding alpha-2 code: " + error_test_alpha_3.upper() + ".", "Error message incorrect: {}.".format(test_request_error3["message"]))
         self.assertEqual(test_request_error3["status"], 400, "Error status code incorrect: {}.".format(test_request_error3["status"]))
-        self.assertEqual(test_request_error3["path"], self.alpha2_base_url + error_test_alpha2_3, "Error path incorrect: {}.".format(test_request_error3["path"]))
+        self.assertEqual(test_request_error3["path"], self.alpha_base_url + error_test_alpha_3, "Error path incorrect: {}.".format(test_request_error3["path"]))
 
     def test_year_endpoint(self): 
-        """ Testing single and multiple years, year ranges and greater than/less than and invalid years. """
+        """ Testing '/api/year' path/endpoint using single and multiple years, year ranges and greater than/less than and invalid years. """
         test_year_2016 = "2016"
         test_year_2007 = "2007"
-        test_year_2021 = "2021"
         test_year_2004_2009 = "2004-2009"
         test_year_gt_2017 = ">2017"
         test_year_lt_2002 = "<2002"
@@ -362,51 +364,6 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_2007['GD'][0], test_gd_expected, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_year_2007['SM'][0], test_sm_expected, "Expected and observed outputs do not match.")
 #3.)
-        test_request_year_2021 = requests.get(self.year_base_url + test_year_2021, headers=self.user_agent_header).json() #2021
-
-        #expected test outputs
-        test_cn_expected = {
-                "Code/Subdivision Change": "",
-                "Date Issued": "2021-11-25",
-                "Description of Change in Newsletter": "Change of spelling of CN-NX; Update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CN)."
-                }
-        test_et_expected = {
-                "Code/Subdivision Change": "Subdivisions added: ET-SI Sidama.",
-                "Date Issued": "2021-11-25",
-                "Description of Change in Newsletter": "Addition of regional state ET-SI; Update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:ET)."
-                }
-        test_np_expected = {
-                "Code/Subdivision Change": "",
-                "Date Issued": "2021-11-25",
-                "Description of Change in Newsletter": "Change of spelling of NP-P5; Modification of remark part 2; Update List Source.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:NP)."
-                }
-        test_ss_expected = {
-                "Code/Subdivision Change": "",
-                "Date Issued": "2021-11-25",
-                "Description of Change in Newsletter": "Typographical correction of SS-BW (deletion of the extra space between el and Ghazal).",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:SS)."
-                }
-
-        #expected key outputs
-        test_year_2021_keys = ['CN', 'ET', 'FR', 'GB', 'GT', 'HU', 'IS', 'KH', 'LT', 'LV', 'NP', 'PA', 'RU', 'SI', 'SS']
-
-        self.assertIsInstance(test_request_year_2021, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_year_2021)))
-        self.assertEqual(list(test_request_year_2021), test_year_2021_keys, "Expected keys of output dict from API do not match, got {}.".format(list(test_request_year_2021)))
-        self.assertEqual(len(list(test_request_year_2021)), 15, "Expected there to be 15 output objects from API call, got {}.".format(len(list(test_request_year_2021))))
-        for alpha2 in list(test_request_year_2021):
-                for row in range(0, len(test_request_year_2021[alpha2])):
-                        self.assertEqual(list(test_request_year_2021[alpha2][row].keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(test_request_year_2021[alpha2][row].keys())))
-                        self.assertIsInstance(test_request_year_2021[alpha2][row], dict, "Expected output row of object of API to be of type dict, got {}.".format(type(test_request_year_2021[alpha2][row])))
-                        self.assertEqual(str(datetime.strptime(test_request_year_2021[alpha2][row]["Date Issued"], "%Y-%m-%d").year), "2021", 
-                                "Year in Date Issued column does not match expected 2021, got {}.".format(datetime.strptime(test_request_year_2021[alpha2][row]["Date Issued"], "%Y-%m-%d").year))
-        self.assertEqual(test_request_year_2021['CN'][0], test_cn_expected, "Expected and observed outputs do not match.")
-        self.assertEqual(test_request_year_2021['ET'][0], test_et_expected, "Expected and observed outputs do not match.")
-        self.assertEqual(test_request_year_2021['NP'][0], test_np_expected, "Expected and observed outputs do not match.")
-        self.assertEqual(test_request_year_2021['SS'][0], test_ss_expected, "Expected and observed outputs do not match.")
-#4.)
         test_request_year_2004_2009 = requests.get(self.year_base_url + test_year_2004_2009, headers=self.user_agent_header).json() #2004-2009
 
         #expected test outputs
@@ -455,7 +412,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_2004_2009['CO'][0], test_co_expected, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_year_2004_2009['KP'][0], test_kp_expected, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_year_2004_2009['ZA'][0], test_za_expected, "Expected and observed outputs do not match.")
-#5.)    
+#4.)    
         test_request_year_gt_2017 = requests.get(self.year_base_url + test_year_gt_2017, headers=self.user_agent_header).json() #>2017
 
         #expected test outputs
@@ -507,7 +464,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_gt_2017['GH'][0], test_gh_expected, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_year_gt_2017['SA'][0], test_sa_expected, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_year_gt_2017['VE'][0], test_ve_expected, "Expected and observed outputs do not match.")
-#6.)    
+#5.)    
         test_request_year_lt_2002 = requests.get(self.year_base_url + test_year_lt_2002, headers=self.user_agent_header).json() #<2002
 
         #expected test outputs
@@ -552,34 +509,33 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_lt_2002['IT'][0], test_it_expected, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_year_lt_2002['RO'][0], test_ro_expected, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_year_lt_2002['TR'][0], test_tr_expected, "Expected and observed outputs do not match.")
-#7.) 
+#6.) 
         test_request_year_abc = requests.get(self.year_base_url + test_year_abc, headers=self.user_agent_header).json() #abc
         
         self.assertIsInstance(test_request_year_abc, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_year_abc)))
         self.assertEqual(list(test_request_year_abc.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
-        self.assertEqual(test_request_year_abc["message"], "Invalid year input: " + test_year_abc + ".", "Error message incorrect: {}.".format(test_request_year_abc["message"]))
+        self.assertEqual(test_request_year_abc["message"], "Invalid year input " + test_year_abc + ", year should be >1999 and <=2024.", "Error message incorrect: {}.".format(test_request_year_abc["message"]))
         self.assertEqual(test_request_year_abc["status"], 400, "Error status code incorrect: {}.".format(test_request_year_abc["status"]))
         self.assertEqual(test_request_year_abc["path"], self.year_base_url + test_year_abc, "Error path incorrect: {}.".format(test_request_year_abc["path"]))
-#8.) 
+#7.) 
         test_request_year_12345 = requests.get(self.year_base_url + test_year_12345, headers=self.user_agent_header).json() #1234
 
         self.assertIsInstance(test_request_year_12345, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_year_12345)))
         self.assertEqual(list(test_request_year_12345.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
-        self.assertEqual(test_request_year_12345["message"], "Invalid year input: " + test_year_12345.upper() + ".", "Error message incorrect: {}.".format(test_request_year_12345["message"]))
+        self.assertEqual(test_request_year_12345["message"], "Invalid year input " + test_year_12345.upper() + ", year should be >1999 and <=2024.", "Error message incorrect: {}.".format(test_request_year_12345["message"]))
         self.assertEqual(test_request_year_12345["status"], 400, "Error status code incorrect: {}.".format(test_request_year_12345["status"]))
         self.assertEqual(test_request_year_12345["path"], self.year_base_url + test_year_12345, "Error path incorrect: {}.".format(test_request_year_12345["path"]))
     
-    def test_alpha2_year_endpoint(self):
-        """ Testing varying combinations of alpha-2 codes with years/year ranges. """
+    def test_alpha_year_endpoint(self):
+        """ Testing '/api/alpha/year' path/endpoint, using various combinations of alpha codes with years, and year ranges. """
         test_ad_2015 = ("AD", "2015") #Andorra 2015
-        test_es_2002 = ("ES", "2002") #Spain 2002
-        test_hr_2011 = ("HR", "2011") #Croatia 2011
-        test_ma_2019 = ("MA", "<2019") #Morocco 2019
+        test_es_2002 = ("ESP", "2002") #Spain 2002
         test_tr_2002 = ("TR", ">2002") #Turkey <2011
-        test_ve_2013 = ("VE", "2013") #Venezuela 2013 
+        test_ma_mh_nr_lt_2019 = ("MA,MHL,520", "<2019") #Morocco, Marshall Islands, Nauru <2019
+        test_ve_2021_2023 = ("VE", "2021-2024") #Venezuela 2021-2024
         test_abc_2000 = ("abc", "2000") 
 #1.)
-        test_ad_2015_request = requests.get(self.alpha2_base_url + test_ad_2015[0] + "/year/" + test_ad_2015[1], headers=self.user_agent_header).json() #Andorra - 2015
+        test_ad_2015_request = requests.get(self.alpha_base_url + test_ad_2015[0] + "/year/" + test_ad_2015[1], headers=self.user_agent_header).json() #Andorra - 2015
         
         #expected test outputs
         test_ad_2015_expected = {
@@ -601,7 +557,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.assertIsInstance(test_ad_2015_request[test_ad_2015[0]], list, "Expected output object of API to be of type list, got {}.".format(type(test_ad_2015_request[test_ad_2015[0]])))
         self.assertEqual(test_ad_2015_expected, test_ad_2015_request[test_ad_2015[0]][0], "Observed and expected outputs of API do not match.")
 #2.) 
-        test_es_2002_request = requests.get(self.alpha2_base_url + test_es_2002[0] + "/year/" + test_es_2002[1], headers=self.user_agent_header).json() #Spain - 2002
+        test_es_2002_request = requests.get(self.alpha_base_url + test_es_2002[0] + "/year/" + test_es_2002[1], headers=self.user_agent_header).json() #Spain - 2002
 
         #expected test outputs
         test_es_2002_expected = {
@@ -620,54 +576,10 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                         self.assertIsInstance(test_es_2002_request[alpha2][row], dict, "Expected output row of object of API to be of type dict, got {}.".format(type(test_es_2002_request[alpha2][row])))
                         self.assertEqual(datetime.strptime(test_es_2002_request[alpha2][row]["Date Issued"], "%Y-%m-%d").year, 2002, 
                                 "Year in Date Issued column does not match expected 2002, got {}.".format(datetime.strptime(test_es_2002_request[alpha2][row]["Date Issued"], "%Y-%m-%d").year))
-        self.assertIsInstance(test_es_2002_request[test_es_2002[0]], list, "Expected output object of API to be of type list, got {}.".format(type(test_es_2002_request[test_es_2002[0]])))
-        self.assertEqual(test_es_2002_expected, test_es_2002_request[test_es_2002[0]][0], "Observed and expected outputs of API do not match.")
+        self.assertIsInstance(test_es_2002_request["ES"], list, "Expected output object of API to be of type list, got {}.".format(type(test_es_2002_request["ES"])))
+        self.assertEqual(test_es_2002_expected, test_es_2002_request["ES"][0], "Observed and expected outputs of API do not match.")
 #3.) 
-        test_hr_2011_request = requests.get(self.alpha2_base_url + test_hr_2011[0] + "/year/" + test_hr_2011[1], headers=self.user_agent_header).json() #Croatia - 2011
-
-        #expected test outputs
-        test_hr_2011_expected = {
-                "Code/Subdivision Change": "",
-                "Date Issued": "2011-12-13 (corrected 2011-12-15)",
-                "Description of Change in Newsletter": "Alphabetical re-ordering.",
-                "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)."
-                }
-
-        self.assertIsInstance(test_hr_2011_request, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_hr_2011_request)))
-        self.assertEqual(list(test_hr_2011_request), ['HR'], "Expected HR to be the only key returned from API in dict, got {}.".format(list(test_hr_2011_request)))
-        self.assertEqual(len(test_hr_2011_request), 1, "Expected 1 row returned from API, got {}.".format(len(test_hr_2011_request)))
-        for alpha2 in list(test_hr_2011_request):
-                for row in range(0, len(test_hr_2011_request[alpha2])):
-                        self.assertEqual(list(test_hr_2011_request[alpha2][row].keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(test_hr_2011_request[alpha2][row].keys())))
-                        self.assertIsInstance(test_hr_2011_request[alpha2][row], dict, "Expected output row of object of API to be of type dict, got {}.".format(type(test_hr_2011_request[alpha2][row])))
-                        self.assertEqual(datetime.strptime(re.sub("[(].*[)]", "", test_hr_2011_request[alpha2][row]["Date Issued"]).replace(' ', "").replace(".", ''), "%Y-%m-%d").year, 2011, 
-                                "Year in Date Issued column does not match expected 2011, got {}.".format(datetime.strptime(re.sub("[(].*[)]", "", test_hr_2011_request[alpha2][row]["Date Issued"]).replace(' ', "").replace(".", ''), "%Y-%m-%d").year))
-        self.assertIsInstance(test_hr_2011_request[test_hr_2011[0]], list, "Expected output object of API to be of type list, got {}.".format(type(test_hr_2011_request[test_hr_2011[0]])))
-        self.assertEqual(test_hr_2011_expected, test_hr_2011_request[test_hr_2011[0]][0], "Observed and expected outputs of API do not match.")
-#4.) 
-        test_ma_lt_2019_request = requests.get(self.alpha2_base_url + test_ma_2019[0] + "/year/" + test_ma_2019[1], headers=self.user_agent_header).json() #Morocco - <2019
-
-        #expected test outputs
-        test_ma_lt_2019_expected = {
-                "Code/Subdivision Change": "Spelling change: MA-05 Béni-Mellal-Khénifra -> Béni Mellal-Khénifra Location change: MA-ESM Es-Semara (EH) -> Es-Semara (EH-partial).",
-                "Date Issued": "2018-11-26",
-                "Description of Change in Newsletter": "Change of spelling of MA-05; Change of (EH) to (EH-partial) for MA-ESM; Correction of the romanization system label.",
-                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:MA)."
-                }
-        
-        self.assertIsInstance(test_ma_lt_2019_request, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_ma_lt_2019_request)))
-        self.assertEqual(list(test_ma_lt_2019_request), ['MA'], "Expected MA to be the only key returned from API in dict, got {}.".format(list(test_ma_lt_2019_request)))
-        self.assertEqual(len(test_ma_lt_2019_request), 1, "Expected 1 row returned from API, got {}.".format(len(test_ma_lt_2019_request)))
-        for alpha2 in list(test_ma_lt_2019_request):
-                for row in range(0, len(test_ma_lt_2019_request[alpha2])):
-                        self.assertEqual(list(test_ma_lt_2019_request[alpha2][row].keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(test_ma_lt_2019_request[alpha2][row].keys())))
-                        self.assertIsInstance(test_ma_lt_2019_request[alpha2][row], dict, "Expected output row of object of API to be of type dict, got {}.".format(type(test_ma_lt_2019_request[alpha2][row])))
-                        self.assertTrue(datetime.strptime(re.sub("[(].*[)]", "", test_ma_lt_2019_request[alpha2][row]["Date Issued"]).replace(' ', "").replace(".", ''), '%Y-%m-%d').year < 2019, 
-                                "Expected year of updates output to be less than 2019, got {}.".format(re.sub("[(].*[)]", "", test_ma_lt_2019_request[alpha2][row]["Date Issued"]).replace(' ', "").replace(".", '')))        
-        self.assertIsInstance(test_ma_lt_2019_request[test_ma_2019[0]], list, "Expected output object of API to be of type list, got {}".format(type(test_ma_lt_2019_request[test_ma_2019[0]])))
-        self.assertEqual(test_ma_lt_2019_expected, test_ma_lt_2019_request[test_ma_2019[0]][0], "Observed and expected outputs of API do not match.")
-#5.) 
-        test_tr_gt_2002_request = requests.get(self.alpha2_base_url + test_tr_2002[0] + "/year/" + test_tr_2002[1], headers=self.user_agent_header).json() #Turkey - >2002
+        test_tr_gt_2002_request = requests.get(self.alpha_base_url + test_tr_2002[0] + "/year/" + test_tr_2002[1], headers=self.user_agent_header).json() #Turkey - >2002
         
         #expected test outputs 
         test_tr_gt_2002_expected = {
@@ -688,23 +600,58 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                                 "Expected year of updates output to be greater than 2002, got {}.".format(test_tr_gt_2002_request[alpha2][row]["Date Issued"]))  
         self.assertIsInstance(test_tr_gt_2002_request[test_tr_2002[0]], list, "Expected output object of API to be of type list, got {}.".format(type(test_tr_gt_2002_request[test_tr_2002[0]])))
         self.assertEqual(test_tr_gt_2002_expected, test_tr_gt_2002_request[test_tr_2002[0]][0], "Observed and expected outputs of API do not match.")
-#6.)
-        test_ve_2013_request = requests.get(self.alpha2_base_url + test_ve_2013[0] + "/year/" + test_ve_2013[1], headers=self.user_agent_header).json() #Venezuela - 2013
+#4.)
+        test_ma_mh_nr_lt_2019_request = requests.get(self.alpha_base_url + test_ma_mh_nr_lt_2019[0] + "/year/" + test_ma_mh_nr_lt_2019[1], headers=self.user_agent_header).json() #Morocco, Marshall Islands, Nauru - <2019
 
-        self.assertIsInstance(test_ve_2013_request, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_ve_2013_request)))
-        self.assertEqual(len(test_ve_2013_request), 0, "Expected 0 rows returned from API, got {}.".format(len(test_ve_2013_request)))
-        self.assertEqual(test_ve_2013_request, {}, "Expected output of API to be an empty dict, got\n{}".format(test_ve_2013_request))
-#7.) 
-        test_abc_2000_request = requests.get(self.alpha2_base_url + test_abc_2000[0] + "/year/" + test_abc_2000[1], headers=self.user_agent_header).json() #abc - 2000
+        #expected test outputs
+        test_ma_lt_2019_expected = {
+                "Code/Subdivision Change": "Spelling change: MA-05 Béni-Mellal-Khénifra -> Béni Mellal-Khénifra Location change: MA-ESM Es-Semara (EH) -> Es-Semara (EH-partial).",
+                "Date Issued": "2018-11-26",
+                "Description of Change in Newsletter": "Change of spelling of MA-05; Change of (EH) to (EH-partial) for MA-ESM; Correction of the romanization system label.",
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:MA)."
+                }
+        test_mh_lt_2019_expected = {
+                "Code/Subdivision Change": "",
+                "Date Issued": "2017-11-23",
+                "Description of Change in Newsletter": "Change of spelling of subdivision name in mah of MH‐ALK, MH‐ALL, MH‐ARN, MH‐EBO, MH‐JAB, MH‐JAL, MH‐KWA, MH‐LIB, MH‐MAJ, MH‐MAL, MH‐MEJ, MH‐MIL, MH‐NMK, MH‐NMU, MH‐RON, MH‐UTI, MH‐WTH, WTJ; in mah/eng of MH-ENI, MH-KIL; update List Source.",
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:MH)."
+                }
+        test_nr_lt_2019_expected = {
+                "Code/Subdivision Change": "Name changed: NR-05 Baiti -> Baitsi.",
+                "Date Issued": "2017-11-23",
+                "Description of Change in Newsletter": "Change of subdivision name of NR-05; addition of local variation of NR-05, update List Source.",
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:NR)."
+                }
+        
+        self.assertIsInstance(test_ma_mh_nr_lt_2019_request, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_ma_mh_nr_lt_2019_request)))
+        self.assertEqual(list(test_ma_mh_nr_lt_2019_request), ['MA', 'MH', 'NR'], "Expected the output keys returned to be MA, MH and NR from API in dict, got {}.".format(list(test_ma_mh_nr_lt_2019_request)))
+        self.assertEqual(len(test_ma_mh_nr_lt_2019_request), 3, "Expected 3 rows returned from API, got {}.".format(len(test_ma_mh_nr_lt_2019_request)))
+        for alpha2 in list(test_ma_mh_nr_lt_2019_request):
+                for row in range(0, len(test_ma_mh_nr_lt_2019_request[alpha2])):
+                        self.assertEqual(list(test_ma_mh_nr_lt_2019_request[alpha2][row].keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(test_ma_mh_nr_lt_2019_request[alpha2][row].keys())))
+                        self.assertIsInstance(test_ma_mh_nr_lt_2019_request[alpha2][row], dict, "Expected output row of object of API to be of type dict, got {}.".format(type(test_ma_mh_nr_lt_2019_request[alpha2][row])))
+                        self.assertTrue(datetime.strptime(re.sub("[(].*[)]", "", test_ma_mh_nr_lt_2019_request[alpha2][row]["Date Issued"]).replace(' ', "").replace(".", ''), '%Y-%m-%d').year < 2019, 
+                                "Expected year of updates output to be less than 2019, got {}.".format(re.sub("[(].*[)]", "", test_ma_mh_nr_lt_2019_request[alpha2][row]["Date Issued"]).replace(' ', "").replace(".", '')))        
+        self.assertEqual(test_ma_lt_2019_expected, test_ma_mh_nr_lt_2019_request["MA"][0], "Observed and expected outputs of API do not match.") 
+        self.assertEqual(test_mh_lt_2019_expected, test_ma_mh_nr_lt_2019_request["MH"][0], "Observed and expected outputs of API do not match.") 
+        self.assertEqual(test_nr_lt_2019_expected, test_ma_mh_nr_lt_2019_request["NR"][0], "Observed and expected outputs of API do not match.") 
+#5.)
+        test_ve_2021_2024_request = requests.get(self.alpha_base_url + test_ve_2021_2023[0] + "/year/" + test_ve_2021_2023[1], headers=self.user_agent_header).json() #Venezuela - 2021-2024
+
+        self.assertIsInstance(test_ve_2021_2024_request, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_ve_2021_2024_request)))
+        self.assertEqual(len(test_ve_2021_2024_request), 0, "Expected 0 rows returned from API, got {}.".format(len(test_ve_2021_2024_request)))
+        self.assertEqual(test_ve_2021_2024_request, {}, "Expected output of API to be an empty dict, got\n{}".format(test_ve_2021_2024_request))
+#6.) 
+        test_abc_2000_request = requests.get(self.alpha_base_url + test_abc_2000[0] + "/year/" + test_abc_2000[1], headers=self.user_agent_header).json() #abc - 2000
         
         self.assertIsInstance(test_abc_2000_request, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_abc_2000_request)))
         self.assertEqual(list(test_abc_2000_request.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
-        self.assertEqual(test_abc_2000_request["message"], "Invalid 3 letter alpha-3 code input: " + test_abc_2000[0].upper() + ".", "Error message incorrect: {}.".format(test_abc_2000_request["message"]))
+        self.assertEqual(test_abc_2000_request["message"], "Invalid ISO 3166-1 alpha-3 country code input, cannot convert into corresponding alpha-2 code: " + test_abc_2000[0].upper() + ".", "Error message incorrect: {}.".format(test_abc_2000_request["message"]))
         self.assertEqual(test_abc_2000_request["status"], 400, "Error status code incorrect: {}.".format(test_abc_2000_request["status"]))
-        self.assertEqual(test_abc_2000_request["path"], self.alpha2_base_url + test_abc_2000[0] + "/year/" + test_abc_2000[1], "Error path incorrect: {}.".format(test_abc_2000_request["path"]))
+        self.assertEqual(test_abc_2000_request["path"], self.alpha_base_url + test_abc_2000[0] + "/year/" + test_abc_2000[1], "Error path incorrect: {}.".format(test_abc_2000_request["path"]))
 
     def test_name_endpoint(self):
-        """ Testing name endpoint, return all ISO 3166 updates data from input alpha-2 name/names. """
+        """ Testing '/api/name' path/endpoint, return all ISO 3166 updates data from input ISO 3166-1 name/names. """
         test_name_benin = "Benin"
         test_name_tajikistan = "Tajikistan"
         test_name_moldova = "Moldova"
@@ -725,13 +672,13 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                                      "Holy See": "Vatican City", "Venezuela, Bolivarian Republic of": "Venezuela", "Virgin Islands, British": "British Virgin Islands",
                                      "Virgin Islands, U.S.": "United States Virgin Islands", "Viet Nam": "Vietnam"}
 #1.)    
-        #for each countrytest_name_year_endpoint name, test API returns correct object, test using common.name attribute
+        #for each country, test API returns correct object using its alpha-2 code
         for alpha2 in sorted(list(iso3166.countries_by_alpha2.keys())):
             country_name = iso3166.countries_by_alpha2[alpha2].name
             if (country_name == "Kosovo"):
                 continue
             test_request_name = requests.get(self.name_base_url + country_name, headers=self.user_agent_header).json()
-            #convert country name to its more comon name
+            #convert country name to its more common name
             if (country_name in list(name_exceptions_converted.keys())):
                 country_name = name_exceptions_converted[country_name]
             self.assertEqual(list(test_request_name)[0], alpha2, 
@@ -747,7 +694,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 }
 
         self.assertIsInstance(test_request_bj, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_bj)))
-        self.assertIsInstance(test_request_bj["BJ"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_bj["BJ"])))
+        self.assertIsInstance(test_request_bj["BJ"], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_bj["BJ"])))
         self.assertEqual(list(test_request_bj.keys()), ["BJ"], "Expected parent key does not match output, got {}.".format(list(test_request_bj.keys())))
         for row in test_request_bj["BJ"]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
@@ -764,7 +711,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 }
         
         self.assertIsInstance(test_request_tj, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_tj)))
-        self.assertIsInstance(test_request_tj["TJ"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_tj["TJ"])))
+        self.assertIsInstance(test_request_tj["TJ"], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_tj["TJ"])))
         self.assertEqual(list(test_request_tj.keys()), ["TJ"], "Expected parent key does not match output, got {}.".format(list(test_request_tj.keys())))
         for row in test_request_tj["TJ"]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
@@ -781,7 +728,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 }
         
         self.assertIsInstance(test_request_md, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_md)))
-        self.assertIsInstance(test_request_md["MD"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_md["MD"])))
+        self.assertIsInstance(test_request_md["MD"], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_md["MD"])))
         self.assertEqual(list(test_request_md.keys()), ["MD"], "Expected parent key does not match output, got {}.".format(list(test_request_md.keys())))
         for row in test_request_md["MD"]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
@@ -804,8 +751,8 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 }
         
         self.assertIsInstance(test_request_ml_ni, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_ml_ni)))
-        self.assertIsInstance(test_request_ml_ni["ML"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_ml_ni["ML"])))
-        self.assertIsInstance(test_request_ml_ni["NI"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_ml_ni["NI"])))
+        self.assertIsInstance(test_request_ml_ni["ML"], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_ml_ni["ML"])))
+        self.assertIsInstance(test_request_ml_ni["NI"], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_ml_ni["NI"])))
         self.assertEqual(list(test_request_ml_ni.keys()), ["ML", "NI"], "Expected parent key does not match output, got {}.".format(list(test_request_ml_ni.keys())))
         for code in test_request_ml_ni:
                 for row in test_request_ml_ni[code]:
@@ -815,32 +762,32 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_ml_ni["ML"][0], test_name_ml_ni_expected, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_ml_ni["NI"][0], test_name_ml_ni_expected_2, "Expected and observed outputs do not match.")
 #6.)
-        test_request_error = requests.get(self.name_base_url + test_name_error1, headers=self.user_agent_header).json() 
+        test_request_error = requests.get(self.name_base_url + test_name_error1, headers=self.user_agent_header).json() #ABCDEF
 
         self.assertIsInstance(test_request_error, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_error)))
         self.assertEqual(list(test_request_error.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
-        self.assertEqual(test_request_error["message"], f'Country name {test_name_error1.title()} not found in the ISO 3166.', "Error message incorrect: {}.".format(test_request_error["message"]))
+        self.assertEqual(test_request_error["message"], "No matching country name found for input: " + test_name_error1.title() + ".", "Error message incorrect: {}.".format(test_request_error["message"]))
         self.assertEqual(test_request_error["status"], 400, "Error status code incorrect: {}.".format(test_request_error["status"]))
         self.assertEqual(test_request_error["path"], self.name_base_url + test_name_error1, "Error path incorrect: {}.".format(test_request_error["path"]))
 #7.)
-        test_request_error_2 = requests.get(self.name_base_url + test_name_error2, headers=self.user_agent_header).json() 
-
+        test_request_error_2 = requests.get(self.name_base_url + test_name_error2, headers=self.user_agent_header).json() #12345
+ 
         self.assertIsInstance(test_request_error_2, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_error_2)))
         self.assertEqual(list(test_request_error_2.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
-        self.assertEqual(test_request_error_2["message"], f'Country name {test_name_error2.title()} not found in the ISO 3166.', "Error message incorrect: {}.".format(test_request_error_2["message"]))
+        self.assertEqual(test_request_error_2["message"], "No matching country name found for input: " + test_name_error2.title() + ".", "Error message incorrect: {}.".format(test_request_error_2["message"]))
         self.assertEqual(test_request_error_2["status"], 400, "Error status code incorrect: {}.".format(test_request_error_2["status"]))
         self.assertEqual(test_request_error_2["path"], self.name_base_url + test_name_error2, "Error path incorrect: {}.".format(test_request_error_2["path"]))
 
     def test_name_year_endpoint(self):
-        """ Testing varying combinations of country names with years/year ranges. """
+        """ Testing '/api/name' + '/api/year' path/endpoint, using a variety of combinations of country names with years and year ranges. """
         test_name_egypt_2014 = ("Egypt", "2014")
         test_name_indonesia_2022 = ("Indonesia", "2022")
         test_name_japan_gt_2018 = ("Japan", ">2018")
         test_name_kiribati_lesotho_lt_2012 = ("Kiribati, Lesotho", "<2012")
-        test_name_malta_nepal_2007_2011 = ("Malta, Nepal", "2007-2011")
-        test_name_error1 = ("ABCDEF", "2002")
+        test_name_malta_nepal_2007_2011 = ("Malta, Nepal", "2011-2007")
+        test_name_error1 = ("ABCDEFGHIJ", "200202")
         test_name_error2 = ("12345", "ABCD")
-        test_name_error3 = ("blahblah", "2040")
+        test_name_error3 = ("blahblahblah", "2040-2050")
 #1.) 
         test_request_egypt_2014 = requests.get(self.name_base_url + test_name_egypt_2014[0] + "/year/" + test_name_egypt_2014[1], headers=self.user_agent_header).json() #Egypt 2014
 
@@ -852,7 +799,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 }
         
         self.assertIsInstance(test_request_egypt_2014, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_egypt_2014)))
-        self.assertIsInstance(test_request_egypt_2014["EG"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_egypt_2014["EG"])))
+        self.assertIsInstance(test_request_egypt_2014["EG"], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_egypt_2014["EG"])))
         self.assertEqual(list(test_request_egypt_2014.keys()), ["EG"], "Expected parent key does not match output, got {}.".format(list(test_request_egypt_2014.keys())))
         for code in test_request_egypt_2014:
                 for row in test_request_egypt_2014[code]:
@@ -870,7 +817,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 }
 
         self.assertIsInstance(test_request_indonesia_2022, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_indonesia_2022)))
-        self.assertIsInstance(test_request_indonesia_2022["ID"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_indonesia_2022["ID"])))
+        self.assertIsInstance(test_request_indonesia_2022["ID"], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_indonesia_2022["ID"])))
         self.assertEqual(list(test_request_indonesia_2022.keys()), ["ID"], "Expected parent key does not match output, got {}.".format(list(test_request_indonesia_2022.keys())))
         for code in test_request_indonesia_2022:
                 for row in test_request_indonesia_2022[code]:
@@ -888,7 +835,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 }
 
         self.assertIsInstance(test_request_japan_gt_2018, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_japan_gt_2018)))
-        self.assertIsInstance(test_request_japan_gt_2018["JP"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_japan_gt_2018["JP"])))
+        self.assertIsInstance(test_request_japan_gt_2018["JP"], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_japan_gt_2018["JP"])))
         self.assertEqual(list(test_request_japan_gt_2018.keys()), ["JP"], "Expected parent key does not match output, got {}.".format(list(test_request_japan_gt_2018.keys())))
         for code in test_request_japan_gt_2018:
                 for row in test_request_japan_gt_2018[code]:
@@ -912,8 +859,8 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 }
         
         self.assertIsInstance(test_request_kiribati_lesotho_lt_2012, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_kiribati_lesotho_lt_2012)))
-        self.assertIsInstance(test_request_kiribati_lesotho_lt_2012["KI"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_kiribati_lesotho_lt_2012["KI"])))
-        self.assertIsInstance(test_request_kiribati_lesotho_lt_2012["LS"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_kiribati_lesotho_lt_2012["LS"])))
+        self.assertIsInstance(test_request_kiribati_lesotho_lt_2012["KI"], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_kiribati_lesotho_lt_2012["KI"])))
+        self.assertIsInstance(test_request_kiribati_lesotho_lt_2012["LS"], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_kiribati_lesotho_lt_2012["LS"])))
         self.assertEqual(list(test_request_kiribati_lesotho_lt_2012.keys()), ["KI", "LS"], "Expected parent key does not match output, got {}.".format(list(test_request_kiribati_lesotho_lt_2012.keys())))
         for code in test_request_kiribati_lesotho_lt_2012:
                 for row in test_request_kiribati_lesotho_lt_2012[code]:
@@ -937,10 +884,10 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
                 "Description of Change in Newsletter": "First level prefix addition, language adjustment, comment addition, deletion of the romanization system and source list update.",
                 "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)."
                 }
-        
+
         self.assertIsInstance(test_request_malta_nepal_2007_2011, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_malta_nepal_2007_2011)))
-        self.assertIsInstance(test_request_malta_nepal_2007_2011["MT"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_malta_nepal_2007_2011["MT"])))
-        self.assertIsInstance(test_request_malta_nepal_2007_2011["NP"], list, "Expected ouput object of API updates to be of type list, got {}.".format(type(test_request_malta_nepal_2007_2011["NP"])))
+        self.assertIsInstance(test_request_malta_nepal_2007_2011["MT"], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_malta_nepal_2007_2011["MT"])))
+        self.assertIsInstance(test_request_malta_nepal_2007_2011["NP"], list, "Expected output object of API updates to be of type list, got {}.".format(type(test_request_malta_nepal_2007_2011["NP"])))
         self.assertEqual(list(test_request_malta_nepal_2007_2011.keys()), ["MT", "NP"], "Expected parent key does not match output, got {}.".format(list(test_request_malta_nepal_2007_2011.keys())))
         for code in test_request_malta_nepal_2007_2011:
                 for row in test_request_malta_nepal_2007_2011[code]:
@@ -950,39 +897,40 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_malta_nepal_2007_2011["MT"][0], test_name_malta_nepal_2007_2011_expected, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_malta_nepal_2007_2011["NP"][0], test_name_malta_nepal_2007_2011_expected_2, "Expected and observed outputs do not match.")
 #6.)
-        test_request_error = requests.get(self.name_base_url + test_name_error1[0] + "/year/" + test_name_error1[1], headers=self.user_agent_header).json() #ABCDEF, 2002
+        test_request_error = requests.get(self.name_base_url + test_name_error1[0] + "/year/" + test_name_error1[1], headers=self.user_agent_header).json() #ABCDEF, 200202
 
         self.assertIsInstance(test_request_error, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_error)))
         self.assertEqual(list(test_request_error.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
-        self.assertEqual(test_request_error["message"], f'Country name {test_name_error1[0].title()} not found in the ISO 3166.', "Error message incorrect: {}.".format(test_request_error["message"]))
+        self.assertEqual(test_request_error["message"], "No matching country name found for input: " + test_name_error1[0].title() + ".", "Error message incorrect: {}.".format(test_request_error["message"]))
         self.assertEqual(test_request_error["status"], 400, "Error status code incorrect: {}.".format(test_request_error["status"]))
         self.assertEqual(test_request_error["path"], self.name_base_url + test_name_error1[0] + "/year/" + test_name_error1[1], "Error path incorrect: {}.".format(test_request_error["path"]))
 #7.)
-        test_request_error_2 = requests.get(self.name_base_url + test_name_error2[0] + "/year/" + test_name_error2[1], headers=self.user_agent_header).json() #12345, ""
+        test_request_error_2 = requests.get(self.name_base_url + test_name_error2[0] + "/year/" + test_name_error2[1], headers=self.user_agent_header).json() #12345, ABCDE
 
         self.assertIsInstance(test_request_error_2, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_error_2)))
         self.assertEqual(list(test_request_error_2.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
-        self.assertEqual(test_request_error_2["message"], f'Country name {test_name_error2[0].title()} not found in the ISO 3166.', "Error message incorrect: {}.".format(test_request_error_2["message"]))
+        self.assertEqual(test_request_error_2["message"], "No matching country name found for input: " + test_name_error2[0] + ".", "Error message incorrect: {}.".format(test_request_error_2["message"]))
         self.assertEqual(test_request_error_2["status"], 400, "Error status code incorrect: {}.".format(test_request_error_2["status"]))
         self.assertEqual(test_request_error_2["path"], self.name_base_url + test_name_error2[0] + "/year/" + test_name_error2[1], "Error path incorrect: {}.".format(test_request_error_2["path"]))
 #8.)
-        test_request_error_3 = requests.get(self.name_base_url + test_name_error3[0] + "/year/" + test_name_error3[1], headers=self.user_agent_header).json() #"", ""
+        test_request_error_3 = requests.get(self.name_base_url + test_name_error3[0] + "/year/" + test_name_error3[1], headers=self.user_agent_header).json() #blahblahblahblah, 2040-2050
 
         self.assertIsInstance(test_request_error_3, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_error_3)))
         self.assertEqual(list(test_request_error_3.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
-        self.assertEqual(test_request_error_3["message"], f'Country name {test_name_error3[0].title()} not found in the ISO 3166.', "Error message incorrect: {}.".format(test_request_error_3["message"]))
+        self.assertEqual(test_request_error_3["message"], "No matching country name found for input: " + test_name_error3[0].title() + ".", "Error message incorrect: {}.".format(test_request_error_3["message"]))
         self.assertEqual(test_request_error_3["status"], 400, "Error status code incorrect: {}.".format(test_request_error_3["status"]))
         self.assertEqual(test_request_error_3["path"], self.name_base_url + test_name_error3[0] + "/year/" + test_name_error3[1], "Error path incorrect: {}.".format(test_request_error_3["path"]))
 
     @unittest.skip("Skipping as number of results will change month by month of running tests.")
-    def test_month_endpoint(self):
-        """ Testing months input parameter which returns the updates in a specified month range. """
+    def test_months_endpoint(self):
+        """ Testing '/api/months' paths/endpoint, which returns the updates in a specified month range. """
         test_month_1 = "1"
         test_month_2 = "6"
-        test_month_3 = "10"
-        test_month_4 = "20"
-        test_month_5 = "50"
-        test_month_6 = "abc"
+        test_month_3 = "24"
+        test_month_4 = "12-36"
+        test_month_5 = "abc"
+        test_month_6 = ""
+        current_datetime = datetime.strptime(str(date.today()), '%Y-%m-%d')
 #1.)
         test_request_month1 = requests.get(self.month_base_url + test_month_1, headers=self.user_agent_header).json() #1
 
@@ -993,46 +941,161 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_month2 = requests.get(self.month_base_url + test_month_2, headers=self.user_agent_header).json() #6
 
         self.assertIsInstance(test_request_month2, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_month2)))
-        self.assertEqual(len(test_request_month2), 12, "Expected 12 rows returned from API, got {}.".format(len(test_request_month2)))
+        self.assertEqual(len(test_request_month2), 8, "Expected 8 rows returned from API, got {}.".format(len(test_request_month2)))
         for alpha2 in list(test_request_month2):
                 for row in range(0, len(test_request_month2[alpha2])):
-                       self.assertEqual(datetime.strptime(test_request_month2[alpha2][row]["Date Issued"], '%Y-%m-%d').month, (date.today() + relativedelta(months=-6)).month,
-                                        "Expected Date of country update to be within the past 6 months:\nToday: {}, Update: {}.".format(date.today(), test_request_month2[alpha2][row]["Date Issued"]))
+                       current_date_issued = datetime.strptime(test_request_month2[alpha2][row]["Date Issued"], '%Y-%m-%d')
+                       self.assertTrue(((current_datetime.year - current_date_issued.year) * 12 + current_datetime.month - current_date_issued.month)-1 <= 6,
+                                       "Expected current updates published data to be within the past 6 months:\n{}".format(test_request_month2[alpha2][row]))
 #3.)
-        test_request_month3 = requests.get(self.month_base_url + test_month_3, headers=self.user_agent_header).json() #10
+        test_request_month3 = requests.get(self.month_base_url + test_month_3, headers=self.user_agent_header).json() #24
 
         self.assertIsInstance(test_request_month3, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_month3)))
-        self.assertEqual(len(test_request_month3), 11, "Expected 11 rows returned from API, got {}.".format(len(test_request_month3)))
+        self.assertEqual(len(test_request_month3), 26, "Expected 26 rows returned from API, got {}.".format(len(test_request_month3)))
         for alpha2 in list(test_request_month3):
                 for row in range(0, len(test_request_month3[alpha2])):
-                       self.assertEqual(datetime.strptime(test_request_month3[alpha2][row]["Date Issued"], '%Y-%m-%d').month, (date.today() + relativedelta(months=-10)).month,
-                                        "Expected Date of country update to be within the past 10 months:\nToday: {}, Update: {}.".format(date.today(), test_request_month3[alpha2][row]["Date Issued"]))
+                       current_date_issued = datetime.strptime(test_request_month3[alpha2][row]["Date Issued"], '%Y-%m-%d')
+                       self.assertTrue(((current_datetime.year - current_date_issued.year) * 12 + current_datetime.month - current_date_issued.month)-1 <= 24,
+                                       "Expected current updates published data to be within the past 24 months:\n{}".format(test_request_month3[alpha2][row]))
 #4.)
-        test_request_month4 = requests.get(self.month_base_url + test_month_4, headers=self.user_agent_header).json() #20
+        test_request_month4 = requests.get(self.month_base_url + test_month_4, headers=self.user_agent_header).json() #12-36
 
         self.assertIsInstance(test_request_month4, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_month4)))
-        self.assertEqual(len(test_request_month4), 21, "Expected 21 rows returned from API, got {}.".format(len(test_request_month4)))
+        self.assertEqual(len(test_request_month4), 31, "Expected 31 rows returned from API, got {}.".format(len(test_request_month4)))
         for alpha2 in list(test_request_month4):
                 for row in range(0, len(test_request_month4[alpha2])):
-                       self.assertEqual(datetime.strptime(test_request_month4[alpha2][row]["Date Issued"], '%Y-%m-%d').month, (date.today() + relativedelta(months=-20)).month,
-                                        "Expected Date of country update to be within the past 20 months:\nToday: {}, Update: {}.".format(date.today(), test_request_month4[alpha2][row]["Date Issued"]))
+                       current_date_issued = datetime.strptime(test_request_month4[alpha2][row]["Date Issued"], '%Y-%m-%d')
+                       month_difference_date_issued = ((current_datetime.year - current_date_issued.year) * 12 + current_datetime.month - current_date_issued.month)-1
+                #        self.assertTrue(month_difference_date_issued >= 12 and month_difference_date_issued <= 36,
+                #                        "Expected current updates published data to be within the month range of 12-26 months:\n{}".format(test_request_month4[alpha2][row]))
 #5.)
-        test_request_month5 = requests.get(self.month_base_url + test_month_5, headers=self.user_agent_header).json() #50
+        test_request_month5 = requests.get(self.month_base_url + test_month_5, headers=self.user_agent_header).json() #abc
 
         self.assertIsInstance(test_request_month5, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_month5)))
-        self.assertEqual(len(test_request_month5), 59, "Expected 59 rows returned from API, got {}.".format(len(test_request_month5)))
-        for alpha2 in list(test_request_month5):
-                for row in range(0, len(test_request_month5[alpha2])):
-                       self.assertEqual(datetime.strptime(test_request_month5[alpha2][row]["Date Issued"], '%Y-%m-%d').month, (date.today() + relativedelta(months=-50)).month,
-                                        "Expected Date of country update to be within the past 50 months:\nToday: {}, Update: {}.".format(date.today(), test_request_month5[alpha2][row]["Date Issued"]))
-#6.)
-        test_request_month6 = requests.get(self.month_base_url + test_month_6, headers=self.user_agent_header).json() #abc
+        self.assertEqual(list(test_request_month5.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
+        self.assertEqual(test_request_month5["message"], "Invalid month input: " + test_month_5 + ".", "Error message incorrect: {}.".format(test_request_month5["message"]))
+        self.assertEqual(test_request_month5["status"], 400, "Error status code incorrect: {}.".format(test_request_month5["status"]))
+        self.assertEqual(test_request_month5["path"], self.base_url + '/months/' + test_month_5, "Error path incorrect: {}.".format(test_request_month5["path"]))
+#5.)
+        test_request_month6 = requests.get(self.month_base_url + test_month_6, headers=self.user_agent_header).json() #""
 
         self.assertIsInstance(test_request_month6, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_month6)))
         self.assertEqual(list(test_request_month6.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
-        self.assertEqual(test_request_month6["message"], "Invalid month input: " + test_month_6 + ".", "Error message incorrect: {}.".format(test_request_month6["message"]))
+        self.assertEqual(test_request_month6["message"], "The month input parameter cannot be empty.", "Error message incorrect: {}.".format(test_request_month6["message"]))
         self.assertEqual(test_request_month6["status"], 400, "Error status code incorrect: {}.".format(test_request_month6["status"]))
-        self.assertEqual(test_request_month6["path"], self.base_url + '?months=' + test_month_6, "Error path incorrect: {}.".format(test_request_month6["path"]))
+        self.assertEqual(test_request_month6["path"], self.base_url + '/months/' + test_month_6, "Error path incorrect: {}.".format(test_request_month6["path"]))
+
+    @unittest.skip("Skipping as number of results will change month by month of running tests.")
+    def test_months_alpha_endpoint(self):
+        """ Testing '/api/months' + '/api/alpha' paths/endpoint, which returns the updates in a specified month range for an input country per its ISO 3166 alpha code. """
+        test_alpha_month_gb_24 = ("GB", "24") #UK
+        test_alpha_month_in_24 = ("IN", "24") #Iraq
+        test_alpha_month_ci_dz_ss_36 = ("CI,DZA,728", "36") #Ivory Coast, Algeria, South Sudan
+        test_alpha_month_ec_2 = ("EC", "2") #Ecuador
+        test_alpha_month_is_12_36 = ("IS", "12-36") #Iceland
+        test_alpha_month_error1 = ("abc", "100") 
+        current_datetime = datetime.strptime(str(date.today()), '%Y-%m-%d')
+#1.)
+        test_request_alpha_month_gb_24 = requests.get(self.alpha_base_url + test_alpha_month_gb_24[0] + "/months/" + test_alpha_month_gb_24[1], headers=self.user_agent_header).json() #GB - 24
+        test_alpha_month_gb_24_expected = {
+                "Code/Subdivision Change": "",
+                "Date Issued": "2022-11-29",
+                "Description of Change in Newsletter": "Deletion of two-tier county GB-NTH; Addition of unitary authority GB-NNH, GB-WNH; Change of category name from two-tier county to unitary authority for GB-BKM; Update List Source.",
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:GB)."
+                }
+        
+        self.assertIsInstance(test_request_alpha_month_gb_24, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_alpha_month_gb_24)))
+        self.assertEqual(len(test_request_alpha_month_gb_24), 1, "Expected 1 row returned from API, got {}.".format(len(test_request_alpha_month_gb_24)))
+        for alpha2 in list(test_request_alpha_month_gb_24):
+                for row in range(0, len(test_request_alpha_month_gb_24[alpha2])):
+                       current_date_issued = datetime.strptime(test_request_alpha_month_gb_24[alpha2][row]["Date Issued"], '%Y-%m-%d')
+                       self.assertTrue(((current_datetime.year - current_date_issued.year) * 12 + current_datetime.month - current_date_issued.month)-1 <= 24,
+                                       "Expected current updates published data to be within the past 24 months:\n{}".format(test_request_alpha_month_gb_24[alpha2][row]))
+        self.assertEqual(test_request_alpha_month_gb_24["GB"][0], test_alpha_month_gb_24_expected, "Expected and observed outputs do not match.")
+#2.)
+        test_request_alpha_month_in_24 = requests.get(self.alpha_base_url + test_alpha_month_in_24[0] + "/months/" + test_alpha_month_in_24[1], headers=self.user_agent_header).json() #IN - 24
+        test_alpha_month_in_24_expected = {
+                "Code/Subdivision Change": "",
+                "Date Issued": "2023-11-23",
+                "Description of Change in Newsletter": "Change of subdivision code from IN-OR to IN-OD, from IN-CT to IN-CG, from IN-TG to IN-TS, from IN-UT to IN-UK; Deletion of the asterisk from IN-JH; Update Code Source.",
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:IN)."
+                }
+
+        self.assertIsInstance(test_request_alpha_month_in_24, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_alpha_month_in_24)))
+        self.assertEqual(len(test_request_alpha_month_in_24), 1, "Expected 1 row returned from API, got {}.".format(len(test_request_alpha_month_in_24)))
+        for alpha2 in list(test_request_alpha_month_in_24):
+                for row in range(0, len(test_request_alpha_month_in_24[alpha2])):
+                       current_date_issued = datetime.strptime(test_request_alpha_month_in_24[alpha2][row]["Date Issued"], '%Y-%m-%d')
+                       self.assertTrue(((current_datetime.year - current_date_issued.year) * 12 + current_datetime.month - current_date_issued.month)-1 <= 24,
+                                       "Expected current updates published data to be within the past 24 months:\n{}".format(test_request_alpha_month_in_24[alpha2][row]))
+        self.assertEqual(test_request_alpha_month_in_24["IN"][0], test_alpha_month_in_24_expected, "Expected and observed outputs do not match.")
+#3.)
+        test_request_alpha_month_ci_dz_ss_36 = requests.get(self.alpha_base_url + test_alpha_month_ci_dz_ss_36[0] + "/months/" + test_alpha_month_ci_dz_ss_36[1], headers=self.user_agent_header).json() #CI, DZ, SS - 36
+        test_alpha_month_ci_dz_ss_36_expected_ci = {
+                "Code/Subdivision Change": "",
+                "Date Issued": "2022-09-02",
+                "Description of Change in Newsletter": "Correction of the French full name.",
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CI)."
+                }
+        test_alpha_month_ci_dz_ss_36_expected_dz = {
+                "Code/Subdivision Change": "",
+                "Date Issued": "2022-11-29",
+                "Description of Change in Newsletter": "Addition of province DZ-49, DZ-50, DZ-51, DZ-52, DZ-53, DZ-54, DZ-55, DZ-56, DZ-57, DZ-58; Update list source.",
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:DZ)."
+                }
+        test_alpha_month_ci_dz_ss_36_expected_ss = {
+                "Code/Subdivision Change": "",
+                "Date Issued": "2021-11-25",
+                "Description of Change in Newsletter": "Typographical correction of SS-BW (deletion of the extra space between el and Ghazal).",
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:SS)."
+                }
+        
+        self.assertIsInstance(test_request_alpha_month_ci_dz_ss_36, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_alpha_month_ci_dz_ss_36)))
+        self.assertEqual(len(test_request_alpha_month_ci_dz_ss_36), 3, "Expected 3 rows returned from API, got {}.".format(len(test_request_alpha_month_ci_dz_ss_36)))
+        for alpha2 in list(test_request_alpha_month_ci_dz_ss_36):
+                for row in range(0, len(test_request_alpha_month_ci_dz_ss_36[alpha2])):
+                       current_date_issued = datetime.strptime(test_request_alpha_month_ci_dz_ss_36[alpha2][row]["Date Issued"], '%Y-%m-%d')
+                       self.assertTrue(((current_datetime.year - current_date_issued.year) * 12 + current_datetime.month - current_date_issued.month)-1 <= 36,
+                                       "Expected current updates published data to be within the past 36 months:\n{}".format(test_request_alpha_month_ci_dz_ss_36[alpha2][row]))
+        self.assertEqual(test_request_alpha_month_ci_dz_ss_36["CI"][0], test_alpha_month_ci_dz_ss_36_expected_ci, "Expected and observed outputs do not match.")
+        self.assertEqual(test_request_alpha_month_ci_dz_ss_36["DZ"][0], test_alpha_month_ci_dz_ss_36_expected_dz, "Expected and observed outputs do not match.")
+        self.assertEqual(test_request_alpha_month_ci_dz_ss_36["SS"][0], test_alpha_month_ci_dz_ss_36_expected_ss, "Expected and observed outputs do not match.")
+#4.)
+        test_request_alpha_month_is_12_36 = requests.get(self.alpha_base_url + test_alpha_month_is_12_36[0] + "/months/" + test_alpha_month_is_12_36[1], headers=self.user_agent_header).json() #IS - 12-36    
+        test_alpha_month_is_12_36_expected_1 = {
+                "Code/Subdivision Change": "",
+                "Date Issued": "2022-11-29",
+                "Description of Change in Newsletter": "Deletion of municipality IS-AKH, IS-BLO, IS-HEL, IS-HUT, IS-SBH, IS-SKU, IS-SSF; Addition of municipality IS-HUG, IS-SKR.",
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:IS)."
+                }
+        test_alpha_month_is_12_36_expected_2 = {
+                "Code/Subdivision Change": "",
+                "Date Issued": "2022-11-21",
+                "Description of Change in Newsletter": "Change of the full name.",
+                "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:IS)."
+                }
+        
+        self.assertIsInstance(test_request_alpha_month_is_12_36, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_alpha_month_is_12_36)))
+        self.assertEqual(len(test_request_alpha_month_is_12_36), 1, "Expected 1 rows returned from API, got {}.".format(len(test_request_alpha_month_is_12_36)))
+        for alpha2 in list(test_request_alpha_month_is_12_36):
+                for row in range(0, len(test_request_alpha_month_is_12_36[alpha2])):
+                       current_date_issued = datetime.strptime(test_request_alpha_month_is_12_36[alpha2][row]["Date Issued"], '%Y-%m-%d')
+                       month_difference_date_issued = ((current_datetime.year - current_date_issued.year) * 12 + current_datetime.month - current_date_issued.month)-1
+                       self.assertTrue(month_difference_date_issued >= 12 and month_difference_date_issued <= 36,
+                                       "Expected current updates published data to be within the month range of 12-36 months:\n{}".format(test_request_alpha_month_is_12_36[alpha2][row]))
+        self.assertEqual(test_request_alpha_month_is_12_36["IS"][0], test_alpha_month_is_12_36_expected_1, "Expected and observed outputs do not match.")
+        self.assertEqual(test_request_alpha_month_is_12_36["IS"][1], test_alpha_month_is_12_36_expected_2, "Expected and observed outputs do not match.")
+#5.)
+        test_request_alpha_month_ec_2 = requests.get(self.alpha_base_url + test_alpha_month_ec_2[0] + "/months/" + test_alpha_month_ec_2[1], headers=self.user_agent_header).json() #EC - 2        
+        self.assertEqual(test_request_alpha_month_ec_2, {}, "Expected and observed outputs do not match.")
+#6.)
+        test_request_month_error = requests.get(self.alpha_base_url + test_alpha_month_error1[0] + "/months/" + test_alpha_month_error1[1] , headers=self.user_agent_header).json() #abc - 100
+
+        self.assertIsInstance(test_request_month_error, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_month_error)))
+        self.assertEqual(list(test_request_month_error.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
+        self.assertEqual(test_request_month_error["message"], "Invalid ISO 3166-1 alpha-3 country code input, cannot convert into corresponding alpha-2 code: " + test_alpha_month_error1[0].upper() + ".", "Error message incorrect: {}.".format(test_request_month_error["message"]))
+        self.assertEqual(test_request_month_error["status"], 400, "Error status code incorrect: {}.".format(test_request_month_error["status"]))
+        self.assertEqual(test_request_month_error["path"], self.base_url + '/alpha/' + test_alpha_month_error1[0] + "/months/" + test_alpha_month_error1[1], "Error path incorrect: {}.".format(test_request_month_error["path"]))
 
 if __name__ == '__main__':
     #run all unit tests
