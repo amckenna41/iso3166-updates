@@ -5,6 +5,7 @@ import re
 from datetime import datetime
 from dateutil import relativedelta
 import iso3166
+import platform
 
 class ISO3166_Updates():
     """
@@ -34,11 +35,14 @@ class ISO3166_Updates():
     year(input_year):
         get all listed updates/changes in the updates json object for an input year, set of years,
         year range or greater than/less than year.
+    months(input_month):
+        get all listed updates/changes in the updates json that have been published within the past
+        number of months or within a specified month range.    
     __getitem__(alpha_code):
         get all listed updates/changes in the updates json object for an input country/countries,
         by making the instance object subscriptable and updates accessible via their alpha-2, 
         alpha-3 or numeric country codes.
-    convert_to_alpha2(alpha_code:
+    convert_to_alpha2(alpha_code):
         convert the inputted ISO 3166-1 alpha-3 or numeric country codes into their 2 letter 
         alpha-2 counterpart.
 
@@ -95,12 +99,15 @@ class ISO3166_Updates():
         
         #raise error if iso3166-updates json doesn't exist in folder
         if not (os.path.isfile(os.path.join(self.iso3166_updates_module_path, self.iso3166_updates_json_filename))):
-            raise OSError("Issue finding iso3166-updates.json in dir: {}.".format(
-                os.path.join(self.iso3166_updates_module_path, self.iso3166_updates_json_filename)))
+            raise OSError(f"Issue finding iso3166-updates.json in dir: {os.path.join(self.iso3166_updates_module_path, self.iso3166_updates_json_filename)}.")
 
-        #open iso3166-updates json file and load it into class variable
-        with open(os.path.join(self.iso3166_updates_module_path, self.iso3166_updates_json_filename)) as iso3166_updates_json:
-            self.all = json.load(iso3166_updates_json)
+        #importing all updates data from JSON, open iso3166-updates json file and load it into class variable, loading in a JSON is different in Windows & Unix/Linux systems
+        if (platform.system() != "Windows"):
+            with open(os.path.join(self.iso3166_updates_module_path, self.iso3166_updates_json_filename)) as iso3166_updates_json:
+                self.all = json.load(iso3166_updates_json)
+        else:
+            with open(os.path.join(self.iso3166_updates_module_path, self.iso3166_updates_json_filename), encoding="utf-8") as iso3166_updates_json:
+                self.all = json.loads(iso3166_updates_json.read())
 
         #make all updates object subscriptable using Map class
         # self.all = Map(self.all)
@@ -114,14 +121,14 @@ class ISO3166_Updates():
                 if (len(self.country_code[code]) == 3):
                     temp_alpha_code = self.convert_to_alpha2(self.country_code[code])
                     if (temp_alpha_code is None and self.country_code[code].isdigit()):
-                        raise ValueError("Invalid ISO 3166-1 numeric country code input, cannot convert into corresponding alpha-2 code: {}.".format(self.country_code[code]))
+                        raise ValueError(f"Invalid ISO 3166-1 numeric country code input, cannot convert into corresponding alpha-2 code: {self.country_code[code]}.")
                     if (temp_alpha_code is None):
-                        raise ValueError("Invalid ISO 3166-1 alpha-3 country code input, cannot convert into corresponding alpha-2 code: {}.".format(self.country_code[code]))
+                        raise ValueError(f"Invalid ISO 3166-1 alpha-3 country code input, cannot convert into corresponding alpha-2 code: {self.country_code[code]}.")
                     self.country_code[code] = temp_alpha_code
 
                 #raise error if invalid alpha-2 code input
                 if not (self.country_code[code] in sorted(list(iso3166.countries_by_alpha2.keys()))) or not (self.country_code[code] in list(self.all.keys())):
-                    raise ValueError("Invalid alpha-2 country code input: {}.".format(self.country_code[code]))
+                    raise ValueError(f"Invalid alpha-2 country code input: {self.country_code[code]}.")
                 
                 #create temporary updates data object
                 temp_updates_data[self.country_code[code]] = {}
@@ -181,7 +188,7 @@ class ISO3166_Updates():
         #raise type error if input isn't a string
         if not (isinstance(alpha_code, str)):
             raise TypeError('Input parameter {} is not of correct datatype string, got {}.'.format(alpha_code, type(alpha_code)))       
-        
+    
         #stripping input of whitespace, uppercasing, separating multiple alpha codes, if applicable and sort list
         alpha_code = alpha_code.strip().upper()
         alpha_code = sorted(alpha_code.replace(' ', '').split(','))
@@ -196,17 +203,17 @@ class ISO3166_Updates():
             if (len(alpha_code[code]) == 3):
                 temp_alpha_code = self.convert_to_alpha2(alpha_code[code])
                 if (temp_alpha_code is None and alpha_code[code].isdigit()):
-                    raise ValueError("Invalid ISO 3166-1 numeric country code input, cannot convert into corresponding alpha-2 code: {}.".format(alpha_code[code]))
+                    raise ValueError(f"Invalid ISO 3166-1 numeric country code input, cannot convert into corresponding alpha-2 code: {alpha_code[code]}.")
                 if (temp_alpha_code is None):
-                    raise ValueError("Invalid ISO 3166-1 alpha-3 country code input, cannot convert into corresponding alpha-2 code: {}.".format(alpha_code[code]))
+                    raise ValueError(f"Invalid ISO 3166-1 alpha-3 country code input, cannot convert into corresponding alpha-2 code: {alpha_code[code]}.")
                 alpha_code[code] = temp_alpha_code
                
             #raise error if invalid alpha-2 code input or country data not imported on object instantiation 
             if not (alpha_code[code] in sorted(list(iso3166.countries_by_alpha2.keys()))):
-                raise ValueError("Invalid alpha-2 code input: {}.".format(alpha_code[code]))
+                raise ValueError(f"Invalid alpha-2 code input: {alpha_code[code]}.")
             if not (alpha_code[code] in list(self.all.keys())):
-                raise ValueError("Valid alpha-2 code input {}, but country data not available as 'country_code' parameter was input on class instantiation,"
-                                " try creating another instance of the class with no initial input parameter value, e.g iso = ISO3166_Updates().".format(alpha_code[code]))
+                raise ValueError(f"Valid alpha-2 code input {alpha_code[code]}, but country data not available as 'country_code' parameter was input on class instantiation,"
+                                " try creating another instance of the class with no initial input parameter value, e.g iso = ISO3166_Updates().")
 
             #add each country update to country object
             country_updates_dict[alpha_code[code]] = []
@@ -217,8 +224,11 @@ class ISO3166_Updates():
                     if (isinstance(country_updates_dict[alpha_code[code]][update][key], dict)):
                         country_updates_dict[alpha_code[code]][update][key] = Map(country_updates_dict[alpha_code[code]][update][key])
             
-            #convert into instance of Map class so keys can be accessed via dot notation
-            country_updates_dict = Map(country_updates_dict)
+        #keys in updates dict needs sorted in the case of alpha-3 and or numeric codes being input
+        country_updates_dict = dict(sorted(country_updates_dict.items()))
+
+        #convert into instance of Map class so keys can be accessed via dot notation
+        country_updates_dict = Map(country_updates_dict)
 
         return country_updates_dict 
     
@@ -244,7 +254,7 @@ class ISO3166_Updates():
             input_year = input_year.replace(' ', '').split(',')
         else:
             #raise error if invalid data type for year parameter
-            raise TypeError("Invalid data type for year parameter, expected str, got {}.".format(type(input_year)))
+            raise TypeError(f"Invalid data type for year parameter, expected str, got {type(input_year)}.")
         
         country_output_dict = {}
 
@@ -292,7 +302,7 @@ class ISO3166_Updates():
             if (year_ == '<' or year_ == '>' or year_ == '-'):
                 continue
             if not (bool(re.match(r"^1[0-9][0-9][0-9]$|^2[0-9][0-9][0-9]$", year_))):
-                raise ValueError("Invalid year input: {}.".format(year_))
+                raise ValueError(f"Invalid year input: {year_}.")
 
         #temp object to not override original updates object
         country_output_dict = {}
@@ -359,9 +369,11 @@ class ISO3166_Updates():
         :country_output_dict: dict
             output dictionary of sought ISO 3166 updates for input months/month range.
         """
-        #if no input month parameter specified then return error message
-        if (input_month == ""):
-            raise ValueError("The month input parameter cannot be empty.")
+        # #if no input month parameter specified then return error message
+        # if (input_month == ""):
+        #     raise ValueError("The month input parameter cannot be empty.")
+
+        #add int functionality
 
         #return error if invalid month value type input, skip if month range input
         if not ('-' in input_month):
@@ -422,7 +434,7 @@ class ISO3166_Updates():
 
         return country_output_dict
         
-    def convert_to_alpha2(self, alpha_code: str):
+    def convert_to_alpha2(self, alpha_code: str) -> str:
         """ 
         Auxillary function that converts an ISO 3166 country's 3 letter alpha-3 
         or numeric code into its 2 letter alpha-2 counterpart. 

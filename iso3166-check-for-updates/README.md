@@ -2,7 +2,7 @@
 
 <!-- [![check-for-updates](https://github.com/amckenna41/iso3166-updates/workflows/Check%20for%20ISO3166%20Updates/badge.svg)](https://github.com/amckenna41/iso3166-updates/actions?query=workflowCheck%20for%20ISO3166%20Updates) -->
 
-This custom-built microservice webapp is periodically initialised and called (usually every 3-6 months) automatically using a CRON scheduler. The app uses the `iso3166-updates` Python software to pull all the latest updates from all of the ISO 3166-2 data sources to check for the latest updates within a certain period e.g the past 6-12 months (this month range is used as the ISO usually publishes their updates at the end of the year with occasional mid-year updates). The functionality compares the generated output with that of the updates json in the current version of the `iso3166-updates` software. Ultimately, this function ensures that the software and associated APIs are up-to-date with the latest ISO 3166-2 information for all countries/territories/subdivisions etc. The app is built using a custom Docker container that is run on the serverless GCP Cloud Run service. 
+This custom-built microservice webapp is periodically initialised and called automatically using a CRON scheduler. The app uses the `iso3166-updates` Python software to pull all the latest updates from all of the ISO 3166-2 data sources to check for the latest updates within a certain period e.g the past 6-12 months (this month range is used as the ISO usually publishes their updates at the end of the year with occasional mid-year updates). The functionality compares the generated output with that of the updates json in the current version of the `iso3166-updates` software. Ultimately, this function ensures that the software and associated APIs are up-to-date with the latest ISO 3166-2 information for all countries/territories/subdivisions etc. The app is built using a custom Docker container that is run on the serverless GCP Cloud Run service. 
 
 There is also functionality implemented that automatically tabulates and formats all of the required updates in a GitHub Issue on the [iso3166-updates](https://github.com/amckenna41/iso3166-updates), [iso3166-2](https://github.com/amckenna41/iso3166-2) and [iso3166-flag-icons](https://github.com/amckenna41/iso3166-flag-icons) repositories. Each of these repos require the latest and most accurate ISO 3166-2 data. The creation of these Issues will notify the repository owner that changes are outstanding that need to be implemented into the JSONs of the [iso3166-updates](https://github.com/amckenna41/iso3166-updates), [iso3166-2](https://github.com/amckenna41/iso3166-2) and [iso3166-flag-icons](https://github.com/amckenna41/iso3166-flag-icons) repos. 
 
@@ -14,13 +14,13 @@ GCP Cloud Architecture
 ----------------------
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166-updates-api/gcp_architecture.png?raw=true" alt="gcp_arch" height="500" width="750"/>
+  <img src="https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166-check-for-updates/gcp_architecture.png?raw=true" alt="gcp_arch" height="500" width="750"/>
 </p>
 
 Requirements
 ------------
-* [python][python] >= 3.8
-* [iso3166-updates][iso3166-updates] >= 1.3.0
+* [python][python] >= 3.9
+* [iso3166-updates][iso3166-updates] >= 1.7.0
 * [pandas][pandas] >= 1.4.3
 * [numpy][numpy] >= 1.23.2
 * [requests][requests] >= 2.28.1
@@ -61,6 +61,8 @@ gcloud beta run deploy {APP_NAME} --image gcr.io/iso3166-updates/{CONTAINER_NAME
 #GITHUB_API_TOKEN: GitHub API token for creating an Issue on the repos.
 #MONTH_RANGE: number of months from script execution to get updates from. 
 #CREATE_ISSUE: set to 1 to create Issues on the GitHub repos outlining the latest ISO 3166 updates.
+#EXPORT: set to 1 to export latest ISO 3166 updates JSON to storage bucket.
+#EXPORT_CSV: set to 1 to export latest ISO 3166 updates in CSV format to storage bucket.
 ```
 
 **Run Cloud Run application/script:**
@@ -78,7 +80,7 @@ gcloud run services delete {APP_NAME} --region {REGION_NAME}
 docker build -t {CONTAINER_NAME} . && gcloud builds submit --tag gcr.io/iso3166-updates/{CONTAINER_NAME} && \
   yes | gcloud beta run deploy {APP_NAME} --image gcr.io/iso3166-updates/{CONTAINER_NAME} \
     --region {REGION_NAME} --platform managed --memory 1024Mi --timeout 2700 --service-account {SERVICE_ACCOUNT} \
-    --update-env-vars GITHUB_OWNER="",GITHUB_REPOS="",GITHUB_API_TOKEN="",MONTH_RANGE="",CREATE_ISSUE=1 && \
+    --update-env-vars GITHUB_OWNER="",GITHUB_REPOS="",GITHUB_API_TOKEN="",MONTH_RANGE="",CREATE_ISSUE=0,EXPORT=1,EXPORT_CSV=1 && \
     curl "$(gcloud run services describe {APP_NAME} --region {REGION_NAME} --format 'value(status.url)')"
 
 gcloud run services delete {APP_NAME} --region {REGION_NAME}

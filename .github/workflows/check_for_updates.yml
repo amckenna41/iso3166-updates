@@ -45,6 +45,6 @@ jobs:
           --region ${{ secrets.GCP_REGION }} --platform managed --memory 1024M --timeout 2700 --allow-unauthenticated \
           --service-account ${{ secrets.GCP_SA_EMAIL}} --update-env-vars BUCKET_NAME=${{ secrets.GCP_BUCKET_NAME }},BLOB_NAME=${{ secrets.GCP_BLOB_NAME }}, \
             ARCHIVE_FOLDER=${{ secrets.GCP_ARCHIVE_FOLDER }},GITHUB_OWNER=${{ secrets.REPO_OWNER }},GITHUB_REPOS=${{ secrets.REPOs }},\
-            GITHUB_API_TOKEN=${{ secrets.REPO_API_TOKEN }},MONTH_RANGE=12,CREATE_ISSUE=1,EXPORT=1
+            GITHUB_API_TOKEN=${{ secrets.REPO_API_TOKEN }},MONTH_RANGE=12,CREATE_ISSUE=1,EXPORT=1,EXPORT_CSV=1
           curl $(gcloud run services describe ${{ secrets.GCP_CLOUD_RUN_NAME }} --platform managed --region ${{ secrets.GCP_REGION }} --format 'value(status.url)')
           gcloud run services delete ${{ secrets.GCP_CLOUD_RUN_NAME }}

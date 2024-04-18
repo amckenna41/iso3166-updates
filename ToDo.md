@@ -279,19 +279,19 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Rerun script in notebook - export and create_issue = 1.
 - [X] Updates that already have OBP in their Edition/Newsletter - missing hyphen in between - rerun script.
 - [X] Change all references of ISO 3166-2 changes to ISO 3166 chabges.
-- [ ] Add github release.
+- [X] Add github release.
 - [X] Extract modification remarks part 1, 2 and 3.
 - [ ] Don't need two change/updates attributes in output object.
 - [X] Update readme with new column/attribute.
 - [X] Only add remark if update has "modification of remarks in the text".
 - [X] Mention in readme that pulling in from wiki as well, as it has some of the older updates, ones from earlier newsletters (e.g IM).
-- [ ] Change Descripton of change ... to just Descripton of change.
+- [X] Change Descripton of change ... to just Descripton of change.
 - [X] Append remark to only latest updates entry. 
 - [X] When adding remark, lowercase the first letter of remark.
 - [X] Mention # of tests and test cases in test readme (20 + 3 skipped).
 - [X] Update table of contents.
 - [X] Docs on readthedocs, readthedocs badge - [![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](http://ansicolortags.readthedocs.io/?badge=latest) 
-- [ ] Add directories subsection to main readme and Table of contents.
+- [X] Add directories subsection to main readme and Table of contents.
 - [X] Update class to be in the form from iso3166_updates import *, all_updates = ISO3166_Updates(), ad_updates = ISO3166_Updates("AD") etc.
 - [ ] Add error not found response section.
 - [X] Update check-for-updates cloud func as gcp storage no longer required.
@@ -300,7 +300,7 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [ ] Review demo, missing updates already in object being returned.
 - [ ] Review demo, check remarks are being appended.
 - [X] Switch to pyproject.toml - update workflows.
-- [ ] Update tests, API and documentation with new class import functionality.
+- [X] Update tests, API and documentation with new class import functionality.
 - [X] Update worklfow to account for failure of test workflow.
 - [ ] Refer to iso3166-2 docs to help with docs for this.
 - [X] Add license section to iso3166-updates docs main page.
@@ -317,23 +317,40 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Update check-for-updates script with get_all script.
 - [X] In scripts, raise error if invalid year rather than skipping.
 - [ ] In check-for-updates, programmatically get date that object was last updated in repo.
-- [ ] Keep export functionality on check-for-updates. Set to true if wanting to export to bucket. Env vars not explicitly required, set create_issue=0 by default.
+- [X] Keep export functionality on check-for-updates. Set to true if wanting to export to bucket. Env vars not explicitly required, set create_issue=0 by default.
 - [X] For year range function, if lesser number is on right or left of '-', it should still return the year range updates.
 - [X] Update medium article with new endpoint updates etc.
-- [ ] Add bucket details back to check-for-updates for export functionality.
+- [X] Add bucket details back to check-for-updates for export functionality.
 - [X] Include return type for parameter typed functions.
 - [X] Add months functionality to software?
 - [X] In months functionality, add support for month range e.g /months/12-36, updates published over the past 12-36 months.
-- [ ] In software, months function can accept int or str.
-- [ ] Use github API to programtically print out when the object was last updated on the repo: https://stackoverflow.com/questions/50194241/get-when-the-file-was-last-updated-from-a-github-repository. Mention in readme.
-- [ ] In build_test workflow, split up build, test, linting into seperate sections. But need to install the required dependancies on each job as they are seperate and run on different machines. Combine build and test into one workflow?
-- [ ] Double check artifacts are being exported in workflow file.
-- [ ] Mention number of existing updates.
+- [X] In software, months function can accept int or str.
+- [X] Use github API to programtically print out when the object was last updated on the repo: https://stackoverflow.com/questions/50194241/get-when-the-file-was-last-updated-from-a-github-repository. Mention in readme.
+- [X] In build_test workflow, split up build, test, linting into seperate sections. But need to install the required dependancies on each job as they are seperate and run on different machines. Combine build and test into one workflow?
+- [X] Double check artifacts are being exported in workflow file.
+- [X] Mention number of existing updates.
 - [X] Reword sections in api.rst and usage.rst.
 - [X] Split up years sections in usage.rst.
-- [ ] Switch string formatting to f string.
-- [ ] In check-for-updates, export_to_bucket and create_github_issue functions should return 1 or 0, and then this return value should be used to print out 
-the adaquate success/failure message. Script shouldn't fail if either of the funcs fail?
+- [X] Switch string formatting to f string.
+- [X] In check-for-updates, export_to_bucket and create_github_issue functions should return 1 or 0, and then this return value should be used to print out the adaquate success/failure message. Script shouldn't fail if either of the funcs fail?
+- [X] Blob name not explicityl required for check-for-updates
+- [X] Export to bucket, regardless if updates found, if blob doesnt exist then export.
+- [X] In check-for-updates, have a EXPORT_CSV env var that exports the object to csv as well, to the same bucekt.
+- [X] Read over get_all script.
+- [X] In get_all, if export=True, have a message saying successfull export to folder after time elapsed message.
+- [X] In check_for_updates.py, if error when exporting to bucket, mention bucket_name and blob_name in output message.
+- [X] In tests, replace .format() with f strings.
+- [X] In check-for-updates, only date range object being exported, need the whole one to be.
+- [X] In get_all script, if alpha2 is invalid, raise error rather than just ignoring it.
+- [X] In check-for-updates, for create_issue and export env vars, need to convert to an int as str representation of "0" and "1" both equate to True.
+- [X] Unit test checking that no update entries have an empty "Code/Subdivision change".
+- [X] Expected 249 update objects but got 245, are ones with no updates ({}) not being exported as well. Check repo object.
+- [X] When accessing all_updates, think it might not be returning keys in alphabetical order.
+- [ ] Skip all months related test cases.
+- [ ] Update gcp_arch image in check-for-updates readme.
+- [X] For get_all script tests, input a variety of alpha codes.
+- [X] Add platform module functionality to test_get_all script so tests can be run on windows.
+- [ ] Read over docs.
 
 Future addtions 
-- [ ] Programmatically push latest version of software and object to PyPI - can do this in specific workflow.
+- [ ] Programmatically push latest version of software and object to PyPI - can do this in specific workflow. Pull in current version of object from repo/software, compare against latest exported object, programtically push latest object to iso3166_updates/iso3166-updates.json in repo, function should take in arguments including new software version and commit message and then use GitHub API to start the build_test workflows. https://stackoverflow.com/questions/74100867/run-github-workflow-with-python

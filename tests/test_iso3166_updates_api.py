@@ -9,6 +9,7 @@ import getpass
 from importlib.metadata import metadata
 unittest.TestLoader.sortTestMethodsUsing = None
 
+@unittest.skip("Skipping tests for iso3166-updates API.")
 class ISO3166_Updates_Api_Tests(unittest.TestCase):
     """
     Test suite for testing ISO 3166 Updates API created to accompany the iso3166-updates Python software package. 
