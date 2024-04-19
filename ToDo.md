@@ -305,7 +305,7 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [ ] Refer to iso3166-2 docs to help with docs for this.
 - [X] Add license section to iso3166-updates docs main page.
 - [X] Raise custom error if trying to access alpha code that exists but isnt in object after custom parameter input to class 
-- [ ] Add more detail to examples in api.rst
+- [X] Add more detail to examples in api.rst
 - [ ] Add backtotop button for docs.
 - [X] If Code/Subdivision change == "" then switch data in Description of change in newsletter to Code/Subdivison change attribute. 
 - [X] Implement alpha-3 and numeric support for get_all script.
@@ -316,7 +316,7 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Double check spelling using code-spell-checker extension
 - [X] Update check-for-updates script with get_all script.
 - [X] In scripts, raise error if invalid year rather than skipping.
-- [ ] In check-for-updates, programmatically get date that object was last updated in repo.
+- [X] In check-for-updates, programmatically get date that object was last updated in repo.
 - [X] Keep export functionality on check-for-updates. Set to true if wanting to export to bucket. Env vars not explicitly required, set create_issue=0 by default.
 - [X] For year range function, if lesser number is on right or left of '-', it should still return the year range updates.
 - [X] Update medium article with new endpoint updates etc.
@@ -346,11 +346,12 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Unit test checking that no update entries have an empty "Code/Subdivision change".
 - [X] Expected 249 update objects but got 245, are ones with no updates ({}) not being exported as well. Check repo object.
 - [X] When accessing all_updates, think it might not be returning keys in alphabetical order.
-- [ ] Skip all months related test cases.
-- [ ] Update gcp_arch image in check-for-updates readme.
+- [X] Skip all months related test cases.
+- [X] Update gcp_arch image in check-for-updates readme.
 - [X] For get_all script tests, input a variety of alpha codes.
 - [X] Add platform module functionality to test_get_all script so tests can be run on windows.
-- [ ] Read over docs.
+- [X] Read over docs.
+- [X] If getting all codes in get_all delete nested dicts else dont.
 
 Future addtions 
 - [ ] Programmatically push latest version of software and object to PyPI - can do this in specific workflow. Pull in current version of object from repo/software, compare against latest exported object, programtically push latest object to iso3166_updates/iso3166-updates.json in repo, function should take in arguments including new software version and commit message and then use GitHub API to start the build_test workflows. https://stackoverflow.com/questions/74100867/run-github-workflow-with-python

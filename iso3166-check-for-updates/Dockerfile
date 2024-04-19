@@ -10,7 +10,7 @@ RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-ke
 # Update list of available packages
 RUN apt-get update -y
 
-# Install latest release of Chrome WebDriver (114.0.5735.90), unzip and create symlink to executable
+# Install latest release of Chrome WebDriver, unzip and create symlink to executable
 RUN CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
     mkdir -p /opt/chromedriver-$CHROMEDRIVER_VERSION && \
     curl -sS -o /tmp/chromedriver_linux64.zip http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip && \

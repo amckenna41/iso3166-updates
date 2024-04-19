@@ -37,7 +37,7 @@ The list of ISO 3166 updates was last updated on **March 2024**. A log of the la
 
 .. |updates_md_location_link| raw:: html
 
-   <a href="https://github.com/amckenna41/iso3166-updates/blob/main/UPDATES.md" target="_blank">UPDATES.md</a>
+   <a href="https://github.com/amckenna41/iso3166-updates/blob/main/UPDATES.MD" target="_blank">UPDATES.md</a>
 
 License
 =======

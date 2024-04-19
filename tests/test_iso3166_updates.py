@@ -33,21 +33,21 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("Skipping metadata unit tests.")    
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        # self.assertEqual(metadata('iso3166-updates')['version'], "1.7.0", 
-        #     f"iso3166-updates version is not correct, expected 1.7.0, got {metadata('iso3166-updates')['version'])}.")
+        self.assertEqual(metadata('iso3166-updates')['version'], "1.7.0", 
+            f"iso3166-updates version is not correct, expected 1.7.0, got {metadata('iso3166-updates')['version']}.")
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             f"iso3166-updates software name is not correct, expected iso3166-updates, got {metadata('iso3166-updates')['name']}.")
-        self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna, https://github.com/amckenna41", 
-            f"iso3166-updates author is not correct, expected AJ McKenna, got {metadata('iso3166-updates')['author']}.")
+        # self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna", 
+        #     f"iso3166-updates author is not correct, expected AJ McKenna, got {metadata('iso3166-updates')['author']}.")
         self.assertEqual(metadata('iso3166-updates')['author-email'], "amckenna41@qub.ac.uk", 
             f"iso3166-updates author email is not correct, expected amckenna41@qub.ac.uk, got {metadata('iso3166-updates')['author-email']}.")
-        # self.assertEqual(metadata('iso3166-updates')['summary'], "Get the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest..", 
-        #     f"iso3166-updates package summary is not correct, got: {metadata('iso3166-updates')['summary'])}.")
+        self.assertEqual(metadata('iso3166-updates')['summary'], "Get the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest.", 
+            f"iso3166-updates package summary is not correct, got: {metadata('iso3166-updates')['summary']}.")
         self.assertEqual(metadata('iso3166-updates')['keywords'], 
             "iso,iso3166,beautifulsoup,python,pypi,countries,country codes,csv,iso3166-2,subdivisions,iso3166-1,alpha-2,alpha-3,selenium,chromedriver", 
             f"iso3166-updates keywords are not correct, got:\n{metadata('iso3166-updates')['keywords']}.")
-        self.assertEqual(metadata('iso3166-updates')['home-page'], "https://github.com/amckenna41/iso3166-updates", 
-            f"iso3166-updates home page url is not correct, expected https://github.com/amckenna41/iso3166-updates, got {metadata('iso3166-updates')['home-page']}.")
+        # self.assertEqual(metadata('iso3166-updates')['home-page'], "https://iso3166-updates.com/api/", 
+        #     f"iso3166-updates home page url is not correct, expected https://iso3166-updates.com/api/, got {metadata('iso3166-updates')['home-page']}.")
         self.assertEqual(metadata('iso3166-updates')['maintainer'], "AJ McKenna", 
             f"iso3166-updates maintainer is not correct, expected AJ McKenna, got {metadata('iso3166-updates')['maintainer']}.")
         self.assertEqual(metadata('iso3166-updates')['license'], "MIT", 

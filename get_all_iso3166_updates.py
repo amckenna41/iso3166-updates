@@ -203,7 +203,7 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
             return iso3166.countries_by_alpha3[alpha_code].alpha2
 
     #split multiple alpha codes into list, remove any whitespace and empty strings
-    alpha_codes = alpha_codes.replace(' ', '').split(',')
+    alpha_codes = str(alpha_codes).replace(' ', '').split(',')
     alpha_codes = list(filter(None, alpha_codes))
 
     #var to keep track of original alpha-2 and year parameter inputs
@@ -211,7 +211,7 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
 
     #parse input alpha_codes parameter, use all alpha-2 codes if parameter not set
     if (alpha_codes == []):
-        #use list of all 2 letter alpha-2 codes, according to ISO 3166-1 
+        #use list of all 2 letter alpha-2 codes, according to ISO 3166-1, set bool to true
         alpha_codes = sorted(list(iso3166.countries_by_alpha2.keys()))
     else:
         #iterate over all codes, checking they're valid, convert alpha-3 to alpha-2 if applicable
@@ -450,10 +450,10 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
     #auxillary function to remove all empty nested dicts within object
     def _del(_d: dict):
         return {a:_del(b) if isinstance(b, dict) else b for a, b in _d.items() if b and not a.startswith('_')}
-
+    
     #remove any empty nested updates dict if gathering all country updates, keep empty dicts if list of alpha-2 codes input 
-    # if (year != [] and input_alpha_codes == []):
-    #     all_iso3166_updates = _del(all_iso3166_updates)
+    if (year != [] and input_alpha_codes == []):
+        all_iso3166_updates = _del(all_iso3166_updates)
 
     #temp filename export var
     temp_filename = os.path.splitext(export_filename)[0]
@@ -493,7 +493,7 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
             #if verbose flag set, print export completion message
             if (verbose):
                 print(f"\nAll ISO 3166 updates exported to folder {export_folder}.")
-
+    
     #export all ISO 3166 updates to csv, store in export folder dir
     if (export_csv):
         #checking if all_iso3166_updates object isn't empty

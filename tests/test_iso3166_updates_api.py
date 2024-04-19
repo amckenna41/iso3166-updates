@@ -9,7 +9,6 @@ import getpass
 from importlib.metadata import metadata
 unittest.TestLoader.sortTestMethodsUsing = None
 
-@unittest.skip("Skipping tests for iso3166-updates API.")
 class ISO3166_Updates_Api_Tests(unittest.TestCase):
     """
     Test suite for testing ISO 3166 Updates API created to accompany the iso3166-updates Python software package. 
@@ -42,8 +41,8 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
     """     
     def setUp(self):
         """ Initialise test variables including base urls for API. """
-        self.base_url = "https://iso3166-updates-frontend-amckenna41.vercel.app/api"
-        # self.base_url = "https://iso3166-updates.com/api" 
+        # self.base_url = "https://iso3166-updates-frontend-amckenna41-amckenna41s-projects.vercel.app/api"
+        self.base_url = "https://iso3166-updates.com/api" 
 
         self.__version__ = metadata('iso3166_updates')['version']
         self.user_agent_header = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(self.__version__,
@@ -55,7 +54,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.month_base_url = self.base_url + '/months/'
 
         #correct column/key names for dict returned from api
-        self.expected_output_columns = ["Code/Subdivision Change", "Date Issued", "Description of Change in Newsletter", "Edition/Newsletter"]
+        self.expected_output_columns = ["Code/Subdivision Change", "Date Issued", "Description of Change", "Edition/Newsletter"]
 
         #turn off tqdm progress bar functionality when running tests
         os.environ["TQDM_DISABLE"] = "1"
@@ -103,15 +102,15 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         
         #expected test outputs
         test_alpha_ad_expected1 = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Update List Source.",
                 "Date Issued": "2015-11-27",
-                "Description of Change in Newsletter": "Update List Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:AD)."
                 }
         test_alpha_ad_expected2 = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Update List Source.",
                 "Date Issued": "2014-11-03",
-                "Description of Change in Newsletter": "Update List Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:AD)."
                 }
 
@@ -128,15 +127,15 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         
         #expected test outputs
         test_alpha_bo_expected1 = {
-                "Code/Subdivision Change": "",
-                "Date Issued": "2014-12-18",
-                "Description of Change in Newsletter": "Alignment of the English and French short names upper and lower case with UNTERM.",
+                "Code/Subdivision Change": "Change of short name upper case: replace the parentheses with a coma.",
+                "Date Issued": "2024-02-29",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BO)."
                 }
         test_alpha_bo_expected2 = {
-                "Code/Subdivision Change": "",
-                "Date Issued": "2014-11-03",
-                "Description of Change in Newsletter": "Update List Source.",
+                "Code/Subdivision Change": "Alignment of the English and French short names upper and lower case with UNTERM.",
+                "Date Issued": "2014-12-18",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BO)."
                 }
         
@@ -145,7 +144,7 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(list(test_request_bo.keys()), [test_alpha_bo], "Expected parent key does not match output, got {}.".format(list(test_request_bo.keys())))
         for row in test_request_bo[test_alpha_bo]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(row.keys())))
-        self.assertEqual(len(test_request_bo[test_alpha_bo]), 5, "Expected there to be 5 elements in output object, got {}.".format(len(test_request_bo[test_alpha_bo])))
+        self.assertEqual(len(test_request_bo[test_alpha_bo]), 6, "Expected there to be 6 elements in output object, got {}.".format(len(test_request_bo[test_alpha_bo])))
         self.assertEqual(test_request_bo[test_alpha_bo][0], test_alpha_bo_expected1, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_bo[test_alpha_bo][1], test_alpha_bo_expected2, "Expected and observed outputs do not match.")
 #3.)
@@ -153,15 +152,15 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 
         #expected test outputs
         test_alpha_co_expected1 = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Addition of local variation of CO-DC, CO-SAP, CO-VAC; update list source.",
                 "Date Issued": "2016-11-15",
-                "Description of Change in Newsletter": "Addition of local variation of CO-DC, CO-SAP, CO-VAC; update list source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CO)."
                 }
         test_alpha_co_expected2 = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Change of name of CO-DC.",
                 "Date Issued": "2004-03-08",
-                "Description of Change in Newsletter": "Change of name of CO-DC.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Newsletter I-6 (https://web.archive.org/web/20120112041245/http://www.iso.org/iso/iso_3166-2_newsletter_i-6_en.pdf)."
                 }       
 
@@ -180,13 +179,13 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_alpha_bf_expected1 = {
                 "Code/Subdivision Change": "Spelling change: BF-TUI Tui -> Tuy.",
                 "Date Issued": "2016-11-15",
-                "Description of Change in Newsletter": "Change of spelling of BF-TUI; update list source.",
+                "Description of Change": "Change of spelling of BF-TUI; update list source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BF)."
                 }
         test_alpha_bf_expected2 = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Correction of the short name lowercase in French.",
                 "Date Issued": "2014-04-15",
-                "Description of Change in Newsletter": "Correction of the short name lowercase in French.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BF)."
                 }         
 
@@ -208,19 +207,19 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_alpha_bn_expected = {
                 "Code/Subdivision Change": "Spelling change: BN-BM Brunei-Muara -> Brunei dan Muara (ms).",
                 "Date Issued": "2019-11-22",
-                "Description of Change in Newsletter": "Change of subdivision name of BN-BM; Update List Source.",
+                "Description of Change": "Change of subdivision name of BN-BM; Update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BN)."
                 }  
         test_alpha_cu_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Update List Source.",
                 "Date Issued": "2015-11-27",
-                "Description of Change in Newsletter": "Update List Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CU)."
                 }  
         test_alpha_dj_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Correction of the Code Source.",
                 "Date Issued": "2020-11-24",
-                "Description of Change in Newsletter": "Correction of the Code Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:DJ)."
                 }     
 
@@ -275,27 +274,27 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 
         #expected test outputs
         test_au_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Update List Source; update Code Source.",
                 "Date Issued": "2016-11-15",
-                "Description of Change in Newsletter": "Update List Source; update Code Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:AU)."
                 }
         test_dz_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Change of spelling of DZ-28; Update list source.",
                 "Date Issued": "2016-11-15",
-                "Description of Change in Newsletter": "Change of spelling of DZ-28; Update list source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:DZ)."
                 }
         test_mv_expected = {
                 "Code/Subdivision Change": "Spelling change: MV-05.",
                 "Date Issued": "2016-11-15",
-                "Description of Change in Newsletter": "Change of spelling of MV-05.",
+                "Description of Change": "Change of spelling of MV-05.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:MV)."
                 }
         test_pw_expected = {
                 "Code/Subdivision Change": "Name changed: PW-050 Hatobohei -> Hatohobei.",
                 "Date Issued": "2016-11-15",
-                "Description of Change in Newsletter": "Change of spelling of PW-050 in eng, pau; update list source.",
+                "Description of Change": "Change of spelling of PW-050 in eng, pau; update list source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:PW)."
                 }
 
@@ -324,25 +323,25 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_ag_expected = {
                 "Code/Subdivision Change": "Subdivisions added: 6 parishes, 1 dependency.",
                 "Date Issued": "2007-04-17",
-                "Description of Change in Newsletter": "Addition of the administrative subdivisions and of their code elements.",
+                "Description of Change": "Addition of the administrative subdivisions and of their code elements.",
                 "Edition/Newsletter": "Newsletter I-8 (https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf)."
                 }
         test_bh_expected = {
                 "Code/Subdivision Change": "Subdivision layout: 12 regions (see below) -> 5 governorates.",
                 "Date Issued": "2007-04-17",
-                "Description of Change in Newsletter": "Modification of the administrative structure.",
+                "Description of Change": "Modification of the administrative structure.",
                 "Edition/Newsletter": "Newsletter I-8 (https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf)."
                 }
         test_gd_expected = {
                 "Code/Subdivision Change": "Subdivisions added: 6 parishes, 1 dependency.",
                 "Date Issued": "2007-04-17",
-                "Description of Change in Newsletter": "Addition of the administrative subdivisions and of their code elements.",
+                "Description of Change": "Addition of the administrative subdivisions and of their code elements.",
                 "Edition/Newsletter": "Newsletter I-8 (https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf)."
                 }
         test_sm_expected = {
                 "Code/Subdivision Change": "Subdivisions added: 9 municipalities.",
                 "Date Issued": "2007-04-17",
-                "Description of Change in Newsletter": "Addition of the administrative subdivisions and of their code elements.",
+                "Description of Change": "Addition of the administrative subdivisions and of their code elements.",
                 "Edition/Newsletter": "Newsletter I-8 (https://web.archive.org/web/20120330105926/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf)."
                 }
 
@@ -371,25 +370,25 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_af_expected = {
                 "Code/Subdivision Change": "Subdivisions added: AF-DAY Dāykondī AF-PAN Panjshīr.",
                 "Date Issued": "2005-09-13",
-                "Description of Change in Newsletter": "Addition of 2 provinces. Update of list source.",
+                "Description of Change": "Addition of 2 provinces. Update of list source.",
                 "Edition/Newsletter": "Newsletter I-7 (https://web.archive.org/web/20081218103217/http://www.iso.org/iso/iso_3166-2_newsletter_i-7_en.pdf)."
                 }
         test_co_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Change of name of CO-DC.",
                 "Date Issued": "2004-03-08",
-                "Description of Change in Newsletter": "Change of name of CO-DC.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Newsletter I-6 (https://web.archive.org/web/20120112041245/http://www.iso.org/iso/iso_3166-2_newsletter_i-6_en.pdf)."
                 }
         test_kp_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Spelling correction in header of list source.",
                 "Date Issued": "2004-03-08",
-                "Description of Change in Newsletter": "Spelling correction in header of list source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Newsletter I-6 (https://web.archive.org/web/20120112041245/http://www.iso.org/iso/iso_3166-2_newsletter_i-6_en.pdf)."
                 }
         test_za_expected = {
                 "Code/Subdivision Change": "Codes: Gauteng: ZA-GP -> ZA-GT KwaZulu-Natal: ZA-ZN -> ZA-NL.",
                 "Date Issued": "2007-12-13",
-                "Description of Change in Newsletter": "Second edition of ISO 3166-2 (this change was not announced in a newsletter).",
+                "Description of Change": "Second edition of ISO 3166-2 (not announced in a newsletter).",
                 "Edition/Newsletter": "ISO 3166-2:2007 (http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718)."
                 }
 
@@ -420,41 +419,43 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_cl_expected = {
                 "Code/Subdivision Change": "Subdivisions added: CL-NB Ñuble.",
                 "Date Issued": "2018-11-26",
-                "Description of Change in Newsletter": "Addition of region CL-NB; Update List Source.",
+                "Description of Change": "Addition of region CL-NB; Update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CL)."
                 }
         test_gh_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Correction of the Code Source.",
                 "Date Issued": "2020-11-24",
-                "Description of Change in Newsletter": "Correction of the Code Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:GH)."
                 }
         test_sa_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Change of subdivision category from province to region.",
                 "Date Issued": "2018-11-26",
-                "Description of Change in Newsletter": "Change of subdivision category from province to region.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:SA)."
                 }
         test_ve_expected = {
-                "Code/Subdivision Change": "Subdivisions renamed: VE-X Vargas -> La Guaira.",
-                "Date Issued": "2020-11-24",
-                "Description of Change in Newsletter": "Change of subdivision name of VE-X; Update List Source; Correction of the Code Source.",
+                "Code/Subdivision Change": "Change of short name upper case: replace the parentheses with a coma.",
+                "Date Issued": "2024-02-29",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:VE)."
                 }
 
         #expected key outputs
-        test_year_gt_2017_keys = ['AF', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AS', 'AW', 'AX', 'BA', 'BD', 'BG', 'BI', 'BJ', 'BL', 'BM', 'BN', 'BQ', 'BR', 'BS', 'BT', 'BV', 'BW', 
-                                  'BY', 'CC', 'CD', 'CH', 'CI', 'CK', 'CL', 'CN', 'CV', 'CW', 'CX', 'CY', 'CZ', 'DE', 'DJ', 'DZ', 'EC', 'EE', 'EH', 'ER', 'ES', 'ET', 'FI', 
-                                  'FK', 'FO', 'FR', 'GB', 'GE', 'GF', 'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GW', 'GY', 'HK', 'HM', 'HU', 
-                                  'ID', 'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT', 'JE', 'JP', 'KG', 'KH', 'KM', 'KP', 'KR', 'KY', 'KZ', 'LA', 'LB', 'LK', 'LS', 'LT', 
-                                  'LV', 'LY', 'MA', 'MC', 'MD', 'ME', 'MF', 'MH', 'MK', 'ML', 'MM', 'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'NA', 
-                                  'NC', 'NF', 'NI', 'NL', 'NO', 'NP', 'NR', 'NU', 'NZ', 'PA', 'PE', 'PF', 'PH', 'PK', 'PL', 'PM', 'PN', 'PR', 'QA', 'RE', 'RS', 'RU', 'SA', 
-                                  'SB', 'SC', 'SD', 'SI', 'SJ', 'SL', 'SM', 'SS', 'ST', 'SX', 'SY', 'SZ', 'TC', 'TD', 'TF', 'TG', 'TH', 'TJ', 'TK', 'TL', 'TN', 'TR', 'TT', 
-                                  'TW', 'TZ', 'UA', 'UG', 'UM', 'UZ', 'VA', 'VE', 'VG', 'VI', 'VN', 'WF', 'YE', 'YT', 'ZA', 'ZM']
+        test_year_gt_2017_keys = ['AF', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AS', 'AW', 'AX', 'BA', 'BD', 'BG', 'BI', 'BJ', 'BL', 'BM', 'BN', 'BO', 
+                                  'BQ', 'BR', 'BS', 'BT', 'BV', 'BW', 'BY', 'CC', 'CD', 'CH', 'CI', 'CK', 'CL', 'CN', 'CV', 'CW', 'CX', 'CY', 
+                                  'CZ', 'DE', 'DJ', 'DZ', 'EC', 'EE', 'EH', 'ER', 'ES', 'ET', 'FI', 'FK', 'FM', 'FO', 'FR', 'GB', 'GE', 'GF', 
+                                  'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GW', 'GY', 'HK', 'HM', 'HU', 'ID', 
+                                  'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT', 'JE', 'JP', 'KG', 'KH', 'KM', 'KP', 'KR', 'KY', 'KZ', 'LA', 
+                                  'LB', 'LK', 'LS', 'LT', 'LV', 'LY', 'MA', 'MC', 'MD', 'ME', 'MF', 'MH', 'MK', 'ML', 'MM', 'MN', 'MO', 'MP', 
+                                  'MQ', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'NA', 'NC', 'NF', 'NI', 'NL', 'NO', 'NP', 'NR', 'NU', 'NZ', 
+                                  'PA', 'PE', 'PF', 'PH', 'PK', 'PL', 'PM', 'PN', 'PR', 'QA', 'RE', 'RS', 'RU', 'SA', 'SB', 'SC', 'SD', 'SI', 
+                                  'SJ', 'SL', 'SM', 'SS', 'ST', 'SX', 'SY', 'SZ', 'TC', 'TD', 'TF', 'TG', 'TH', 'TJ', 'TK', 'TL', 'TN', 'TR', 
+                                  'TT', 'TW', 'TZ', 'UA', 'UG', 'UM', 'UZ', 'VA', 'VE', 'VG', 'VI', 'VN', 'WF', 'YE', 'YT', 'ZA', 'ZM']
 
         self.assertIsInstance(test_request_year_gt_2017, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_request_year_gt_2017)))
         self.assertEqual(list(test_request_year_gt_2017), test_year_gt_2017_keys, "Expected keys of output dict from API do not match, got {}.".format(list(test_request_year_gt_2017)))
-        self.assertEqual(len(list(test_request_year_gt_2017)), 177, "Expected there to be 177 output objects from API call, got {}.".format(len(list(test_request_year_gt_2017))))
+        self.assertEqual(len(list(test_request_year_gt_2017)), 179, "Expected there to be 179 output objects from API call, got {}.".format(len(list(test_request_year_gt_2017))))
         for alpha2 in list(test_request_year_gt_2017):
                 for row in range(0, len(test_request_year_gt_2017[alpha2])):
                         self.assertEqual(list(test_request_year_gt_2017[alpha2][row].keys()), self.expected_output_columns, "Expected columns do not match output, got\n{}.".format(list(test_request_year_gt_2017[alpha2][row].keys())))
@@ -472,25 +473,25 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_ca_expected = {
                 "Code/Subdivision Change": "Subdivisions added: CA-NU Nunavut.",
                 "Date Issued": "2000-06-21",
-                "Description of Change in Newsletter": "Addition of 1 new territory.",
+                "Description of Change": "Addition of 1 new territory.",
                 "Edition/Newsletter": "Newsletter I-1 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_i-1_en.pdf)."
                 }
         test_it_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Correction of spelling mistakes of names of 2 provinces.",
                 "Date Issued": "2000-06-21",
-                "Description of Change in Newsletter": "Correction of spelling mistakes of names of 2 provinces.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Newsletter I-1 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_i-1_en.pdf)."
                 }
         test_ro_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Correction of spelling mistake of subdivision category in header.",
                 "Date Issued": "2000-06-21",
-                "Description of Change in Newsletter": "Correction of spelling mistake of subdivision category in header.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Newsletter I-1 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_i-1_en.pdf)."
                 }
         test_tr_expected = {
                 "Code/Subdivision Change": "Subdivisions added: TR-80 Osmaniye.",
                 "Date Issued": "2000-06-21",
-                "Description of Change in Newsletter": "Addition of 1 new province. Correction of 2 spelling errors.",
+                "Description of Change": "Addition of 1 new province. Correction of 2 spelling errors.",
                 "Edition/Newsletter": "Newsletter I-1 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_i-1_en.pdf)."
                 }
 
@@ -533,16 +534,16 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_es_2002 = ("ESP", "2002") #Spain 2002
         test_tr_2002 = ("TR", ">2002") #Turkey <2011
         test_ma_mh_nr_lt_2019 = ("MA,MHL,520", "<2019") #Morocco, Marshall Islands, Nauru <2019
-        test_ve_2021_2023 = ("VE", "2021-2024") #Venezuela 2021-2024
+        test_ve_2021_2023 = ("VE", "2021-2023") #Venezuela 2021-2023
         test_abc_2000 = ("abc", "2000") 
 #1.)
         test_ad_2015_request = requests.get(self.alpha_base_url + test_ad_2015[0] + "/year/" + test_ad_2015[1], headers=self.user_agent_header).json() #Andorra - 2015
         
         #expected test outputs
         test_ad_2015_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Update List Source.",
                 "Date Issued": "2015-11-27",
-                "Description of Change in Newsletter": "Update List Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:AD)."
                 }
 
@@ -562,9 +563,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 
         #expected test outputs
         test_es_2002_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Error correction: Regional subdivision indicator corrected in ES-PM.",
                 "Date Issued": "2002-12-10",
-                "Description of Change in Newsletter": "Error correction: Regional subdivision indicator corrected in ES-PM.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Newsletter I-4 (https://web.archive.org/web/20081218103210/http://www.iso.org/iso/iso_3166-2_newsletter_i-4_en.pdf)."
                 }
 
@@ -584,9 +585,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         
         #expected test outputs 
         test_tr_gt_2002_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Change of the short and full name.",
                 "Date Issued": "2022-07-11",
-                "Description of Change in Newsletter": "Change of the short and full name.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:TR)."
                 }
 
@@ -608,19 +609,19 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_ma_lt_2019_expected = {
                 "Code/Subdivision Change": "Spelling change: MA-05 Béni-Mellal-Khénifra -> Béni Mellal-Khénifra Location change: MA-ESM Es-Semara (EH) -> Es-Semara (EH-partial).",
                 "Date Issued": "2018-11-26",
-                "Description of Change in Newsletter": "Change of spelling of MA-05; Change of (EH) to (EH-partial) for MA-ESM; Correction of the romanization system label.",
+                "Description of Change": "Change of spelling of MA-05; Change of (EH) to (EH-partial) for MA-ESM; Correction of the romanization system label.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:MA)."
                 }
         test_mh_lt_2019_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Change of spelling of subdivision name in mah of MH‐ALK, MH‐ALL, MH‐ARN, MH‐EBO, MH‐JAB, MH‐JAL, MH‐KWA, MH‐LIB, MH‐MAJ, MH‐MAL, MH‐MEJ, MH‐MIL, MH‐NMK, MH‐NMU, MH‐RON, MH‐UTI, MH‐WTH, WTJ; in mah/eng of MH-ENI, MH-KIL; update List Source.",
                 "Date Issued": "2017-11-23",
-                "Description of Change in Newsletter": "Change of spelling of subdivision name in mah of MH‐ALK, MH‐ALL, MH‐ARN, MH‐EBO, MH‐JAB, MH‐JAL, MH‐KWA, MH‐LIB, MH‐MAJ, MH‐MAL, MH‐MEJ, MH‐MIL, MH‐NMK, MH‐NMU, MH‐RON, MH‐UTI, MH‐WTH, WTJ; in mah/eng of MH-ENI, MH-KIL; update List Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:MH)."
                 }
         test_nr_lt_2019_expected = {
                 "Code/Subdivision Change": "Name changed: NR-05 Baiti -> Baitsi.",
                 "Date Issued": "2017-11-23",
-                "Description of Change in Newsletter": "Change of subdivision name of NR-05; addition of local variation of NR-05, update List Source.",
+                "Description of Change": "Change of subdivision name of NR-05; addition of local variation of NR-05, update List Source.",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:NR)."
                 }
         
@@ -637,11 +638,11 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_mh_lt_2019_expected, test_ma_mh_nr_lt_2019_request["MH"][0], "Observed and expected outputs of API do not match.") 
         self.assertEqual(test_nr_lt_2019_expected, test_ma_mh_nr_lt_2019_request["NR"][0], "Observed and expected outputs of API do not match.") 
 #5.)
-        test_ve_2021_2024_request = requests.get(self.alpha_base_url + test_ve_2021_2023[0] + "/year/" + test_ve_2021_2023[1], headers=self.user_agent_header).json() #Venezuela - 2021-2024
+        test_ve_2021_2023_request = requests.get(self.alpha_base_url + test_ve_2021_2023[0] + "/year/" + test_ve_2021_2023[1], headers=self.user_agent_header).json() #Venezuela - 2021-2023
 
-        self.assertIsInstance(test_ve_2021_2024_request, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_ve_2021_2024_request)))
-        self.assertEqual(len(test_ve_2021_2024_request), 0, "Expected 0 rows returned from API, got {}.".format(len(test_ve_2021_2024_request)))
-        self.assertEqual(test_ve_2021_2024_request, {}, "Expected output of API to be an empty dict, got\n{}".format(test_ve_2021_2024_request))
+        self.assertIsInstance(test_ve_2021_2023_request, dict, "Expected output object of API to be of type dict, got {}.".format(type(test_ve_2021_2023_request)))
+        self.assertEqual(len(test_ve_2021_2023_request), 0, "Expected 0 rows returned from API, got {}.".format(len(test_ve_2021_2023_request)))
+        self.assertEqual(test_ve_2021_2023_request, {}, "Expected output of API to be an empty dict, got\n{}".format(test_ve_2021_2023_request))
 #6.) 
         test_abc_2000_request = requests.get(self.alpha_base_url + test_abc_2000[0] + "/year/" + test_abc_2000[1], headers=self.user_agent_header).json() #abc - 2000
         
@@ -688,9 +689,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_bj = requests.get(self.name_base_url + test_name_benin, headers=self.user_agent_header).json() #Benin
 
         test_name_bj_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Correction of the Code Source.",
                 "Date Issued": "2020-11-24",
-                "Description of Change in Newsletter": "Correction of the Code Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BJ)."
                 }
 
@@ -705,9 +706,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_tj = requests.get(self.name_base_url + test_name_tajikistan, headers=self.user_agent_header).json() #Tajikistan
 
         test_name_tj_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Correction of the Code Source.",
                 "Date Issued": "2020-11-24",
-                "Description of Change in Newsletter": "Correction of the Code Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:TJ)."
                 }
         
@@ -722,9 +723,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_md = requests.get(self.name_base_url + test_name_moldova, headers=self.user_agent_header).json() #Moldova
 
         test_name_md_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Modification of the French short name lower case.",
                 "Date Issued": "2019-02-15",
-                "Description of Change in Newsletter": "Modification of the French short name lower case.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:MD)."
                 }
         
@@ -739,15 +740,15 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_ml_ni = requests.get(self.name_base_url + test_name_mali_nicaragua, headers=self.user_agent_header).json() #Mali, Nicaragua 
 
         test_name_ml_ni_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Addition of regions ML-9, ML-10; update List Source.",
                 "Date Issued": "2017-11-23",
-                "Description of Change in Newsletter": "Addition of regions ML-9, ML-10; update List Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:ML)."
                 }
         test_name_ml_ni_expected_2 = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Correction of the Code Source.",
                 "Date Issued": "2020-11-24",
-                "Description of Change in Newsletter": "Correction of the Code Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:NI)."
                 }
         
@@ -793,9 +794,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_egypt_2014 = requests.get(self.name_base_url + test_name_egypt_2014[0] + "/year/" + test_name_egypt_2014[1], headers=self.user_agent_header).json() #Egypt 2014
 
         test_name_egypt_2014_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Delete EG-HU and EG-SU; update List Source.",
                 "Date Issued": "2014-10-29",
-                "Description of Change in Newsletter": "Delete EG-HU and EG-SU; update List Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:EG)."
                 }
         
@@ -811,9 +812,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_indonesia_2022 = requests.get(self.name_base_url + test_name_indonesia_2022[0] + "/year/" + test_name_indonesia_2022[1], headers=self.user_agent_header).json() #Indonesia 2022
 
         test_name_indonesia_2022_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Addition of provinces ID-PE, ID-PS and ID-PT; Update List Source.",
                 "Date Issued": "2022-11-29",
-                "Description of Change in Newsletter": "Addition of provinces ID-PE, ID-PS and ID-PT; Update List Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:ID)."
                 }
 
@@ -829,9 +830,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_japan_gt_2018 = requests.get(self.name_base_url + test_name_japan_gt_2018[0] + "/year/" + test_name_japan_gt_2018[1], headers=self.user_agent_header).json() #Japan >2018
 
         test_name_japan_gt_2018_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Correction of the romanization system label.",
                 "Date Issued": "2018-11-26",
-                "Description of Change in Newsletter": "Correction of the romanization system label.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:JP)."
                 }
 
@@ -847,15 +848,15 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_request_kiribati_lesotho_lt_2012 = requests.get(self.name_base_url + test_name_kiribati_lesotho_lt_2012[0] + "/year/" + test_name_kiribati_lesotho_lt_2012[1], headers=self.user_agent_header).json() #Kiribati, Lesotho <2012
 
         test_name_kiribati_lesotho_lt_2012_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Addition of administrative language Gilbertese (-, gil).",
                 "Date Issued": "2009-03-03",
-                "Description of Change in Newsletter": "Addition of administrative language Gilbertese (-, gil).",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:KI)."
                 }
         test_name_kiribati_lesotho_lt_2012_expected_2 = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Addition of local generic administrative term, update of the official languages according to ISO 3166-2 and source list update.",
                 "Date Issued": "2011-12-13 (corrected 2011-12-15)",
-                "Description of Change in Newsletter": "Addition of local generic administrative term, update of the official languages according to ISO 3166-2 and source list update.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)."
                 }
         
@@ -876,13 +877,13 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
         test_name_malta_nepal_2007_2011_expected = {
                 "Code/Subdivision Change": "Subdivisions added: 68 local councils.",
                 "Date Issued": "2007-11-28",
-                "Description of Change in Newsletter": "Addition of administrative subdivisions and of their code elements.",
+                "Description of Change": "Addition of administrative subdivisions and of their code elements.",
                 "Edition/Newsletter": "Newsletter I-9 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/newsletter_i-9.pdf)."
                 }
         test_name_malta_nepal_2007_2011_expected_2 = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "First level prefix addition, language adjustment, comment addition, deletion of the romanization system and source list update.",
                 "Date Issued": "2011-12-13 (corrected 2011-12-15)",
-                "Description of Change in Newsletter": "First level prefix addition, language adjustment, comment addition, deletion of the romanization system and source list update.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf)."
                 }
 
@@ -999,9 +1000,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 #1.)
         test_request_alpha_month_gb_24 = requests.get(self.alpha_base_url + test_alpha_month_gb_24[0] + "/months/" + test_alpha_month_gb_24[1], headers=self.user_agent_header).json() #GB - 24
         test_alpha_month_gb_24_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Deletion of two-tier county GB-NTH; Addition of unitary authority GB-NNH, GB-WNH; Change of category name from two-tier county to unitary authority for GB-BKM; Update List Source.",
                 "Date Issued": "2022-11-29",
-                "Description of Change in Newsletter": "Deletion of two-tier county GB-NTH; Addition of unitary authority GB-NNH, GB-WNH; Change of category name from two-tier county to unitary authority for GB-BKM; Update List Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:GB)."
                 }
         
@@ -1016,9 +1017,9 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 #2.)
         test_request_alpha_month_in_24 = requests.get(self.alpha_base_url + test_alpha_month_in_24[0] + "/months/" + test_alpha_month_in_24[1], headers=self.user_agent_header).json() #IN - 24
         test_alpha_month_in_24_expected = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Change of subdivision code from IN-OR to IN-OD, from IN-CT to IN-CG, from IN-TG to IN-TS, from IN-UT to IN-UK; Deletion of the asterisk from IN-JH; Update Code Source.",
                 "Date Issued": "2023-11-23",
-                "Description of Change in Newsletter": "Change of subdivision code from IN-OR to IN-OD, from IN-CT to IN-CG, from IN-TG to IN-TS, from IN-UT to IN-UK; Deletion of the asterisk from IN-JH; Update Code Source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:IN)."
                 }
 
@@ -1033,21 +1034,21 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 #3.)
         test_request_alpha_month_ci_dz_ss_36 = requests.get(self.alpha_base_url + test_alpha_month_ci_dz_ss_36[0] + "/months/" + test_alpha_month_ci_dz_ss_36[1], headers=self.user_agent_header).json() #CI, DZ, SS - 36
         test_alpha_month_ci_dz_ss_36_expected_ci = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Correction of the French full name.",
                 "Date Issued": "2022-09-02",
-                "Description of Change in Newsletter": "Correction of the French full name.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CI)."
                 }
         test_alpha_month_ci_dz_ss_36_expected_dz = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Addition of province DZ-49, DZ-50, DZ-51, DZ-52, DZ-53, DZ-54, DZ-55, DZ-56, DZ-57, DZ-58; Update list source.",
                 "Date Issued": "2022-11-29",
-                "Description of Change in Newsletter": "Addition of province DZ-49, DZ-50, DZ-51, DZ-52, DZ-53, DZ-54, DZ-55, DZ-56, DZ-57, DZ-58; Update list source.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:DZ)."
                 }
         test_alpha_month_ci_dz_ss_36_expected_ss = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Typographical correction of SS-BW (deletion of the extra space between el and Ghazal).",
                 "Date Issued": "2021-11-25",
-                "Description of Change in Newsletter": "Typographical correction of SS-BW (deletion of the extra space between el and Ghazal).",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:SS)."
                 }
         
@@ -1064,15 +1065,15 @@ class ISO3166_Updates_Api_Tests(unittest.TestCase):
 #4.)
         test_request_alpha_month_is_12_36 = requests.get(self.alpha_base_url + test_alpha_month_is_12_36[0] + "/months/" + test_alpha_month_is_12_36[1], headers=self.user_agent_header).json() #IS - 12-36    
         test_alpha_month_is_12_36_expected_1 = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Deletion of municipality IS-AKH, IS-BLO, IS-HEL, IS-HUT, IS-SBH, IS-SKU, IS-SSF; Addition of municipality IS-HUG, IS-SKR.",
                 "Date Issued": "2022-11-29",
-                "Description of Change in Newsletter": "Deletion of municipality IS-AKH, IS-BLO, IS-HEL, IS-HUT, IS-SBH, IS-SKU, IS-SSF; Addition of municipality IS-HUG, IS-SKR.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:IS)."
                 }
         test_alpha_month_is_12_36_expected_2 = {
-                "Code/Subdivision Change": "",
+                "Code/Subdivision Change": "Change of the full name.",
                 "Date Issued": "2022-11-21",
-                "Description of Change in Newsletter": "Change of the full name.",
+                "Description of Change": "",
                 "Edition/Newsletter": "Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:IS)."
                 }
         

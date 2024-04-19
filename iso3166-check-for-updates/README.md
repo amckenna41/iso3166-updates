@@ -22,7 +22,6 @@ Requirements
 * [python][python] >= 3.9
 * [iso3166-updates][iso3166-updates] >= 1.7.0
 * [pandas][pandas] >= 1.4.3
-* [numpy][numpy] >= 1.23.2
 * [requests][requests] >= 2.28.1
 * [beautifulsoup4][beautifulsoup4] >= 4.11.1
 * [iso3166][iso3166] >= 2.1.1
@@ -96,7 +95,6 @@ https://stackoverflow.com/questions/53073411/selenium-webdriverexceptionchrome-f
 [python]: https://www.python.org/downloads/release/python-360/
 [iso3166-updates]: https://github.com/amckenna41/iso3166-updates
 [pandas]: https://pandas.pydata.org/
-[numpy]: https://numpy.org/
 [requests]: https://requests.readthedocs.io/
 [beautifulsoup4]: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 [google-auth]: https://cloud.google.com/python/docs/reference

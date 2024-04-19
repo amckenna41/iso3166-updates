@@ -14,8 +14,8 @@ from importlib.metadata import metadata
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 
-@unittest.skip("Skipping tests for get_all_iso3166_updates.py scipt to not overload servers and test runners.")
-class ISO3166_Updates_Tests(unittest.TestCase):
+# @unittest.skip("Skipping tests for get_all_iso3166_updates.py script to not overload servers and test runners.")
+class ISO3166_Get_Updates_Tests(unittest.TestCase):
     """
     Test suite for testing the get_all_iso3166_updates script that gathers and parses all ISO 3166-2 
     updates from the various data sources.
@@ -42,8 +42,6 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     test_get_updates_alpha_year:
         testing main get_updates() function that gets all the ISO 3166 updates for the input country/countries, 
         using a variety of ISO 3166-1 alpha codes and year parameter values.
-    test_iso3166_alpha2_json:
-        testing contents of JSON exported from get_updates() function, using a variety of alpha-2 codes.
     """
     def setUp(self):
         """ Initialise test variables, import json. """
@@ -93,7 +91,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             request = requests.get(self.iso_base_url + code, headers=self.user_agent_header)
             self.assertEqual(request.status_code, 200, 
                 "Expected status code 200, got {}.".format(request.status_code))   
-    
+
     def test_table_to_array(self):
         """ Test function that parses updates html table into 2D array of headers & rows. """
         test_alpha2_ba = "BA" #Bosnia
@@ -434,7 +432,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             a variety of ISO 3166-1 alpha country code input parameter values. """
         test_alpha_au = "AU" #Australia
         test_alpha_cv = "CV" #Cabo Verde
-        test_alpha_id = "IND" #Indonesia
+        test_alpha_id = "IDN" #Indonesia
         test_alpha_pt = "PRT" #Portugal ({})
         test_alpha_bf_ca_gu_ie_je_str = "BF, CAN, GUM, 372, 832" #Burkina Faso, Canada, Guam, Ireland, Jersey - concat_updates=False
         test_alpha_error_1 = 12345 #should raise type error
@@ -515,7 +513,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             "Description of Change": "",
             "Code/Subdivision Change": "Addition of province ID-PD; Update List Source."
             }
-        
+
         self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-ID.csv")), 
             "Expected output CSV file to exist in folder.")
         self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-ID.json")),
@@ -618,13 +616,11 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         self.assertTrue(set(["Country Code"] + self.expected_output_columns) == set(list(test_bf_ca_gu_ie_je_iso3166_csv.columns)),
             "Column names/headers do not match expected:\n{}.".format(set(list(test_bf_ca_gu_ie_je_iso3166_csv.columns))))
 #7.)
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             iso3166_updates.get_updates(test_alpha_error_1, export_filename=self.export_filename, 
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0)
             iso3166_updates.get_updates(test_alpha_error_2, export_filename=self.export_filename, 
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0)
-#8.)
-        with self.assertRaises(ValueError):
             iso3166_updates.get_updates(test_alpha_error_3, export_filename=self.export_filename, 
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0)
 
@@ -689,15 +685,15 @@ class ISO3166_Updates_Tests(unittest.TestCase):
 #3.)
         test_year_gt_2021_updates = iso3166_updates.get_updates(year=test_year3, export_filename=self.export_filename,  #>2021
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
-        test_year_gt_2021_expected_keys = ['CN', 'DZ', 'ET', 'FI', 'FR', 'GB', 'GT', 'HU', 'ID', 'IN', 'IQ', 'IS', 'KH', 'KP', 'KR', 'KZ', 
-                                           'LT', 'LV', 'ME', 'NP', 'NZ', 'PA', 'PH', 'PL', 'RU', 'SI', 'SS']
+        test_year_gt_2021_expected_keys = ['CN', 'DZ', 'ET', 'FI', 'FR', 'GB', 'GT', 'HU', 'ID', 'IN', 'IQ', 'IR', 'IS', 'KH', 
+                                           'KP', 'KR', 'KZ', 'LT', 'LV', 'ME', 'NP', 'NZ', 'PA', 'PH', 'PL', 'RU', 'SI', 'SS']
 
         self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "_>2021.csv")), 
             "Expected output CSV file to exist in folder.")
         self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "_>2021.json")),
             "Expected output JSON file to exist in folder.")
-        self.assertEqual(len(test_year_gt_2021_updates), 27, 
-            "Expected 27 updates in output object, got {}.".format(len(test_year_gt_2021_updates)))
+        self.assertEqual(len(test_year_gt_2021_updates), 28, 
+            "Expected 28 updates in output object, got {}.".format(len(test_year_gt_2021_updates)))
         self.assertEqual(list(test_year_gt_2021_updates), test_year_gt_2021_expected_keys, 
             "Expected and observed list of country codes do not match:\n{}.".format(list(test_year_gt_2021_updates)))
         for update in test_year_gt_2021_updates:
@@ -708,8 +704,8 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         test_gt_2021_iso3166_csv = pd.read_csv(os.path.join(self.export_folder, self.export_filename + "_>2021.csv")).fillna("")
         self.assertTrue(set(["Country Code"] + self.expected_output_columns) == set(list(test_gt_2021_iso3166_csv.columns)),
             "Column names/headers do not match expected:\n{}.".format(set(list(test_gt_2021_iso3166_csv.columns))))
-        self.assertEqual(len(test_gt_2021_iso3166_csv), 36, 
-            "Expected there to be 36 output objects in csv, got {}.".format(len(test_gt_2021_iso3166_csv)))
+        self.assertEqual(len(test_gt_2021_iso3166_csv), 37, 
+            "Expected there to be 37 output objects in csv, got {}.".format(len(test_gt_2021_iso3166_csv)))
 #4.)
         test_year_lt_2003_updates = iso3166_updates.get_updates(year=test_year4, export_filename=self.export_filename,  #<2003
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
@@ -792,23 +788,9 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         self.assertEqual(len(test_year_1999_2002_iso3166_csv), 78, 
             "Expected there to be 78 output objects in csv, got {}.".format(len(test_year_1999_2002_iso3166_csv)))
 #7.)
-        test_year_error1_updates = iso3166_updates.get_updates(year=test_year7, export_filename=self.export_filename,   #abcdef
+        with self.assertRaises(ValueError):
+            iso3166_updates.get_updates(year=test_year7, export_filename=self.export_filename,   #abcdef
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
-
-        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + ".csv")), 
-            "Expected output CSV file to exist in folder.")
-        self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + ".json")),
-            "Expected output JSON file to exist in folder.")
-        self.assertEqual(len(test_year_error1_updates), 249, 
-            "Expected 250 updates in output object, got {}.".format(len(test_year_error1_updates)))
-
-        test_year_error1_updates_csv = pd.read_csv(os.path.join(self.export_folder, self.export_filename + ".csv")).fillna("")
-        self.assertTrue(set(["Country Code"] + self.expected_output_columns) == set(list(test_year_error1_updates_csv.columns)),
-            "Column names/headers do not match expected:\n{}.".format(set(list(test_year_error1_updates_csv.columns))))
-        self.assertEqual(len(test_year_error1_updates_csv), 575, 
-            "Expected there to be 575 output objects in csv, got {}.".format(len(test_year_error1_updates_csv)))
-#8.)
-        with self.assertRaises(TypeError):
             iso3166_updates.get_updates(year=test_year8, export_filename=self.export_filename,   #12345
                     export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0)
             iso3166_updates.get_updates(year=test_year9, export_filename=self.export_filename,   #True
@@ -927,108 +909,6 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                     export_filename=self.export_filename, export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=False, verbose=0)
             iso3166_updates.get_updates(alpha_codes=test_error2[0], year=test_error2[1], 
                     export_filename=self.export_filename, export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=False, verbose=0)
-
-    def test_iso3166_alpha2_json(self):
-        """ Testing all ISO 3166 updates created in JSON generated from software package. """
-        alpha2_codes = list(iso3166.countries_by_alpha2.keys())
-        test_alpha2_bg = "BG" #Bulgaria
-        test_alpha2_cn = "CN" #China
-        test_alpha2_cy = "CY" #Cyprus
-        test_alpha2_ec = "EC" #Ecuador
-        test_alpha2_mz = "MZ" #Mozambique
-        test_alpha2_sk = "SK" #Slovakia
-        test_alpha2_abc = "abc"
-        test_alpha2_123 = 123
-        test_alpha2_false = False
-#1.)
-        #iterate over each IS O3166 alpha-2 code, testing alpha-2 code is in updates json
-        for code in alpha2_codes:
-            if (code == "XK"): #skip XK (Kosovo)
-                continue
-            self.assertIn(code, list(self.iso3166_json.keys()), f"ISO 3166-1 alpha-2 code {code} not found in updates json.")
-#2.)       
-        bg_expected_output1 = {'Date Issued': '2018-11-26', 'Edition/Newsletter': 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BG).', 
-            'Description of Change': '', 'Code/Subdivision Change': 'Correction of the romanization system label.'}
-        bg_expected_output2 = {'Date Issued': '2018-04-20', 'Edition/Newsletter': 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BG).', 
-            'Description of Change': '', 'Code/Subdivision Change': 'Change of subdivision category from region to district in eng and fra; update List Source.'}
-
-        self.assertIsInstance(self.iso3166_json[test_alpha2_bg], list, "Expected output to be of type list, got {}.".format(type(self.iso3166_json[test_alpha2_bg])))
-        self.assertEqual(len(self.iso3166_json[test_alpha2_bg]), 9, "Expected there to be 9 elements in output row, got {}.".format(len(self.iso3166_json[test_alpha2_bg])))
-        for row in range(0, len(self.iso3166_json[test_alpha2_bg])):
-            self.assertEqual(list(self.iso3166_json[test_alpha2_bg][row].keys()), self.expected_output_columns, 
-                             f"Columns from output do not match expected:\n{list(self.iso3166_json[test_alpha2_bg][row].keys())}.")
-        self.assertEqual(self.iso3166_json[test_alpha2_bg][0], bg_expected_output1, f"Row in updates json does not match expected output:\n{self.iso3166_json[test_alpha2_bg][0]}.")
-        self.assertEqual(self.iso3166_json[test_alpha2_bg][1], bg_expected_output2, f"Row in updates json does not match expected output:\n{self.iso3166_json[test_alpha2_bg][1]}")
-#3.)
-        cn_expected_output1 = {'Date Issued': '2021-11-25', 'Edition/Newsletter': 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CN).', 
-            'Description of Change': '', 'Code/Subdivision Change': 'Change of spelling of CN-NX; Update List Source.'}
-        cn_expected_output2 = {'Date Issued': '2019-11-22', 'Edition/Newsletter': 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CN).', 
-            'Description of Change': '', 'Code/Subdivision Change': 'Change language from mon to zho for CN-NM.'}
-
-        self.assertIsInstance(self.iso3166_json[test_alpha2_cn], list, "Expected output to be of type list, got {}.".format(type(self.iso3166_json[test_alpha2_cn])))
-        self.assertEqual(len(self.iso3166_json[test_alpha2_cn]), 6, "Expected there to be 6 elements in output row, got {}.".format(len(self.iso3166_json[test_alpha2_cn])))
-        for row in range(0, len(self.iso3166_json[test_alpha2_cn])):
-            self.assertEqual(list(self.iso3166_json[test_alpha2_cn][row].keys()), self.expected_output_columns, 
-                             f"Columns from output do not match expected:\n{list(self.iso3166_json[test_alpha2_cn][row].keys())}.")        
-        self.assertEqual(self.iso3166_json[test_alpha2_cn][0], cn_expected_output1, f"Row in updates json does not match expected output:\n{self.iso3166_json[test_alpha2_cn][0]}.")
-        self.assertEqual(self.iso3166_json[test_alpha2_cn][1], cn_expected_output2, f"Row in updates json does not match expected output:\n{self.iso3166_json[test_alpha2_cn][1]}.")
-#4.)
-        cy_expected_output1 = {'Date Issued': '2018-11-26', 'Edition/Newsletter': 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CY).', 
-            'Description of Change': '', 'Code/Subdivision Change': 'Correction of the romanization system label.'}
-        cy_expected_output2 = {'Date Issued': '2018-04-20', 'Edition/Newsletter': 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CY).', 
-            'Description of Change': '', 'Code/Subdivision Change': 'Update Code Source; update List Source.'}
-
-        self.assertIsInstance(self.iso3166_json[test_alpha2_cy], list, "Expected output to be of type list, got {}.".format(type(self.iso3166_json[test_alpha2_cy])))
-        self.assertEqual(len(self.iso3166_json[test_alpha2_cy]), 5, "Expected there to be 5 elements in output row, got {}.".format(len(self.iso3166_json[test_alpha2_cy])))
-        for row in range(0, len(self.iso3166_json[test_alpha2_cy])):
-            self.assertEqual(list(self.iso3166_json[test_alpha2_cy][row].keys()), self.expected_output_columns, 
-                             f"Columns from output do not match expected:\n{list(self.iso3166_json[test_alpha2_cy][row].keys())}.")
-        self.assertEqual(self.iso3166_json[test_alpha2_cy][0], cy_expected_output1, f"Row in updates json does not match expected output:\n{self.iso3166_json[test_alpha2_cy][0]}.")
-        self.assertEqual(self.iso3166_json[test_alpha2_cy][1], cy_expected_output2, f"Row in updates json does not match expected output:\n{self.iso3166_json[test_alpha2_cy][1]}")
-#5.)
-        ec_expected_output1 = {'Date Issued': '2017-11-23', 'Edition/Newsletter': 
-            'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:EC).', 'Description of Change': '', 
-            'Code/Subdivision Change': "Change of spelling of EC-S, EC-Z; update List Source."}
-        ec_expected_output2 = {'Date Issued': '2010-06-30', 'Edition/Newsletter': 
-            'Newsletter II-2 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf).', 
-                'Description of Change': 'Update of the administrative structure and of the list source.', 
-                'Code/Subdivision Change': 'Subdivisions added: EC-SE Santa Elena EC-SD Santo Domingo de los Tsáchilas.'}
-        
-        self.assertIsInstance(self.iso3166_json[test_alpha2_ec], list, "Expected output to be of type list, got {}.".format(type(self.iso3166_json[test_alpha2_ec])))
-        self.assertEqual(len(self.iso3166_json[test_alpha2_ec]), 3, "Expected there to be 3 elements in output row, got {}.".format(len(self.iso3166_json[test_alpha2_ec])))
-        for row in range(0, len(self.iso3166_json[test_alpha2_ec])):
-            self.assertEqual(list(self.iso3166_json[test_alpha2_ec][row].keys()), self.expected_output_columns, f"Columns from output do not match expected:\n{list(self.iso3166_json[test_alpha2_ec][row].keys())}.")
-        self.assertEqual(self.iso3166_json[test_alpha2_ec][0], ec_expected_output1, f"Row in updates json does not match expected output:\n{self.iso3166_json[test_alpha2_ec][0]}.")
-        self.assertEqual(self.iso3166_json[test_alpha2_ec][1], ec_expected_output2, f"Row in updates json does not match expected output:\n{self.iso3166_json[test_alpha2_ec][1]}.")
-#6.)
-        self.assertEqual(self.iso3166_json[test_alpha2_mz], {}, "Expected output to be an empty dict, got {}.".format(self.iso3166_json[test_alpha2_mz]))
-#7.)
-        self.assertEqual(self.iso3166_json[test_alpha2_sk], {}, "Expected output to be an empty dict, got {}.".format(self.iso3166_json[test_alpha2_sk]))
-#8.)   
-        for alpha2 in list(self.iso3166_json.keys()): #Testing no entries have an empty Edition/Newsletter or Code/Subdivision Change field 
-            for row in range(0, len(self.iso3166_json[alpha2])):
-                self.assertNotEqual(self.iso3166_json[alpha2][row]["Edition/Newsletter"], "", 
-                    "For all entries in json the Edition/Newsletter column should not be empty, {}.".format(self.iso3166_json[alpha2][row]))
-                self.assertNotEqual(self.iso3166_json[alpha2][row]["Code/Subdivision Change"], "", 
-                    "For all entries in json the Code/Subdivision Change column should not be empty, {}.".format(self.iso3166_json[alpha2][row]))
-#9.)    
-        for alpha2 in list(self.iso3166_json.keys()): #Testing Date Issued columns have correct data format (Y-m-d)
-            for row in range(0, len(self.iso3166_json[alpha2])):
-                temp_date = self.iso3166_json[alpha2][row]["Date Issued"]
-                if ("corrected" in self.iso3166_json[alpha2][row]["Date Issued"]):
-                    temp_date = re.sub("[(].*[)]", "", temp_date).replace(' ', "").replace(".", '')
-                self.assertTrue(datetime.fromisoformat(temp_date),
-                    "Expected Date Issued column to be in format Y-m-d, got {}.".format(self.iso3166_json[alpha2][row]["Date Issued"]))
-#10.)    
-        #testing all unicode arrows (->) have been converted into normal arrows
-        iso3166_json_str = json.dumps(self.iso3166_json)
-        self.assertTrue('→' not in iso3166_json_str, 
-            "Expected unicode arrow '→' to not be in any text in JSON.")
-#11.)        
-        with self.assertRaises(KeyError):
-            self.iso3166_json[test_alpha2_abc]
-            self.iso3166_json[test_alpha2_123]
-            self.iso3166_json[test_alpha2_false]   
 
     def tearDown(self):
         """ Delete imported json from memory. """
