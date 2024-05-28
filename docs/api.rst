@@ -16,6 +16,7 @@ The other endpoints available in the API are:
 * https://iso3166-updates.com/api/name/<input_name>/year/<input_year>
 * https://iso3166-updates.com/api/months/<input_month>
 * https://iso3166-updates.com/api/months/<input_month>/alpha/<input_alpha>
+* https://iso3166-updates.com/api/months/<input_month>/name/<input_name>
 
 Below are some example usage of the API and the above endpoints, utilising the **Python Requests** library.
  
@@ -300,7 +301,8 @@ curl::
 Get all ISO 3166 updates for a country from the previous months or month range
 ------------------------------------------------------------------------------
 Returning all ISO 3166 updates data for a specific country or list of countries that were published 
-within the previous input number of months or within a specified month range using the ``/api/months`` endpoint.
+within the previous input number of months or within a specified month range, using the country's 
+ISO 3166 alpha code or name, using the ``/api/months`` endpoint:
 
 For example, publication dates within the past 9 months or within the past 12-36 months, for GR and IE:
 
@@ -319,9 +321,9 @@ For example, publication dates within the past 9 months or within the past 12-36
 
     #past 12-36 months for Ireland
     input_month = "12-36" 
-    input_alpha = "GR"
+    input_alpha = "IE"
 
-    request_url = base_url + f"months/{input_month}"
+    request_url = base_url + f"months/{input_month}/alpha/{input_alpha}"
     ie_12_36_months = requests.get(request_url).json()
 
 curl::
@@ -329,6 +331,32 @@ curl::
     $ curl -i https://iso3166-updates.com/api/months/9/alpha/GR
     $ curl -i https://iso3166-updates.com/api/alpha/ie/months/12-36
 
+For example, publication dates within the past 24 months or within the past 6-12 months, for Djibouti and Panama:
+
+.. code-block:: python
+
+    import requests
+
+    base_url = "https://iso3166-updates.com/api/"
+
+    #past 24 months for Djibouti
+    input_month = "24" 
+    input_name = "Djibouti"
+
+    request_url = base_url + f"months/{input_month}/name/{input_name}"
+    djibouti_24_months = requests.get(request_url).json()
+
+    #past 6-12 months for Panama
+    input_month = "6-12" 
+    input_name = "Panama"
+
+    request_url = base_url + f"months/{input_month}/name/{input_name}"
+    panama_6_12_months = requests.get(request_url).json()
+
+curl::
+
+    $ curl -i https://iso3166-updates.com/api/months/24/name/Djibouti
+    $ curl -i https://iso3166-updates.com/api/name/Panama/months/6-12
 
 .. note::
     A demo of the software and API is available `here <https://colab.research.google.com/drive/1btfEx23bgWdkUPiwdwlDqKkmUp1S-_7U?usp=sharing/>`_.

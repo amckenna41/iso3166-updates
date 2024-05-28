@@ -30,9 +30,6 @@ USER_AGENT_HEADER = {'User-Agent': 'iso3166-updates/{} ({}; {})'.format(__versio
 wiki_base_url = "https://en.wikipedia.org/wiki/ISO_3166-2:"
 iso_base_url = "https://www.iso.org/obp/ui/en/#iso:code:3166:"
 
-#path to chromedriver executable
-chromedriver_executable_path = '/usr/local/bin/chromedriver'
-
 def create_driver():
     """
     Create instance of Selenium Chromedriver for each country's individual page on the 
@@ -55,7 +52,11 @@ def create_driver():
     [2]: https://www.geeksforgeeks.org/how-to-install-selenium-in-python/
     [3]: https://www.scrapingbee.com/webscraping-questions/selenium/chromedriver-executable-needs-to-be-in-path/
     [4]: https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json
+    [5]: https://googlechromelabs.github.io/chrome-for-testing/
     """
+    #path to chromedriver executable
+    chromedriver_executable_path = '/usr/local/bin/chromedriver'
+
     #verify Chromedriver is found on path, raise exception if not
     if not (os.path.isfile(chromedriver_executable_path)):
       raise WebDriverException("Chromedriver not found at path: " + chromedriver_executable_path + \
@@ -77,6 +78,7 @@ def create_driver():
     chrome_options.add_argument('--disable-blink-features=AutomationControlled')
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"]) 
     chrome_options.add_experimental_option("useAutomationExtension", False) 
+
     #when testing locally need to specify the binary location of Google Chrome: find / -type d -name "*Chrome.app"
     chrome_options.binary_location = "/Applications/Google Chrome 2.app/Contents/MacOS/Google Chrome"
 
@@ -102,44 +104,44 @@ def create_driver():
 def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166-updates", export_folder: str="iso3166-updates-output",
         concat_updates: bool=True, export_json: bool=True, export_csv: bool=False, verbose: bool=True, use_selenium: bool=True) -> dict:
     """
-    Get all listed changes/updates to a country's ISO 3166-2 subdivision codes/names. The two data 
-    sources for the updates data are via the "Changes" section on its wiki page aswell as any listed 
-    updates on the official ISO website. A country's wiki page and section on ISO website follow the 
-    convention https://en.wikipedia.org/wiki/ISO_3166-2:XX and https://www.iso.org/obp/ui#iso:code:3166:XX, 
-    respectively, where XX is the 2 letter alpha-2 code for a country listed in the ISO 3166-1. The 
-    "Changes" section lists updates or changes to any ISO 3166-2 codes, including historical changes, 
-    according to the ISO newsletters which were released up until July 2013 but now are communicated 
-    via their online catalogue/Online Browsing Platform (OBP), or via a database, which usually costs 
-    money to subscribe to. The ISO newsletters are not easily discoverable and accessible 
-    online and may require a subscription to the ISO 3166-2 database 
-    (https://www.iso.org/iso/updating_information.pdf), with the ISO 3166 dataset itself 
+    Get all listed changes/updates to a country's ISO 3166-2 subdivision codes/names. The two data
+    sources for the updates data are via the "Changes" section on its wiki page as well as any listed
+    updates on the official ISO website. A country's wiki page and section on ISO website follow the
+    convention https://en.wikipedia.org/wiki/ISO_3166-2:XX and https://www.iso.org/obp/ui#iso:code:3166:XX,
+    respectively, where XX is the 2 letter alpha-2 code for a country listed in the ISO 3166-1. The
+    "Changes" section lists updates or changes to any ISO 3166-2 codes, including historical changes,
+    according to the ISO newsletters which were released up until July 2013 but now are communicated
+    via their online catalogue/Online Browsing Platform (OBP), or via a database, which usually costs
+    money to subscribe to. The ISO newsletters are not easily discoverable and accessible
+    online and may require a subscription to the ISO 3166-2 database
+    (https://www.iso.org/iso/updating_information.pdf), with the ISO 3166 dataset itself
     costing around $330!
 
-    Some countries have missing and or not up-to-date updates data on their wiki pages, so the 
-    country data from the official ISO website is also gathered using Selenium Chromedriver, prior 
+    Some countries have missing and or not up-to-date updates data on their wiki pages, so the
+    country data from the official ISO website is also gathered using Selenium Chromedriver, prior
     to being scraped using BeautifulSoup, as the page requires Javascript to be run on page load.
     Some country updates mention a change to their remarks which are additional notes/supplementary
-    info about changes to a country. These remarks are appended to the country description from 
+    info about changes to a country. These remarks are appended to the country description from
     the ISO page.
 
     The earliest available changes are from the year 2000 and the latest changes are from 2024.
 
-    The updates data from the wiki page and ISO website are converted to a DataFrame with the 
-    columns: Date Issued, Edition/Newsletter, Code/Subdivision Change and Description of Change.#
-    These are concatenated before being exported to a CSV and or JSON for further analysis. You 
-    can also get the updates from a particular year, list of years, year range or updates greater 
-    than or less than a specified year, using the year parameter. All of the updates are ordered 
-    alphabetically by their 2 letter ISO 3166-1 country code and exported to a JSON and or CSV file.
+    The updates data from the wiki page and ISO website are converted to a DataFrame with the
+    columns: Code/Subdivision Change, Description of Change, Date Issued, and Edition/Newsletter.
+    These are concatenated before being exported to a CSV and or JSON for further analysis. You
+    can also get the updates from a particular year, list of years, year range or updates greater
+    than or less than a specified year, using the year parameter. All of the updates are ordered
+    alphabetically by their 2 letter ISO 3166-1 country code.
 
     Parameters
     ==========
     :alpha_codes: str (default="")
-        single string or comma separated list of ISO 3166-1 alpha-2, alpha-3 or numeric country codes, 
-        to get the latest ISO 3166 updates from. Any alpha-3 or numeric codes input are converted to their 
+        single string or comma separated list of ISO 3166-1 alpha-2, alpha-3 or numeric country codes,
+        to get the latest ISO 3166 updates from. Any alpha-3 or numeric codes input are converted to their
         alpha-2 equivalent. If no value passed into param then all updates for all ISO 3166-1 countries are retrieved.
     :year: str (default="")
-        single string or comma separated list of 1 or more years to get the specific ISO 3166 updates from, 
-        per country. By default the year param will be empty meaning all changes/updates for all years 
+        single string or comma separated list of 1 or more years to get the specific ISO 3166 updates from,
+        per country. By default the year param will be empty meaning all changes/updates for all years
         will be retrieved. You can also pass in a year range (e.g 2010-2015) or a year to get all updates
         less than or greater than that specified year (e.g >2007, <2021).
     :export_filename: str (default="iso3166-updates")
@@ -173,19 +175,19 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
     less_than = False
 
     def convert_to_alpha2(alpha_code: str):
-        """ 
-        Auxillary function that converts an ISO 3166 country's 3 letter alpha-3 
-        or numeric code into its 2 letter alpha-2 counterpart. 
+        """
+        Auxillary function that converts an ISO 3166 country's 3 letter alpha-3
+        or numeric code into its 2 letter alpha-2 counterpart.
 
-        Parameters 
+        Parameters
         ==========
         :alpha_code: str
             3 letter ISO 3166-1 alpha-3 or numeric country code.
-        
+
         Returns
         =======
         :iso3166.countries_by_alpha3[alpha3_code].alpha2: str
-            2 letter ISO 3166 alpha-2 country code. 
+            2 letter ISO 3166 alpha-2 country code.
         """
         if (alpha_code.isdigit()):
             #return error if numeric code not found
@@ -194,7 +196,7 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
             else:
                 #use iso3166 package to find corresponding alpha-2 code from its numeric code
                 return iso3166.countries_by_numeric[alpha_code].alpha2
-    
+
         #return error if 3 letter alpha-3 code not found
         if not (alpha_code in list(iso3166.countries_by_alpha3.keys())):
             return None
@@ -202,8 +204,12 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
             #use iso3166 package to find corresponding alpha-2 code from its alpha-3 code
             return iso3166.countries_by_alpha3[alpha_code].alpha2
 
+    #raise error if input alpha codes param is not a str
+    if not (isinstance(alpha_codes, str)):
+      raise TypeError(f"Expected input alpha_codes parameter to be a string, got {type(alpha_codes)}.")
+
     #split multiple alpha codes into list, remove any whitespace and empty strings
-    alpha_codes = str(alpha_codes).replace(' ', '').split(',')
+    alpha_codes = alpha_codes.replace(' ', '').upper().split(',')
     alpha_codes = list(filter(None, alpha_codes))
 
     #var to keep track of original alpha-2 and year parameter inputs
@@ -211,7 +217,7 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
 
     #parse input alpha_codes parameter, use all alpha-2 codes if parameter not set
     if (alpha_codes == []):
-        #use list of all 2 letter alpha-2 codes, according to ISO 3166-1, set bool to true
+        #use list of all 2 letter alpha-2 codes, according to ISO 3166-1
         alpha_codes = sorted(list(iso3166.countries_by_alpha2.keys()))
     else:
         #iterate over all codes, checking they're valid, convert alpha-3 to alpha-2 if applicable
@@ -220,10 +226,10 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
             #convert 3 letter alpha-3 or numeric code into its 2 letter alpha-2 counterpart
             if len(alpha_codes[code]) == 3:
                 alpha_codes[code] = convert_to_alpha2(alpha_codes[code])
-            
+
             #raise error if invalid alpha-2 code found
             if (alpha_codes[code] not in list(iso3166.countries_by_alpha2.keys())):
-                raise ValueError(f"Invalid alpha country code input: {alpha_codes[code]}.")
+                raise ValueError("Invalid alpha country code input: {}.".format(alpha_codes[code]))
 
     #uppercase, remove duplicate codes and sort into alphabetical order
     alpha_codes = [code.upper() for code in alpha_codes]
@@ -278,15 +284,15 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
             continue
         #raise error if invalid year input
         if not (bool(re.match(r"^1[0-9][0-9][0-9]$|^2[0-9][0-9][0-9]$", year_))):
-            raise ValueError(f"Invalid year input, must be a year >= 1999, got {year_}.")
-    
+            raise ValueError("Invalid year input, must be a year >= 1999, got {}.".format(year_))
+
     #object to store all country updates/changes
     all_iso3166_updates = {}
 
     #temp filename export var
     temp_filename = os.path.splitext(export_filename)[0]
 
-    ### Get JSON and CSV filenames based on alpha-2 and year input parameters - concat_updates=True ###
+    ###Â Get JSON and CSV filenames based on alpha-2 and year input parameters - concat_updates=True ###
 
     #append 2 letter alpha-2 codes to export filenames if less than 10 input, append year as well if applicable
     if (len(alpha_codes) <= 10 and not (any(code in export_filename for code in alpha_codes)) and \
@@ -330,7 +336,7 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
                 temp_filename = temp_filename + "_" + year[0] + "-" + year[1]
 
         #append year param to filename if alpha-2 input param is empty
-        elif ((input_alpha_codes == [] or input_alpha_codes == ['']) and (year != [] and year != ['']) and \
+        elif ((input_alpha_codes == [] or input_alpha_codes == ['']) and (year != [''] and year != ['']) and \
               concat_updates==True and len(year) <= 10 and not (greater_than or less_than or year_range)):
 
             #separate years into comma separated list
@@ -356,35 +362,35 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
     #iterate over all input ISO 3166-1 country codes
     for alpha2 in tqdm(alpha_codes, ncols=50, disable=tqdm_disable):
 
-        #raise error if alpha-2 not valid
+        #skip to next iteration if alpha-2 not valid
         if (alpha2 not in list(iso3166.countries_by_alpha2.keys())):
-            raise ValueError(f"Invalid alpha-2 country code input {alpha2}.")
+            continue
 
         #print out progress if verbose set to true
         if (verbose):
             if (tqdm_disable):
                 print(f"ISO 3166-1 Code: {alpha2} ({wiki_base_url + alpha2}, {iso_base_url + alpha2}).")
             else:
-                print(f" - {alpha2}")
+                print(f" - {iso3166.countries_by_alpha2[alpha2].name.title()} ({alpha2})".format(alpha2))
 
-        all_iso3166_updates[alpha2] = {}    
+        all_iso3166_updates[alpha2] = {}
 
         #web scrape country's wiki data, convert html table/2D array to dataframe
         iso3166_df_wiki = get_updates_df_wiki(alpha2, year, year_range, less_than, greater_than)
 
         #use Selenium Chromedriver to parse country's updates data from official ISO website
         if (use_selenium):
-            iso3166_df_iso = get_updates_df_selenium(alpha2, year, year_range, less_than, greater_than)
+            iso_website_df = get_updates_df_selenium(alpha2, year, year_range, less_than, greater_than)
 
             #concatenate two updates dataframes
-            iso3166_df = pd.concat([iso3166_df_wiki, iso3166_df_iso], ignore_index=True, sort=False)
+            iso3166_df = pd.concat([iso3166_df_wiki, iso_website_df], ignore_index=True, sort=False)
         else:
             iso3166_df = iso3166_df_wiki
-        
+
         #only export non-empty dataframes
         if not (iso3166_df.empty):
 
-            def is_corrected_date(row: pd.Series): 
+            def is_corrected_date(row: pd.Series):
                 """ return true/false if row in dataframes has a "corrected" publication date in Date Issued col. """
                 return True if ("corrected" in row) else False
 
@@ -400,23 +406,27 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
               iso3166_df.update(corrected_date_iso3166_df.set_index('Date Issued'), overwrite=True)
               iso3166_df.reset_index(inplace=True)
 
+            #reindex/reorder columns in dataframe
+            iso3166_df = iso3166_df.reindex(columns=['Code/Subdivision Change', 'Description of Change', 
+                                                    'Date Issued', 'Corrected Date Issued', 'Edition/Newsletter'])
+    
             #convert date column to datetime object
             iso3166_df['Date Issued'] = pd.to_datetime(iso3166_df["Date Issued"])
 
             #sort and order by date, newest to oldest
             iso3166_df = iso3166_df.sort_values(by=['Date Issued'], ascending=False)
 
-            #convert date column back to string 
+            #convert date column back to string
             iso3166_df['Date Issued'] = iso3166_df['Date Issued'].astype(str)
 
             #drop duplicates by Date Issued column
             iso3166_df = iso3166_df.drop_duplicates("Date Issued")
 
-            #append "corrected" date to Date Issued column, if applicable 
+            #append "corrected" date to Date Issued column, if applicable
             iso3166_df['Date Issued'] = iso3166_df['Date Issued'] + iso3166_df['Corrected Date Issued']
 
-            #drop unneeded date columns
-            iso3166_df.drop(["Corrected Date Issued", "Corrected Date"], axis=1, inplace=True)
+            #drop unneeded corrected date column
+            iso3166_df.drop(["Corrected Date Issued"], axis=1, inplace=True)
 
             #swap data in Code/Subdivision change & Description of change... columns if Code/Subdivision column has no value but the latter does
             for index, row in iso3166_df.iterrows():
@@ -450,9 +460,9 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
     #auxillary function to remove all empty nested dicts within object
     def _del(_d: dict):
         return {a:_del(b) if isinstance(b, dict) else b for a, b in _d.items() if b and not a.startswith('_')}
-    
-    #remove any empty nested updates dict if gathering all country updates, keep empty dicts if list of alpha-2 codes input 
-    if (year != [] and input_alpha_codes == []):
+
+    #remove any empty nested updates dict if gathering all country updates, keep empty dicts if list of alpha-2 codes input
+    if (year != [''] and input_alpha_codes == []):
         all_iso3166_updates = _del(all_iso3166_updates)
 
     #temp filename export var
@@ -469,12 +479,12 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
             if (concat_updates):
                 #export updates into the same json
                 with open(os.path.join(export_folder, os.path.splitext(export_filename_concat_updates)[0] + ".json"), "w") as write_file:
-                    json.dump(all_iso3166_updates_json, write_file, indent=4, ensure_ascii=False)      
+                    json.dump(all_iso3166_updates_json, write_file, indent=4, ensure_ascii=False)
             else:
                 #separate country updates into individual json files
                 for update in all_iso3166_updates_json:
                     #append alpha-2 codes and list of years or gt/lt/range symbols, if applicable, to separate exported json files
-                    if (year != [] and year != ['']):
+                    if (year != ['']):
                         if (greater_than):
                             export_filename_no_concat_updates = temp_filename + "-" + update + "_>" + ','.join(year) + ".json"
                         elif (less_than):
@@ -492,8 +502,8 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
 
             #if verbose flag set, print export completion message
             if (verbose):
-                print(f"\nAll ISO 3166 updates exported to folder {export_folder}.")
-    
+                print("\nAll ISO 3166 updates exported to folder {}.".format(export_folder))
+
     #export all ISO 3166 updates to csv, store in export folder dir
     if (export_csv):
         #checking if all_iso3166_updates object isn't empty
@@ -516,7 +526,7 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
                         if (temp_updates.empty):
                             continue
                         #append alpha-2 codes and list of years or gt/lt/range symbol, if applicable, to separate exported csv files
-                        if (year != [] and year != ['']):
+                        if (year != ['']):
                             if (greater_than):
                                 export_filename_no_concat_updates = temp_filename + "-" + update + "_>" + ','.join(year) + ".csv"
                             elif (less_than):
@@ -532,17 +542,17 @@ def get_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166
                         temp_updates.to_csv(os.path.join(export_folder, export_filename_no_concat_updates), index=False)
 
     if (verbose):
-        print(f"Total elapsed time for executing script: {round(elapsed/60, 2)} minutes.")
+        print("Total elapsed time for executing script: {} minutes.".format(round(elapsed/60, 2)))
 
     return all_iso3166_updates
 
-def get_updates_df_selenium(alpha2: str, year: list=[], year_range: bool=False, less_than: bool=False, greater_than: bool=False) -> pd.DataFrame:    
+def get_updates_df_selenium(alpha2: str, year: list=[], year_range: bool=False, less_than: bool=False, greater_than: bool=False) -> pd.DataFrame:
     """
-    Pull all related ISO 3166 updates/changes for a given input country from the official ISO 
+    Pull all related ISO 3166 updates/changes for a given input country from the official ISO
     website. The Selenium Chromedriver tool is utilised prior to the BS4 web scraper as JavaScript
     has to run on the site to get the data. Various random steps are implemented during execution
-    of the Chromedriver to avoid requests being blocked. The changes section for each country is 
-    parsed and, converted into a 2D table and then a DataFrame.
+    of the Chromedriver to avoid requests being blocked. The changes section for each country is
+    parsed and converted into a 2D table and then a DataFrame.
 
     Parameters
     ==========
@@ -550,7 +560,7 @@ def get_updates_df_selenium(alpha2: str, year: list=[], year_range: bool=False, 
         single string of an alpha-2 ISO 3166-1 code to get the latest ISO 3166 updates for.
     :year: list
         array/list of year(s). If not empty only the ISO 3166 updates for the selected
-        year for a particular country will be returned. If empty then all years of 
+        year for a particular country will be returned. If empty then all years of
         updates are returned.
     :year_range: bool
         set to True if a range of years are input into year parameter e.g "2002-2010" etc.
@@ -569,72 +579,76 @@ def get_updates_df_selenium(alpha2: str, year: list=[], year_range: bool=False, 
         converted pandas dataframe of all ISO 3166 changes for particular country/countries
         from official ISO website.
     """
-    #counter that determines the max number of retries for the Selenium function, retry required if an error occurs when accessing a country's ISO page
+    #counter that determines the max number of retries for the Selenium function, retry required if an error occurs when accessing the html of a country's ISO page
     recursive_selenium_count = 3
 
-    #create instance of chromedriver
-    driver = create_driver()
+    #initialise dataframe to hold updates data obtained from ISO pages
+    iso3166_df_selenium = pd.DataFrame()
 
     #raise error if invalid alpha-2 code input
     if not(alpha2.upper() in list(iso3166.countries_by_alpha2.keys())):
         raise ValueError(f"Invalid alpha-2 input: {alpha2}.")
-    
-    #create session for input country's ISO section
-    driver.get(iso_base_url + alpha2.upper())
-    
-    #pause for 4 seconds
-    WebDriverWait(driver, 4) 
-
-    #get page html source and create parsed BeautifulSoup object
-    table_html = driver.page_source
-    soup = BeautifulSoup(table_html, 'html.parser')
-
-    #randomly scroll down the page 200-700px
-    driver.execute_script('window.scrollTo(0, ' + random.choice(["200", "300", "400", "500", "600", "700"]) + ')') 
-    
-    #pause for 2.5 seconds
-    time.sleep(2.5)
-
-    #have to run below code again to get page html source and create parsed BeautifulSoup object, seems to be error in page loading time
-    table_html = driver.page_source
-    soup = BeautifulSoup(table_html, 'html.parser')
 
     #parse Changes section table on webpage, using the header of the section
-    changes_html = ""   
-    for h3 in soup.find_all('h3'):
-        if (('change history of country code' in h3.text.lower()) or ('historique des modifications des codes de pays' in h3.text.lower())):
-            changes_html = str(soup).split(str(h3))[1]
-            break
+    changes_html = ""
 
-    #create soup object from changes section, get html table 
-    changes_table_soup = BeautifulSoup(changes_html, "lxml")
-    changes_table = changes_table_soup.find('table')
+    while (recursive_selenium_count != 0 and changes_html == ""):
 
-    #convert html table into 2D array
-    changes_table_converted = table_to_array(changes_table)
+      #create instance of chromedriver
+      driver = create_driver()
 
-    #remarks table html, if applicable
-    country_summary_table = soup.find(class_='core-view-summary')
+      #create session for input country's ISO section
+      driver.get(iso_base_url + alpha2.upper())
 
-    #if changes table is empty, recursively recall the function, up to 3 times, if table still empty then raise error
-    if (len(changes_table_converted) == 0):
-        #recursively call the function up to 3 times
-        while (recursive_selenium_count != 0):
-            #convert 2D array of updates into dataframe, fix columns, remove duplicate rows etc
-            iso3166_df_selenium = parse_updates_table(alpha2, changes_table_converted, year, year_range, less_than, greater_than)
-            #get any listed remarks from ISO page, if applicable
-            iso3166_df_selenium = parse_remarks_table(iso3166_df_selenium, country_summary_table)
-            #decrement the recursive counter
-            recursive_selenium_count-=1 
-        #if recursive limit has been met then delete driver session and raise a runtime error
-        if (recursive_selenium_count == 0):
-            driver.quit()
-            raise RuntimeError("Runtime error that occurs when Selenium hasn't properly parsed ISO website after 3 attempts, may need to rerun script again.")
-    else:
-        #convert 2D array of updates into dataframe, fix columns, remove duplicate rows etc
-        iso3166_df_selenium = parse_updates_table(alpha2, changes_table_converted, year, year_range, less_than, greater_than)
-        #get any listed remarks from ISO page, if applicable
-        iso3166_df_selenium = parse_remarks_table(iso3166_df_selenium, country_summary_table)
+      #pause for 4 seconds
+      WebDriverWait(driver, 4)
+
+      #get page html source and create parsed BeautifulSoup object
+      table_html = driver.page_source
+      soup = BeautifulSoup(table_html, 'html.parser')
+
+      #randomly scroll down the page 200-700px
+      driver.execute_script('window.scrollTo(0, ' + random.choice(["200", "300", "400", "500", "600", "700"]) + ')')
+
+      #pause for 2.5 seconds
+      time.sleep(2.5)
+
+      #have to run below code again to get page html source and create parsed BeautifulSoup object, seems to be error in page loading time
+      table_html = driver.page_source
+      soup = BeautifulSoup(table_html, 'html.parser')
+
+      for h3 in soup.find_all('h3'):
+          if (('change history of country code' in h3.text.lower()) or ('historique des modifications des codes de pays' in h3.text.lower())):
+              changes_html = str(soup).split(str(h3))[1]
+              break
+
+      #break to next while loop iteration if Changes html table data is blank
+      if (changes_html == ""):
+          break
+
+      #create soup object from changes section, get html table
+      changes_table_soup = BeautifulSoup(changes_html, "lxml")
+      changes_table = changes_table_soup.find('table')
+
+      #convert html table into 2D array
+      changes_table_converted = table_to_array(changes_table)
+
+      #add remarks table html, if applicable
+      country_summary_table = soup.find(class_='core-view-summary')
+
+      #convert 2D array of updates into dataframe, fix columns, remove duplicate rows etc
+      iso3166_df_selenium = parse_updates_table(alpha2, changes_table_converted, year, year_range, less_than, greater_than)
+
+      #get any listed remarks from ISO page, if applicable
+      iso3166_df_selenium = parse_remarks_table(iso3166_df_selenium, country_summary_table)
+
+      #decrement the recursive counter
+      recursive_selenium_count-=1
+
+    #raise error if max number of recursive tries have been done
+    if (recursive_selenium_count == 0):
+        driver.quit()
+        raise RuntimeError("Runtime error that occurs when Selenium hasn't properly parsed ISO website after 3 attempts, may need to rerun script again.")
 
     #delete chromedriver session
     driver.quit()
@@ -644,22 +658,22 @@ def get_updates_df_selenium(alpha2: str, year: list=[], year_range: bool=False, 
 def get_updates_df_wiki(alpha2: str, year: list=[], year_range: bool=False, less_than: bool=False, greater_than: bool=False) -> pd.DataFrame:
     """
     Pull all related ISO 3166 updates/changes for a given input country from the country's
-    respective wiki page. Selenium is not a requirement for web scraping wiki pages. Convert 
-    parsed html table, from the Changes/Updates Section into a pandas dataframe. 
+    respective wiki page. Selenium is not a requirement for web scraping wiki pages. Convert
+    parsed html table, from the Changes/Updates Section into a pandas dataframe.
 
     Parameters
     ==========
     :alpha2: str
         single string of an alpha-2 ISO 3166-1 code to get the latest ISO 3166 updates for.
     :year: array
-        array/list of year(s). Only the ISO 3166 updates for the selected year for a particular 
+        array/list of year(s). Only the ISO 3166 updates for the selected year for a particular
         country will be returned. If empty then all years of updates are returned.
     :year_range: bool
         set to True if a range of years are input into year parameter e.g "2002-2010" etc.
         Function will remove all rows in Dataframe that aren't in specified year range.
     :less_than: bool
         set to True if less than symbol is input into year parameter e.g "<2018" etc.
-        Function will remove all rows in Dataframe that are greater than or equal to 
+        Function will remove all rows in Dataframe that are greater than or equal to
         specified year.
     :greater_than: bool
         set to True if greater than symbol is input into year parameter e.g ">2005" etc.
@@ -681,33 +695,33 @@ def get_updates_df_wiki(alpha2: str, year: list=[], year_range: bool=False, less
     #convert html content into BS4 object
     soup = BeautifulSoup(page.content, "html.parser")
 
-    #get Changes Section/Heading from soup 
+    #get Changes Section/Heading from soup
     changesSection = soup.find("span", {"id": "Changes"})
 
     #skip to next iteration if no changes for ISO code found
     if (changesSection is None):
         return pd.DataFrame()
 
-    #get table element in Changes Section 
+    #get table element in Changes Section
     table = changesSection.findNext('table')
-    
-    #convert html table to 2D array 
+
+    #convert html table to 2D array
     iso3166_table_wiki = table_to_array(table)
 
     #convert 2D array of updates into dataframe, fix columns, remove duplicate rows etc
     iso3166_df_wiki = parse_updates_table(alpha2, iso3166_table_wiki, year, year_range, less_than, greater_than)
 
-    #some wiki pages have multiple Changes/Updates table
+    #some wiki pages have multiple Changes/Updates tables
     iso3166_table_2 = table.findNext('table', {"class": "wikitable"})
 
-    #concatenate both updates table to 1 dataframe, if applicable 
+    #concatenate both updates table to 1 dataframe, if applicable
     if (iso3166_table_2 != None):
         #convert secondary table into 2D array
         temp_iso3166_table = table_to_array(iso3166_table_2)
         #several tables have extra unwanted cols meaning we ignore those tables
-        if ('former code' not in [col.lower() for col in temp_iso3166_table[0]] and 
-            'in region' not in [col.lower() for col in temp_iso3166_table[0]] and 
-            'before' not in [col.lower() for col in temp_iso3166_table[0]]): 
+        if ('former code' not in [col.lower() for col in temp_iso3166_table[0]] and
+            'in region' not in [col.lower() for col in temp_iso3166_table[0]] and
+            'before' not in [col.lower() for col in temp_iso3166_table[0]]):
             temp_iso3166_df_wiki = parse_updates_table(alpha2, temp_iso3166_table, year, year_range, less_than, greater_than)
             #concat two dataframes together
             iso3166_df_wiki = pd.concat([iso3166_df_wiki, temp_iso3166_df_wiki], axis=0)
@@ -716,16 +730,16 @@ def get_updates_df_wiki(alpha2: str, year: list=[], year_range: bool=False, less
 
 def parse_remarks_table(iso3166_df_: pd.DataFrame, country_summary_table) -> pd.DataFrame:
     """
-    Parsing country summary table on ISO page which contains a selection of info 
-    about the country. Here we are just parsing the "Remarks" column which 
+    Parsing country summary table on ISO page which contains a selection of info
+    about the country. Here we are just parsing the "Remarks" column which
     contains supplementary info/remarks about the ISO 3166 entry. The remarks
-    are split into remarks part 1, 2 and 3, with the majority only having part
+    are split into remarks part 1, 2, 3 and 4, with the majority only having part
     1 and 2.
-    
-    For any countries that have remarks listed, they are appended to the country 
+
+    For any countries that have remarks listed, they are appended to the country
     update's description. If the remark has been mentioned in multiple updates
     then the remark will only be added to the latest entry. For any countries
-    that don't have any remarks listed the original input object will be 
+    that don't have any remarks listed the original input object will be
     returned.
 
     Parameters
@@ -733,7 +747,7 @@ def parse_remarks_table(iso3166_df_: pd.DataFrame, country_summary_table) -> pd.
     :iso3166_df_: pd.DataFrame
         object with all the pulled ISO 3166 updates data for inputted country.
     :country_summary_table: bs4.element.Tag
-        bs4 soup object for summary table element on country's ISO page. 
+        bs4 soup object for summary table element on country's ISO page.
 
     Returns
     =======
@@ -743,14 +757,14 @@ def parse_remarks_table(iso3166_df_: pd.DataFrame, country_summary_table) -> pd.
         for input country then the original input object will be returned.
     """
     #object to store all remarks - part 1, 2 and 3, if applicable
-    remarks_ = {"part1": "", "part2": "", "part3": ""}
+    remarks_ = {"part1": "", "part2": "", "part3": "", "part4": ""}
 
     #iterate through data columns on ISO summary table, append any remarks to object, if applicable
     for elem in country_summary_table:
         #check if html element is a bs4.Tag element, get its column name
         if isinstance(elem, Tag):
             column_name = elem.find(class_="core-view-field-name").text.lower()
-            
+
             def parse_remarks_column_value(col_elem):
                 """ Parse remarks from column class element. """
                 #get column value from html class element, remove whitespace
@@ -758,37 +772,42 @@ def parse_remarks_table(iso3166_df_: pd.DataFrame, country_summary_table) -> pd.
                 if (column_value != "" and column_value != None):
                     #remove full stop at end of string, if applicable
                     if (column_value[-1] == "."):
-                        column_value = column_value[:-1]         
-                return column_value   
+                        column_value = column_value[:-1]
+                return column_value
 
             #parse remarks data from column in ISO page
             column_value = parse_remarks_column_value(elem)
 
-            #append remark part 1 column value to array 
+            #append remark part 1 column value to array
             if (column_name == "remark part 1"):
                 remarks_["part1"] = column_value
 
-            #append remark part 2 column value to array 
+            #append remark part 2 column value to array
             if (column_name == "remark part 2"):
                 remarks_["part2"] = column_value
 
-            #append remark part 3 column value to array 
+            #append remark part 3 column value to array
             if (column_name == "remark part 3"):
                 remarks_["part3"] = column_value
 
+            #append remark part 4 column value to array
+            if (column_name == "remark part 4"):
+                remarks_["part4"] = column_value
+
     #if no remarks found, return original input object
-    if (all(value == "" for value in remarks_.values())): 
+    if (all(value == "" for value in remarks_.values())):
         return iso3166_df_
-    
+
     #sort dataframe via the date column
     iso3166_df_ = iso3166_df_.sort_values(by=['Date Issued'], ascending=False)
-    
+
     #bools to check if remark has been appended to country updates description,
     #which means the same remark isn't being added to multiple descriptions and only the most recent update
-    remark_part1_added = False 
-    remark_part2_added = False 
-    remark_part3_added = False 
-    
+    remark_part1_added = False
+    remark_part2_added = False
+    remark_part3_added = False
+    remark_part4_added = False
+
     #iterate over all updates in dataframe, add remarks to description attribute, if applicable
     for index, row in iso3166_df_.iterrows():
         if ("remark part 1" in row["Description of Change"].lower() and not remark_part1_added):
@@ -803,18 +822,22 @@ def parse_remarks_table(iso3166_df_: pd.DataFrame, country_summary_table) -> pd.
             if (remarks_["part3"] != ''):
                 iso3166_df_.at[index, "Description of Change"] = row["Description of Change"][:-1] + " (" + remarks_["part3"][0].lower() + remarks_["part3"][1:] + ")."
                 remark_part3_added = True
+        if ("remark part 4" in row["Description of Change"].lower() and not remark_part4_added):
+            if (remarks_["part4"] != ''):
+                iso3166_df_.at[index, "Description of Change"] = row["Description of Change"][:-1] + " (" + remarks_["part4"][0].lower() + remarks_["part4"][1:] + ")."
+                remark_part4_added = True
 
     return iso3166_df_
 
 def parse_updates_table(alpha2: str, iso3166_updates_table: list, year: list, year_range: bool, less_than: bool, greater_than: bool) -> pd.DataFrame:
     """
     Convert columns/headers using correct naming conventions, correct Date column into correct
-    format, translate any unicode arrows in the text to normal arrow (->), fill any null rows. 
-    Some listed updates are "corrected" at a later date after publication; to keep track of 
-    these corrections the "Corrected Date Issued" and "Corrected Date" columns are used but 
-    later removed from the output dataframe. If year param not empty then remove any rows that 
-    don't have specified input year(s). If year range, less than or greater than parameters 
-    set to True then get all updates from year range or all updates less than or all updates 
+    format, translate any unicode arrows in the text to normal arrow (->), fill any null rows.
+    Some listed updates are "corrected" at a later date after publication; to keep track of
+    these corrections the "Corrected Date Issued" and "Corrected Date" columns are used but
+    later removed from the output dataframe. If year param not empty then remove any rows that
+    don't have specified input year(s). If year range, less than or greater than parameters
+    set to True then get all updates from year range or all updates less than or all updates
     greater than input year, respectively.
 
     Parameters
@@ -837,7 +860,7 @@ def parse_updates_table(alpha2: str, iso3166_updates_table: list, year: list, ye
     :greater_than: bool
         set to True if greater than symbol is input into year parameter e.g ">2005" etc.
         Function will remove all rows in Dataframe that are less than specified year.
-    
+
     Returns
     =======
     :iso3166_df: pd.DataFrame
@@ -846,15 +869,18 @@ def parse_updates_table(alpha2: str, iso3166_updates_table: list, year: list, ye
     """
     #raise error if input updates table isn't an array/list
     if not isinstance(iso3166_updates_table, list):
-        raise TypeError(f"Input ISO 3166 updates table parameter must be a array/list, got {type(iso3166_updates_table)}.")
+        raise TypeError(f"Input ISO 3166 updates table parameter must be an array/list, got {type(iso3166_updates_table)}.")
 
-    #update column names to correct naming conventions
-    cols = correct_columns(iso3166_updates_table[0])
+    #update column names to correct naming conventions, catch error if array empty
+    try:
+      cols = correct_columns(iso3166_updates_table[0])
+    except:
+      raise ValueError(f"Error parsing columns from {alpha2} updates table, table should not be emtpy: {iso3166_updates_table}.")
 
-    #lambda function to translate any occurrences of unicode arrow → to normal arrow ->
-    correct_arrow_lambda = lambda table: [[elem.replace('→', '->') for elem in entry if isinstance(elem, str)] for entry in table]
+    #lambda function to translate any occurrences of unicode arrow â†’ to normal arrow ->
+    correct_arrow_lambda = lambda table: [[elem.replace('â†’', '->') for elem in entry if isinstance(elem, str)] for entry in table]
 
-    #translate unicode arrow → to normal arrow -> in table text, using lambda function
+    #translate unicode arrow â†’ to normal arrow -> in table text, using lambda function
     iso3166_updates_table = correct_arrow_lambda(iso3166_updates_table)
 
     #convert 2D array into dataframe
@@ -875,7 +901,7 @@ def parse_updates_table(alpha2: str, iso3166_updates_table: list, year: list, ye
             remove any full stops/punctuation and whitespace. """
         return re.sub("[(].*[)]", "", row).replace(' ', "").replace(".", '')
 
-    #set Date Issued column to the original date of publication 
+    #set Date Issued column to the original date of publication
     iso3166_df["Date Issued"] = iso3166_df["Date Issued"].apply(corrected_date)
 
     def get_year(row: pd.Series):
@@ -891,7 +917,7 @@ def parse_updates_table(alpha2: str, iso3166_updates_table: list, year: list, ye
         #create temp year column to get year of updates from date column, convert to str
         iso3166_df['Year'] = iso3166_df["Date Issued"].apply(get_year)
         iso3166_df['Year'] = iso3166_df['Year'].astype(str)
-        
+
         #drop all rows in dataframe that are less than input year
         if (greater_than):
             iso3166_df = iso3166_df.drop(iso3166_df[iso3166_df.Year < year[0]].index)
@@ -926,7 +952,7 @@ def parse_updates_table(alpha2: str, iso3166_updates_table: list, year: list, ye
 
     #separate 'Browsing' and 'Platform' string if they are concatenated in column
     iso3166_df["Edition/Newsletter"] = iso3166_df["Edition/Newsletter"].str.replace('BrowsingPlatform', "Browsing Platform")
-        
+
     def remove_doublespacing(row: pd.Series):
         """ remove double spacing from string. """
         return re.sub(' +', ' ', row)
@@ -943,25 +969,25 @@ def parse_updates_table(alpha2: str, iso3166_updates_table: list, year: list, ye
     iso3166_df.drop(iso3166_df[(iso3166_df['Code/Subdivision Change'] == "") & (iso3166_df['Description of Change'] == "")].index, inplace=True)
 
     #reindex/reorder columns in dataframe
-    iso3166_df = iso3166_df.reindex(columns=['Date Issued', 'Corrected Date Issued', 'Edition/Newsletter',
-        'Code/Subdivision Change', 'Description of Change'])
-
+    iso3166_df = iso3166_df.reindex(columns=['Code/Subdivision Change', 'Description of Change', 
+                                             'Date Issued', 'Corrected Date Issued', 'Edition/Newsletter'])
+    
     return iso3166_df
 
 def correct_columns(cols: list) -> list:
-    """ 
-    Update column names so all dataframes follow the column format of: ["Date Issued", 
-    "Edition/Newsletter", "Code/Subdivision Change", "Description of Change"].
+    """
+    Update column names so all dataframes follow the column format of: ["Code/Subdivision Change", 
+    "Description of Change", "Date Issued", "Edition/Newsletter"].
 
     Parameters
     ==========
     :cols: list
         list of column names from header of parsed Changes table on wiki.
-    
+
     Returns
     =======
     :cols: list
-        list of columns updated to correct naming conventions. 
+        list of columns updated to correct naming conventions.
     """
     if ("Newsletter" in cols):
         cols = list(map(lambda x: x.replace("Newsletter", 'Edition/Newsletter'), cols))
@@ -978,24 +1004,24 @@ def correct_columns(cols: list) -> list:
     cols = list(map(lambda x: x.replace("Description of Change", 'Description of Change'), cols))
     cols = list(map(lambda x: x.replace("Description of Change in newsletter", 'Description of Change'), cols))
 
-    return cols     
+    return cols
 
 def table_to_array(table_tag) -> tuple:
     """
-    Convert html table into 2D array. Much of the function code was inspired from [1] which 
-    provides an optimal and working solution for handling tables with different rowspans & 
-    colspans. 
+    Convert html table into 2D array. Much of the function code was inspired from [1] which
+    provides an optimal and working solution for handling tables with different rowspans &
+    colspans.
 
     Parameters
     ==========
     :table_tag: bs4.element.Tag
       BS4 Tag object of table element.
-    
+
     Returns
     =======
     :table: tuple
       tuple of parsed data from html table in Changes section of ISO 3166 wiki.
-    
+
     References
     ==========
     [1]: https://stackoverflow.com/questions/48393253/how-to-parse-table-with-rowspan-and-colspan
@@ -1003,10 +1029,10 @@ def table_to_array(table_tag) -> tuple:
     #if invalid table tag input return empty array
     if (table_tag is None):
         return []
-    
+
     #raise type error if input parameter not a BS4 tag type
     if not isinstance(table_tag, Tag):
-        raise TypeError(f"Input table object must be of type bs4.element.Tag, got {type(table_tag)}.")
+        raise TypeError("Input table object must be of type bs4.element.Tag, got {}.".format(type(table_tag)))
 
     rowspans = []  #track pending rowspans
     rows = table_tag.find_all('tr') #all table rows
@@ -1015,16 +1041,16 @@ def table_to_array(table_tag) -> tuple:
     #add active rowspans from preceding rows
     #we *ignore* the colspan value on the last cell, to prevent
     #creating 'phantom' columns with no actual cells, only extended
-    #colspans. This is achieved by hardcoding the last cell width as 1. 
-    #a colspan of 0 means “fill until the end” but can really only apply
-    #to the last cell; ignore it elsewhere. 
+    #colspans. This is achieved by hardcoding the last cell width as 1.
+    #a colspan of 0 means â€œfill until the endâ€ but can really only apply
+    #to the last cell; ignore it elsewhere.
     colcount = 0
     for r, row in enumerate(rows):
         cells = row.find_all(['td', 'th'], recursive=False)
         colcount = max(
             colcount,
             sum(int(c.get('colspan', 1)) or 1 for c in cells[:-1]) + len(cells[-1:]) + len(rowspans))
-        # update rowspan bookkeeping; 0 is a span to the bottom. 
+        # update rowspan bookkeeping; 0 is a span to the bottom.
         rowspans += [int(c.get('rowspan', 1)) or len(rows) - r for c in cells]
         rowspans = [s - 1 for s in rowspans if s > 1]
 
@@ -1038,7 +1064,7 @@ def table_to_array(table_tag) -> tuple:
     #fill matrix from row data
     rowspans = {}  #track pending rowspans, column number mapping to count
     for row, row_elem in enumerate(rows):
-        span_offset = 0  #how many columns are skipped due to row and colspans 
+        span_offset = 0  #how many columns are skipped due to row and colspans
         for col, cell in enumerate(row_elem.find_all(['td', 'th'], recursive=False)):
             #adjust for preceding row and colspans
             col += span_offset
@@ -1068,7 +1094,7 @@ def table_to_array(table_tag) -> tuple:
             #remove any double spacing after commas, colons, semicolons or &nhbsp; unicode in cell text
             value = value.replace(" ,", ",").replace(" :", ":").replace(" ;", ";").replace(u'\xa0', ' ').replace(' )', ')').replace('( ', '()')
 
-            #add href link to newsletter rows if applicable - ignore any wiki links            
+            #add href link to newsletter rows if applicable - ignore any wiki links
             if not (cell.find('a') is None):
                 if not (cell.find('a')['href'].startswith('/wiki/')):
                     value = value + " (" + cell.find('a')['href'] + ')'
@@ -1085,7 +1111,7 @@ def table_to_array(table_tag) -> tuple:
                 except IndexError:
                     #rowspan or colspan outside the confines of the table
                     pass
-        
+
         #update rowspan bookkeeping
         rowspans = {c: s - 1 for c, s in rowspans.items() if s > 1}
 
@@ -1100,7 +1126,7 @@ def table_to_array(table_tag) -> tuple:
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Get latest changes/updates for all countries in the ISO 3166-1/3166-2 standards.')
-    parser.add_argument('-alpha', '--alpha', type=str, required=False, default="", 
+    parser.add_argument('-alpha_codes', '--alpha_codes', type=str, required=False, default="", 
         help='ISO 3166-1 alpha-2, alpha-3 or numeric country codes to check for updates.')
     parser.add_argument('-year', '--year', type=str, required=False, default="", 
         help='Selected year(s) to check for updates, can also be a year range or greater than/less than specific year.')
@@ -1110,7 +1136,7 @@ if __name__ == '__main__':
         help='Folder where to store exported ISO files.')
     parser.add_argument('-export_json', '--export_json', required=False, action=argparse.BooleanOptionalAction, default=1,
         help='Whether to export all found updates to json.')
-    parser.add_argument('-export_csv', '--export_csv', required=False, action=argparse.BooleanOptionalAction, default=0,
+    parser.add_argument('-export_csv', '--export_csv', required=False, action=argparse.BooleanOptionalAction, default=1,
         help='Whether to export all found updates to csv files in export folder.')
     parser.add_argument('-concat_updates', '--concat_updates', required=False, action=argparse.BooleanOptionalAction, default=1,
         help='Whether to concatenate updates of individual countries into the same json or csv files or to individual files.')
@@ -1132,5 +1158,5 @@ if __name__ == '__main__':
     use_selenium = args.use_selenium
 
     #output ISO 3166 updates/changes for selected alpha code(s) and year(s)
-    get_updates(alpha_codes, year, export_filename, export_folder, 
-        concat_updates, export_json, export_csv, verbose, use_selenium)
+    get_updates(alpha_codes=alpha_codes, year=year, export_filename=export_filename, export_folder=export_folder, 
+        concat_updates=concat_updates, export_json=export_json, export_csv=export_csv, verbose=verbose, use_selenium=use_selenium)

@@ -36,17 +36,17 @@ iso["AD"]
 iso["BA","DE","FRA","HUN","600"]
 ```
 
-**Get all listed ISO 3166 changes/updates for all countries, for years 2002, 2003 and 2004:**
+**Get all listed ISO 3166 changes/updates for all countries, for years 2002, 2005 and 2009:**
 ```python
-iso.year("2002, 2003, 2004")
+iso.year("2002, 2005, 2009")
 ```
 
-**Get all listed ISO 3166 changes/updates for all countries, for year range 2013-2016:**
+**Get all listed ISO 3166 changes/updates for all countries, for year range 2013-2016, inclusive:**
 ```python
 iso.year("2013-2016")
 ```
 
-**Get all listed ISO 3166 changes/updates for all countries, for all years after 2017 inclusive:**
+**Get all listed ISO 3166 changes/updates for all countries, for all years after 2017, inclusive:**
 ```python
 iso.year(">2017")
 ```
@@ -68,7 +68,7 @@ iso.months("36-48")
 
 The output to the above functions for the updates/changes to an ISO 3166 country returns 4 attributes: 
 
-* Edition/Newsletter: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform page.
-* Date Issued: date that the change was communicated.
 * Code/Subdivision change: overall summary of change/update made.
 * Description of Change: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
+* Date Issued: date that the change was communicated.
+* Edition/Newsletter: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform page.

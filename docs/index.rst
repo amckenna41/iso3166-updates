@@ -26,10 +26,10 @@ and naming conventions.
 
 Each ISO 3166 update entry has 4 main data attributes:
 
-* *Edition/Newsletter*: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform (OBP) page.
-* *Date Issued*: date that the change was communicated.
 * *Code/Subdivision change*: overall summary of change/update made.
 * *Description of Change*: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
+* *Date Issued*: date that the change was communicated.
+* *Edition/Newsletter*: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform (OBP) page.
 
 Last Updated
 ============

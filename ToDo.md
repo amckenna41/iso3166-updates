@@ -94,7 +94,7 @@ Edition/Newsletter - should be OBP.
 - [X] Update api/readme to incorporate new api gateway.
 - [X] Update api config / gateway if api config file changed. Documentation requires new one to be created. Create new one (iso3166-updates-config-2), delete old one (iso3166-updates), then create new one (iso3166-updates), delete old new one (iso3166-updates-config-2) 
 - [X] Mention intended audience in readme.
-- [] Add api landing page with documentation, similar to restcountries.
+- [X] Add api landing page with documentation, similar to restcountries.
 - [X] Add years to input param of get_updates func, use tupele of (alpha2, year)
 - [X] Reorder software metadata in setup.py to be in order of main func, create __description__ var.
 - [X] Add download_url to setup.py - url of zipped package.
@@ -218,6 +218,7 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Remove double spacing from string: import re, re.sub(' +', ' ', 'The     quick brown    fox').
 - [X] Try recreating the driver on each iteration - https://stackoverflow.com/questions/58968078/max-retries-exceeded-with-url-selenium.
 - [X] Add use_selenium flag to just get wiki data not selenium, add to check-for-updates func.
+*****
 - [X] Add get_driver() function from check-for-updates to main file on repo.
 - [X] Mention check-for-updates microservice in readme.
 - [X] Rerun get all script to remove some instances of double spacing, e.g "AZ".
@@ -261,7 +262,7 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Comment out binary_location in get_all script.
 - [X] When correcting date using re.sub, can just use that on all Date Issud values as it wont effect the outcome.
 - [X] Go over main readme's.
-- [X] In check-for-updates check that archive_folder is actually storing archive json and not duplicate of one on main folder **.
+- [X] In check-for-updates check that archive_folder is actually storing archive json and not duplicate of one on main folder 
 - [X] In check-for-updates double check archive functionality still works.
 - [X] When mentioning any repo secrets relating to GCP, prefix with GCP_
 - [X] In check-for-updates look into different status codes, return message if request gets status code.
@@ -281,7 +282,7 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Change all references of ISO 3166-2 changes to ISO 3166 chabges.
 - [X] Add github release.
 - [X] Extract modification remarks part 1, 2 and 3.
-- [ ] Don't need two change/updates attributes in output object.
+- [X] Don't need two change/updates attributes in output object.
 - [X] Update readme with new column/attribute.
 - [X] Only add remark if update has "modification of remarks in the text".
 - [X] Mention in readme that pulling in from wiki as well, as it has some of the older updates, ones from earlier newsletters (e.g IM).
@@ -297,12 +298,12 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Update check-for-updates cloud func as gcp storage no longer required.
 - [X] Update latest 2024 updates (no subdivision changes found).
 - [X] Update updates.md and API version.
-- [ ] Review demo, missing updates already in object being returned.
-- [ ] Review demo, check remarks are being appended.
+- [X] Review demo, missing updates already in object being returned.
+- [X] Review demo, check remarks are being appended.
 - [X] Switch to pyproject.toml - update workflows.
 - [X] Update tests, API and documentation with new class import functionality.
 - [X] Update worklfow to account for failure of test workflow.
-- [ ] Refer to iso3166-2 docs to help with docs for this.
+- [X] Refer to iso3166-2 docs to help with docs for this.
 - [X] Add license section to iso3166-updates docs main page.
 - [X] Raise custom error if trying to access alpha code that exists but isnt in object after custom parameter input to class 
 - [X] Add more detail to examples in api.rst
@@ -333,7 +334,7 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Split up years sections in usage.rst.
 - [X] Switch string formatting to f string.
 - [X] In check-for-updates, export_to_bucket and create_github_issue functions should return 1 or 0, and then this return value should be used to print out the adaquate success/failure message. Script shouldn't fail if either of the funcs fail?
-- [X] Blob name not explicityl required for check-for-updates
+- [X] Blob name not explicitly required for check-for-updates
 - [X] Export to bucket, regardless if updates found, if blob doesnt exist then export.
 - [X] In check-for-updates, have a EXPORT_CSV env var that exports the object to csv as well, to the same bucekt.
 - [X] Read over get_all script.
@@ -352,6 +353,26 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] Add platform module functionality to test_get_all script so tests can be run on windows.
 - [X] Read over docs.
 - [X] If getting all codes in get_all delete nested dicts else dont.
+- [ ] Coverage report not uploading correctly.
+- [X] Add section on readme with links to other related repos.
+- [X] Add more info about API on API section of docs.
+- [X] Update changelog.md
+- [X] Update API unit tests.
+- [X] Add /months/name endpoint examples to readme and docs
+- [X] Reorder list of attributes -  in readme and code outputs etc. 
+- [X] Rerun get_script to get object with new attribute order
+- [X] Create guidelines when contributing to the repo, such as adding new updates data, list places in directory where date of last update has to be manually updated. Add to comments on contributing.rst.
+- [ ] When reordering attributes, in unit tests double check need to reorder object attributes - API and software unit tests.
+- [X] Update UPDATES.md file with reordered csv attributes.
+- [X] After reordering of attributes, some subdivision objects are in incorrect order e.g DJ, ER, FR
+- [X] In test_get_all script, double check if tests should be getting all data, try to minimise exporting all the data etc. Run each test case 1 by 1.
+- [ ] In changelog, add seperate section for software and API?
 
-Future addtions 
-- [ ] Programmatically push latest version of software and object to PyPI - can do this in specific workflow. Pull in current version of object from repo/software, compare against latest exported object, programtically push latest object to iso3166_updates/iso3166-updates.json in repo, function should take in arguments including new software version and commit message and then use GitHub API to start the build_test workflows. https://stackoverflow.com/questions/74100867/run-github-workflow-with-python
+Future additions
+----------------
+- [X] Programmatically push latest version of software and object to PyPI - can do this in specific workflow. Pull in current version of object from repo/software, compare against latest exported object, programtically push latest object to iso3166_updates/iso3166-updates.json in repo, function should take in arguments including new software version and commit message and then use GitHub API to start the build_test workflows. https://stackoverflow.com/questions/74100867/run-github-workflow-with-python
+- [X] Additional steps for Python chromedriver protection - https://www.zenrows.com/blog/selenium-avoid-bot-detection#disable-automation-indicator-webdriver-flags
+- [ ] Add backtotop button on readthedocs
+- [ ] Install Chromedriver in workflow so the selenium functions can be tested in CI/CD
+- [ ] Mock get_updates for requests.get and driver.get etc.
+- [ ] Add alpha_codes_from parameter to get script, pulls all updates data from the input alpha code alphabetically. 

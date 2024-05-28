@@ -17,7 +17,7 @@
   <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/ISO_Logo_%28Red_square%29.svg" alt="iso" height="300" width="400"/> -->
 </div>
 
-> Software and API that checks for any updates/changes to the ISO 3166-1 and ISO 3166-2 country codes and subdivision naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui). Available via a lightweight Python software package as well as an API. 
+> Software and accompanying API that checks for any updates/changes to the ISO 3166-1 and ISO 3166-2 country codes and subdivision naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui). Available via a lightweight Python software package as well as an API. 
 
 * A <b>demo</b> of the software and API is available [here][demo_iso3166_updates].
 * A <b>demo</b> of the script used to pull and export all the latest updates is available [here][demo_get_all_iso3166_updates].
@@ -44,11 +44,11 @@ Introduction
 ------------
 `iso3166-updates` is a software and accompanying API that consists of a series of scripts that check for any updates/changes to the ISO 3166 country codes and subdivision naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui).
 
-The ISO 3166 standard by the ISO (International Organization for Standardisation) defines codes for the names of countries, dependent territories, special areas of geographical interest, consolidated into the ISO 3166-1 standard [[1]](#references), and their principal subdivisions (e.g., provinces, states, departments, regions), which comprise the ISO 3166-2 standard [[2]](#references). The ISO 3166-1 was first published in 1974 and currently comprises 249 countries, 193 of which are sovereign states that are members of the United Nations 🇺🇳 [[1]](#references). The ISO 3166-2 was first published in 1998 and as of November 2023 there are 5,039 codes defined in it [[2]](#references).
+The ISO 3166 standard by the ISO (International Organization for Standardisation) defines codes for the names of countries, dependent territories, special areas of geographical interest, consolidated into the ISO 3166-1 standard [[1]](#references), and their principal subdivisions (e.g., provinces, states, departments, regions etc), which comprise the ISO 3166-2 standard [[2]](#references). The ISO 3166-1 was first published in 1974 and currently comprises 249 countries, 193 of which are sovereign states that are members of the United Nations 🇺🇳 [[1]](#references). The ISO 3166-2 was first published in 1998 and as of November 2023 there are **5,039** codes defined in it [[2]](#references).
 
 ### Problem Statement:
 
-The ISO is a very dynamic organisation and regularly change/update/remove entries within its library of standards, including the ISO 3166. Additions/changes/deletions to country/territorial codes occur less often in the ISO 3166-1, but changes are more frequent for the ISO 3166-2 codes due to there being thousands more entries, thus it can be difficult to keep up with and track these changes. These changes can occur for a variety of geopolitical and administrative reasons. Previously these changes were communicated via newsletters; but as of July 2013 these changes are now communicated via their online catalogue/Online Browsing Platform (OBP), or via a database, which usually costs money to subscribe to (up to $300) [[3]](#references). Usually these updates are conveyed at the end of the year, with amendments and updates occasionally published at various times throughout the year [[4]](#references). 
+The ISO is a very dynamic organisation and regularly change, update and or remove entries within its library of standards, including the ISO 3166. Additions, changes and or deletions to country/territorial codes occur less often in the ISO 3166-1, but changes are more frequent for the ISO 3166-2 codes due to there being thousands more entries, thus it can be difficult to keep up with and track these changes. These changes can occur for a variety of geopolitical and administrative reasons. Previously these changes were communicated via newsletters; but as of July 2013 these changes are now communicated via their online catalogue/Online Browsing Platform (OBP), or via a database, which usually costs money to subscribe to (**up to $300**) [[3]](#references). Usually these updates are conveyed at the end of the year, with amendments and updates occasionally published at various times throughout the year [[4]](#references). 
 
 This software and accompanying API make it extremely easy to check for any new or historic updates to a country or set of country's ISO 3166-2 codes for free; with an easy-to-use interface and Python package and API, ensuring that you get the most up-to-date and accurate ISO 3166-2 codes and naming conventions.
 
@@ -77,14 +77,15 @@ The other endpoints available in the API are:
 * https://iso3166-updates.com/api/name/<input_name>/year/<input_year>
 * https://iso3166-updates.com/api/months/<input_month>
 * https://iso3166-updates.com/api/months/<input_month>/alpha/<input_alpha>
+* https://iso3166-updates.com/api/months/<input_month>/name/<input_name>
 
-The paths/endpoints available in the API are - `/api/all`, `/api/alpha`, `/api/name`, `/api/year` and `/api/months`. 
+The main paths/endpoints available in the API are - `/api/all`, `/api/alpha`, `/api/name`, `/api/year` and `/api/months`. 
 
 * `/api/all`: get all of the ISO 3166 updates/changes data for all countries.
 
 * `/api/alpha`: get all the ISO 3166 updates/changes data for one or more countries according to their ISO 3166-1 alpha-2, alpha-3 or numeric country codes. A single alpha code or a list of them can be passed to the API e.g. `/api/alpha/AL`, `/api/alpha/BW`, `/api/alpha/FR,DE,HUN,IDN,504`. If an invalid alpha code is input then an error will be returned. This endpoint can be used in conjunction with the **year** and **month** endpoints to get the country updates for a specific country and year, and the country updates for a specific country over the past number of months, respectively. This will be in the format: `/api/alpha/<input_alpha>/year/<input_year>` and `/api/alpha/<input_alpha>/months/<input_month>`, respectively.
 
-* `/api/name`: get all the ISO 3166 updates/changes data for one or more countries according to their country name, as listed in the ISO 3166-1. A single country name or list of them can be passed into the API e.g. `/api/name/Brazil`, `/api/name/Colombia`, `/api/name/Benin,France,Moldova`. A closeness function is used to get the most approximate available country from the one input, e.g. Sweden will be used if the input is `/api/name/Swede`. If no matching country is found from the closeness function or an invalid name is input then an error will be returned. This endpoint can be used in conjunction with the **year** and **months** endpoint to get the country updates for a specific country name and year and the country updates for a specific country over the past number of months, respectively. This will be in the format: `/api/name/<input_name>/year/<input_year>` and `/api/name/<input_name>/months/<input_month>`, respectively. 
+* `/api/name`: get all the ISO 3166 updates/changes data for one or more countries according to their country name, as listed in the ISO 3166-1. A single country name or list of them can be passed to the API e.g. `/api/name/Brazil`, `/api/name/Colombia`, `/api/name/Benin,France,Moldova`. A closeness function is used to get the most approximate available country from the one input, e.g. Sweden will be used if the input is `/api/name/Swede`. If no matching country is found from the closeness function or an invalid name is input then an error will be returned. This endpoint can be used in conjunction with the **year** and **months** endpoint to get the country updates for a specific country name and year and the country updates for a specific country over the past number of months, respectively. This will be in the format: `/api/name/<input_name>/year/<input_year>` and `/api/name/<input_name>/months/<input_month>`, respectively. 
 
 * `/api/year`: get all the ISO 3166 updates/changes data for one or more countries according to a specific year, year range, or a cut-off year to get updates less than/more than a year, e.g. `/api/year/2017`, `/api/year/2010-2015`, `/api/year/<2009`, `/api/year/>2002`. If an invalid year is input then an error will be returned. This endpoint can be used in conjunction with the **alpha** and **name** endpoints to get the country updates for a specific country and year. This will be in in the format `/api/alpha/<input_alpha>/year/<input_year>` and `/api/name/<input_name>/year/<input_year>`, respectively. 
 
@@ -92,14 +93,14 @@ The paths/endpoints available in the API are - `/api/all`, `/api/alpha`, `/api/n
 
 * `/api`: main homepage and API documentation.
 
-The API was hosted and built using GCP, with a Cloud Function being used in the backend which is fronted by an api gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON where all ISO 3166 updates are stored. <i>Although, due to the cost of infrastructure, the hosting was switched to Vercel (https://vercel.com/).</i>
+The API was originally hosted and built using GCP, with a Cloud Function being used in the backend, fronted by an api gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON where all ISO 3166 updates are stored. <i>Although, due to the cost of infrastructure, the hosting was switched to Vercel (https://vercel.com/).</i>
 
 The full list of attributes available for each country are:
 
-* Edition/Newsletter: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform page.
-* Date Issued: date that the change was communicated.
 * Code/Subdivision change: overall summary of change/update made.
 * Description of change: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
+* Date Issued: date that the change was communicated.
+* Edition/Newsletter: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform page.
 
 Documentation
 -------------
@@ -113,16 +114,17 @@ Staying up to date
 ------------------
 The list of ISO 3166 updates was last updated on <strong>March 2024</strong>.
 
-The object storing all updates - iso3166-updates.json - for the software package is consistently checked for the latest updates using a Google Cloud Run microservice ([iso3166-check-for-updates](https://github.com/amckenna41/iso3166-updates/tree/main/iso3166-check-for-updates)). The application is built using a custom Docker container that uses the `iso3166-updates` Python software to pull all the latest updates/changes from the various data sources, to check for the latest updates within a certain period e.g. the past 6-12 months (this month range is used as the ISO usually publishes their updates at the end of the year with occasional mid-year updates). The app compares the generated output with that of the updates JSON currently in the software package and will replace this json to integrate the latest updates found, such that the API will have the most up-to-date data. A Cloud Scheduler is used to call the application on the aforementioned schedule. 
+The object storing all updates - iso3166-updates.json - for the software package is consistently checked for the latest updates using a Google Cloud Run microservice ([iso3166-check-for-updates](https://github.com/amckenna41/iso3166-updates/tree/main/iso3166-check-for-updates)). The application is built using a custom Docker container that uses the `iso3166-updates` Python software to pull all the latest updates/changes from the various data sources, to check for the latest updates within a certain period e.g. the past 6-12 months (this month range is used as the ISO usually publishes their updates at the end of the year with occasional mid-year updates). The app compares the generated output with that of the updates JSON currently in the software package and will replace this json to integrate the latest updates found, such that the API will have the most **up-to-date** and **accurate** data. A Cloud Scheduler is used to call the application on the aforementioned schedule. 
 
 Additionally, a GitHub Issue in the custom-built [`iso3166-updates`](https://github.com/amckenna41/iso3166-updates), [`iso3166-2`](https://github.com/amckenna41/iso3166-2) and [`iso3166-flag-icons`](https://github.com/amckenna41/iso3166-flag-icons) repositories will be automatically created that formats and tabulates all updates/changes that need to be implemented into the JSONs on the aforementioned repos.
 
-Ultimately, this Cloud Run microservice ensures that the software and associated APIs are up-to-date with the most latest, accurate and reliable ISO 3166-2 information for all countries/territories/subdivisions etc.
+Ultimately, this Cloud Run microservice ensures that the software and associated APIs are up-to-date with the **most latest, accurate** and **reliable** ISO 3166-2 information for all countries/territories/subdivisions etc.
 
 Requirements
 ------------
 * [python][python] >= 3.8
 * [iso3166][iso3166] >= 2.1.1 
+* [python-dateutil][python-dateutil] >= 2.9.0
 
 Installation
 ------------
@@ -161,17 +163,17 @@ iso["AD"]
 iso["BA","DE","FRA","HUN","600"]
 ```
 
-**Get all listed ISO 3166 changes/updates for all countries, for years 2002, 2003 and 2004:**
+**Get all listed ISO 3166 changes/updates for all countries, for years 2002, 2005 and 2009:**
 ```python
-iso.year("2002, 2003, 2004")
+iso.year("2002, 2005, 2009")
 ```
 
-**Get all listed ISO 3166 changes/updates for all countries, for year range 2013-2016:**
+**Get all listed ISO 3166 changes/updates for all countries, for year range 2013-2016, inclusive:**
 ```python
 iso.year("2013-2016")
 ```
 
-**Get all listed ISO 3166 changes/updates for all countries, for all years after 2017 inclusive:**
+**Get all listed ISO 3166 changes/updates for all countries, for all years after 2017, inclusive:**
 ```python
 iso.year(">2017")
 ```
@@ -247,15 +249,15 @@ from the various data sources.
   #                       requires Python Selenium and Chromedriver. If False then just use country data
   #                       from its wiki page (default=True).
 ```
-**Get all the latest updates for all ISO 3166 countries**
+<!-- **Get all the latest updates for all ISO 3166 countries:**
 ```bash
 ./get_all_updates.sh 
 
 '''
---export_filename     Filename for exported JSON/CSV files containing updates data (default="iso3166-updates.json").
+--export_filename     Filename for exported JSON/CSV files containing updates data (default="iso3166-updates").
 --export_folder       Folder name to store exported JSON/CSV files containing updates data (default="test-iso3166-updates).
 '''
-```
+``` -->
 
 <!-- **Import module:**
 ```python
@@ -293,42 +295,43 @@ iso3166_updates.get_updates("YE", year="<2010")
 ``` -->
 
 The output files from the <i>get_all_iso3166_updates.py</i> script for the updates/changes to an ISO 3166-2 country returns 4 columns: 
-<b>Edition/Newsletter, Date Issued, Code/Subdivision Change</b> and <b>Description of Change.</b> For the CSV export, if more than one country input, then an additional primary key column <b>Country Code</b> will be prepended to the first column, which will be the 2 letter ISO 3166-1 country code. 
+<b>Code/Subdivision Change, Description of Change, Date Issued</b> and <b>Edition/Newsletter.</b> For the CSV export, if more than one country input, then an additional primary key column <b>Country Code</b> will be prepended to the first column, which will be the 2 letter ISO 3166-1 country code. 
 
-* Edition/Newsletter: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform page.
-* Date Issued: date that the change was communicated.
 * Code/Subdivision Change: overall summary of change/update made.
 * Description of Change: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
+* Date Issued: date that the change was communicated.
+* Edition/Newsletter: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform page.
 
 E.g. The output format of the exported <b>CSV</b> for AD (Andorra) is:
 
-| Edition/Newsletter | Date Issued | Code/Subdivision Change | Description of Change |   
+| Code/Subdivision Change | Description of Change | Date Issued | Edition/Newsletter |   
 |:-------------------|:------------|------------------------------------:|------------------------:|
-| Newsletter I-8.    | 2007-04-17  | Subdivisions added: 7 parishes.   | Addition of the administrative subdivisions and of their code elements.                 | 
-| Online Browsing Platform (OBP). | 2014-11-03 | | Update List Source |
-| Online Browsing Platform (OBP). | 2015-11-27 | | Update List Source | 
+| Subdivisions added: 7 parishes.   | Addition of the administrative subdivisions and of their code elements. | 2007-04-17 | Newsletter I-8. | 
+| Update List Source. |  | 2014-11-03 | Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:AD) | 
+| Update List Source. |  | 2015-11-27 | Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:AD) | 
 
 E.g. The output format of the exported <b>JSON</b> for AD (Andorra) is:
 ```javascript
 {
   "AD": [
       {
+          "Code/Subdivision Change": "Update List Source.",
+          "Description of Change": "",
           "Date Issued": "2015-11-27",
-          "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:AD).",
-          "Code/Subdivision Change": "Update List Source.",
-          "Description of Change": ""
+          "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:AD)."
       },
       {
+          "Code/Subdivision Change": "Update List Source.",
+          "Description of Change": "",
           "Date Issued": "2014-11-03",
-          "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:AD).",
-          "Code/Subdivision Change": "Update List Source.",
-          "Description of Change": ""
+          "Edition/Newsletter": "Online Browsing Platform (OBP) (https://www.iso.org/obp/ui/#iso:code:3166:AD)."
       },
       {
-          "Date Issued": "2007-04-17",
-          "Edition/Newsletter": "Newsletter I-8 (https://web.archive.org/web/20120330105926/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf).",
           "Code/Subdivision Change": "Subdivisions added: 7 parishes.",
-          "Description of Change": "Addition of the administrative subdivisions and of their code elements."
+          "Description of Change": "Addition of the administrative subdivisions and of their code elements.",
+          "Date Issued": "2007-04-17",
+          "Edition/Newsletter": "Newsletter I-8 (https://web.archive.org/web/20120330105926/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf)."
+
       }
   ]
 }
@@ -341,7 +344,7 @@ Directories
 * `/docs` - documentation for `iso3166-updates`, available on [readthedocs](https://iso3166-updates.readthedocs.io/en/latest/).
 * `/tests` - unit and integration tests for `iso3166-updates` software and API.
 * `get_all_iso3166_updates.py` - python module that pulls and exports all the latest ISO 3166 data from the various data sources.
-* `get_all_iso3166-updates.sh` - shell script created to call the get_all_iso3166_updates.py script to introduce some pseudo randomness required when using Python Selenium. 
+<!-- * `get_all_iso3166-updates.sh` - shell script created to call the get_all_iso3166_updates.py script to introduce some pseudo randomness required when using Python Selenium.  -->
 * `UPDATES.md` - log of all the latest updates from 2022 onwards. 
 
 Issues
@@ -352,6 +355,15 @@ Contact
 -------
 If you have any questions or comments, please contact amckenna41@qub.ac.uk or raise an issue on the [Issues][Issues] tab. <br><br>
 <!-- [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/adam-mckenna-7a5b22151/) -->
+
+Other ISO 3166 repositories
+---------------------------
+Below are some of my other custom-built repositories that relate to the ISO 3166 standard.
+
+* [iso3166-updates-api](https://github.com/amckenna41/iso3166-updates-api): frontend API for iso3166-updates.
+* [iso3166-2](https://github.com/amckenna41/iso3166-2): a lightweight custom-built Python package, and accompanying API, that can be used to access all of the world's ISO 3166-2 subdivision data. A plethora of data attributes are available per country and subdivision including: name, local name, code, parent code, type, lat/longitude and flag. Currently, the package and API supports data from 250 countries/territories, according to the ISO 3166-1 standard.
+* [iso3166-2-api](https://github.com/amckenna41/iso3166-2-api): frontend API for iso3166-2.
+* [iso3166-flag-icons](https://github.com/amckenna41/iso3166-flag-icons): a comprehensive library of over 3500 country and regional flags from the ISO 3166-1 and ISO 3166-2 standards.
 
 References
 ----------
@@ -374,6 +386,7 @@ Support
 [medium]: https://medium.com/@ajmckenna69/iso3166-updates-d06b817af3a7
 [python]: https://www.python.org/downloads/release/python-360/
 [iso3166-updates]: https://github.com/amckenna41/iso3166-updates
+[python-dateutil]: https://pypi.org/project/python-dateutil/
 [pandas]: https://pandas.pydata.org/
 [tqdm]: https://github.com/tqdm/tqdm
 [requests]: https://requests.readthedocs.io/
@@ -387,7 +400,7 @@ Support
 [selenium]: https://selenium-python.readthedocs.io/index.html
 [webdriver-manager]: https://pypi.org/project/webdriver-manager/
 [lxml]: https://lxml.de/
-[updates_md]: https://github.com/amckenna41/iso3166-updates/blob/main/UPDATES.md
+[updates_md]: https://github.com/amckenna41/iso3166-updates/blob/main/UPDATES.MD
 [iso3166]: https://github.com/deactivated/python-iso3166
 [PyPi]: https://pypi.org/project/iso3166-updates/
 [Issues]: https://github.com/amckenna41/iso3166-updates/issues

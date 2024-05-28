@@ -53,14 +53,14 @@ gcloud builds submit --tag gcr.io/iso3166-updates/{CONTAINER_NAME}
 ```bash
 gcloud beta run deploy {APP_NAME} --image gcr.io/iso3166-updates/{CONTAINER_NAME} \
   --region {REGION_NAME} --platform managed --memory 1024Mi --timeout 2700 --service-account {SERVICE_ACCOUNT} \
-  --update-env-vars GITHUB_OWNER="",GITHUB_REPOS="",GITHUB_API_TOKEN="",MONTH_RANGE="",CREATE_ISSUE=1
+  --update-env-vars GITHUB_OWNER="",GITHUB_REPOS="",GITHUB_API_TOKEN="",MONTH_RANGE="",CREATE_ISSUE=1,EXPORT_JSON=1,EXPORT_CSV=1
 
 #GITHUB_OWNER: owner of GitHub repos.
 #GITHUB_REPOS: list of GitHub repos where to create Issue outlining the latest ISO 3166 updates.
 #GITHUB_API_TOKEN: GitHub API token for creating an Issue on the repos.
 #MONTH_RANGE: number of months from script execution to get updates from. 
 #CREATE_ISSUE: set to 1 to create Issues on the GitHub repos outlining the latest ISO 3166 updates.
-#EXPORT: set to 1 to export latest ISO 3166 updates JSON to storage bucket.
+#EXPORT_JSON: set to 1 to export latest ISO 3166 updates JSON to storage bucket.
 #EXPORT_CSV: set to 1 to export latest ISO 3166 updates in CSV format to storage bucket.
 ```
 
@@ -76,10 +76,10 @@ gcloud run services delete {APP_NAME} --region {REGION_NAME}
 
 **Combining the above all into one command:**
 ```bash
-docker build -t {CONTAINER_NAME} . && gcloud builds submit --tag gcr.io/iso3166-updates/{CONTAINER_NAME} && \
+docker build -t {CONTAINER_NAME} . && gcloud builds submit --tag gcr.io/{APP_NAME}/{CONTAINER_NAME} && \
   yes | gcloud beta run deploy {APP_NAME} --image gcr.io/iso3166-updates/{CONTAINER_NAME} \
     --region {REGION_NAME} --platform managed --memory 1024Mi --timeout 2700 --service-account {SERVICE_ACCOUNT} \
-    --update-env-vars GITHUB_OWNER="",GITHUB_REPOS="",GITHUB_API_TOKEN="",MONTH_RANGE="",CREATE_ISSUE=0,EXPORT=1,EXPORT_CSV=1 && \
+    --update-env-vars GITHUB_OWNER="",GITHUB_REPOS="",GITHUB_API_TOKEN="",MONTH_RANGE="",CREATE_ISSUE=1,EXPORT_JSON=1,EXPORT_CSV=1 && \
     curl "$(gcloud run services describe {APP_NAME} --region {REGION_NAME} --format 'value(status.url)')"
 
 gcloud run services delete {APP_NAME} --region {REGION_NAME}

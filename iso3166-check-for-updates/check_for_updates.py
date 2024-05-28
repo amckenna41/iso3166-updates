@@ -51,7 +51,7 @@ def check_for_updates_main() -> tuple[dict, int]:
     that stores all the flag icons of all countries and subdivisions in the 
     ISO 3166-1 and ISO 3166-2. 
 
-    Additionally, if the EXPORT and EXPORT_CSV environment variables are set then 
+    Additionally, if the EXPORT_JSON and EXPORT_CSV environment variables are set then 
     the output object will be exported to a GCP Storage bucket, in JSON and CSV
     format, respectively.
 
@@ -83,10 +83,10 @@ def check_for_updates_main() -> tuple[dict, int]:
         create_issue = int(os.environ.get("CREATE_ISSUE")) #env var should be 0 or 1
 
     #get export env var which determines if new updates data object is exported to GCP storage bucket
-    if (os.environ.get("EXPORT") is None or os.environ.get("EXPORT") == ""):
+    if (os.environ.get("EXPORT_JSON") is None or os.environ.get("EXPORT_JSON") == ""):
         export = False
     else:
-        export = int(os.environ.get("EXPORT")) #env var should be 0 or 1
+        export = int(os.environ.get("EXPORT_JSON")) #env var should be 0 or 1
 
     #get bucket name and blob name env vars for exporting object to GCP bucket, it can be empty/None if export env var is set to False
     bucket_name = os.environ.get("BUCKET_NAME")
@@ -305,7 +305,7 @@ def create_github_issue(latest_iso3166_updates_after_date_filter: dict, missing_
             body += "<h3>" + iso3166.countries_by_alpha2[code].name + " (" + code + ") " + flag.flag(code) + ":</h3>"
 
             #create table element to store output data
-            body += "<table><tr><th>Date Issued</th><th>Edition/Newsletter</th><th>Code/Subdivision Change</th><th>Description of Change</th></tr>"
+            body += "<table><tr><th>Date Issued</th><th>Code/Subdivision Change</th><th>Description of Change</th><th>Edition/Newsletter</th></tr>"
 
             #iterate over all update rows for each country in object, appending to table row 
             for row in latest_iso3166_updates_after_date_filter[code]:
@@ -334,7 +334,7 @@ def create_github_issue(latest_iso3166_updates_after_date_filter: dict, missing_
             body += "<h3>" + iso3166.countries_by_alpha2[code].name + " (" + code + ") " + flag.flag(code) + ":</h3>"
 
             #create table element to store output data
-            body += "<table><tr><th>Date Issued</th><th>Edition/Newsletter</th><th>Code/Subdivision Change</th><th>Description of Change</th></tr>"
+            body += "<table><tr><th>Date Issued</th><th>Code/Subdivision Change</th><th>Description of Change</th><th>Edition/Newsletter</th></tr>"
 
             #iterate over all update rows for each country in object, appending to table element
             for row in missing_filtered_updates[code]:

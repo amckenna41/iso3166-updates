@@ -12,8 +12,8 @@ class ISO3166_Updates():
     This class is used to access all the ISO-3166 updates/changes data from its respective json
     created from the data sources used in the get_all_iso3166_updates.py script. All of the 
     keys and objects in the JSON are accessible via dot notation using the Map class. Each
-    country has the attributes: Date Issued, Edition/Newsletter, Code/Subdivision Change and
-    Description of Change. 
+    country has the attributes: Code/Subdivision Change, Description of Change, Date Issued and 
+    Edition/Newsletter.
     
     "Date Issued" is the date at which the change was published by the ISO, the "Edition/Newsletter"
     column is the name and or edition of newsletter that the ISO 3166 change/update was communicated 

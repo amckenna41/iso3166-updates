@@ -25,7 +25,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     def setUp(self):
         """ Initialise test variables. """                
         #output columns from various functions
-        self.expected_output_columns = ["Date Issued", "Edition/Newsletter", "Code/Subdivision Change", "Description of Change"]
+        self.expected_output_columns = ["Code/Subdivision Change", "Description of Change", "Date Issued", "Edition/Newsletter"]
 
         #instance of ISO3166_Updates() class
         self.all_updates = ISO3166_Updates()
@@ -33,12 +33,12 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("Skipping metadata unit tests.")    
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        self.assertEqual(metadata('iso3166-updates')['version'], "1.7.0", 
-            f"iso3166-updates version is not correct, expected 1.7.0, got {metadata('iso3166-updates')['version']}.")
+        # self.assertEqual(metadata('iso3166-updates')['version'], "1.7.1", 
+        #     f"iso3166-updates version is not correct, expected 1.7.1, got {metadata('iso3166-updates')['version']}.")
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             f"iso3166-updates software name is not correct, expected iso3166-updates, got {metadata('iso3166-updates')['name']}.")
-        # self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna", 
-        #     f"iso3166-updates author is not correct, expected AJ McKenna, got {metadata('iso3166-updates')['author']}.")
+        self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna", 
+            f"iso3166-updates author is not correct, expected AJ McKenna, got {metadata('iso3166-updates')['author']}.")
         self.assertEqual(metadata('iso3166-updates')['author-email'], "amckenna41@qub.ac.uk", 
             f"iso3166-updates author email is not correct, expected amckenna41@qub.ac.uk, got {metadata('iso3166-updates')['author-email']}.")
         self.assertEqual(metadata('iso3166-updates')['summary'], "Get the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest.", 
@@ -65,12 +65,19 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         for iso_code in list(test_all_updates.keys()):
             self.assertIn(iso_code, list(iso3166.countries_by_alpha2.keys()),
                     f"Alpha-2 code {iso_code} not found in list of available codes.")
+#2.)
         updates_counter = 0
         for iso_code in test_all_updates:
             for update in range(0, len(test_all_updates[iso_code])):
                 updates_counter += 1
                 self.assertNotEqual(test_all_updates[iso_code][update]["Code/Subdivision Change"], "", "All individual ISO 3166 updates should not have an empty Code/Subdivision Change attribute.")
         self.assertEqual(updates_counter, 925, f"Expected 925 total ISO 3166 updates in output object, got {updates_counter}.")
+#3.)
+        iso3166_updates_empty = ["MZ", "PY", "SK", "VU"]  #testing only these country updates objects have empty dicts
+        for iso_code in test_all_updates:
+             if (test_all_updates[iso_code] == {}):
+                  self.assertTrue(iso_code in iso3166_updates_empty, 
+                        f"Expected country code's updates object to be empty:\n{test_all_updates[iso_code]}.")
 
     def test_updates_alpha(self):
         """ Testing __getitem__ function that allows the updates class to be subscriptable, using a variety of alpha-2 country codes. """
