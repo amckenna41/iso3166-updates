@@ -1,11 +1,13 @@
-import get_all_iso3166_updates as iso3166_updates
+try:
+    from get_all_iso3166_updates import *
+except:
+    from ..get_all_iso3166_updates import *
 import iso3166
 import getpass
 import requests
 import json
 import shutil
 import os
-import re
 import pandas as pd
 from datetime import datetime
 from bs4 import BeautifulSoup
@@ -110,7 +112,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
 #1.)
         soup = BeautifulSoup(requests.get(self.wiki_base_url + test_alpha2_ba).content, "html.parser") #Bosnia
         table_html = soup.find("span", {"id": "Changes"}).findNext('table')
-        ba_table = iso3166_updates.table_to_array(table_html)
+        ba_table = table_to_array(table_html)
 
         ba_expected_output1 = ['ISO 3166-2:2007 (http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718).', 
             '2007-12-13.', 'Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1] (#cite_note-2).', 
@@ -134,7 +136,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
 #2.)
         soup = BeautifulSoup(requests.get(self.wiki_base_url + test_alpha2_eg).content, "html.parser") #Egypt
         table_html = soup.find("span", {"id": "Changes"}).findNext('table')
-        eg_table = iso3166_updates.table_to_array(table_html)
+        eg_table = table_to_array(table_html)
 
         eg_expected_output1 = ['ISO 3166-2:2007 (http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718).', 
             '2007-12-13.', 'Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1] (#cite_note-3).', 
@@ -157,7 +159,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
 #3.)
         soup = BeautifulSoup(requests.get(self.wiki_base_url + test_alpha2_qa).content, "html.parser") #Qatar
         table_html = soup.find("span", {"id": "Changes"}).findNext('table')
-        qa_table = iso3166_updates.table_to_array(table_html)
+        qa_table = table_to_array(table_html)
 
         qa_expected_output = ['Newsletter II-3 (https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf).',
                         '2011-12-13 (corrected 2011-12-15).',
@@ -176,7 +178,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
 #4.)
         soup = BeautifulSoup(requests.get(self.wiki_base_url + test_alpha2_rs).content, "html.parser") #Serbia
         table_html = soup.find("span", {"id": "Changes"}).findNext('table')
-        rs_table = iso3166_updates.table_to_array(table_html)
+        rs_table = table_to_array(table_html)
 
         rs_expected_output1 = ['Newsletter I-8 (https://web.archive.org/web/20120330105926/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf).', 
             '2007-04-17.', 'Addition of a new country (in accordance with ISO 3166-1 Newsletter V-12).', 'Subdivisions added: 1 city, 2 autonomous republics, 29 districts.']
@@ -198,22 +200,22 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
 #5.)    
         soup = BeautifulSoup(requests.get(self.wiki_base_url + test_alpha2_br).content, "html.parser") #Brazil
         table_html = soup.find("span", {"id": "Changes"})
-        br_table = iso3166_updates.table_to_array(table_html)
+        br_table = table_to_array(table_html)
 
         self.assertIsNone(table_html, "Table should be none as no listed changes/updates on wiki.")
         self.assertEqual(br_table, [], "Output from function should be empty array when input param is None.")
 #6.)
         soup = BeautifulSoup(requests.get(self.wiki_base_url + test_alpha2_pt).content, "html.parser") #Portugal
         table_html = soup.find("span", {"id": "Changes"})
-        test_table = iso3166_updates.table_to_array(table_html)
+        test_table = table_to_array(table_html)
 
         self.assertIsNone(table_html, "Table should be none as invalid alpha-2 code input.")
         self.assertEqual(test_table, [], "Output from function should be empty array when input param is None.")
 #7.)
         with self.assertRaises(TypeError):
-           iso3166_updates.table_to_array(test_alpha2_error_1)
-           iso3166_updates.table_to_array(test_alpha2_error_2)
-           iso3166_updates.table_to_array(test_alpha2_error_3)
+           table_to_array(test_alpha2_error_1)
+           table_to_array(test_alpha2_error_2)
+           table_to_array(test_alpha2_error_3)
 
     # @unittest.skip("")
     def test_get_updates_wiki_df(self): 
@@ -230,7 +232,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         expected_output_columns = ["Code/Subdivision Change", "Description of Change", "Date Issued", "Corrected Date Issued", "Edition/Newsletter"]
 #1.)
         #get updates dataframe using 2 letter alpha-2 code
-        az_updates_df = iso3166_updates.get_updates_df_wiki(test_alpha2_az) #Azerbaijan
+        az_updates_df = get_updates_df_wiki(test_alpha2_az) #Azerbaijan
         
         az_expected_output1 = ['Codes: Naxçıvan: AZ-MM → AZ-NX.', 'Correction of one code and four spelling errors. Notification of the rayons belonging to the autonomous republic.', '2002-05-21', '', 
                                'Newsletter I-2 (https://web.archive.org/web/20081218103157/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf).']
@@ -251,7 +253,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(az_updates_df_output2, az_expected_output2, "Row value for column does not match expected output.")
 #2.)
         #get updates dataframe using 2 letter alpha-2 code
-        fi_updates_df = iso3166_updates.get_updates_df_wiki(test_alpha2_fi) #Finland
+        fi_updates_df = get_updates_df_wiki(test_alpha2_fi) #Finland
 
         fi_expected_output1 = ['Subdivision layout: 6 provinces (see below) → 19 regions.', 'Administrative re-organization, deletion of useless \
                                information and the region names in English and French, source list and source code update.', '2011-12-13', 
@@ -272,7 +274,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(fi_updates_df_output2, fi_expected_output2, "Row value for column does not match expected output.")
 #3.)
         #get updates dataframe using 2 letter alpha-2 code
-        gh_updates_df = iso3166_updates.get_updates_df_wiki(test_alpha2_gh) #Ghana
+        gh_updates_df = get_updates_df_wiki(test_alpha2_gh) #Ghana
 
         gh_expected_output1 = ['', 'Deletion of region GH-BA; Addition of regions GH-AF, GH-BE, GH-BO, GH-NE, GH-OT, GH-SV, GH-WN; Update List Source.', '2019-11-22', '', 
                                'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:GH).']
@@ -295,7 +297,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(gh_updates_df_output3, gh_expected_output3, "Row value for column does not match expected output.")
 #4.)
         #get updates dataframe using 2 letter alpha-2 code
-        ke_updates_df = iso3166_updates.get_updates_df_wiki(test_alpha2_ke) #Kenya
+        ke_updates_df = get_updates_df_wiki(test_alpha2_ke) #Kenya
 
         ke_expected_output1 = ['Codes: Western: KE-900 → KE-800.', 'Second edition of ISO 3166-2 (this change was not announced in a newsletter)[1] (#cite_note-1).', '2007-12-13', '', 
                                'ISO 3166-2:2007 (http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718).']
@@ -319,7 +321,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(ke_updates_df_output3, ke_expected_output3, "Row value for column does not match expected output.")
 #5.)
         #get updates dataframe using 2 letter alpha-2 code
-        sn_updates_df = iso3166_updates.get_updates_df_wiki(test_alpha2_sn) #Senegal
+        sn_updates_df = get_updates_df_wiki(test_alpha2_sn) #Senegal
 
         sn_expected_output1 = ['Subdivisions added: SN-MT Matam.', 'Addition of one new region. List source updated.', '2003-09-05', '', 
                                'Newsletter I-5 (https://web.archive.org/web/20081218103244/http://www.iso.org/iso/iso_3166-2_newsletter_i-5_en.pdf).']
@@ -339,12 +341,12 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(sn_updates_df_output2, sn_expected_output2, "Row value for column does not match expected output.")
 #6.)    
         with self.assertRaises(requests.exceptions.HTTPError):
-            iso3166_updates.get_updates_df_wiki(test_alpha2_error_1)
-            iso3166_updates.get_updates_df_wiki(test_alpha2_error_2)
+            get_updates_df_wiki(test_alpha2_error_1)
+            get_updates_df_wiki(test_alpha2_error_2)
 #7.)
         with self.assertRaises(TypeError):
-            iso3166_updates.get_updates_df_wiki(test_alpha2_error_3)
-            iso3166_updates.get_updates_df_wiki(test_alpha2_error_4)
+            get_updates_df_wiki(test_alpha2_error_3)
+            get_updates_df_wiki(test_alpha2_error_4)
 
     # @unittest.skip("Skipping to save having to go through process of installing Selenium and Chromedriver - tested locally.")
     def test_get_updates_selenium_df(self):
@@ -359,7 +361,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         test_alpha2_error_3 = False
         expected_output_columns = ['Code/Subdivision Change', 'Description of Change', 'Date Issued', 'Corrected Date Issued', 'Edition/Newsletter']
 #1.)
-        bs_updates_df = iso3166_updates.get_updates_df_selenium(test_alpha2_bs) #Barbados
+        bs_updates_df = get_updates_df_selenium(test_alpha2_bs) #Barbados
 
         bs_expected_output1 = ['', 'Addition of island BS-NP; Addition of Remark; Update List Source.', '2018-11-26', '', 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:BS).']
         bs_expected_output2 = ['', 'Correction of NL II-2 for toponyms and typographical errors, one deletion and source list update.', '2011-12-13', '', 
@@ -377,7 +379,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(bs_updates_df_output1, bs_expected_output1, "Row value for column does not match expected output.")
         self.assertEqual(bs_updates_df_output2, bs_expected_output2, "Row value for column does not match expected output.")
 #2.)
-        cm_updates_df = iso3166_updates.get_updates_df_selenium(test_alpha2_cm) #Cameroon
+        cm_updates_df = get_updates_df_selenium(test_alpha2_cm) #Cameroon
 
         cm_expected_output1 = ['', 'Update List Source.', '2015-11-27', '', 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CM).']
         cm_expected_output2 = ['', 'Update List Source.', '2014-11-03', '', 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:CM).']
@@ -394,7 +396,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(cm_updates_df_output1, cm_expected_output1, "Row value for column does not match expected output.")
         self.assertEqual(cm_updates_df_output2, cm_expected_output2, "Row value for column does not match expected output.")
 #3.)
-        mn_updates_df = iso3166_updates.get_updates_df_selenium(test_alpha2_mn) #Mongolia
+        mn_updates_df = get_updates_df_selenium(test_alpha2_mn) #Mongolia
 
         mn_expected_output1 = ['', 'Correction of the romanization system label.', '2018-11-26', '', 'Online Browsing Platform (OBP) - (https://www.iso.org/obp/ui/#iso:code:3166:MN).']
 
@@ -407,20 +409,20 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(expected_output_columns, list(mn_updates_df.columns), "Columns/headers of dataframe do not match:\n{}".format(list(mn_updates_df.columns)))
         self.assertEqual(mn_updates_df_output1, mn_expected_output1, "Row value for column does not match expected output.")
 #4.)
-        sk_updates_df = iso3166_updates.get_updates_df_selenium(test_alpha2_sk) #Slovakia
+        sk_updates_df = get_updates_df_selenium(test_alpha2_sk) #Slovakia
 
         self.assertIsInstance(sk_updates_df, pd.DataFrame, "Ouput of function should be a dataframe, got {}.".format(type(sk_updates_df)))
         self.assertTrue(sk_updates_df.empty, "Expected output to be an empty dataframe.")
 #5.)
-        vu_updates_df = iso3166_updates.get_updates_df_selenium(test_alpha2_vu) #Vanuatu
+        vu_updates_df = get_updates_df_selenium(test_alpha2_vu) #Vanuatu
 
         self.assertIsInstance(vu_updates_df, pd.DataFrame, "Ouput of function should be a dataframe, got {}.".format(type(vu_updates_df)))
         self.assertTrue(vu_updates_df.empty, "Expected output to be an empty dataframe.")
 #6.)
         with self.assertRaises(ValueError):
-            iso3166_updates.get_updates_df_selenium(test_alpha2_error_1)
-            iso3166_updates.get_updates_df_selenium(test_alpha2_error_2)
-            iso3166_updates.get_updates_df_selenium(test_alpha2_error_3)
+            get_updates_df_selenium(test_alpha2_error_1)
+            get_updates_df_selenium(test_alpha2_error_2)
+            get_updates_df_selenium(test_alpha2_error_3)
 
     # @unittest.skip("")
     def test_get_updates_alpha(self):
@@ -436,7 +438,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         test_alpha_error_3 = "XYZ" #should raise value error
         test_alpha_error_4 = "invalid_alpha_code" #should raise value error
 #1.) 
-        test_alpha_au_updates = iso3166_updates.get_updates(alpha_codes=test_alpha_au, export_filename=self.export_filename, export_folder=self.export_folder, 
+        test_alpha_au_updates = get_updates(alpha_codes=test_alpha_au, export_filename=self.export_filename, export_folder=self.export_folder, 
                 concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=True)   #Australia
     
         test_au_expected = {
@@ -467,7 +469,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(test_au_iso3166_csv.head(1).to_dict(orient='records')[0], test_au_expected, 
             f"Expected and observed outputs do not match:\n{test_au_iso3166_csv.head(1).to_dict(orient='records')[0]}")
 #2.)  
-        test_alpha_cv_updates = iso3166_updates.get_updates(test_alpha_cv, export_filename=self.export_filename, export_folder=self.export_folder, 
+        test_alpha_cv_updates = get_updates(test_alpha_cv, export_filename=self.export_filename, export_folder=self.export_folder, 
                 concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=True)   #Cabo Verde
         
         test_cv_expected = {
@@ -498,7 +500,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(test_cv_iso3166_csv.head(1).to_dict(orient='records')[0], test_cv_expected,
             f"Expected and observed outputs do not match:\n{test_cv_iso3166_csv.head(1).to_dict(orient='records')[0]}")
 #3.)
-        test_alpha_id_updates = iso3166_updates.get_updates(test_alpha_id, export_filename=self.export_filename, export_folder=self.export_folder, 
+        test_alpha_id_updates = get_updates(test_alpha_id, export_filename=self.export_filename, export_folder=self.export_folder, 
                 export_json=True, export_csv=True, verbose=0, use_selenium=True)    #Indonesia
         
         test_id_expected = {
@@ -529,7 +531,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(test_id_iso3166_csv.head(1).to_dict(orient='records')[0], test_id_expected,
             f"Expected and observed outputs do not match:\n{test_id_iso3166_csv.head(1).to_dict(orient='records')[0]}")
 #4.)
-        test_alpha_pt_updates = iso3166_updates.get_updates(test_alpha_pt, export_filename=self.export_filename, export_folder=self.export_folder, 
+        test_alpha_pt_updates = get_updates(test_alpha_pt, export_filename=self.export_filename, export_folder=self.export_folder, 
                 export_json=True, export_csv=True, verbose=0, use_selenium=False)   #Portugal
         
         self.assertFalse(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-PT.csv")),
@@ -542,7 +544,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
             test_alpha_pt_updates_json = json.load(output_json)
         self.assertEqual(test_alpha_pt_updates_json, {}, f"Expected and observed outputs do not match:\n{test_alpha_pt_updates_json}")
 #5.)
-        test_alpha_bf_ca_gu_ie_je_updates = iso3166_updates.get_updates(test_alpha_bf_ca_gu_ie_je_str, export_filename=self.export_filename, 
+        test_alpha_bf_ca_gu_ie_je_updates = get_updates(test_alpha_bf_ca_gu_ie_je_str, export_filename=self.export_filename, 
                 export_folder=self.export_folder, concat_updates=False, export_json=True, export_csv=True, verbose=0, use_selenium=False)   #concat_updates=False, individual output files
         
         self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-BF.json")),
@@ -583,7 +585,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
                 self.assertEqual(list(row.keys()), self.expected_output_columns, f"Columns from output do not match expected:\n{list(row.keys())}")
                 self.assertIsInstance(row, dict, "Ouput object row should be of type dict, got {}.".format(type(row)))
 #6.)    
-        test_alpha_bf_ca_gu_ie_je_updates = iso3166_updates.get_updates(test_alpha_bf_ca_gu_ie_je_str, export_filename=self.export_filename, 
+        test_alpha_bf_ca_gu_ie_je_updates = get_updates(test_alpha_bf_ca_gu_ie_je_str, export_filename=self.export_filename, 
             export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)    #Burkina Faso, Canada, Guam, Ireland, Jersey - concat_updates=True, one output file
 
         self.assertTrue(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-BF,CA,GU,IE,JE.json")), 
@@ -609,18 +611,18 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
             "Column names/headers do not match expected:\n{}.".format(set(list(test_bf_ca_gu_ie_je_iso3166_csv.columns))))
 #7.)
         with self.assertRaises(TypeError):
-            iso3166_updates.get_updates(test_alpha_error_1, export_filename=self.export_filename, 
+            get_updates(test_alpha_error_1, export_filename=self.export_filename, 
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0)
-            iso3166_updates.get_updates(test_alpha_error_2, export_filename=self.export_filename, 
+            get_updates(test_alpha_error_2, export_filename=self.export_filename, 
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0)
 #8.)
         with self.assertRaises(ValueError):
-            iso3166_updates.get_updates(test_alpha_error_3, export_filename=self.export_filename, 
+            get_updates(test_alpha_error_3, export_filename=self.export_filename, 
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0)
-            iso3166_updates.get_updates(test_alpha_error_4, export_filename=self.export_filename, 
+            get_updates(test_alpha_error_4, export_filename=self.export_filename, 
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0)
             
-    # @unittest.skip("")  
+    @unittest.skip("Skipping as below tests requiring extracting all updates each time.")  
     def test_get_updates_year(self):
         """ Testing main updates function that gets the updates and exports to json/csv, using a variety of year input 
             parameter values. Note, only using updates data from the wiki pages and not ISO due to time constraint of 
@@ -635,7 +637,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         test_year8 = 12345
         test_year9 = True
 #1.)    
-        test_year_2017_updates = iso3166_updates.get_updates(year=test_year1, export_filename=self.export_filename,  #2017
+        test_year_2017_updates = get_updates(year=test_year1, export_filename=self.export_filename,  #2017
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
         test_year_2017_expected_keys = ["CN", "CY", "ID", "KP", "NR", "PA", "PK", "QA", "TJ", "UG"]
 
@@ -658,7 +660,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(len(test_2017_iso3166_csv), 10, 
             "Expected there to be 10 output objects in csv, got {}.".format(len(test_2017_iso3166_csv)))
 #2.)
-        test_year_2005_updates = iso3166_updates.get_updates(year=test_year2, export_filename=self.export_filename,  #2005
+        test_year_2005_updates = get_updates(year=test_year2, export_filename=self.export_filename,  #2005
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
         test_year_2005_expected_keys = ["AF", "DJ", "ID", "RU", "SI", "VN"]
 
@@ -681,7 +683,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(len(test_2005_iso3166_csv), 6, 
             "Expected there to be 6 output objects in csv, got {}.".format(len(test_2005_iso3166_csv)))
 #3.)
-        test_year_gt_2021_updates = iso3166_updates.get_updates(year=test_year3, export_filename=self.export_filename,  #>2021
+        test_year_gt_2021_updates = get_updates(year=test_year3, export_filename=self.export_filename,  #>2021
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
         test_year_gt_2021_expected_keys = ['CN', 'DZ', 'ET', 'FI', 'FR', 'GB', 'GT', 'HU', 'ID', 'IN', 'IQ', 'IR', 'IS', 'KH', 
                                            'KP', 'KR', 'KZ', 'LT', 'LV', 'ME', 'NP', 'NZ', 'PA', 'PH', 'PL', 'RU', 'SI', 'SS']
@@ -705,7 +707,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(len(test_gt_2021_iso3166_csv), 37, 
             "Expected there to be 37 output objects in csv, got {}.".format(len(test_gt_2021_iso3166_csv)))
 #4.)
-        test_year_lt_2003_updates = iso3166_updates.get_updates(year=test_year4, export_filename=self.export_filename,  #<2003
+        test_year_lt_2003_updates = get_updates(year=test_year4, export_filename=self.export_filename,  #<2003
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
         test_year_lt_2003_expected_keys = ['AE', 'AL', 'AO', 'AZ', 'BD', 'BG', 'BI', 'BJ', 'BY', 'CA', 'CD', 'CN', 'CV', 'CZ', \
                                         'DO', 'EC', 'ER', 'ES', 'ET', 'FR', 'GB', 'GE', 'GN', 'GT', 'HR', 'ID', 'IN', 'IR', \
@@ -732,7 +734,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(len(test_lt_2003_iso3166_csv), 79, 
             "Expected there to be 79 output objects in csv, got {}.".format(len(test_lt_2003_iso3166_csv)))
 #5.)
-        test_year_2005_2007_updates = iso3166_updates.get_updates(year=test_year5, export_filename=self.export_filename,  #2005-2007
+        test_year_2005_2007_updates = get_updates(year=test_year5, export_filename=self.export_filename,  #2005-2007
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
         test_year_2005_2007_expected_keys = ['AD', 'AF', 'AG', 'BA', 'BB', 'BG', 'BH', 'BL', 'CI', 'CZ', 'DJ', 'DM', 'DO', 'EG', 'FR', 'GB', \
                                         'GD', 'GE', 'GG', 'GN', 'HT', 'ID', 'IM', 'IR', 'IT', 'JE', 'KE', 'KN', 'KW', 'LB', 'LC', 'LI', \
@@ -759,7 +761,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         self.assertEqual(len(test_year_2005_2007_iso3166_csv), 62, 
             "Expected there to be 62 output objects in csv, got {}.".format(len(test_year_2005_2007_iso3166_csv)))
 #6.)
-        test_year_1999_2002_updates = iso3166_updates.get_updates(year=test_year6, export_filename=self.export_filename,  #1999-2002
+        test_year_1999_2002_updates = get_updates(year=test_year6, export_filename=self.export_filename,  #1999-2002
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
         test_year_1999_2002_expected_keys = ['AE', 'AL', 'AO', 'AZ', 'BD', 'BG', 'BI', 'BJ', 'BY', 'CA', 'CD', 'CN', 'CV', 'CZ', 'DO', 'EC', \
                                              'ER', 'ES', 'ET', 'FR', 'GB', 'GE', 'GN', 'GT', 'HR', 'ID', 'IN', 'IR', 'IT', 'KG', 'KH', 'KP', \
@@ -787,11 +789,11 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
             "Expected there to be 78 output objects in csv, got {}.".format(len(test_year_1999_2002_iso3166_csv)))
 #7.)
         with self.assertRaises(ValueError):
-            iso3166_updates.get_updates(year=test_year7, export_filename=self.export_filename,   #abcdef
+            get_updates(year=test_year7, export_filename=self.export_filename,   #abcdef
                 export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
-            iso3166_updates.get_updates(year=test_year8, export_filename=self.export_filename,   #12345
+            get_updates(year=test_year8, export_filename=self.export_filename,   #12345
                     export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0)
-            iso3166_updates.get_updates(year=test_year9, export_filename=self.export_filename,   #True
+            get_updates(year=test_year9, export_filename=self.export_filename,   #True
                     export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0)
 
     # @unittest.skip("")
@@ -807,7 +809,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
         test_error1 = ("ABC", "3003")
         test_error2 = ("ABCDEF", "ABC")
 #1.) 
-        test_alpha_year_ch_2003_updates = iso3166_updates.get_updates(alpha_codes=test_ch_2003[0], year=test_ch_2003[1],  #Switzerland
+        test_alpha_year_ch_2003_updates = get_updates(alpha_codes=test_ch_2003[0], year=test_ch_2003[1],  #Switzerland
                 export_filename=self.export_filename, export_folder=self.export_folder, concat_updates=True, export_json=True, \
                     export_csv=False, verbose=0, use_selenium=True)
 
@@ -824,7 +826,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
                 self.assertEqual(datetime.strptime(test_alpha_year_ch_2003_updates[update][row]["Date Issued"], '%Y-%m-%d').year, 2003,
                             "Expected year of updates output to be 2003, got {}.".format(test_alpha_year_ch_2003_updates[update][row]["Date Issued"]))
 #2.)
-        test_alpha_year_md_2008_updates = iso3166_updates.get_updates(alpha_codes=test_md_2008[0], year=test_md_2008[1],  #Moldova
+        test_alpha_year_md_2008_updates = get_updates(alpha_codes=test_md_2008[0], year=test_md_2008[1],  #Moldova
                 export_filename=self.export_filename, export_folder=self.export_folder, concat_updates=True, export_json=True, \
                     export_csv=False, verbose=0, use_selenium=True)
 
@@ -841,7 +843,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
                 self.assertEqual(datetime.strptime(test_alpha_year_md_2008_updates[update][row]["Date Issued"], '%Y-%m-%d').year, 2008,
                             "Expected year of updates output to be 2008, got {}.".format(test_alpha_year_md_2008_updates[update][row]["Date Issued"]))
 #3.) 
-        test_alpha_year_ne_2010_updates = iso3166_updates.get_updates(alpha_codes=test_ne_2010[0], year=test_ne_2010[1],  #Niger
+        test_alpha_year_ne_2010_updates = get_updates(alpha_codes=test_ne_2010[0], year=test_ne_2010[1],  #Niger
                 export_filename=self.export_filename, export_folder=self.export_folder, concat_updates=True, export_json=True, \
                     export_csv=False, verbose=0, use_selenium=True)
 
@@ -858,7 +860,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
                 self.assertEqual(datetime.strptime(test_alpha_year_ne_2010_updates[update][row]["Date Issued"], '%Y-%m-%d').year, 2010,
                             "Expected year of updates output to be 2010, got {}.".format(test_alpha_year_ne_2010_updates[update][row]["Date Issued"]))
 #4.)
-        test_alpha_year_sd_tt_2015_2021_updates = iso3166_updates.get_updates(alpha_codes=test_sd_tt_2015_2021[0], year=test_sd_tt_2015_2021[1],  #Sudan, Trinidad and Tabago
+        test_alpha_year_sd_tt_2015_2021_updates = get_updates(alpha_codes=test_sd_tt_2015_2021[0], year=test_sd_tt_2015_2021[1],  #Sudan, Trinidad and Tabago
                 export_filename=self.export_filename, export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=False, verbose=0, use_selenium=True)
 
         self.assertFalse(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-SD,TT_2015-2021.csv")), 
@@ -875,7 +877,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
                                 (datetime.strptime(test_alpha_year_sd_tt_2015_2021_updates[update][row]["Date Issued"], '%Y-%m-%d').year <= 2021), 
                             "Expected year of updates output to be between 2015 and 2021, got {}.".format(test_alpha_year_sd_tt_2015_2021_updates[update][row]["Date Issued"]))
 #5.)
-        test_alpha_year_es_gq_kg_sm_2020_updates = iso3166_updates.get_updates(alpha_codes=test_es_gq_kg_sm_2020[0], year=test_es_gq_kg_sm_2020[1], #Spain, Equitorial Guinea, Kyrgyzstan, San Marino
+        test_alpha_year_es_gq_kg_sm_2020_updates = get_updates(alpha_codes=test_es_gq_kg_sm_2020[0], year=test_es_gq_kg_sm_2020[1], #Spain, Equitorial Guinea, Kyrgyzstan, San Marino
                 export_filename=self.export_filename, export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=False, verbose=0, use_selenium=True)
 
         self.assertFalse(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-ES,GQ,KG,SM_2020.csv")), 
@@ -891,7 +893,7 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
                 self.assertEqual(datetime.strptime(test_alpha_year_es_gq_kg_sm_2020_updates[update][row]["Date Issued"], '%Y-%m-%d').year, 2020,
                             "Expected year of updates output to be 2020, got {}.".format(test_alpha_year_es_gq_kg_sm_2020_updates[update][row]["Date Issued"]))
 #6.) 
-        test_alpha_year_ie_2027_updates = iso3166_updates.get_updates(alpha_codes=test_ie_2027[0], year=test_ie_2027[1],  #Ireland
+        test_alpha_year_ie_2027_updates = get_updates(alpha_codes=test_ie_2027[0], year=test_ie_2027[1],  #Ireland
                 export_filename=self.export_filename, export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=False, verbose=0, use_selenium=True)
 
         self.assertFalse(os.path.isfile(os.path.join(self.export_folder, self.export_filename + "-IE_2027.csv")), 
@@ -904,9 +906,9 @@ class ISO3166_Get_Updates_Tests(unittest.TestCase):
             "Expected output object to be an empty dict, got {}.".format(test_alpha_year_ie_2027_updates["IE"]))
 #7.)
         with self.assertRaises(ValueError):
-            iso3166_updates.get_updates(alpha_codes=test_error1[0], year=test_error1[1], 
+            get_updates(alpha_codes=test_error1[0], year=test_error1[1], 
                     export_filename=self.export_filename, export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=False, verbose=0)
-            iso3166_updates.get_updates(alpha_codes=test_error2[0], year=test_error2[1], 
+            get_updates(alpha_codes=test_error2[0], year=test_error2[1], 
                     export_filename=self.export_filename, export_folder=self.export_folder, concat_updates=True, export_json=True, export_csv=False, verbose=0)
 
     def tearDown(self):

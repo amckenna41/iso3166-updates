@@ -367,6 +367,8 @@ if unicodedata.name('→') == 'RIGHTWARDS ARROW' then convert to ->
 - [X] After reordering of attributes, some subdivision objects are in incorrect order e.g DJ, ER, FR
 - [X] In test_get_all script, double check if tests should be getting all data, try to minimise exporting all the data etc. Run each test case 1 by 1.
 - [ ] In changelog, add seperate section for software and API?
+- [ ] Multiple import options for get script in test_get_all script.
+- [X] Skip year unit tests in test_get_all until Mock requests/chromedriver is implemented.
 
 Future additions
 ----------------

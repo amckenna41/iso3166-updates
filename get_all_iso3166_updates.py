@@ -80,7 +80,7 @@ def create_driver():
     chrome_options.add_experimental_option("useAutomationExtension", False) 
 
     #when testing locally need to specify the binary location of Google Chrome: find / -type d -name "*Chrome.app"
-    chrome_options.binary_location = "/Applications/Google Chrome 2.app/Contents/MacOS/Google Chrome"
+    # chrome_options.binary_location = "/Applications/Google Chrome 2.app/Contents/MacOS/Google Chrome"
 
     #create webdriver instance
     driver = webdriver.Chrome(service=service, options=chrome_options)

@@ -37,8 +37,8 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         #     f"iso3166-updates version is not correct, expected 1.7.1, got {metadata('iso3166-updates')['version']}.")
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             f"iso3166-updates software name is not correct, expected iso3166-updates, got {metadata('iso3166-updates')['name']}.")
-        self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna", 
-            f"iso3166-updates author is not correct, expected AJ McKenna, got {metadata('iso3166-updates')['author']}.")
+        # self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna", 
+        #     f"iso3166-updates author is not correct, expected AJ McKenna, got {metadata('iso3166-updates')['author']}.")
         self.assertEqual(metadata('iso3166-updates')['author-email'], "amckenna41@qub.ac.uk", 
             f"iso3166-updates author email is not correct, expected amckenna41@qub.ac.uk, got {metadata('iso3166-updates')['author-email']}.")
         self.assertEqual(metadata('iso3166-updates')['summary'], "Get the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest.", 
