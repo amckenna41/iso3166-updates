@@ -98,7 +98,8 @@ def check_for_updates_main() -> tuple[dict, int]:
     commits = repo.get_commits(path='iso3166-updates.json')
     if (commits.totalCount):
         latest_commit_date = datetime.strptime(commits[0].commit.committer.date.strftime('%Y-%m-%d'), "%Y-%m-%d")
-
+    
+    
     #date difference between current date and date object was last updated, print out difference in months
     date_diff = relativedelta(current_datetime, latest_commit_date)
     print(f"The iso3166-updates.json object was last updated {date_diff.months} months ago on: {str(latest_commit_date)}.")
