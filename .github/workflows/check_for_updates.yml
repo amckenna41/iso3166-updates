@@ -47,7 +47,7 @@ jobs:
 
       - name: 'gcloud login'
         run: |-
-          gcloud auth login --brief --cred-file=$GOOGLE_APPLICATION_CREDENTIALS
+          gcloud auth login --brief --cred-file=$GOOGLE_APPLICATION_CREDENTIALS | y
 
       #setup and authenticate GCP SDK
       # - name: Setup gcloud
