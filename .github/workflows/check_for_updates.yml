@@ -35,15 +35,19 @@ jobs:
       - name: Export CLOUDSDK_PYTHON
         run: export CLOUDSDK_PYTHON="/usr/bin/python3"
 
-      # #setup and authenticate GCP SDK
-      # - name: Setup gcloud
-      #   uses: google-github-actions/setup-gcloud@v0.2.0
-      #   with:
-      #       service_account_email: ${{ secrets.GCP_SA_EMAIL }} 
-      #       # service_account_key: ${{ secrets.GCP_SA_KEY }} 
-      #       project_id: ${{ secrets.GCP_PROJECT }}
-      #       export_default_credentials: true
+      #setup and authenticate GCP SDK
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+            # service_account_email: ${{ secrets.GCP_SA_EMAIL }} 
+            # service_account_key: ${{ secrets.GCP_SA_KEY }} 
+            project_id: ${{ secrets.GCP_PROJECT }}
+            # export_default_credentials: true
       # 
+
+      - name: 'gcloud login'
+        run: |-
+          gcloud auth login --brief --cred-file=$GOOGLE_APPLICATION_CREDENTIALS
 
       #setup and authenticate GCP SDK
       # - name: Setup gcloud
@@ -52,14 +56,7 @@ jobs:
       #     workload_identity_provider: '${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER}}' 
       #     service_account: ${{ secrets.GCP_SA_EMAIL }} 
 
-      -
-        uses: 'google-github-actions/setup-gcloud@master'
-        with:
-          project_id: ${{ secrets.GCP_PROJECT }}
-      -
-        name: 'gcloud login'
-        run: |-
-          gcloud auth login --brief --cred-file=$GOOGLE_APPLICATION_CREDENTIALS
+
 
       #create Google Cloud Run app using Dockerfile that pulls all the latest ISO 3166 updates data and compares with existing object in GCP bucket,
       #if updates are found after month date filter applied that aren't in object then they will be appended to it, delete Cloud Run app after
