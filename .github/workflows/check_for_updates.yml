@@ -17,7 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:  
       - uses: actions/checkout@v4 #checkout repo 
-      
+      - uses: google-github-actions/auth@v2
+        with:
+          # workload_identity_provider: '${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER}}' 
+          workload_identity_provider: 'projects/732211363570/locations/global/workloadIdentityPools/cloud-run/providers/github'
+          service_account: ${{ secrets.GCP_SA_EMAIL }} 
+
       #setup python env 
       - name: Setup python
         uses: actions/setup-python@v4
@@ -39,11 +44,11 @@ jobs:
       # 
 
       #setup and authenticate GCP SDK
-      - name: Setup gcloud
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: '${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER}}' 
-          service_account: ${{ secrets.GCP_SA_EMAIL }} 
+      # - name: Setup gcloud
+      #   uses: google-github-actions/auth@v2
+      #   with:
+      #     workload_identity_provider: '${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER}}' 
+      #     service_account: ${{ secrets.GCP_SA_EMAIL }} 
 
       #create Google Cloud Run app using Dockerfile that pulls all the latest ISO 3166 updates data and compares with existing object in GCP bucket,
       #if updates are found after month date filter applied that aren't in object then they will be appended to it, delete Cloud Run app after
@@ -60,3 +65,5 @@ jobs:
             GITHUB_API_TOKEN=${{ secrets.REPO_API_TOKEN }},MONTH_RANGE=12,CREATE_ISSUE=1,EXPORT=1,EXPORT_CSV=1
           curl $(gcloud run services describe ${{ secrets.GCP_CLOUD_RUN_NAME }} --platform managed --region ${{ secrets.GCP_REGION }} --format 'value(status.url)')
           gcloud run services delete ${{ secrets.GCP_CLOUD_RUN_NAME }}
+
+#https://github.com/google-github-actions/auth/blob/main/docs/TROUBLESHOOTING.md
