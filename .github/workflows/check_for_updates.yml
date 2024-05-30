@@ -52,6 +52,15 @@ jobs:
       #     workload_identity_provider: '${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER}}' 
       #     service_account: ${{ secrets.GCP_SA_EMAIL }} 
 
+      -
+        uses: 'google-github-actions/setup-gcloud@master'
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
+      -
+        name: 'gcloud login'
+        run: |-
+          gcloud auth login --brief --cred-file=$GOOGLE_APPLICATION_CREDENTIALS
+
       #create Google Cloud Run app using Dockerfile that pulls all the latest ISO 3166 updates data and compares with existing object in GCP bucket,
       #if updates are found after month date filter applied that aren't in object then they will be appended to it, delete Cloud Run app after
       #execution to save on resources
