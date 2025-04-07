@@ -11,6 +11,7 @@ build:
 # Build documentation in the "docs/" directory with Sphinx
 sphinx:
    configuration: docs/conf.py
+   language: en
    # fail_on_warning: true #set to True to fail sphinx build if warnings found
 
 # Optionally build your docs in additional formats such as PDF and ePub

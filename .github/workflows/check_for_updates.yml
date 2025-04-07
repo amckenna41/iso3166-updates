@@ -2,44 +2,51 @@ name: Checking for latest ISO 3166 Updates
 
 on:
   schedule:
-    # Run on first of month, every 3 months (https://crontab.guru)
+    #run on first of month, every 3 months (https://crontab.guru)
     - cron: '0 0 1 */3 *'
 
-  # allow for workflow to be manually initiated from the Actions tab
+  #allow for workflow to be manually initiated from the Actions tab
   workflow_dispatch:
 
 jobs:
   check_updates:
+    # permissions for Cloud Run app
+    permissions:
+      contents: 'read'
+      id-token: 'write'
     runs-on: ubuntu-latest
+    #environment variables available to all steps
+    env:
+      CLOUDSDK_PYTHON: /usr/bin/python3
     steps:  
-      - uses: actions/checkout@v3 #checkout repo 
-      
+      - uses: actions/checkout@v4 #checkout repo 
+      - uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: '${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER}}' 
+          service_account: ${{ secrets.GCP_SA_EMAIL }} 
+          create_credentials_file: true
+          activate_credentials_file: true
+
       #setup python env 
       - name: Setup python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      
+
+      #create artifacts dir
+      - name: Create Artifacts directory
+        run: mkdir artifacts
+
       #export gcloud related Python environment variable
       - name: Export CLOUDSDK_PYTHON
         run: export CLOUDSDK_PYTHON="/usr/bin/python3"
 
-      # #setup and authenticate GCP SDK
-      # - name: Setup gcloud
-      #   uses: google-github-actions/setup-gcloud@v0.2.0
-      #   with:
-      #       service_account_email: ${{ secrets.GCP_SA_EMAIL }} 
-      #       # service_account_key: ${{ secrets.GCP_SA_KEY }} 
-      #       project_id: ${{ secrets.GCP_PROJECT }}
-      #       export_default_credentials: true
-      # 
-
       #setup and authenticate GCP SDK
       - name: Setup gcloud
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/setup-gcloud@v1
         with:
-          workload_identity_provider: '${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER}}' 
-          service_account: ${{ secrets.GCP_SA_EMAIL }} 
+            project_id: ${{ secrets.GCP_PROJECT }}
+            # export_default_credentials: true
 
       #create Google Cloud Run app using Dockerfile that pulls all the latest ISO 3166 updates data and compares with existing object in GCP bucket,
       #if updates are found after month date filter applied that aren't in object then they will be appended to it, delete Cloud Run app after
@@ -54,5 +61,22 @@ jobs:
           --service-account ${{ secrets.GCP_SA_EMAIL}} --update-env-vars BUCKET_NAME=${{ secrets.GCP_BUCKET_NAME }},BLOB_NAME=${{ secrets.GCP_BLOB_NAME }}, \
             ARCHIVE_FOLDER=${{ secrets.GCP_ARCHIVE_FOLDER }},GITHUB_OWNER=${{ secrets.REPO_OWNER }},GITHUB_REPOS=${{ secrets.REPOs }},\
             GITHUB_API_TOKEN=${{ secrets.REPO_API_TOKEN }},MONTH_RANGE=12,CREATE_ISSUE=1,EXPORT=1,EXPORT_CSV=1
-          curl $(gcloud run services describe ${{ secrets.GCP_CLOUD_RUN_NAME }} --platform managed --region ${{ secrets.GCP_REGION }} --format 'value(status.url)')
+          for i in {1..5}; do
+            curl $(gcloud run services describe ${{ secrets.GCP_CLOUD_RUN_NAME }} --platform managed --region ${{ secrets.GCP_REGION }} --format 'value(status.url)') && break || sleep 10
+          done
+          gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=${{ secrets.GCP_CLOUD_RUN_NAME }} AND resource.labels.location=${{ secrets.GCP_REGION }}" --format=json > artifacts/cloud_run_logs.txt
+          gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=${{ secrets.GCP_CLOUD_RUN_NAME }} AND resource.labels.location=${{ secrets.GCP_REGION }}" --format='text' > artifacts/cloud_run_logs.txt
           gcloud run services delete ${{ secrets.GCP_CLOUD_RUN_NAME }}
+
+      #upload test artifacts to workflow
+      - name: Upload Test Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: test_artifacts
+          path: |
+            artifacts/cloud_run_logs.txt
+
+#curl $(gcloud run services describe ${{ secrets.GCP_CLOUD_RUN_NAME }} --platform managed --region ${{ secrets.GCP_REGION }} --format 'value(status.url)')
+#https://github.com/google-github-actions/auth/blob/main/docs/TROUBLESHOOTING.md
+#https://cloud.google.com/blog/products/identity-security/enabling-keyless-authentication-from-github-actions
+#https://stackoverflow.com/questions/62783869/why-am-i-seeing-this-error-error-gcloud-run-deploy-permission-denied-the-c

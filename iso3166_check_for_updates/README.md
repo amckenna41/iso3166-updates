@@ -8,7 +8,7 @@ There is also functionality implemented that automatically tabulates and formats
 
 Currently, this script takes approximately 25 minutes to execute. 
 
-Note, due to this microservice only being called periodically, the Cloud Run app is created and then deleted after its execution to save on money and resources.
+Note, due to this microservice only being called periodically, the Cloud Run app is created and then deleted after its execution to save on resources.
 
 GCP Cloud Architecture 
 ----------------------
@@ -20,7 +20,7 @@ GCP Cloud Architecture
 Requirements
 ------------
 * [python][python] >= 3.9
-* [iso3166-updates][iso3166-updates] >= 1.7.0
+* [iso3166-updates][iso3166-updates] >= 1.8.0
 * [pandas][pandas] >= 1.4.3
 * [requests][requests] >= 2.28.1
 * [beautifulsoup4][beautifulsoup4] >= 4.11.1
@@ -58,10 +58,10 @@ gcloud beta run deploy {APP_NAME} --image gcr.io/iso3166-updates/{CONTAINER_NAME
 #GITHUB_OWNER: owner of GitHub repos.
 #GITHUB_REPOS: list of GitHub repos where to create Issue outlining the latest ISO 3166 updates.
 #GITHUB_API_TOKEN: GitHub API token for creating an Issue on the repos.
-#MONTH_RANGE: number of months from script execution to get updates from. 
-#CREATE_ISSUE: set to 1 to create Issues on the GitHub repos outlining the latest ISO 3166 updates.
-#EXPORT_JSON: set to 1 to export latest ISO 3166 updates JSON to storage bucket.
-#EXPORT_CSV: set to 1 to export latest ISO 3166 updates in CSV format to storage bucket.
+#MONTH_RANGE: number of months from script execution to get updates from (default=6). 
+#CREATE_ISSUE: set to 1 to create Issues on the GitHub repos outlining the latest ISO 3166 updates (default=0).
+#EXPORT_JSON: set to 1 to export latest ISO 3166 updates JSON to storage bucket (default=1).
+#EXPORT_CSV: set to 1 to export latest ISO 3166 updates in CSV format to storage bucket (default=1).
 ```
 
 **Run Cloud Run application/script:**
@@ -79,7 +79,7 @@ gcloud run services delete {APP_NAME} --region {REGION_NAME}
 docker build -t {CONTAINER_NAME} . && gcloud builds submit --tag gcr.io/{APP_NAME}/{CONTAINER_NAME} && \
   yes | gcloud beta run deploy {APP_NAME} --image gcr.io/iso3166-updates/{CONTAINER_NAME} \
     --region {REGION_NAME} --platform managed --memory 1024Mi --timeout 2700 --service-account {SERVICE_ACCOUNT} \
-    --update-env-vars GITHUB_OWNER="",GITHUB_REPOS="",GITHUB_API_TOKEN="",MONTH_RANGE="",CREATE_ISSUE=1,EXPORT_JSON=1,EXPORT_CSV=1 && \
+    --update-env-vars GITHUB_OWNER="",GITHUB_REPOS="",GITHUB_API_TOKEN="",MONTH_RANGE="",CREATE_ISSUE=0,EXPORT_JSON=1,EXPORT_CSV=1 && \
     curl "$(gcloud run services describe {APP_NAME} --region {REGION_NAME} --format 'value(status.url)')"
 
 gcloud run services delete {APP_NAME} --region {REGION_NAME}

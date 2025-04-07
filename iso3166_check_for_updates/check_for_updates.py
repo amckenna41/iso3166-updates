@@ -26,21 +26,21 @@ success_message["status"] = 200
 #get current date and time on function execution
 current_datetime = datetime.strptime(datetime.today().strftime('%Y-%m-%d'), "%Y-%m-%d")
 
-#instance of ISO3166_Updates class to get all updates in current software version
-current_iso3166_updates = ISO3166_Updates()
+#instance of Updates class to get all updates in current software version
+current_iso3166_updates = Updates()
 
 @app.route("/")
 def check_for_updates_main() -> tuple[dict, int]:
     """
     Google Cloud Run main entry script that checks for any latest/missing ISO 3166-2 
     updates data within specified date range for the iso3166-updates API. It uses the 
-    get_all_iso3166_updates.py script to web scrape all country's ISO 3166-2 updates 
+    get_all_iso3166_updates.py script to web scrape all countrys' ISO 3166-2 updates 
     data from the various data sources (wiki and ISO), checking for any updates in a 
     date range. This date range is normally set to the past 6-12 months, as the ISO 3166 
-    is updated annually (except for 2001 and 2006), usually at the end of the year as 
-    well as period updates published throughout the year. The Cloud run app is built 
-    using a custom docker container that contains all the required dependencies and 
-    binaries required to run this script. 
+    is usually updated annually, normally at the end of the year as well as periodic 
+    updates published throughout the year. The Cloud run app is built using a custom 
+    docker container that contains all the required dependencies and binaries required 
+    to run the full export pipeline script. 
     
     If any updates are found that are not already present in the JSON object within 
     the current version of the iso3166-updates software package then a GitHub Issue 
@@ -52,8 +52,8 @@ def check_for_updates_main() -> tuple[dict, int]:
     ISO 3166-1 and ISO 3166-2. 
 
     Additionally, if the EXPORT_JSON and EXPORT_CSV environment variables are set then 
-    the output object will be exported to a GCP Storage bucket, in JSON and CSV
-    format, respectively.
+    the output object will be exported to a GCP Storage bucket in their respective 
+    formats.
 
     Parameters
     ==========
@@ -99,13 +99,12 @@ def check_for_updates_main() -> tuple[dict, int]:
     if (commits.totalCount):
         latest_commit_date = datetime.strptime(commits[0].commit.committer.date.strftime('%Y-%m-%d'), "%Y-%m-%d")
     
-    
     #date difference between current date and date object was last updated, print out difference in months
-    date_diff = relativedelta(current_datetime, latest_commit_date)
+    date_diff = relativedelta.relativedelta(current_datetime, latest_commit_date)
     print(f"The iso3166-updates.json object was last updated {date_diff.months} months ago on: {str(latest_commit_date)}.")
     
-    #call get_updates function to scrape all latest country updates from data sources
-    latest_iso3166_updates, latest_iso3166_updates_csv = get_updates(export_json=False, export_csv=True, verbose=True)
+    #call get_updates function to scrape all the latest country updates from data sources
+    latest_iso3166_updates, latest_iso3166_updates_csv = get_iso3166_updates(export_json=False, export_csv=True, verbose=True)
     
     #iterate over all alpha-2 codes, check for any updates in specified months range in updates json 
     for alpha2 in list(latest_iso3166_updates.keys()):
@@ -115,7 +114,7 @@ def check_for_updates_main() -> tuple[dict, int]:
                 #convert str date into date object, remove "corrected" date if applicable
                 row_date = (datetime.strptime(re.sub("[(].*[)]", "", latest_iso3166_updates[alpha2][row]["Date Issued"]).replace(' ', "").replace(".", ''), "%Y-%m-%d"))
                 #compare date difference from current row to current date
-                date_diff = relativedelta(current_datetime, row_date)
+                date_diff = relativedelta.relativedelta(current_datetime, row_date)
                 #calculate date difference in months
                 diff_months = date_diff.months + (date_diff.years * 12)
 
@@ -164,7 +163,7 @@ def check_for_updates_main() -> tuple[dict, int]:
             if (export_to_bucket_success_code != -1):
                 success_message["message"] = f"New ISO 3166 updates found and successfully exported to bucket {bucket_name}."
             else:
-                success_message["message"] = "New ISO 3166 updates found, but there was an error exporting to the GCP storage bucket, double check the BUCKET_NAME ({bucket_name}) and BLOB_NAME ({blob_name}) environment variables are set and correct, and that the bucket exists."
+                success_message["message"] = f"New ISO 3166 updates found, but there was an error exporting to the GCP storage bucket, double check the BUCKET_NAME ({bucket_name}) and BLOB_NAME ({blob_name}) environment variables are set and correct, and that the bucket exists."
     #if no updates found but export functionality still enabled, export to bucket and return success message 
     else:
         if (export):
@@ -172,7 +171,7 @@ def check_for_updates_main() -> tuple[dict, int]:
             if (export_to_bucket_success_code != -1):
                 success_message["message"] = f"ISO 3166 updates object successfully exported to bucket: {bucket_name}."
             else:
-                success_message["message"] = "There was an error exporting to the GCP storage bucket, double check the BUCKET_NAME ({bucket_name}) and BLOB_NAME ({blob_name}) environment variables are set and correct, and that the bucket exists."
+                success_message["message"] = f"There was an error exporting to the GCP storage bucket, double check the BUCKET_NAME ({bucket_name}) and BLOB_NAME ({blob_name}) environment variables are set and correct, and that the bucket exists."
         #set success message when no updates found and export functionality not enabled
         else:
             success_message["message"] = f"No new ISO 3166 updates found, object not exported to bucket."
@@ -297,16 +296,16 @@ def create_github_issue(latest_iso3166_updates_after_date_filter: dict, missing_
 
         #display number of updates for countries and the date period
         body += "<h2>" + str(total_updates) + " update(s) found for " + str(total_countries) + " country/countries between the " + str(month_range) + " month period of " + \
-            str((current_datetime + relativedelta(months=-month_range)).strftime('%Y-%m-%d')) + " to " + str(current_datetime.strftime('%Y-%m-%d')) + "</h2>"
+            str((current_datetime + relativedelta.relativedelta(months=-month_range)).strftime('%Y-%m-%d')) + " to " + str(current_datetime.strftime('%Y-%m-%d')) + "</h2>"
 
-        #iterate over updates in json, append to updates object
+        #iterate over updates in json, output individual updates data
         for code in list(latest_iso3166_updates_after_date_filter.keys()):
             
             #header displaying current country name, code and flag icon using emoji-country-flag library
             body += "<h3>" + iso3166.countries_by_alpha2[code].name + " (" + code + ") " + flag.flag(code) + ":</h3>"
 
             #create table element to store output data
-            body += "<table><tr><th>Date Issued</th><th>Code/Subdivision Change</th><th>Description of Change</th><th>Edition/Newsletter</th></tr>"
+            body += "<table><tr><th>Date Issued</th><th>Change</th><th>Description of Change</th><th>Source</th></tr>"
 
             #iterate over all update rows for each country in object, appending to table row 
             for row in latest_iso3166_updates_after_date_filter[code]:
@@ -335,7 +334,7 @@ def create_github_issue(latest_iso3166_updates_after_date_filter: dict, missing_
             body += "<h3>" + iso3166.countries_by_alpha2[code].name + " (" + code + ") " + flag.flag(code) + ":</h3>"
 
             #create table element to store output data
-            body += "<table><tr><th>Date Issued</th><th>Code/Subdivision Change</th><th>Description of Change</th><th>Edition/Newsletter</th></tr>"
+            body += "<table><tr><th>Date Issued</th><th>Change</th><th>Description of Change</th><th>Source</th></tr>"
 
             #iterate over all update rows for each country in object, appending to table element
             for row in missing_filtered_updates[code]:
@@ -477,7 +476,6 @@ def export_to_bucket(latest_iso3166_updates: dict, latest_iso3166_updates_csv: d
 
 # def push_to_repo(latest_iso3166_updates: dict, version: float, commit_message: str):
 #     """
-    
 #     """    
 #     github_api_path = f"https://api.github.com/repos/{os.environ.get("GITHUB_OWNER")}/iso3166-updates/branches/master" 
 #     # https://api.github.com/repos/amckenna41/iso3166-updates/contents/iso3166-updates.json

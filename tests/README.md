@@ -4,7 +4,11 @@ All of the modules and functionalities of iso3166-updates are thoroughly tested 
 ## Module tests:
 
 * `test_iso3166_updates` - unit tests for iso3166-updates package.
-* `test_get_all_iso3166_updates` - unit tests for script that pulls all updates from data sources.
+* `test_export_updates_driver` - unit tests for Chromedriver functionalities in export script.
+* `test_export_updates_get_updates_data` - unit tests for script that pulls the data from the two main data sources in export script.
+* `test_export_updates_main` - unit tests for main entry function in export script.
+* `test_export_updates_utils` - unit tests for utils module that contains various utility functions used throughout export script. 
+* `test_export_updates_parse_updates_data` - unit tests for functionalities that parse the updates data in export script.
 * `test_iso3166_updates_api` - unit tests for iso3166-updates api.
 
 ## Running Tests

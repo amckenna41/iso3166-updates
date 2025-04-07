@@ -8,32 +8,32 @@ to the ISO 3166 country codes and subdivision naming conventions, as per the ISO
 and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui). 
 
 The ISO 3166 standard by the ISO (International Organization for Standardisation) defines codes for the names of countries, dependent territories, 
-special areas of geographical interest, consolidated into the ISO 3166-1 standard, and their principal subdivisions (e.g., provinces, states, 
+special areas of geographical interest, consolidated into the ISO 3166-1 standard, and their principal subdivisions (e.g. provinces, states, 
 departments, regions), which comprise the ISO 3166-2 standard. The ISO 3166-1 was first published in 1974 and currently comprises 249 countries, 
 193 of which are sovereign states that are members of the United Nations 🇺🇳. The ISO 3166-2 was first published in 1998 and as of November 2023 
 there are **5,039** codes defined in it.
 
-The ISO is a very dynamic organisation and regularly change, update and or remove entries within its library of standards, including the ISO 3166. 
+The ISO is a very dynamic organisation and they regularly change, update and or remove entries within its library of standards, including the ISO 3166. 
 Additions, changes and deletions to country/territorial codes occur less often in the ISO 3166-1, but changes are more frequent for the ISO 3166-2 
 codes due to there being thousands more entries, thus it can be difficult to keep up with and track these changes. These changes can occur for a 
 variety of geopolitical and administrative reasons. Previously these changes were communicated via newsletters; but as of July 2013 these changes 
-are now communicated via their online catalogue/Online Browsing Platform (OBP), or via a database, which usually costs money to subscribe to (>$300). 
+are now communicated via their online catalogue/Online Browsing Platform (OBP), or via a database, which usually costs money to subscribe to (>$300!). 
 Usually these updates are conveyed at the end of the year, with amendments and updates occasionally published at various times throughout the year.
 
 This software and accompanying API make it extremely easy to check for any new or historic updates to a country or set of country's ISO 3166-2 
-codes for free; with an easy-to-use interface and Python package and API, ensuring that you get the most **up-to-date** and **accurate** ISO 3166-2 codes 
+codes for free; with an easy-to-use interface via a Python package and API, ensuring that you get the most **up-to-date** and **accurate** ISO 3166-2 codes 
 and naming conventions.
 
 Each ISO 3166 update entry has 4 main data attributes:
 
-* *Code/Subdivision change*: overall summary of change/update made.
+* *Change*: overall summary of change/update made.
 * *Description of Change*: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
-* *Date Issued*: date that the change was communicated.
-* *Edition/Newsletter*: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform (OBP) page.
+* *Date Issued*: date that the change was communicated/published.
+* *Source*: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform (OBP) page.
 
 Last Updated
 ============
-The list of ISO 3166 updates was last updated on **March 2024**. A log of the latest ISO 3166 updates can be seen in the |updates_md_location_link| file.
+The list of ISO 3166 updates was last updated on **April 2025**. A log of the latest ISO 3166 updates can be seen in the |updates_md_location_link| file.
 
 .. |updates_md_location_link| raw:: html
 
@@ -53,6 +53,17 @@ License
    
 .. Changelog
 .. =========
+
+.. Latest Version: **1.8.0**.
+.. ******
+.. v1.8.0
+.. ******
+
+.. Latest Version: **1.7.0**.
+.. ******
+.. v1.7.0
+.. ******
+
 
 .. Latest Version: **1.6.1**.
 .. ******

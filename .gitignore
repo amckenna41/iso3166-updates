@@ -132,6 +132,8 @@ iso3166_updates_venv/
 # mkdocs documentation
 /site
 
+Dockerfile
+
 # mypy
 .mypy_cache/
 .dmypy.json
@@ -139,3 +141,16 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+updates_check.txt
+updates_check_2.txt
+
+colab_script.py
+
+iso3166_updates_export/remove_duplicates.py
+
+iso3166_check_for_updates/old
+
+successful_tests/
+
+.github/workflows/TODO.md

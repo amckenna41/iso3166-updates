@@ -1,15 +1,15 @@
 name: Deploy to TestPyPI 📦
 
-# trigger deploy workflow once build and test workflow has successfully completed
+#trigger deploy workflow once build and test workflow has successfully completed
 on:
   workflow_run:
     workflows: ["Building and Testing"]
     types: [completed]
 
-  # allow for workflow to be manually initiated from the Actions tab
+  #allow for workflow to be manually initiated from the Actions tab
   workflow_dispatch:
 
-# build and deploy to Test PyPI server if test workflow was successful or manual trigger was selected
+#build and deploy to Test PyPI server if test workflow was successful or manual trigger was selected
 jobs:
   test_success:
     timeout-minutes: 10
@@ -20,9 +20,9 @@ jobs:
       matrix:
         python-version: [3.9]  #deploying using one Python version on 1 runner
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-    # build distribution package using poetry tool and upload to the test PYPi server via custom github action
+    #build distribution package using poetry tool and upload to the test PYPi server via custom github action
     - name: Build and publish to Test PyPI
       uses: JRubics/poetry-publish@v2.0
       with:
@@ -30,19 +30,19 @@ jobs:
         repository_name: "testpypi"
         repository_url: "https://test.pypi.org/legacy/"
 
-     # sleep for 30 seconds to ensure that distribution package has successfully been uploaded to Test PyPI
+     #sleep for 30 seconds to ensure that distribution package has successfully been uploaded to Test PyPI
     - name: Wait / Sleep
-      uses: jakejarvis/wait-action@master
+      uses: jakejarvis/wait-action@v1
       with:
         time: '30s'
 
-    # download package of iso3166_updates from Test PYPI server to ensure it uploaded correctly
+    #download package of iso3166_updates from Test PYPI server to ensure it uploaded correctly
     - name: Install iso3166_updates from Test PyPI
       run: |
         pip install -i https://test.pypi.org/simple/ iso3166_updates --upgrade
         echo "iso3166_updates successfully installed"
         
-  # test workflow was not successful so package not deployed to Test PyPI or PyPI
+  #test workflow was not successful so package not deployed to Test PyPI or PyPI
   test_failure:
     name: Test workflow failure
     runs-on: ubuntu-latest

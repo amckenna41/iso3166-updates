@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "iso3166-updates"
-version = "1.7.1"
+version = "1.8.0"
 description = "Get the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest." 
 authors = ["AJ McKenna <amckenna41@qub.ac.uk>"]
 maintainers = ["AJ McKenna <amckenna41@qub.ac.uk>"]
@@ -15,7 +15,6 @@ classifiers = [
         "License :: OSI Approved :: MIT License",
         "License :: Free For Educational Use",
         "Natural Language :: English",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",	
@@ -29,9 +28,10 @@ keywords = ["iso", "iso3166", "beautifulsoup", "python", "pypi", "countries", "c
 packages = [{include = "iso3166_updates"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 iso3166 = "^2.1.1"
 python-dateutil = "^2.9.0.post0"
+thefuzz = "^0.22.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.2"
