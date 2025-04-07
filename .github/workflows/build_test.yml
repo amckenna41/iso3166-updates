@@ -86,6 +86,7 @@ jobs:
     - name: Package safety check
       run: |
         echo "Running package safety check"
+        pip install safety
         python3 -m safety check > artifacts/package_safety_output.txt
         cat artifacts/package_safety_output.txt
       continue-on-error: true
@@ -94,6 +95,7 @@ jobs:
     - name: Bandit
       run: |
         echo "Running Bandit"
+        pip install bandit
         python3 -m bandit -r iso3166_updates iso3166_updates_export iso3166_check_for_updates tests -v > artifacts/bandit_output.txt
         cat artifacts/bandit_output.txt
       continue-on-error: true
