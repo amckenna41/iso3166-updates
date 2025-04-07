@@ -544,7 +544,7 @@ def get_updates_df_selenium(alpha_code: str, include_remarks_data: bool=True) ->
         #add recursive backoff on multiple attempts 
         if (selenium_retry_attempts != 3):
             wait_time = backoff_factor * (2 ** (selenium_retry_attempts - 1)) + random.uniform(0, 1)
-            print(f"Attempt {selenium_retry_attempts} failed: {e}. Retrying in {wait_time:.2f} seconds...")
+            print(f"Attempt {selenium_retry_attempts} failed. Retrying in {wait_time:.2f} seconds...")
             time.sleep(wait_time)
 
         #create instance of chromedriver
