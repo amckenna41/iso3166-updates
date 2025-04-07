@@ -313,7 +313,7 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
         #get html content from wiki of ISO page, convert html content into BS4 object,
         #...get Changes Section/Heading from soup, get table element from section
 #1.)    
-        soup = BeautifulSoup(requests.get(wiki_base_url + test_alpha2_ba, headers={"User-Agent": user_agent_header}).content, "html.parser") #Bosnia & Hez
+        soup = BeautifulSoup(requests.get(wiki_base_url + test_alpha2_ba, headers={"User-Agent": user_agent_header}, timeout=10).content, "html.parser") #Bosnia & Hez
         table_html = soup.find("h2", {"id": "Changes"}).find_next('table')   #gets the 1st Changes table, 2nd one isnt parsed
         ba_table = table_to_array(table_html, soup)
 
@@ -337,7 +337,7 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
         self.assertEqual(ba_test_output1, ba_expected_output1, f"Expected and observed outputs do not match:\n{ba_test_output1}.")
         self.assertEqual(ba_test_output2, ba_expected_output2, f"Expected and observed outputs do not match:\n{ba_expected_output2}.")
 #2.)
-        soup = BeautifulSoup(requests.get(wiki_base_url + test_alpha2_eg, headers={"User-Agent": user_agent_header}).content, "html.parser") #Egypt
+        soup = BeautifulSoup(requests.get(wiki_base_url + test_alpha2_eg, headers={"User-Agent": user_agent_header}, timeout=10).content, "html.parser") #Egypt
         table_html = soup.find("h2", {"id": "Changes"}).find_next('table')
         eg_table = table_to_array(table_html, soup)
 
@@ -360,7 +360,7 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
         self.assertEqual(eg_test_output1, eg_expected_output1, f"Expected and observed outputs do not match:\n{eg_test_output1}.")
         self.assertEqual(eg_test_output2, eg_expected_output2, f"Expected and observed outputs do not match:\n{eg_test_output2}")
 #3.)
-        soup = BeautifulSoup(requests.get(wiki_base_url + test_alpha2_qa, headers={"User-Agent": user_agent_header}).content, "html.parser") #Qatar
+        soup = BeautifulSoup(requests.get(wiki_base_url + test_alpha2_qa, headers={"User-Agent": user_agent_header}, timeout=10).content, "html.parser") #Qatar
         table_html = soup.find("h2", {"id": "Changes"}).find_next('table')
         qa_table = table_to_array(table_html, soup)
 
@@ -379,7 +379,7 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
             f"Expected columns/headers in observed and expected output to match:\n{qa_table[0]}.")
         self.assertEqual(qa_test_output, qa_expected_output, f"Expected and observed outputs do not match:\n{qa_test_output}")
 #4.)
-        soup = BeautifulSoup(requests.get(wiki_base_url + test_alpha2_rs, headers={"User-Agent": user_agent_header}).content, "html.parser") #Serbia
+        soup = BeautifulSoup(requests.get(wiki_base_url + test_alpha2_rs, headers={"User-Agent": user_agent_header}, timeout=10).content, "html.parser") #Serbia
         table_html = soup.find("h2", {"id": "Changes"}).find_next('table')
         rs_table = table_to_array(table_html, soup)
 
@@ -401,14 +401,14 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
         self.assertEqual(rs_test_output1, rs_expected_output1, f"Expected and observed outputs do not match:\n{rs_test_output1}.")
         self.assertEqual(rs_test_output2, rs_expected_output2, f"Expected and observed outputs do not match:\n{rs_test_output2}")
 #5.)    
-        soup = BeautifulSoup(requests.get(wiki_base_url + test_alpha2_br, headers={"User-Agent": user_agent_header}).content, "html.parser") #Brazil
+        soup = BeautifulSoup(requests.get(wiki_base_url + test_alpha2_br, headers={"User-Agent": user_agent_header}, timeout=10).content, "html.parser") #Brazil
         table_html = soup.find("span", {"id": "Changes"})
         br_table = table_to_array(table_html, soup)
 
         self.assertIsNone(table_html, "Table should be none as no listed changes/updates on wiki.")
         self.assertEqual(br_table, [], "Output from function should be empty array when input param is None.")
 #6.)
-        soup = BeautifulSoup(requests.get(wiki_base_url + test_alpha2_pt, headers={"User-Agent": user_agent_header}).content, "html.parser") #Portugal
+        soup = BeautifulSoup(requests.get(wiki_base_url + test_alpha2_pt, headers={"User-Agent": user_agent_header}, timeout=10).content, "html.parser") #Portugal
         table_html = soup.find("span", {"id": "Changes"})
         test_table = table_to_array(table_html, soup)
 

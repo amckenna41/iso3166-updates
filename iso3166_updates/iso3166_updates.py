@@ -899,7 +899,7 @@ class Updates():
         """
         #pull latest data object from repo
         try:
-            response = requests.get("https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166-updates.json")
+            response = requests.get("https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166-updates.json", timeout=15)
             response.raise_for_status()
             latest_iso3166_updates_json = response.json()
         except requests.exceptions.RequestException as e:

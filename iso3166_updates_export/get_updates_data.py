@@ -48,7 +48,7 @@ def get_updates_df_wiki(alpha_code: str) -> pd.DataFrame:
 
     #get html content from wiki of ISO 3166 page, raise exception if status code != 200
     try:
-        response = requests.get(wiki_base_url + alpha2, headers={"User-Agent": user_agent_header})
+        response = requests.get(wiki_base_url + alpha2, headers={"User-Agent": user_agent_header}, timeout=15)
         response.raise_for_status()
         soup = BeautifulSoup(response.content, "html.parser")
     except requests.exceptions.RequestException as e:

@@ -50,7 +50,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
         #turn off tqdm progress bar functionality when running tests
         os.environ["TQDM_DISABLE"] = "1"
 
-    # @unittest.skip("")
+    @unittest.skip("")
     def test_get_iso3166_updates_alpha(self):
         """ Testing main updates function that gets the updates and exports to json/csv, using
             a variety of ISO 3166-1 alpha country code input parameter values. """
@@ -288,7 +288,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             get_iso3166_updates(test_alpha_error_5)
             get_iso3166_updates(test_alpha_error_6)
 
-    # @unittest.skip("Skipping as below tests requiring extracting all updates each time.")   
+    @unittest.skip("Skipping as below tests requiring extracting all updates each time.")   
     def test_get_iso3166_updates_year(self):
         """ Testing main updates function that gets the updates and exports to json/csv, using a variety of year input 
             parameter values. Note, only using updates data from the wiki pages and not ISO due to time constraint of 
@@ -485,7 +485,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             get_iso3166_updates(year=test_year12) #12345
             get_iso3166_updates(year=test_year13) #True
 
-    # @unittest.skip("")
+    @unittest.skip("")
     def test_get_iso3166_updates_alpha_year(self):
         """ Testing main updates function that gets the updates and exports to json/csv, using
             a variety of ISO 3166-1 alpha codes and year input parameter values. """

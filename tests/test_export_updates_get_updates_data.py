@@ -51,10 +51,10 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
 #1.)
         #iterate over each ISO 3166 alpha-2 code, testing response code using request library for wiki and ISO pages
         for code in alpha2_codes:
-            request = requests.get(self.wiki_base_url + code, headers={"headers": self.user_agent_header})
+            request = requests.get(self.wiki_base_url + code, headers={"headers": self.user_agent_header}, timeout=15)
             self.assertEqual(request.status_code, 200, f"Expected status code 200, got {request.status_code}.")
 
-            request = requests.get(self.iso_base_url + code, headers={"headers": self.user_agent_header})
+            request = requests.get(self.iso_base_url + code, headers={"headers": self.user_agent_header}, timeout=15)
             self.assertEqual(request.status_code, 200, f"Expected status code 200, got {request.status_code}.")
 
     # @unittest.skip("")

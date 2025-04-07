@@ -71,7 +71,7 @@ class Updates_Api_Tests(unittest.TestCase):
 
     def test_homepage_endpoint(self):
         """ Testing contents of main '/api' endpoint that returns the homepage and API documentation. """
-        test_request_main = requests.get(self.base_url, headers=self.user_agent_header)
+        test_request_main = requests.get(self.base_url, headers=self.user_agent_header, timeout=10)
         soup = BeautifulSoup(test_request_main.content, 'html.parser')
 #1.)
         # version = soup.find(id='version').text.split(': ')[1]
@@ -89,7 +89,7 @@ class Updates_Api_Tests(unittest.TestCase):
 
     def test_all_endpoint(self):
         """ Testing '/api/all' endpoint that returns all updates data for all countries. """
-        test_request_all = requests.get(self.all_base_url, headers=self.user_agent_header)
+        test_request_all = requests.get(self.all_base_url, headers=self.user_agent_header, timeout=10)
 #1.)
         self.assertIsInstance(test_request_all.json(), dict, f"Expected output object of API to be of type dict, got {type(test_request_all.json())}.")
         self.assertEqual(len(test_request_all.json()), 249, f"Expected there to be 249 elements in output object, got {len(test_request_all.json())}.")
@@ -98,7 +98,7 @@ class Updates_Api_Tests(unittest.TestCase):
 
     def test_json_schema_all_endpoint(self):
         """ Testing the JSON schema for all the data, using the /all endpoint. """
-        test_request_all = requests.get(self.all_base_url, headers=self.user_agent_header)
+        test_request_all = requests.get(self.all_base_url, headers=self.user_agent_header, timeout=10)
         schema = {
             "type": "object",
             "patternProperties": {
@@ -122,7 +122,7 @@ class Updates_Api_Tests(unittest.TestCase):
 
     def test_all_endpoint_duplicates(self):
         """ Testing '/api/all' endpoint has no duplicate updates objects. """
-        test_request_all = requests.get(self.all_base_url, headers=self.user_agent_header)
+        test_request_all = requests.get(self.all_base_url, headers=self.user_agent_header, timeout=10)
 #1.)
         for country_code, updates in test_request_all.json():
             unique_updates = {frozenset(update.items()) for update in updates}
@@ -139,7 +139,7 @@ class Updates_Api_Tests(unittest.TestCase):
         error_test_alpha_2 = "42"
         error_test_alpha_3 = "XYZ" #invalid alpha-3 code
 #1.)
-        test_request_ad = requests.get(self.alpha_base_url + test_alpha_ad, headers=self.user_agent_header).json() #AD
+        test_request_ad = requests.get(self.alpha_base_url + test_alpha_ad, headers=self.user_agent_header, timeout=10).json() #AD
         
         #expected test outputs
         test_alpha_ad_expected1 = {
@@ -164,7 +164,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_ad[test_alpha_ad][0], test_alpha_ad_expected1, f"Expected and observed outputs do not match:\n{test_request_ad[test_alpha_ad][0]}.")
         self.assertEqual(test_request_ad[test_alpha_ad][1], test_alpha_ad_expected2, f"Expected and observed outputs do not match:\n{test_request_ad[test_alpha_ad][1]}.")
 #2.)
-        test_request_bo = requests.get(self.alpha_base_url + test_alpha_bo, headers=self.user_agent_header).json() #BO
+        test_request_bo = requests.get(self.alpha_base_url + test_alpha_bo, headers=self.user_agent_header, timeout=10).json() #BO
         
         #expected test outputs
         test_alpha_bo_expected1 = {
@@ -189,7 +189,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_bo[test_alpha_bo][0], test_alpha_bo_expected1, f"Expected and observed outputs do not match:\n{test_request_bo[test_alpha_bo][0]}")
         self.assertEqual(test_request_bo[test_alpha_bo][1], test_alpha_bo_expected2, f"Expected and observed outputs do not match:\n{test_request_bo[test_alpha_bo][1]}")
 #3.)
-        test_request_co = requests.get(self.alpha_base_url + test_alpha_co, headers=self.user_agent_header).json() #COL
+        test_request_co = requests.get(self.alpha_base_url + test_alpha_co, headers=self.user_agent_header, timeout=10).json() #COL
 
         #expected test outputs
         test_alpha_co_expected1 = {
@@ -214,7 +214,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_co["CO"][0], test_alpha_co_expected1, f"Expected and observed outputs do not match:\n{test_request_co['CO'][0]}")
         self.assertEqual(test_request_co["CO"][1], test_alpha_co_expected2, f"Expected and observed outputs do not match:\n{test_request_co['CO'][1]}")
 #4.)
-        test_request_bf = requests.get(self.alpha_base_url + test_alpha_bf, headers=self.user_agent_header).json() #854
+        test_request_bf = requests.get(self.alpha_base_url + test_alpha_bf, headers=self.user_agent_header, timeout=10).json() #854
         
         #expected test outputs
         test_alpha_bf_expected1 = {
@@ -240,7 +240,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_bf["BF"][1], test_alpha_bf_expected2, f"Expected and observed outputs do not match:\n{test_request_bf['BF'][1]}")
 
 #4.)
-        test_request_bn_cu_dm = requests.get(self.alpha_base_url + test_alpha_bn_cu_dm, headers=self.user_agent_header).json() #BN, CUB, 262
+        test_request_bn_cu_dm = requests.get(self.alpha_base_url + test_alpha_bn_cu_dm, headers=self.user_agent_header, timeout=10).json() #BN, CUB, 262
 
         test_alpha_list = ['BN', 'CU', 'DJ']  
         
@@ -277,7 +277,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_bn_cu_dm['CU'][0], test_alpha_cu_expected, f"Expected and observed outputs do not match:\n{test_request_bn_cu_dm['CU'][0]}")
         self.assertEqual(test_request_bn_cu_dm['DJ'][0], test_alpha_dj_expected, f"Expected and observed outputs do not match:\n{test_request_bn_cu_dm['DJ'][0]}")
 #5.)
-        test_request_error1 = requests.get(self.alpha_base_url + error_test_alpha_1, headers=self.user_agent_header).json() #blahblahblah
+        test_request_error1 = requests.get(self.alpha_base_url + error_test_alpha_1, headers=self.user_agent_header, timeout=10).json() #blahblahblah
 
         self.assertIsInstance(test_request_error1, dict, f"Expected output object of API to be of type dict, got {type(test_request_error1)}.")
         self.assertEqual(list(test_request_error1.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
@@ -285,7 +285,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_error1["status"], 400, f"Error status code incorrect: {test_request_error1['status']}.")
         self.assertEqual(test_request_error1["path"], self.alpha_base_url + error_test_alpha_1, f"Error path incorrect: {test_request_error1['path']}.")
 #6.)
-        test_request_error2 = requests.get(self.alpha_base_url + error_test_alpha_2, headers=self.user_agent_header).json() #42
+        test_request_error2 = requests.get(self.alpha_base_url + error_test_alpha_2, headers=self.user_agent_header, timeout=10).json() #42
 
         self.assertIsInstance(test_request_error2, dict, f"Expected output object of API to be of type dict, got {type(test_request_error2)}.")
         self.assertEqual(list(test_request_error2.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
@@ -293,7 +293,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_error2["status"], 400, f"Error status code incorrect: {test_request_error2['status']}.")
         self.assertEqual(test_request_error2["path"], self.alpha_base_url + error_test_alpha_2, f"Error path incorrect: {test_request_error2['path']}.")
 #7.)
-        test_request_error3 = requests.get(self.alpha_base_url + error_test_alpha_3, headers=self.user_agent_header).json() #xyz
+        test_request_error3 = requests.get(self.alpha_base_url + error_test_alpha_3, headers=self.user_agent_header, timeout=10).json() #xyz
 
         self.assertIsInstance(test_request_error3, dict, f"Expected output object of API to be of type dict, got {type(test_request_error3)}.")
         self.assertEqual(list(test_request_error3.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
@@ -311,7 +311,7 @@ class Updates_Api_Tests(unittest.TestCase):
         test_year_abc = "abc"
         test_year_12345 = "12345"
 #1.)
-        test_request_year_2016 = requests.get(self.year_base_url + test_year_2016, headers=self.user_agent_header).json() #2016
+        test_request_year_2016 = requests.get(self.year_base_url + test_year_2016, headers=self.user_agent_header, timeout=10).json() #2016
 
         #expected test outputs
         test_au_expected = {
@@ -358,7 +358,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_2016['MV'][0], test_mv_expected, f"Expected and observed outputs do not match:\n{test_request_year_2016['MV'][0]}.")
         self.assertEqual(test_request_year_2016['PW'][0], test_pw_expected, f"Expected and observed outputs do not match:\n{test_request_year_2016['PW'][0]}.")
 #2.)
-        test_request_year_2007 = requests.get(self.year_base_url + test_year_2007, headers=self.user_agent_header).json() #2007
+        test_request_year_2007 = requests.get(self.year_base_url + test_year_2007, headers=self.user_agent_header, timeout=10).json() #2007
         
         #expected test outputs
         test_ag_expected = {
@@ -405,7 +405,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_2007['GD'][0], test_gd_expected, f"Expected and observed outputs do not match:\n{test_request_year_2007['GD'][0]}.")
         self.assertEqual(test_request_year_2007['SM'][0], test_sm_expected, f"Expected and observed outputs do not match:\n{test_request_year_2007['SM'][0]}.")
 #3.)
-        test_request_year_2004_2009 = requests.get(self.year_base_url + test_year_2004_2009, headers=self.user_agent_header).json() #2004-2009
+        test_request_year_2004_2009 = requests.get(self.year_base_url + test_year_2004_2009, headers=self.user_agent_header, timeout=10).json() #2004-2009
 
         #expected test outputs
         test_af_expected = {
@@ -454,7 +454,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_2004_2009['KP'][0], test_kp_expected, f"Expected and observed outputs do not match:\n{test_request_year_2004_2009['KP'][0]}.")
         self.assertEqual(test_request_year_2004_2009['ZA'][0], test_za_expected, f"Expected and observed outputs do not match:\n{test_request_year_2004_2009['ZA'][0]}.")
 #4.)    
-        test_request_year_gt_2017 = requests.get(self.year_base_url + test_year_gt_2017, headers=self.user_agent_header).json() #>2017
+        test_request_year_gt_2017 = requests.get(self.year_base_url + test_year_gt_2017, headers=self.user_agent_header, timeout=10).json() #>2017
 
         #expected test outputs
         test_cl_expected = {
@@ -508,7 +508,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_gt_2017['SA'][0], test_sa_expected, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_year_gt_2017['VE'][0], test_ve_expected, "Expected and observed outputs do not match.")
 #5.)    
-        test_request_year_lt_2002 = requests.get(self.year_base_url + test_year_lt_2002, headers=self.user_agent_header).json() #<2002
+        test_request_year_lt_2002 = requests.get(self.year_base_url + test_year_lt_2002, headers=self.user_agent_header, timeout=10).json() #<2002
 
         #expected test outputs
         test_ca_expected = {
@@ -553,7 +553,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_lt_2002['RO'][0], test_ro_expected, f"Expected and observed outputs do not match:\n{test_request_year_lt_2002['RO'][0]}.")
         self.assertEqual(test_request_year_lt_2002['TR'][0], test_tr_expected, f"Expected and observed outputs do not match:\n{test_request_year_lt_2002['TR'][0]}.")
 #6.) 
-        test_request_year_abc = requests.get(self.year_base_url + test_year_abc, headers=self.user_agent_header).json() #abc
+        test_request_year_abc = requests.get(self.year_base_url + test_year_abc, headers=self.user_agent_header, timeout=10).json() #abc
         
         self.assertIsInstance(test_request_year_abc, dict, f"Expected output object of API to be of type dict, got {type(test_request_year_abc)}.")
         self.assertEqual(list(test_request_year_abc.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
@@ -561,7 +561,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_abc["status"], 400, f"Error status code incorrect: {test_request_year_abc['status']}.")
         self.assertEqual(test_request_year_abc["path"], self.year_base_url + test_year_abc, f"Error path incorrect: {test_request_year_abc['path']}.")
 #7.) 
-        test_request_year_12345 = requests.get(self.year_base_url + test_year_12345, headers=self.user_agent_header).json() #1234
+        test_request_year_12345 = requests.get(self.year_base_url + test_year_12345, headers=self.user_agent_header, timeout=10).json() #1234
 
         self.assertIsInstance(test_request_year_12345, dict, f"Expected output object of API to be of type dict, got {type(test_request_year_12345)}.")
         self.assertEqual(list(test_request_year_12345.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
@@ -578,7 +578,7 @@ class Updates_Api_Tests(unittest.TestCase):
         test_ve_2021_2023 = ("VE", "2021-2023") #Venezuela 2021-2023
         test_abc_2000 = ("abc", "2000") 
 #1.)
-        test_ad_2015_request = requests.get(f"{self.alpha_base_url}{test_ad_2015[0]}/year/{test_ad_2015[1]}", headers=self.user_agent_header).json() #Andorra - 2015
+        test_ad_2015_request = requests.get(f"{self.alpha_base_url}{test_ad_2015[0]}/year/{test_ad_2015[1]}", headers=self.user_agent_header, timeout=10).json() #Andorra - 2015
         
         #expected test outputs
         test_ad_2015_expected = {
@@ -600,7 +600,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertIsInstance(test_ad_2015_request[test_ad_2015[0]], list, f"Expected output object of API to be of type list, got {type(test_ad_2015_request[test_ad_2015[0]])}.")
         self.assertEqual(test_ad_2015_expected, test_ad_2015_request[test_ad_2015[0]][0], f"Observed and expected outputs of API do not match.")
 #2.) 
-        test_es_2002_request = requests.get(f"{self.alpha_base_url}{test_es_2002[0]}/year/{test_es_2002[1]}", headers=self.user_agent_header).json() #Spain - 2002
+        test_es_2002_request = requests.get(f"{self.alpha_base_url}{test_es_2002[0]}/year/{test_es_2002[1]}", headers=self.user_agent_header, timeout=10).json() #Spain - 2002
 
         #expected test outputs
         test_es_2002_expected = {
@@ -622,7 +622,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertIsInstance(test_es_2002_request["ES"], list, f"Expected output object of API to be of type list, got {type(test_es_2002_request['ES'])}.")
         self.assertEqual(test_es_2002_expected, test_es_2002_request["ES"][0], "Observed and expected outputs of API do not match.")
 #3.) 
-        test_tr_gt_2002_request = requests.get(f"{self.alpha_base_url}{test_tr_2002[0]}/year/{test_tr_2002[1]}", headers=self.user_agent_header).json() #Turkey - >2002
+        test_tr_gt_2002_request = requests.get(f"{self.alpha_base_url}{test_tr_2002[0]}/year/{test_tr_2002[1]}", headers=self.user_agent_header, timeout=10).json() #Turkey - >2002
         
         #expected test outputs 
         test_tr_gt_2002_expected = {
@@ -644,7 +644,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertIsInstance(test_tr_gt_2002_request[test_tr_2002[0]], list, f"Expected output object of API to be of type list, got {type(test_tr_gt_2002_request[test_tr_2002[0]])}.")
         self.assertEqual(test_tr_gt_2002_expected, test_tr_gt_2002_request[test_tr_2002[0]][0], "Observed and expected outputs of API do not match.")
 #4.)
-        test_ma_mh_nr_lt_2019_request = requests.get(f"{self.alpha_base_url}{test_ma_mh_nr_lt_2019[0]}/year/{test_ma_mh_nr_lt_2019[1]}", headers=self.user_agent_header).json() #Morocco, Marshall Islands, Nauru - <2019
+        test_ma_mh_nr_lt_2019_request = requests.get(f"{self.alpha_base_url}{test_ma_mh_nr_lt_2019[0]}/year/{test_ma_mh_nr_lt_2019[1]}", headers=self.user_agent_header, timeout=10).json() #Morocco, Marshall Islands, Nauru - <2019
 
         #expected test outputs
         test_ma_lt_2019_expected = {
@@ -680,13 +680,13 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_mh_lt_2019_expected, test_ma_mh_nr_lt_2019_request["MH"][0], "Observed and expected outputs of API do not match.") 
         self.assertEqual(test_nr_lt_2019_expected, test_ma_mh_nr_lt_2019_request["NR"][0], "Observed and expected outputs of API do not match.") 
 #5.)
-        test_ve_2021_2023_request = requests.get(f"{self.alpha_base_url}{test_ve_2021_2023[0]}/year/{test_ve_2021_2023[1]}", headers=self.user_agent_header).json() #Venezuela - 2021-2023
+        test_ve_2021_2023_request = requests.get(f"{self.alpha_base_url}{test_ve_2021_2023[0]}/year/{test_ve_2021_2023[1]}", headers=self.user_agent_header, timeout=10).json() #Venezuela - 2021-2023
 
         self.assertIsInstance(test_ve_2021_2023_request, dict, f"Expected output object of API to be of type dict, got {type(test_ve_2021_2023_request)}.")
         self.assertEqual(len(test_ve_2021_2023_request), 0, f"Expected 0 rows returned from API, got {len(test_ve_2021_2023_request)}.")
         self.assertEqual(test_ve_2021_2023_request, {}, f"Expected output of API to be an empty dict, got\n{test_ve_2021_2023_request}")
 #6.) 
-        test_abc_2000_request = requests.get(f"{self.alpha_base_url}{test_abc_2000[0]}/year/{test_abc_2000[1]}", headers=self.user_agent_header).json() #abc - 2000
+        test_abc_2000_request = requests.get(f"{self.alpha_base_url}{test_abc_2000[0]}/year/{test_abc_2000[1]}", headers=self.user_agent_header, timeout=10).json() #abc - 2000
         
         self.assertIsInstance(test_abc_2000_request, dict, f"Expected output object of API to be of type dict, got {type(test_abc_2000_request)}.")
         self.assertEqual(list(test_abc_2000_request.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
@@ -721,14 +721,14 @@ class Updates_Api_Tests(unittest.TestCase):
             country_name = iso3166.countries_by_alpha2[alpha2].name
             if (country_name == "Kosovo"):
                 continue
-            test_request_name = requests.get(self.name_base_url + country_name, headers=self.user_agent_header).json()
+            test_request_name = requests.get(self.name_base_url + country_name, headers=self.user_agent_header, timeout=10).json()
             #convert country name to its more common name
             if (country_name in list(name_exceptions_converted.keys())):
                 country_name = name_exceptions_converted[country_name]
             self.assertEqual(list(test_request_name)[0], alpha2, 
                     f"Input country name {country_name} and one in output object do not match: {list(test_request_name)[0]}.")
 #2.)
-        test_request_bj = requests.get(self.name_base_url + test_name_benin, headers=self.user_agent_header).json() #Benin
+        test_request_bj = requests.get(self.name_base_url + test_name_benin, headers=self.user_agent_header, timeout=10).json() #Benin
 
         test_name_bj_expected = {
                 "Change": "Correction of the Code Source.",
@@ -745,7 +745,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(len(test_request_bj["BJ"]), 3, f"Expected there to be 3 elements in output object, got {len(test_request_bj['BJ'])}.")
         self.assertEqual(test_request_bj["BJ"][0], test_name_bj_expected, "Expected and observed outputs do not match.")
 #3.)
-        test_request_tj = requests.get(self.name_base_url + test_name_tajikistan, headers=self.user_agent_header).json() #Tajikistan
+        test_request_tj = requests.get(self.name_base_url + test_name_tajikistan, headers=self.user_agent_header, timeout=10).json() #Tajikistan
 
         test_name_tj_expected = {
                 "Change": "Correction of the Code Source.",
@@ -762,7 +762,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(len(test_request_tj["TJ"]), 7, f"Expected there to be 7 elements in output object, got {len(test_request_tj['TJ'])}.")
         self.assertEqual(test_request_tj["TJ"][0], test_name_tj_expected, f"Expected and observed outputs do not match:\n{test_request_tj['TJ'][0]}.")
 #4.)
-        test_request_md = requests.get(self.name_base_url + test_name_moldova, headers=self.user_agent_header).json() #Moldova
+        test_request_md = requests.get(self.name_base_url + test_name_moldova, headers=self.user_agent_header, timeout=10).json() #Moldova
 
         test_name_md_expected = {
                 "Change": "Modification of the French short name lower case.",
@@ -779,7 +779,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(len(test_request_md["MD"]), 11, f"Expected there to be 11 elements in output object, got {len(test_request_md['MD'])}.")
         self.assertEqual(test_request_md["MD"][0], test_name_md_expected, f"Expected and observed outputs do not match:\n{test_request_md['MD'][0]}.")
 #5.)
-        test_request_ml_ni = requests.get(self.name_base_url + test_name_mali_nicaragua, headers=self.user_agent_header).json() #Mali, Nicaragua 
+        test_request_ml_ni = requests.get(self.name_base_url + test_name_mali_nicaragua, headers=self.user_agent_header, timeout=10).json() #Mali, Nicaragua 
 
         test_name_ml_ni_expected = {
                 "Change": "Addition of regions ML-9, ML-10; update List Source.",
@@ -806,7 +806,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_ml_ni["ML"][0], test_name_ml_ni_expected, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_ml_ni["NI"][0], test_name_ml_ni_expected_2, "Expected and observed outputs do not match.")
 #6.)
-        test_request_error = requests.get(self.name_base_url + test_name_error1, headers=self.user_agent_header).json() #ABCDEF
+        test_request_error = requests.get(self.name_base_url + test_name_error1, headers=self.user_agent_header, timeout=10).json() #ABCDEF
 
         self.assertIsInstance(test_request_error, dict, f"Expected output object of API to be of type dict, got {type(test_request_error)}.")
         self.assertEqual(list(test_request_error.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
@@ -814,7 +814,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_error["status"], 400, f"Error status code incorrect: {test_request_error['status']}.")
         self.assertEqual(test_request_error["path"], self.name_base_url + test_name_error1, f"Error path incorrect: {test_request_error['path']}.")
 #7.)
-        test_request_error_2 = requests.get(self.name_base_url + test_name_error2, headers=self.user_agent_header).json() #12345
+        test_request_error_2 = requests.get(self.name_base_url + test_name_error2, headers=self.user_agent_header, timeout=10).json() #12345
  
         self.assertIsInstance(test_request_error_2, dict, f"Expected output object of API to be of type dict, got {type(test_request_error_2)}.")
         self.assertEqual(list(test_request_error_2.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
@@ -833,7 +833,7 @@ class Updates_Api_Tests(unittest.TestCase):
         test_name_error2 = ("12345", "ABCD")
         test_name_error3 = ("blahblahblah", "2040-2050")
 #1.) 
-        test_request_egypt_2014 = requests.get(f"{self.name_base_url}{test_name_egypt_2014[0]}/year/{test_name_egypt_2014[1]}", headers=self.user_agent_header).json() #Egypt 2014
+        test_request_egypt_2014 = requests.get(f"{self.name_base_url}{test_name_egypt_2014[0]}/year/{test_name_egypt_2014[1]}", headers=self.user_agent_header, timeout=10).json() #Egypt 2014
 
         test_name_egypt_2014_expected = {
                 "Change": "Delete EG-HU and EG-SU; update List Source.",
@@ -851,7 +851,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(len(test_request_egypt_2014["EG"]), 1, f"Expected there to be 1 element in output object, got {len(test_request_egypt_2014['EG'])}.")
         self.assertEqual(test_request_egypt_2014["EG"][0], test_name_egypt_2014_expected, "Expected and observed outputs do not match.")
 #2.) 
-        test_request_indonesia_2022 = requests.get(f"{self.name_base_url}{test_name_indonesia_2022[0]}/year/{test_name_indonesia_2022[1]}", headers=self.user_agent_header).json() #Indonesia 2022
+        test_request_indonesia_2022 = requests.get(f"{self.name_base_url}{test_name_indonesia_2022[0]}/year/{test_name_indonesia_2022[1]}", headers=self.user_agent_header, timeout=10).json() #Indonesia 2022
 
         test_name_indonesia_2022_expected = {
                 "Change": "Addition of provinces ID-PE, ID-PS and ID-PT; Update List Source.",
@@ -869,7 +869,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(len(test_request_indonesia_2022["ID"]), 1, f"Expected there to be 1 element in output object, got {len(test_request_indonesia_2022['ID'])}.")
         self.assertEqual(test_request_indonesia_2022["ID"][0], test_name_indonesia_2022_expected, "Expected and observed outputs do not match.")
 #3.) 
-        test_request_japan_gt_2018 = requests.get(f"{self.name_base_url}{test_name_japan_gt_2018[0]}/year/{test_name_japan_gt_2018[1]}", headers=self.user_agent_header).json() #Japan >2018
+        test_request_japan_gt_2018 = requests.get(f"{self.name_base_url}{test_name_japan_gt_2018[0]}/year/{test_name_japan_gt_2018[1]}", headers=self.user_agent_header, timeout=10).json() #Japan >2018
 
         test_name_japan_gt_2018_expected = {
                 "Change": "Correction of the romanization system label.",
@@ -887,7 +887,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(len(test_request_japan_gt_2018["JP"]), 1, f"Expected there to be 1 element in output object, got {len(test_request_japan_gt_2018['JP'])}.")
         self.assertEqual(test_request_japan_gt_2018["JP"][0], test_name_japan_gt_2018_expected, f"Expected and observed outputs do not match:\n{test_request_japan_gt_2018['JP'][0],}")
 #4.)
-        test_request_kiribati_lesotho_lt_2012 = requests.get(f"{self.name_base_url}{test_name_kiribati_lesotho_lt_2012[0]}/year/{test_name_kiribati_lesotho_lt_2012[1]}", headers=self.user_agent_header).json() #Kiribati, Lesotho <2012
+        test_request_kiribati_lesotho_lt_2012 = requests.get(f"{self.name_base_url}{test_name_kiribati_lesotho_lt_2012[0]}/year/{test_name_kiribati_lesotho_lt_2012[1]}", headers=self.user_agent_header, timeout=10).json() #Kiribati, Lesotho <2012
 
         test_name_kiribati_lesotho_lt_2012_expected = {
                 "Change": "Addition of administrative language Gilbertese (-, gil).",
@@ -914,7 +914,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_kiribati_lesotho_lt_2012["KI"][0], test_name_kiribati_lesotho_lt_2012_expected, f"Expected and observed outputs do not match:\n{test_request_kiribati_lesotho_lt_2012['KI'][0]}")
         self.assertEqual(test_request_kiribati_lesotho_lt_2012["LS"][0], test_name_kiribati_lesotho_lt_2012_expected_2, f"Expected and observed outputs do not match:\n{test_request_kiribati_lesotho_lt_2012['LS'][0]}")
 #5.)
-        test_request_malta_nepal_2007_2011 = requests.get(f"{self.name_base_url}{test_name_malta_nepal_2007_2011[0]}/year/{test_name_malta_nepal_2007_2011[1]}", headers=self.user_agent_header).json() #Malta, Nepal 2007-2011
+        test_request_malta_nepal_2007_2011 = requests.get(f"{self.name_base_url}{test_name_malta_nepal_2007_2011[0]}/year/{test_name_malta_nepal_2007_2011[1]}", headers=self.user_agent_header, timeout=10).json() #Malta, Nepal 2007-2011
 
         test_name_malta_nepal_2007_2011_expected = {
                 "Change": "Subdivisions added: 68 local councils.",
@@ -941,7 +941,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_malta_nepal_2007_2011["MT"][0], test_name_malta_nepal_2007_2011_expected, f"Expected and observed outputs do not match:\n{test_request_malta_nepal_2007_2011['MT'][0]}")
         self.assertEqual(test_request_malta_nepal_2007_2011["NP"][0], test_name_malta_nepal_2007_2011_expected_2, f"Expected and observed outputs do not match:\n{test_request_malta_nepal_2007_2011['MT'][0]}")
 #6.)
-        test_request_error = requests.get(f"{self.name_base_url}{test_name_error1[0]}/year/{test_name_error1[1]}", headers=self.user_agent_header).json() #ABCDEF, 200202
+        test_request_error = requests.get(f"{self.name_base_url}{test_name_error1[0]}/year/{test_name_error1[1]}", headers=self.user_agent_header, timeout=10).json() #ABCDEF, 200202
 
         self.assertIsInstance(test_request_error, dict, f"Expected output object of API to be of type dict, got {type(test_request_error)}.")
         self.assertEqual(list(test_request_error.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
@@ -949,7 +949,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_error["status"], 400, f"Error status code incorrect: {test_request_error['status']}.")
         self.assertEqual(test_request_error["path"], f"{self.name_base_url} + {test_name_error1[0]}/year/{test_name_error1[1]}", f"Error path incorrect: {test_request_error['path']}.")
 #7.)
-        test_request_error_2 = requests.get(f"{self.name_base_url}{test_name_error2[0]}/year/{test_name_error2[1]}", headers=self.user_agent_header).json() #12345, ABCDE
+        test_request_error_2 = requests.get(f"{self.name_base_url}{test_name_error2[0]}/year/{test_name_error2[1]}", headers=self.user_agent_header, timeout=10).json() #12345, ABCDE
 
         self.assertIsInstance(test_request_error_2, dict, f"Expected output object of API to be of type dict, got {type(test_request_error_2)}.")
         self.assertEqual(list(test_request_error_2.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
@@ -957,7 +957,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_error_2["status"], 400, f"Error status code incorrect: {test_request_error_2['status']}.")
         self.assertEqual(test_request_error_2["path"], f"{self.name_base_url}{test_name_error2[0]}/year/{test_name_error2[1]}", f"Error path incorrect: {test_request_error_2['path']}.")
 #8.)
-        test_request_error_3 = requests.get(f"{self.name_base_url}{test_name_error3[0]}/year/{test_name_error3[1]}", headers=self.user_agent_header).json() #blahblahblahblah, 2040-2050
+        test_request_error_3 = requests.get(f"{self.name_base_url}{test_name_error3[0]}/year/{test_name_error3[1]}", headers=self.user_agent_header, timeout=10).json() #blahblahblahblah, 2040-2050
 
         self.assertIsInstance(test_request_error_3, dict, f"Expected output object of API to be of type dict, got {type(test_request_error_3)}.")
         self.assertEqual(list(test_request_error_3.keys()), ["message", "path", "status"], "Expected error message output to contain message, path and status keys.")
@@ -971,7 +971,7 @@ class Updates_Api_Tests(unittest.TestCase):
         test_date_range2 = "2009-08-17,2011-11-12"
         test_date_range3 = "2022-01-01"
 #1.)
-        test_request_date_range1 = requests.get(self.date_range_url + test_date_range1, headers=self.user_agent_header).json() #2014-04-07,2016-10-16
+        test_request_date_range1 = requests.get(self.date_range_url + test_date_range1, headers=self.user_agent_header, timeout=10).json() #2014-04-07,2016-10-16
         test_request_date_range1_expected = ['AF', 'AL', 'AU', 'BI', 'BW', 'CA', 'CH', 'CN', 'CO', 'CZ', 'EC', 'ES', 'ET', 'GE', 'ID', 
                                              'IN', 'KG', 'KH', 'KP', 'KZ', 'LA', 'LY', 'MA', 'MD', 'MU', 'MY', 'RO', 'SI', 'SN', 'TJ', 
                                              'TL', 'TM', 'TN', 'TW', 'TZ', 'UG', 'UZ', 'VE', 'YE', 'ZA']
@@ -989,7 +989,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(list(test_request_date_range1), test_request_date_range1_expected, 
             f"Expected and observed country code objects do not match:\n{list(test_request_date_range1)}.")
 #2.)
-        test_request_date_range2 = requests.get(self.date_range_url + test_date_range2, headers=self.user_agent_header).json() #2009-08-17,2011-11-12
+        test_request_date_range2 = requests.get(self.date_range_url + test_date_range2, headers=self.user_agent_header, timeout=10).json() #2009-08-17,2011-11-12
         test_request_date_range2_expected = ['AF', 'AL', 'AU', 'BI', 'BW', 'CA', 'CH', 'CN', 'CO', 'CZ', 'EC', 'ES', 'ET', 'GE', 'ID', 
                                              'IN', 'KG', 'KH', 'KP', 'KZ', 'LA', 'LY', 'MA', 'MD', 'MU', 'MY', 'RO', 'SI', 'SN', 'TJ', 
                                              'TL', 'TM', 'TN', 'TW', 'TZ', 'UG', 'UZ', 'VE', 'YE', 'ZA']
@@ -1007,7 +1007,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(list(test_request_date_range2), test_request_date_range2_expected, 
             f"Expected and observed country code objects do not match:\n{list(test_request_date_range2)}.")
 #3.)
-        test_request_date_range3 = requests.get(self.date_range_url + test_date_range3, headers=self.user_agent_header).json() #2022-01-01
+        test_request_date_range3 = requests.get(self.date_range_url + test_date_range3, headers=self.user_agent_header, timeout=10).json() #2022-01-01
         test_request_date_range3_expected = ['AF', 'AL', 'AU', 'BI', 'BW', 'CA', 'CH', 'CN', 'CO', 'CZ', 'EC', 'ES', 'ET', 'GE', 'ID', 
                                              'IN', 'KG', 'KH', 'KP', 'KZ', 'LA', 'LY', 'MA', 'MD', 'MU', 'MY', 'RO', 'SI', 'SN', 'TJ', 
                                              'TL', 'TM', 'TN', 'TW', 'TZ', 'UG', 'UZ', 'VE', 'YE', 'ZA']
