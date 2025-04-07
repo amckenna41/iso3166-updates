@@ -68,6 +68,7 @@
 - Issue with the remarks info from the ISO page not being correctly added to all the attribute values
 - Small fixes and changes to workflows
 - Updates count total updated to 910
+- Workflow throwing error when linting and bandit checks down on multiple versions
 
 ## v1.7.1 - May 2024
 
