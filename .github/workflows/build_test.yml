@@ -100,7 +100,7 @@ jobs:
 
     #upload test artifacts to workflow
     - name: Upload Test Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3.1.3
       with:
         name: test_artifacts
         path: |
@@ -141,7 +141,7 @@ jobs:
       
       #upload artifacts to repo
       - name: Upload flake8 Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.3
         with:
           name: flake8_artifact
           path: flake8_artifacts/flake8_output.txt
@@ -173,7 +173,7 @@ jobs:
           
       #Upload coverage report as an artifact
       - name: Upload Coverage Report Artifact
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v3.1.3
         with:
           name: coverage-report
           path: coverage.xml

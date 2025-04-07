@@ -8,3 +8,4 @@ tqdm
 typing-extensions
 fake_useragent
 jsonschema
+thefuzz
