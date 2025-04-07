@@ -166,7 +166,6 @@ jobs:
           pip3 install pytest pytest-cov codecov iso3166_updates
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           if [ -f iso3166_updates_export/requirements.txt ]; then pip install -r iso3166_updates_export/requirements.txt; fi
-          pip install -e iso3166_updates_export
 
       #Run tests and generate coverage report
       - name: Run tests with coverage
