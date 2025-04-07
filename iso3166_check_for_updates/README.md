@@ -1,4 +1,4 @@
-# ISO 3166 Check for Updates Microservice Application
+# ISO 3166 Check for Updates Microservice Application ✅
 
 <!-- [![check-for-updates](https://github.com/amckenna41/iso3166-updates/workflows/Check%20for%20ISO3166%20Updates/badge.svg)](https://github.com/amckenna41/iso3166-updates/actions?query=workflowCheck%20for%20ISO3166%20Updates) -->
 
@@ -14,7 +14,7 @@ GCP Cloud Architecture
 ----------------------
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166-check-for-updates/gcp_architecture.png?raw=true" alt="gcp_arch" height="500" width="750"/>
+  <img src="https://raw.githubusercontent.com/amckenna41/iso3166-updates/refs/heads/main/iso3166_check_for_updates/gcp_architecture.png" alt="gcp_arch" height="500" width="750"/>
 </p>
 
 Requirements

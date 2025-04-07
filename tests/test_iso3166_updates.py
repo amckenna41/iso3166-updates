@@ -65,8 +65,8 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("Skipping metadata unit tests.")    
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        # self.assertEqual(metadata('iso3166-updates')['version'], "1.8.0", 
-        #     f"iso3166-updates version is not correct, expected 1.8.0, got {metadata('iso3166-updates')['version']}.")
+        # self.assertEqual(metadata('iso3166-updates')['version'], "1.8.1", 
+        #     f"iso3166-updates version is not correct, expected 1.8.1, got {metadata('iso3166-updates')['version']}.")
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             f"iso3166-updates software name is not correct, expected iso3166-updates, got {metadata('iso3166-updates')['name']}.")
         # self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna", 

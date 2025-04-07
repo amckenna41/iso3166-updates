@@ -9,3 +9,4 @@ typing-extensions
 fake_useragent
 jsonschema
 thefuzz
+iso3166-updates

@@ -141,7 +141,7 @@ class Updates():
     """
     def __init__(self, country_code: str="", custom_updates_filepath: str="") -> None:
         
-        self.__version__ = "1.8.0"
+        self.__version__ = "1.8.1"
         self.iso3166_updates_json_filename = "iso3166-updates.json"
         self.country_code = country_code
 

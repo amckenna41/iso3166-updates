@@ -1,4 +1,4 @@
-# ISO 3166 Updates Export
+# ISO 3166 Updates Export 📦
 
 This directory has all the associated scripts and functionality for exporting all the ISO 3166 updates from the various data sources. Below are a description of each of the scripts:
 
