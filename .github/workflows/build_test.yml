@@ -170,7 +170,8 @@ jobs:
       #Run tests and generate coverage report
       - name: Run tests with coverage
         run: |
-          pytest PYTHONPATH=. --cov=iso3166_updates --cov=iso3166_updates_export --cov-report=xml --cov-report=term-missing
+          export PYTHONPATH=.
+          pytest --cov=iso3166_updates --cov=iso3166_updates_export --cov-report=xml --cov-report=term-missing
           
       #Upload coverage report as an artifact
       - name: Upload Coverage Report Artifact
