@@ -1,6 +1,6 @@
 # Change Log
 
-## v1.8.0/v1.8.1 - April 2025
+## v1.8.0/v1.8.1/v1.8.2 - April 2025
 
 
 ### Added
@@ -14,7 +14,7 @@
 - Added additional column conversions to the correct_columns function e.g Publication -> Source, Changes made -> Changes
 - Added functionality to main export script as well as main software script where you can exclude data for an input year/list of years
 - Added unit tests that test the JSON schema of the updates output
-- thefuzz Python package added to pyproject dependancies 
+- thefuzz Python package added to pyproject dependencies 
 - In packaged software, you can now search for updates based on publication date, via a date range, inclusive, e.g "2011-11-09,2013-01-09", if only one date passed in then all updates from that specific date will be gotten
 - Additional parameter for Updates class, user can now input a custom filepath to the updates JSON object
 - Added new parameter to the custom_update function in Updates class to not overwrite original object with new changes
@@ -22,9 +22,13 @@
 - Additional utility function to export directory that iterates over updates objects and finds objects that are duplicate or nearly duplicates
 - Search endpoint added to API, allowing you to search for specific keywords in update objects
 - Added unit test that tests the individual total number of updates per country
-- Addded use_wiki bool parameter to main export pipeline function allowing user to just export the ISO page data by setting this to False
+- Added use_wiki bool parameter to main export pipeline function allowing user to just export the ISO page data by setting this to False
 - Temporary manual updates function for get_script that temporary and manually makes changes to the output because of data source errors
-
+- Added auxiliary function in some test instances that parse the original and corrected dates
+- In the search function, if a date is explicitly input as the search term, the date issued column is also added to search space
+- Added sort_by_date parameter to date_range function that allows you to sort the output of the function by date, latest first
+- Added exclude_match_score parameter to search function which excludes the % match the updates are to the search terms. If not excluded a list of results returned, otherwise a dict is returned
+- Added export to XML functionality, unit tests added
 
 ### Changed
 - Class name changed from ISO3166_Updates to Updates
@@ -32,22 +36,25 @@
 - Changed Code/Subdivision attribute to Change
 - All alpha country codes are passed through convert_to_alpha function rather than just alpha-3 and numeric, for validation 
 - The correct_columns in the get script was rewritten to remove redundancy and ensure consistency
-- Export JSON and export CSV functionaltiy now input into the same function with an input paramet er that specifies if its exporting csv or json
+- Export JSON and export CSV functionality now input into the same function with an input parameter er that specifies if its exporting csv or json
 - Alpha codes range parameter alpha_codes_from_to changed to alpha_codes_range
 - Remarks parsing function refactored to remove redundancy
-- Any auxillary function used in the get scripts moved to outside the functions for resuablility and readibility 
-- Reformatted some of the auxillary function in parse_updates_data script
+- Any auxiliary function used in the get scripts moved to outside the functions for reusability and readability 
+- Reformatted some of the auxiliary function in parse_updates_data script
 - When exporting updates data, if Change attribute empty but Desc of Change not then swap the values such that Change is populated
 - In the get script pipeline, the wiki parsing function no longer exports the Corrected Date Issued column, this is dropped before being returned
 - The functionality that filters out input year/year ranges etc has been moved to a separate utilities function, rather than being in the parse functions
-- For the export functionaltiies, they hasve been split up into individual modules/scripts, the unit tests have also been split up into their own test instances 
-- Auxillary function that removed any double spacing from a row/string now updated to remove any instances of multiple spaces in string
+- For the export functionalities, they have been split up into individual modules/scripts, the unit tests have also been split up into their own test instances 
+- Auxiliary function that removed any double spacing from a row/string now updated to remove any instances of multiple spaces in string
 - Months function in software, to get the updates over the past number of months, removed in place of the date range function which gets the updates over a specified date range
 - Any exported updates with no data, exported as [] instead of {}
-- Any instances of findNext in BS4 changed to find_next to avoid depracation error
+- Any instances of findNext in BS4 changed to find_next to avoid deprecation error
 - When calling the len() function on an object of the Updates class, it should return the number of individual updates objects not the number of country objects
 - Made addition of the remarks data on the ISO pages optional with a parameter, by default they are added
-
+- Functionality to convert date format into YYYY-MM-DD format moved to its own static method function
+- Likeness score for search changed from float to an int between 1 and 100
+- check-for-updates microservice updated with latest version of code 
+- Updated alpha code error messages in software
 
 ### Fixed
 - Errors when running the get_updates script from the cmd line/terminal
@@ -56,7 +63,7 @@
 - Error with citations/reference links on the wiki pages not being parsed correctly and just the html selector name being exported
 - Typing hints for some functions were incorrect type 
 - During testing all exported files should be exported to a folder within tests dir, not within main dir 
-- Error when concatenating mulitple Changes Section, the rows became out of order in terms of Date Issued column, need to resort after concatenation
+- Error when concatenating multiple Changes Section, the rows became out of order in terms of Date Issued column, need to resort after concatenation
 - Error with some changes data exporting with "Changes" attribute empty and "Desc of Change" populated, it should be the other way around
 - Some column names not being changed in correct_columns function, causing errors downstream in pipeline
 - Any functions that accept a year input parameter would accept strings with multiple symbols in them e.g ">2009-2010<>" would be accepted with ">" symbol taking priority, an error is now raised if a similar input
@@ -69,6 +76,12 @@
 - Small fixes and changes to workflows
 - Updates count total updated to 910
 - Workflow throwing error when linting, bandit and or coverage checks executed on multiple versions
+- Dependabot software upgrades
+- Small fix to search pattern regex in search functionality
+- Incorrect URL in check_for_updates function
+- In the date_range function, when the sort_by parameter is set but there is only one output object, the correct object format is returned
+- For multiple endpoints, if there was a trailing or leading comma in the input parameter, an error would be returned, this comma is now just removed 
+- Several fixes to Dockerfile & scripts in check-for-updates app
 
 ## v1.7.1 - May 2024
 

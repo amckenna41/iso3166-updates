@@ -65,7 +65,7 @@ class ISO3166_Export_Updates_Driver_Tests(unittest.TestCase):
         with self.assertRaises(FileNotFoundError) as context:
             create_driver()
 
-        self.assertIn("Chrome binary not found", str(context.exception), "FileNotFounnd error not raised when Google Chrome binary wasn't found.")
+        self.assertIn("Chrome binary not found", str(context.exception), "FileNotFound error not raised when Google Chrome binary wasn't found.")
 
     @patch("os.path.isfile")
     @patch("os.path.exists")

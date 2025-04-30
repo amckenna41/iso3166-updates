@@ -9,7 +9,7 @@ def parse_updates_table(alpha2: str, iso3166_updates_table: list) -> pd.DataFram
     format, translate any unicode arrows in the text to normal arrow (->), fill any null rows.
     Some listed updates are "corrected" at a later date after publication; to keep track of
     these corrections the "Corrected Date Issued" and "Corrected Date" columns are used but
-    later removed from the output dataframe. Correct Source attriubte into correct format. If
+    later removed from the output dataframe. Correct Source attribute into correct format. If
     the Change attribute is empty, swap the data from the Desc of Change attribute to it.
 
     Parameters

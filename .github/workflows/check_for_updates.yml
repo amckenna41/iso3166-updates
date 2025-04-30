@@ -53,14 +53,14 @@ jobs:
       #execution to save on resources
       - name: Create Cloud Run application
         run: |
-          cd iso3166-check-for-updates
+          cd iso3166_check_for_updates
           docker build -t ${{ secrets.GCP_CONTAINER_NAME }} .
           gcloud builds submit --tag gcr.io/iso3166-updates/${{ secrets.GCP_CONTAINER_NAME }}
           gcloud beta run deploy ${{ secrets.GCP_CLOUD_RUN_NAME }} --image gcr.io/iso3166-updates/${{ secrets.GCP_CONTAINER_NAME }} \
           --region ${{ secrets.GCP_REGION }} --platform managed --memory 1024M --timeout 2700 --allow-unauthenticated \
           --service-account ${{ secrets.GCP_SA_EMAIL}} --update-env-vars BUCKET_NAME=${{ secrets.GCP_BUCKET_NAME }},BLOB_NAME=${{ secrets.GCP_BLOB_NAME }}, \
             ARCHIVE_FOLDER=${{ secrets.GCP_ARCHIVE_FOLDER }},GITHUB_OWNER=${{ secrets.REPO_OWNER }},GITHUB_REPOS=${{ secrets.REPOs }},\
-            GITHUB_API_TOKEN=${{ secrets.REPO_API_TOKEN }},MONTH_RANGE=12,CREATE_ISSUE=1,EXPORT=1,EXPORT_CSV=1
+            GITHUB_API_TOKEN=${{ secrets.REPO_API_TOKEN }},MONTH_RANGE=12,CREATE_ISSUE=1,EXPORT=1,EXPORT_CSV=1,EXPORT_XML=1
           for i in {1..5}; do
             curl $(gcloud run services describe ${{ secrets.GCP_CLOUD_RUN_NAME }} --platform managed --region ${{ secrets.GCP_REGION }} --format 'value(status.url)') && break || sleep 10
           done

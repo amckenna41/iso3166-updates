@@ -9,8 +9,9 @@ unittest.TestLoader.sortTestMethodsUsing = None
 class ISO3166_Export_Updates_Parse_Updates_Data_Tests(unittest.TestCase):
     """
     Test suite for testing the parse_updates_data module in the ISO 3166
-    updates export directory. The module parses the exported 
-    tables/objects into the correct format.  
+    updates export directory. The module parses the exported tables/objects 
+    into the correct format, as well as the optional remarks table data from 
+    the ISO page.
 
     Test Cases
     ==========

@@ -9,6 +9,7 @@ from datetime import datetime
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 
+# @unittest.skip("")
 class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
     """
     Test suite for testing the main entry module for exporting the updates data. 
@@ -50,7 +51,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
         #turn off tqdm progress bar functionality when running tests
         os.environ["TQDM_DISABLE"] = "1"
 
-    @unittest.skip("")
+    # @unittest.skip("")
     def test_get_iso3166_updates_alpha(self):
         """ Testing main updates function that gets the updates and exports to json/csv, using
             a variety of ISO 3166-1 alpha country code input parameter values. """
@@ -67,7 +68,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
         test_alpha_error_6 = "invalid_alpha_code" #should raise value error
 #1.) 
         test_alpha_au_updates = get_iso3166_updates(alpha_codes=test_alpha_au, export_filename=self.test_export_filename, export_folder=self.test_export_folder, 
-                concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=True)   #Australia
+                concat_updates=True, export_json=True, export_csv=True, export_xml=True, verbose=0, use_selenium=True)   #Australia
         test_au_expected = {"AU": [{'Change': 'Update List Source; update Code Source.', 'Description of Change': '', 'Date Issued': '2016-11-15', 
             'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AU.'}, 
             {'Change': 'Update List Source.', 'Description of Change': '', 'Date Issued': '2015-11-27', 
@@ -86,6 +87,8 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             "Expected output CSV file to exist in folder.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_AU.json")),
             "Expected output JSON file to exist in folder.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_AU.xml")),
+            "Expected output XML file to exist in folder.")
         self.assertEqual(list(test_alpha_au_updates), ['AU'], 
             f"Expected AU key to be in updates output object:\n{list(test_alpha_au_updates)}.") 
         self.assertEqual(len(list(test_alpha_au_updates["AU"])), 3,
@@ -104,7 +107,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             f"Expected and observed outputs do not match:\n{test_au_iso3166_csv.to_dict(orient='records')}")
 #2.)  
         test_alpha_cv_updates = get_iso3166_updates(test_alpha_cv, export_filename=self.test_export_filename, export_folder=self.test_export_folder, 
-                concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=True)   #Cabo Verde
+                concat_updates=True, export_json=True, export_csv=True, export_xml=True, verbose=0, use_selenium=True)   #Cabo Verde
         test_cv_expected = {'CV': [{'Change': 'Correction of the Code Source.', 'Description of Change': '', 'Date Issued': '2020-11-24', 
             'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CV.'}, 
             {'Change': 'Modification of the French remark.', 'Description of Change': '', 'Date Issued': '2014-03-03', 
@@ -129,6 +132,8 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             "Expected output CSV file to exist in folder.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_CV.json")),
             "Expected output JSON file to exist in folder.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_CV.xml")),
+            "Expected output XML file to exist in folder.")
         self.assertEqual(list(test_alpha_cv_updates), ['CV'],
             f"Expected CV key to be in updates output object:\n{list(test_alpha_cv_updates)}.") 
         self.assertEqual(len(list(test_alpha_cv_updates["CV"])), 6, 
@@ -147,7 +152,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             f"Expected and observed outputs do not match:\n{test_cv_iso3166_csv.to_dict(orient='records')}")
 #3.)
         test_alpha_id_io_updates = get_iso3166_updates(test_alpha_id_io, export_filename=self.test_export_filename, export_folder=self.test_export_folder, 
-                export_json=True, export_csv=True, verbose=0, use_selenium=True)    #Indonesia, British Indian Ocean Territory
+                export_json=True, export_csv=True, export_xml=True, verbose=0, use_selenium=True)    #Indonesia, British Indian Ocean Territory
         test_id_io_expected = {'ID': [{'Change': 'Addition of province ID-PD; Update List Source.', 'Description of Change': '', 'Date Issued': '2023-11-23', 
             'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:ID.'}, 
             {'Change': 'Addition of provinces ID-PE, ID-PS and ID-PT; Update List Source.', 'Description of Change': '', 'Date Issued': '2022-11-29', 
@@ -182,6 +187,8 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             "Expected output CSV file to exist in folder.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_ID,IO.json")),
             "Expected output JSON file to exist in folder.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_ID,IO.xml")),
+            "Expected output XML file to exist in folder.")    
         self.assertEqual(list(test_alpha_id_io_updates), ['ID', 'IO'],
             f"Expected ID and IO keys to be in updates output object:\n{list(test_alpha_id_io_updates)}.") 
         self.assertEqual(len(list(test_alpha_id_io_updates["ID"])), 13, 
@@ -199,13 +206,15 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
         #     f"Expected and observed outputs do not match:\n{test_id_io_iso3166_csv.to_dict(orient='records')}")
 #4.)
         test_alpha_sk_updates = get_iso3166_updates(test_alpha_sk, export_filename=self.test_export_filename, export_folder=self.test_export_folder, 
-                export_json=True, export_csv=True, verbose=0, use_selenium=True)   #Slovakia
+                export_json=True, export_csv=True, export_xml=True, verbose=0, use_selenium=True)   #Slovakia
         test_sk_expected = {"SK": []}
 
         self.assertFalse(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_SK.csv")),
             "Expected output CSV file to not exist in folder.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_SK.json")),
             "Expected output JSON file to exist in folder.")
+        self.assertFalse(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_SK.xml")),
+            "Expected output XML file to exist in folder.")
         self.assertEqual(list(test_alpha_sk_updates), ['SK'],
             f"Expected SK key to be in updates output object:\n{list(test_alpha_sk_updates)}.") 
         with open(os.path.join(self.test_export_folder, self.test_export_filename + "_SK.json")) as output_json:
@@ -213,7 +222,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
         self.assertEqual(test_alpha_sk_updates_json, test_sk_expected, f"Expected and observed outputs do not match:\n{test_alpha_sk_updates_json}")
 #5.)
         test_alpha_bf_ca_gu_ie_je_updates = get_iso3166_updates(test_alpha_bf_ca_gu_ie_je, export_filename=self.test_export_filename, 
-                export_folder=self.test_export_folder, concat_updates=False, export_json=True, export_csv=True, verbose=0, use_selenium=True)  #concat_updates=False, individual output files
+                export_folder=self.test_export_folder, concat_updates=False, export_json=True, export_csv=True, export_xml=True, verbose=0, use_selenium=True)  #concat_updates=False, individual output files
         
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_BF.json")),
             "Expected output JSON file to exist in folder.")
@@ -235,6 +244,16 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             "Expected output CSV file to exist in folder.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_JE.csv")),
             "Expected output CSV file to exist in folder.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_BF.xml")),
+            "Expected output XML file to exist in folder.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_CA.xml")),
+            "Expected output XML file to exist in folder.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_GU.xml")),
+            "Expected output XML file to exist in folder.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_IE.xml")),
+            "Expected output XML file to exist in folder.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_JE.xml")),
+            "Expected output XML file to exist in folder.")
         
         self.assertEqual(list(test_alpha_bf_ca_gu_ie_je_updates), ['BF', 'CA', 'GU', 'IE', 'JE'],
             f"Expected BF, CA, GU, IE, JE keys to be in updates output object:\n{list(test_alpha_bf_ca_gu_ie_je_updates)}") 
@@ -251,15 +270,17 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
         for code in test_alpha_bf_ca_gu_ie_je_updates:
             for row in test_alpha_bf_ca_gu_ie_je_updates[code]:
                 self.assertEqual(list(row.keys()), self.expected_output_columns, f"Columns from output do not match expected:\n{list(row.keys())}")
-                self.assertIsInstance(row, dict, f"Ouput object row should be of type dict, got {type(row)}.")
+                self.assertIsInstance(row, dict, f"Output object row should be of type dict, got {type(row)}.")
 #6.)    
         test_alpha_bf_ca_gu_ie_je_updates = get_iso3166_updates(test_alpha_bf_ca_gu_ie_je, export_filename=self.test_export_filename, 
-            export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)  #Burkina Faso, Canada, Guam, Ireland, Jersey - concat_updates=True, one output file
+            export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, export_xml=True, verbose=0, use_selenium=False)  #Burkina Faso, Canada, Guam, Ireland, Jersey - concat_updates=True, one output file
 
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_BF,CA,GU,IE,JE.json")), 
             f"Output file {os.path.join(self.test_export_filename + '-BF,CA,GU,IE,JE.json')} not found in export folder {self.test_export_folder}.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_BF,CA,GU,IE,JE.csv")), 
             f"Output file {os.path.join(self.test_export_filename + '-BF,CA,GU,IE,JE.csv')} not found in export folder {self.test_export_folder}.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_BF,CA,GU,IE,JE.xml")), 
+            f"Output file {os.path.join(self.test_export_filename + '-BF,CA,GU,IE,JE.xml')} not found in export folder {self.test_export_folder}.")
 
         #open exported BF,CA,GU,IE,JE json
         with open(os.path.join(self.test_export_folder, self.test_export_filename + "_BF,CA,GU,IE,JE.json")) as output_json:
@@ -288,7 +309,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             get_iso3166_updates(test_alpha_error_5)
             get_iso3166_updates(test_alpha_error_6)
 
-    @unittest.skip("Skipping as below tests requiring extracting all updates each time.")   
+    # @unittest.skip("Skipping as below tests requiring extracting all updates each time.")   
     def test_get_iso3166_updates_year(self):
         """ Testing main updates function that gets the updates and exports to json/csv, using a variety of year input 
             parameter values. Note, only using updates data from the wiki pages and not ISO due to time constraint of 
@@ -307,13 +328,15 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
         test_year13 = True
 #1.)    
         test_year_2005_2017_updates = get_iso3166_updates(year=test_year1, export_filename=self.test_export_filename,  #2005,2017
-                export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
+                export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, export_xml=True, verbose=0, use_selenium=False)
         test_year_2005_2017_expected_keys = ['AF', 'CN', 'CY', 'DJ', 'ID', 'KP', 'NR', 'PA', 'PK', 'QA', 'RU', 'SI', 'TJ', 'UG', 'VN']
 
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_2005,2017.csv")), 
             "Expected output CSV file to exist in folder.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_2005,2017.json")),
             "Expected output JSON file to exist in folder.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_2005,2017.xml")),
+            "Expected output XML file to exist in folder.")
         self.assertEqual(len(test_year_2005_2017_updates), 15, 
             f"Expected 15 updates in output object, got {len(test_year_2005_2017_updates)}.")
         self.assertEqual(list(test_year_2005_2017_updates), test_year_2005_2017_expected_keys, 
@@ -332,7 +355,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             f"Expected there to be 16 output objects in csv, got {len(test_2005_2017_iso3166_csv)}.")
 #2.)
         test_year_gt_2021_updates = get_iso3166_updates(year=test_year3, export_filename=self.test_export_filename,  #>2021
-                export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
+                export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, export_xml=True, verbose=0, use_selenium=False)
         test_year_gt_2021_expected_keys = ['CN', 'DZ', 'ET', 'FI', 'FR', 'GB', 'GT', 'HU', 'ID', 'IN', 'IQ', 'IR', 'IS', 'KH', 'KP',
                                            'KR', 'KZ', 'LT', 'LV', 'ME', 'NP', 'NZ', 'PA', 'PH', 'PL', 'RU', 'SI', 'SS', 'VE']
 
@@ -340,6 +363,8 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             "Expected output CSV file to exist in folder.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_>2021.json")),
             "Expected output JSON file to exist in folder.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_>2021.xml")),
+            "Expected output XML file to exist in folder.")
         self.assertEqual(len(test_year_gt_2021_updates), 29, 
             f"Expected 29 updates in output object, got {len(test_year_gt_2021_updates)}.")
         self.assertEqual(list(test_year_gt_2021_updates), test_year_gt_2021_expected_keys, 
@@ -356,7 +381,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             f"Expected there to be 39 output objects in csv, got {len(test_gt_2021_iso3166_csv)}.")
 #3.)
         test_year_lt_2003_updates = get_iso3166_updates(year=test_year4, export_filename=self.test_export_filename,  #<2003
-                export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
+                export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, export_xml=True, verbose=0, use_selenium=False)
         test_year_lt_2003_expected_keys = ['AE', 'AL', 'AO', 'AZ', 'BD', 'BG', 'BI', 'BJ', 'BY', 'CA', 'CD', 'CN', 'CV', 'CZ', 
                                            'DO', 'EC', 'ER', 'ES', 'ET', 'FR', 'GB', 'GE', 'GN', 'GT', 'HR', 'ID', 'IN', 'IR', 
                                            'IT', 'KG', 'KH', 'KP', 'KR', 'KZ', 'LA', 'MA', 'MD', 'MO', 'MU', 'MW', 'NG', 'NI', 
@@ -367,6 +392,8 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             "Expected output CSV file to exist in folder.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_<2003.json")),
             "Expected output JSON file to exist in folder.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_<2003.xml")),
+            "Expected output XML file to exist in folder.")
         self.assertEqual(len(test_year_lt_2003_updates), 59, 
             f"Expected 59 updates in output object, got {len(test_year_lt_2003_updates)}.")
         self.assertEqual(list(test_year_lt_2003_updates), test_year_lt_2003_expected_keys, 
@@ -383,7 +410,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             f"Expected there to be 79 output objects in csv, got {len(test_lt_2003_iso3166_csv)}.")
 #4.)
         test_year_2005_2007_updates = get_iso3166_updates(year=test_year5, export_filename=self.test_export_filename,  #2005-2007
-                export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
+                export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, export_xml=True, verbose=0, use_selenium=False)
         test_year_2005_2007_expected_keys = ['AD', 'AF', 'AG', 'BA', 'BB', 'BG', 'BH', 'BL', 'CI', 'CZ', 'DJ', 'DM', 'DO', 'EG', 'FR', 'GB', 
                                             'GD', 'GE', 'GG', 'GN', 'HT', 'ID', 'IM', 'IR', 'IT', 'JE', 'KE', 'KN', 'KW', 'LB', 'LC', 'LI', 
                                             'LR', 'ME', 'MF', 'MK', 'MT', 'NR', 'PW', 'RS', 'RU', 'RW', 'SB', 'SC', 'SD', 'SG', 'SI', 'SM', 
@@ -393,6 +420,8 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             "Expected output CSV file to exist in folder.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_2005-2007.json")),
             "Expected output JSON file to exist in folder.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_2005-2007.xml")),
+            "Expected output XML file to exist in folder.")
         self.assertEqual(len(test_year_2005_2007_updates), 56, 
             f"Expected 56 updates in output object, got {len(test_year_2005_2007_updates)}.")
         self.assertEqual(list(test_year_2005_2007_updates), test_year_2005_2007_expected_keys, 
@@ -410,7 +439,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             f"Expected there to be 62 output objects in csv, got {len(test_year_2005_2007_iso3166_csv)}.")
 #5.)
         test_year_1999_2002_updates = get_iso3166_updates(year=test_year6, export_filename=self.test_export_filename,  #1999-2002
-                export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
+                export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, export_xml=True, verbose=0, use_selenium=False)
         test_year_1999_2002_expected_keys = ['AE', 'AL', 'AO', 'AZ', 'BD', 'BG', 'BI', 'BJ', 'BY', 'CA', 'CD', 'CN', 'CV', 'CZ', 'DO', 'EC', 
                                              'ER', 'ES', 'ET', 'FR', 'GB', 'GE', 'GN', 'GT', 'HR', 'ID', 'IN', 'IR', 'IT', 'KG', 'KH', 'KP', 
                                              'KR', 'KZ', 'LA', 'MA', 'MD', 'MO', 'MU', 'MW', 'NG', 'NI', 'PH', 'PL', 'PS', 'RO', 'RU', 'SI', 
@@ -420,6 +449,8 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             "Expected output CSV file to exist in folder.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_1999-2002.json")),
             "Expected output JSON file to exist in folder.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_1999-2002.xml")),
+            "Expected output XML file to exist in folder.")
         self.assertEqual(len(test_year_1999_2002_updates), 58, 
             f"Expected 58 updates in output object, got {len(test_year_1999_2002_updates)}.")
         self.assertEqual(list(test_year_1999_2002_updates), test_year_1999_2002_expected_keys, 
@@ -437,7 +468,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             f"Expected there to be 78 output objects in csv, got {len(test_year_1999_2002_iso3166_csv)}.")
 #6.)
         test_year_not_equal_2004_2018_updates = get_iso3166_updates(year=test_year7, export_filename=self.test_export_filename,  #<>2004,2018
-                export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False)
+                export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, export_xml=True, verbose=0, use_selenium=False)
         test_year_not_equal_2004_2018_expected_keys = ['AD', 'AE', 'AF', 'AG', 'AL', 'AO', 'AR', 'AT', 'AU', 'AW', 'AZ', 'BA', 'BB', 'BD', 'BE', 'BF', 
                                                        'BG', 'BH', 'BI', 'BJ', 'BL', 'BN', 'BO', 'BQ', 'BS', 'BT', 'BW', 'BY', 'CA', 'CD', 'CF', 'CG', 
                                                        'CH', 'CI', 'CL', 'CN', 'CO', 'CU', 'CV', 'CW', 'CY', 'CZ', 'DJ', 'DM', 'DO', 'DZ', 'EC', 'EE', 
@@ -454,6 +485,8 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             f"Expected output CSV file to exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_<>2004,2018.csv')}")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_<>2004,2018.json")),
             f"Expected output JSON file to exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_<>2004,2018.json')}")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_<>2004,2018.xml")),
+            f"Expected output XML file to exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_<>2004,2018.xml')}")
         self.assertEqual(len(test_year_not_equal_2004_2018_updates), 171, 
             f"Expected 171 updates in output object, got {len(test_year_not_equal_2004_2018_updates)}.")
         self.assertEqual(list(test_year_not_equal_2004_2018_updates), test_year_not_equal_2004_2018_expected_keys, 
@@ -485,7 +518,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             get_iso3166_updates(year=test_year12) #12345
             get_iso3166_updates(year=test_year13) #True
 
-    @unittest.skip("")
+    # @unittest.skip("")
     def test_get_iso3166_updates_alpha_year(self):
         """ Testing main updates function that gets the updates and exports to json/csv, using
             a variety of ISO 3166-1 alpha codes and year input parameter values. """
@@ -503,47 +536,53 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
 #1.) 
         test_alpha_year_ch_2003_updates = get_iso3166_updates(alpha_codes=test_ch_2003[0], year=test_ch_2003[1],  #Switzerland
                 export_filename=self.test_export_filename, export_folder=self.test_export_folder, concat_updates=True, export_json=True, \
-                    export_csv=False, verbose=0, use_selenium=True)
+                    export_csv=False, export_xml=False, verbose=0, use_selenium=True)
         ch_2003_expected_updates = {'CH': [{'Change': 'Spelling correction of CH-AI and CH-AR. New list source.', 'Description of Change': '', 
             'Date Issued': '2003-09-05', 'Source': 'Newsletter I-5 - https://web.archive.org/web/20081218103244/http://www.iso.org/iso/iso_3166-2_newsletter_i-5_en.pdf.'}]}
 
         self.assertFalse(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_CH_2003.csv")), 
-            f"Expected output CSV file to exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_CH_2003.csv')}.")
+            f"Expected output CSV file to not exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_CH_2003.csv')}.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_CH_2003.json")),
             f"Expected output JSON file to exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_CH_2003.json')}.")
+        self.assertFalse(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_CH_2003.xml")),
+            f"Expected output XML file to not exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_CH_2003.xml')}.")
         self.assertEqual(test_alpha_year_ch_2003_updates, ch_2003_expected_updates, 
             f"Expected and observed updates data outputs do not match:\n{test_alpha_year_ch_2003_updates}")
 #2.)
         test_alpha_year_md_2008_updates = get_iso3166_updates(alpha_codes=test_md_2008[0], year=test_md_2008[1],  #Moldova
                 export_filename=self.test_export_filename, export_folder=self.test_export_folder, concat_updates=True, export_json=True, \
-                    export_csv=False, verbose=0, use_selenium=True)
+                    export_csv=False, export_xml=False, verbose=0, use_selenium=True)
         md_2008_expected_updates = {'MD': [{'Change': 'Correction of administrative language from Romanian (ro, ron) to Moldavian (mo, mol).', 
             'Description of Change': '', 'Date Issued': '2008-09-09', 'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:MD.'}, 
             {'Change': 'Change of short name.', 'Description of Change': '', 'Date Issued': '2008-04-08', 'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:MD.'}]}
 
         self.assertFalse(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_MD_2008.csv")), 
-            f"Expected output CSV file to exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_MD_2008.csv')}.")
+            f"Expected output CSV file to not exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_MD_2008.csv')}.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_MD_2008.json")),
             f"Expected output JSON file to exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_MD_2008.json')}.")
+        self.assertFalse(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_MD_2008.xml")),
+            f"Expected output XML file to not exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_MD_2008.xml')}.")
         self.assertEqual(test_alpha_year_md_2008_updates, md_2008_expected_updates, 
             f"Expected and observed updates data outputs do not match:\n{test_alpha_year_md_2008_updates}")
 #3.) 
         test_alpha_year_ne_om_2010_updates = get_iso3166_updates(alpha_codes=test_ne_om_2010[0], year=test_ne_om_2010[1],  #Niger, Oman
                 export_filename=self.test_export_filename, export_folder=self.test_export_folder, concat_updates=True, export_json=True, \
-                    export_csv=False, verbose=0, use_selenium=True)
+                    export_csv=False, export_xml=False, verbose=0, use_selenium=True)
         ne_om_2010_expected_updates = {'NE': [], 'OM': [{'Change': 'Subdivisions added: OM-BU Al Buraymī. Codes: OM-JA Al Janūbīyah -> OM-ZU Z̧ufār.', 
             'Description of Change': 'Update of the administrative structure and of the list source.', 'Date Issued': '2010-06-30', 
             'Source': 'Newsletter II-2 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf.'}]}
 
         self.assertFalse(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_NE,OM_2010.csv")), 
-            f"Expected output CSV file to exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_NE,OM_2010.csv')}.")
+            f"Expected output CSV file to not exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_NE,OM_2010.csv')}.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_NE,OM_2010.json")),
             f"Expected output JSON file to exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_NE,OM_2010.json')}.")
+        self.assertFalse(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_NE,OM_2010.xml")),
+            f"Expected output XML file to not exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_NE,OM_2010.xml')}.")
         self.assertEqual(test_alpha_year_ne_om_2010_updates, ne_om_2010_expected_updates, 
             f"Expected and observed updates data outputs do not match:\n{test_alpha_year_ne_om_2010_updates}")
 #4.)
         test_alpha_year_sd_tt_2015_2021_updates = get_iso3166_updates(alpha_codes=test_sd_tt_2015_2021[0], year=test_sd_tt_2015_2021[1],  #Sudan, Trinidad and Tabago
-                export_filename=self.test_export_filename, export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=False, verbose=0, use_selenium=True)
+                export_filename=self.test_export_filename, export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=False, export_xml=False, verbose=0, use_selenium=True)
         sd_tt_2015_2021_expected_updates =  {'SD': [{'Change': 'Spelling changes: SD-DC Wasaţ Dārfūr Zālinjay -> Wasaţ Dārfūr. SD-KN Shiamāl Kurdufān -> Shamāl Kurdufān.', 
             'Description of Change': 'Typographical correction of subdivision name of SD-KN, SD-DC; Addition of local variation of SD-DC.', 'Date Issued': '2020-11-24', 
             'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:SD.'},         
@@ -556,20 +595,24 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:TT.'}]}
         
         self.assertFalse(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_SD,TT_2015-2021.csv")), 
-            f"Expected output CSV file to exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_SD,TT_2015-2021.csv')}.")
+            f"Expected output CSV file to not exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_SD,TT_2015-2021.csv')}.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_SD,TT_2015-2021.json")),
             f"Expected output JSON file to exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_SD,TT_2015-2021.json')}.")
+        self.assertFalse(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_SD,TT_2015-2021.xml")), 
+            f"Expected output XML file to not exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_SD,TT_2015-2021.xml')}.")
         self.assertEqual(test_alpha_year_sd_tt_2015_2021_updates, sd_tt_2015_2021_expected_updates, 
             f"Expected and observed updates data outputs do not match:\n{test_alpha_year_sd_tt_2015_2021_updates}")
 #6.) 
         test_alpha_year_ie_2027_updates = get_iso3166_updates(alpha_codes=test_ie_2027[0], year=test_ie_2027[1],  #Ireland
-                export_filename=self.test_export_filename, export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=False, verbose=0, use_selenium=True)
+                export_filename=self.test_export_filename, export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=False, export_xml=False, verbose=0, use_selenium=True)
         ie_2027_expected_updates = {"IE": []}
 
         self.assertFalse(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_IE_2027.csv")), 
             f"Expected output CSV file to not exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_IE_2027.csv')}.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_IE_2027.json")),
             f"Expected output JSON file to not exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_IE_2027.json')}.")
+        self.assertFalse(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_IE_2027.xml")), 
+            f"Expected output XML file to not exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_IE_2027.xml')}.")
         self.assertEqual(test_alpha_year_ie_2027_updates, ie_2027_expected_updates, 
             f"Expected and observed updates data outputs do not match:\n{test_alpha_year_ie_2027_updates}")
 #7.)
@@ -583,9 +626,9 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             get_iso3166_updates(alpha_codes=test_error5[0], year=test_error5[1])
             get_iso3166_updates(alpha_codes=test_error6[0], year=test_error6[1])
 
-    @unittest.skip("Skipping to not overload test runner.")
+    # @unittest.skip("Skipping to not overload test runner.")
     def test_alpha_codes_range(self):
-        """ Testing parameter in get script that gets the updates for a range of alpha codes, alpbetically. """
+        """ Testing parameter in get script that gets the updates for a range of alpha codes, alphabetically. """
         test_alpha_codes_range_ad_az = "AD-AZ" #Andorra-Azerbaijan
         test_alpha_codes_range_ci_cv = "CI-CV" #Ivory Coast-Cabo Verde
         test_alpha_codes_range_nr_mn = "NR-MN" #Mongolia-Norway 
@@ -663,14 +706,14 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             get_iso3166_updates(alpha_codes_range=test_alpha_codes_range_error2) #ZZ
             get_iso3166_updates(alpha_codes_range=test_alpha_codes_range_error3) #NAA-QA
 
-    @unittest.skip("")
+    # @unittest.skip("")
     def test_save_each_iteration(self):
         """ Testing parameter that saves each exports data per iteration rather than in the end in bulk. """
         test_alpha_codes_range_kn_kw = "KN,KP,KR,KW" #St Kitts-Kuwait
         test_alpha_codes_range_pa_pg = "PA-PG" #Panama-Papa New Guinea
 #1.)
         test_alpha_codes_range_kn_kw_updates = get_iso3166_updates(alpha_codes=test_alpha_codes_range_kn_kw, export_filename=self.test_export_filename, 
-            export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, verbose=0, use_selenium=False, save_each_iteration=True)
+            export_folder=self.test_export_folder, concat_updates=True, export_json=True, export_csv=True, export_xml=True, verbose=0, use_selenium=False, save_each_iteration=True)
         
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, self.test_export_filename + "_KN.json")), 
             f"Expected output JSON file to exist in folder: {os.path.join(self.test_export_folder, self.test_export_filename + '_KN.json')}.")

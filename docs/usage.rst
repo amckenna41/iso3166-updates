@@ -58,7 +58,7 @@ For example, Egypt (EG, EGY, 818), Jordan (JO, JOR, 400) and Bosnia & Herz (BA, 
    eg_jo_ba_updates = iso["EG, JOR, 070"]
 
 You can also pass in the sought country code or country codes to the object instantiation using the ``country_code`` input parameter, if only their updates 
-are required from the dataset. This allows for memory to be saved and for all updates data to not be unnecessarily imported on object initialisation. 
+are required from the dataset. This allows for memory to be saved and for all updates data to not be unnecessarily imported on object instantiation. 
 
 For example, if only Sao Tome & Principe's (ST, STP, 678) updates data is needed:
 
@@ -173,16 +173,21 @@ For example, 2012-04-15 to 2013-11-11:
    #get all updates within specified date range, inclusive
    iso.date_range("2012-04-15,2013-11-11")
 
+   #get all updates from specified date range, inclusive, sort by Date Issued rather than default Country Code
+   iso.date_range("12/04/2015,07/05/2010", sort_by_date=1)
+
    #get all updates from specified date, inclusive
    iso.date_range("2012-04-15")
 
 
-Get all ISO 3166 updates that have the inputted search terms
-------------------------------------------------------------
-Return all the ISO 3166 updates data whos changes/description of change attributes feature the inputted search terms, using the ``search()`` 
+Search for all ISO 3166 updates that have specific keywords
+-----------------------------------------------------------
+Return all the ISO 3166 updates data who's changes/description of change attributes feature the inputted search terms, using the ``search()`` 
 function within an object instance of the ``Updates`` class, passing in the required search terms as parameters. The function also accepts
-the ``likeness_score`` parameter which sets a % of likeness that the input search term can be to matching updates, by default a likeness 
-of 1.0 (an exact match) is used.
+the ``likeness_score`` parameter which sets a % of likeness that the input search term can be to the matching updates, by default a likeness 
+of 100 (an exact match) is used. If a date is explicitly input to the search function, the Date Issued column will additionally be added to 
+the search space. The outputs from the search are ordered by ``match_score``, highest match first. This score can be excluded from the output 
+by setting the ``exclude_match_score`` to 1, meaning the outputs will be ordered alphabetically by country code.
 
 For example, Paris, RU-PSK or addition/deletion:
 
@@ -199,22 +204,25 @@ For example, Paris, RU-PSK or addition/deletion:
    #search for any update objects that have RU-PSK in them
    iso.search("RU-PSK")
 
-   #search for any update objects that have addition or deletion in them
-   iso.search("addition, deletion")
+   #search for any update objects that have addition or deletion in them, reduce % likeness score to 80
+   iso.search("addition, deletion", likeness_score=80)
+
+   #search for any update objects that have the date 2023-11-23, exclude the % match score from output
+   iso.search("2023-11-23", exclude_match_score=1)
 
 
-Add custom ISO 3166 update to main Updates object
--------------------------------------------------
+Add custom ISO 3166 updates
+---------------------------
 Add or delete a custom change/update to an existing country in the main iso3166-updates.json object. Custom updates can be used for in-house/bespoke 
-applications that are using the iso3166-updates software but require additional custom changes/updates to be included. When adding a new update, the 
+applications that are using the **iso3166-updates** software but require additional custom changes/updates to be included. When adding a new update, the 
 "Change" and "Date Issued" attributes are required with the "Description of Change" and "Source" attributes being optional. If the input custom 
 change/update already exists then an error will be raised, otherwise it will be appended to the main object.
   
 If the added change/update is required to be deleted from the object, then you can call the same function with the "Change" and "Date Issued" 
 parameters/attributes of the added change/update, but also setting the 'delete' parameter to 1/True. You can also uninstall and reinstall to reset the main object.
 
-Note that this is a destructive yet temporary functionality. Adding a new custom change/update will make the dataset out of sync with the official 
-ISO 3166 Updates data, therefore it is the user's responsibility to keep track of any custom changes/updates and delete them when necessary.
+*Note that this is a destructive yet temporary functionality. Adding a new custom change/update will make the dataset out of sync with the official 
+ISO 3166 Updates data, therefore it is the user's responsibility to keep track of any custom changes/updates and delete them when necessary.*
 
 For example, adding custom Kenyan and Belfast updates:
 
@@ -232,12 +240,28 @@ For example, adding custom Kenyan and Belfast updates:
    iso.custom_update("IE", change="Brand new Belfast subdivision", date_issued="2020-05-12", description_of_change="", source="https:...")
 
 
+If you need to remove the custom updates you can set the ``delete`` parameter in the same function, e.g custom Kenyan and Belfast updates:
+
+.. code-block:: python
+
+   from iso3166_updates import *
+
+   #create instance of Updates class
+   iso = Updates()
+
+   #deleting custom update object for Kenya
+   iso.custom_update(alpha_code="KE", change="New subdivision added", date_issued="2025-01-01", delete=1)
+
+   #deleting custom update object for Belfast
+   iso.custom_update("IE", change="Brand new Belfast subdivision", date_issued="2020-05-12", delete=1)
+
+
 Get all ISO 3166 updates using a custom updates object
 ------------------------------------------------------
 Return all the latest and historic ISO 3166 updates data for all available countries and publication years, using a custom updates object specified
-by the updates_filepath class parameter. You can firstly create an instance of the ``Updates`` class, passing in the desired filepath and then access 
-the ``all`` attribute object instance. You can then access an individual country's ISO 3166 updates data by passing in the sought ISO 3166-1 2 letter alpha-2, 
-3 letter alpha-3 or numeric country code.
+by the updates_filepath class parameter. The custom object should be in the same format and structure as the original updates object.  You can 
+firstly create an instance of the ``Updates`` class, passing in the desired filepath and then access the ``all`` attribute object instance. You can 
+then access an individual country's ISO 3166 updates data by passing in the sought ISO 3166-1 2 letter alpha-2, 3 letter alpha-3 or numeric country code.
 
 .. code-block:: python
 
@@ -275,7 +299,7 @@ Check for the latest ISO 3166 updates from repository
 -----------------------------------------------------
 Check for the latest updates data from the repository in comparison to the current object in the software. This is to ensure that the version of the software
 you are using is up-to-date with the latest data. The function will return what changes, if any, need to be incorporated into your current object. If there
-are any changes, it's reccomended to upgrade to the latest version of the software. 
+are any changes, it's recommended to upgrade to the latest version of the software. 
 
 .. code-block:: python
 
@@ -286,3 +310,7 @@ are any changes, it's reccomended to upgrade to the latest version of the softwa
 
    #compares local dataset with the latest version in the repository
    iso.check_for_updates()
+
+
+.. note::
+    A demo of the software and API is available `here <https://colab.research.google.com/drive/1oGF3j3_9b_g2qAmBtv3n-xO2GzTYRJjf?usp=sharing>`_.

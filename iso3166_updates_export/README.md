@@ -45,6 +45,8 @@ Below are some examples of using the export scripts for exporting the ISO 3166 u
   #                       Whether to export all found updates to json in export folder (default=True).
   # -export_csv EXPORT_CSV, --export_csv EXPORT_CSV
   #                       Whether to export all found updates to csv files in export folder (default=True).
+  # -export_xml EXPORT_XML, --export_xml EXPORT_XML
+  #                       Whether to export all found updates to xml files in export folder (default=True).
   # -verbose VERBOSE, --verbose VERBOSE
   #                       Set to 1 to print out progress of updates function, 0 will not print progress (default=True).
   # -use_selenium USE_SELENIUM, --use_selenium USE_SELENIUM
@@ -76,35 +78,37 @@ get_iso3166_updates(alpha_codes="BA","DE","FR","HU","PY", export_folder="iso3166
 #exported files: /iso3166-updates/iso3166-updates_BA,DE,FR,HU,PY.json
 ```
 
-**Export all listed changes/updates for subset of alpha country codes (HU,IT,JA,KE), in the year 2018, export only to JSON with filename "iso3166-updates.json" and separate updates into separate JSON files (concat_updates=False):**
+**Export all listed changes/updates for subset of alpha country codes (HU,IT,JA,KE), in the year 2018, export to JSON and XML with filename "iso3166-updates.json" and separate updates into separate JSON files (concat_updates=False):**
 ```python
 from iso3166_updates_export import *
 
-get_iso3166_updates(alpha_codes="HU,IT,JA,KE", year="2018", export_json=1, export_csv=0, export_filename="iso3166-updates", concat_updates=0)
+get_iso3166_updates(alpha_codes="HU,IT,JA,KE", year="2018", export_json=1, export_csv=0, export_xml=1, export_filename="iso3166-updates", concat_updates=0)
 #exported files: /iso3166-updates/iso3166-updates_HU,IT,JA,KE_2018.json
+#exported files: /iso3166-updates/iso3166-updates_HU,IT,JA,KE_2018.xml
 ```
 
-**Export all listed changes/updates for Ireland, between years 2012 and 2021, use default parameters (export to json but not csv):**
+**Export all listed changes/updates for Ireland, between years 2012 and 2021, use default parameters (export to XML and csv):**
 ```python
 from iso3166_updates_export import *
 
-get_iso3166_updates(alpha_codes="IE", year="2012-2021")
-#exported files: /iso3166-updates/iso3166-updates_IE_2012-2021.json
+get_iso3166_updates(alpha_codes="IE", year="2012-2021", export_csv=1, export_xml=1)
+#exported files: /iso3166-updates/iso3166-updates_IE_2012-2021.csv
+#exported files: /iso3166-updates/iso3166-updates_IE_2012-2021.xml
 ```
 
-**Get all the latest updates for subset of alpha country codes (HU, IQ, VC) after 2006, export to CSV and JSON with verbose output:**
+**Get all the latest updates for subset of alpha country codes (HU, IQ, VC) after 2006, export to CSV, JSON and XML with verbose output:**
 ```python
 from iso3166_updates_export import *
 
-get_iso3166_updates(alpha_codes="HU,IQ,VC", year=">2006", export_json=True, export_csv=True, verbose=True)
+get_iso3166_updates(alpha_codes="HU,IQ,VC", year=">2006", export_json=True, export_csv=True, export_xml=True, verbose=True)
 #exported files: /iso3166-updates/iso3166-updates_HU_IQ_VC_>2006.json
 ```
 
-**Get all the latest updates for subset of alpha country codes (MO, PA, RW) excluding 2009 and 2021, export to CSV and JSON with verbose output:**
+**Get all the latest updates for subset of alpha country codes (MO, PA, RW) excluding 2009 and 2021, export to CSV, JSON and XML with verbose output:**
 ```python
 from iso3166_updates_export import *
 
-get_iso3166_updates(alpha_codes="MO,PA,RW", year="<>2009,2021", export_json=True, export_csv=True, verbose=True)
+get_iso3166_updates(alpha_codes="MO,PA,RW", year="<>2009,2021", export_json=True, export_csv=True, export_xml=True, verbose=True)
 #exported files: /iso3166-updates/iso3166-updates_MO_PA_RW_<>2009,2021.json
 ```
     
@@ -139,10 +143,10 @@ iso3166_updates.get_updates("YE", year="<2010")
 The output files from the <i>get_all_iso3166_updates.py</i> script for the updates/changes to an ISO 3166-2 country returns 4 columns: 
 <b>Change, Description of Change, Date Issued</b> and <b>Source.</b> For the CSV export, if more than one country input, then an additional primary key column <b>Country Code</b> will be prepended to the first column, which will be the 2 letter ISO 3166-1 country code. 
 
-* Change: overall summary of change/update made.
-* Description of Change: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
-* Date Issued: date that the change was communicated.
-* Source: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform page.
+* **Change**: overall summary of change/update made.
+* **Description of Change**: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
+* **Date Issued**: date that the change was communicated.
+* **Source**: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform page.
 
 E.g. The output format of the exported <b>CSV</b> for AD (Andorra) is:
 
@@ -177,6 +181,34 @@ E.g. The output format of the exported <b>JSON</b> for AD (Andorra) is:
       }
   ]
 }
+```
+
+E.g. The output format of the exported <b>XML</b> for AD (Andorra) is:
+
+```xml
+<?xml version="1.0" ?>
+<ISO3166Updates>
+  <Country code="AD">
+    <Update>
+      <Change>Update List Source.</Change>
+      <Description_of_Change/>
+      <Date_Issued>2015-11-27</Date_Issued>
+      <Source>Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AD.</Source>
+    </Update>
+    <Update>
+      <Change>Update List Source.</Change>
+      <Description_of_Change/>
+      <Date_Issued>2014-11-03</Date_Issued>
+      <Source>Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AD.</Source>
+    </Update>
+    <Update>
+      <Change>Subdivisions added: 7 parishes.</Change>
+      <Description_of_Change>Addition of the administrative subdivisions and of their code elements.</Description_of_Change>
+      <Date_Issued>2007-04-17</Date_Issued>
+      <Source>Newsletter I-8 - https://web.archive.org/web/20120330105926/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.</Source>
+    </Update>
+  </Country>
+</ISO3166Updates>
 ```
 
 [python]: https://www.python.org/downloads/release/python-360/

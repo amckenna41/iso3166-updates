@@ -17,7 +17,7 @@ unittest.TestLoader.sortTestMethodsUsing = None
 class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
     """
     Test suite for testing the utils module in the ISO 3166 updates export directory. 
-    The module contains various utility and auxillary functions used throughout the 
+    The module contains various utility and auxiliary functions used throughout the 
     export process. 
 
     Test Cases
@@ -48,7 +48,7 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
     test_remove_doublespacing:
         testing function that removes double spacing from rows in dataframe.
     test_export_updates:
-        testing the functionality for exporting the exported updates data to the JSON and CSV.
+        testing the functionality for exporting the exported updates data to the JSON, CSV and XML.
     test_remove_duplicates:
         testing the functionality that removes duplicate objects from the dataframe export. 
     """
@@ -181,27 +181,27 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
 
         for index, row in test_filter_year_2010_filtered_output.iterrows():
             current_year = datetime.strptime(re.sub(r"\(.*\)", "", row["Date Issued"]).strip(), "%Y-%m-%d").year
-            self.assertNotEqual(current_year, test_filter_year_2010, f"Current publiction date/year for row should not be 2010: {row}.")
+            self.assertNotEqual(current_year, test_filter_year_2010, f"Current publication date/year for row should not be 2010: {row}.")
 #2.)
         test_filter_year_2004_2007_2008_filtered_output = filter_year(self.iso3166_df, test_filter_year_2004_2007_2008)
         for index, row in test_filter_year_2004_2007_2008_filtered_output.iterrows():
             current_year = datetime.strptime(re.sub(r"\(.*\)", "", row["Date Issued"]).strip(), "%Y-%m-%d").year
-            self.assertNotEqual(current_year, test_filter_year_2004_2007_2008, f"Current publiction date/year for row should not be 2004, 2007 or 2008: {row}.")
+            self.assertNotEqual(current_year, test_filter_year_2004_2007_2008, f"Current publication date/year for row should not be 2004, 2007 or 2008: {row}.")
 #3.)
         test_filter_year_gt_2009_filtered_output = filter_year(self.iso3166_df, test_filter_year_gt_2009)
         for index, row in test_filter_year_gt_2009_filtered_output.iterrows():
             current_year = datetime.strptime(re.sub(r"\(.*\)", "", row["Date Issued"]).strip(), "%Y-%m-%d").year
-            self.assertTrue(current_year>=2009, f"Current publiction date/year for row should not be less than 2009: {row}.")
+            self.assertTrue(current_year>=2009, f"Current publication date/year for row should not be less than 2009: {row}.")
 #4.)
         test_filter_year_lt_2001_filtered_output = filter_year(self.iso3166_df, test_filter_year_lt_2001)
         for index, row in test_filter_year_lt_2001_filtered_output.iterrows():
             current_year = datetime.strptime(re.sub(r"\(.*\)", "", row["Date Issued"]).strip(), "%Y-%m-%d").year
-            self.assertTrue(current_year<2001, f"Current publiction date/year for row should not be more than or equal to 2001: {row}.")
+            self.assertTrue(current_year<2001, f"Current publication date/year for row should not be more than or equal to 2001: {row}.")
 #5.)
         test_filter_year_2010_2015_filtered_output = filter_year(self.iso3166_df, test_filter_year_2010_2015)
         for index, row in test_filter_year_2010_2015_filtered_output.iterrows():
             current_year = datetime.strptime(re.sub(r"\(.*\)", "", row["Date Issued"]).strip(), "%Y-%m-%d").year
-            self.assertTrue((current_year>=2010 and current_year<=2015), f"Current publiction date/year for row should be between 2010 and 2015 inclusive: {row}.")
+            self.assertTrue((current_year>=2010 and current_year<=2015), f"Current publication date/year for row should be between 2010 and 2015 inclusive: {row}.")
 #6.)
         with self.assertRaises(TypeError):
             filter_year(test_year_error1)
@@ -220,36 +220,36 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
         test_alpha_codes_range_3 = "ZW-VU"
         test_alpha_codes_range_4 = "WLF-740"
 #1.)
-        test_alpha_codes_ouput_1, _ = get_alpha_codes_list(test_alpha_codes_1)   #["FR", "BGD", "GE", "ESP", "174"]
-        self.assertEqual(test_alpha_codes_ouput_1, ['BD', 'ES', 'FR', 'GE', 'KM'], f"Expected and observed alpha codes do not match:\n{test_alpha_codes_ouput_1}.")
+        test_alpha_codes_output_1, _ = get_alpha_codes_list(test_alpha_codes_1)   #["FR", "BGD", "GE", "ESP", "174"]
+        self.assertEqual(test_alpha_codes_output_1, ['BD', 'ES', 'FR', 'GE', 'KM'], f"Expected and observed alpha codes do not match:\n{test_alpha_codes_output_1}.")
 #2.)
-        test_alpha_codes_ouput_2, _ = get_alpha_codes_list(test_alpha_codes_2)   #KHM,kna,408,422
-        self.assertEqual(test_alpha_codes_ouput_2, ['KH', 'KN', 'KP', 'LB'], f"Expected and observed alpha codes do not match:\n{test_alpha_codes_ouput_2}.")
+        test_alpha_codes_output_2, _ = get_alpha_codes_list(test_alpha_codes_2)   #KHM,kna,408,422
+        self.assertEqual(test_alpha_codes_output_2, ['KH', 'KN', 'KP', 'LB'], f"Expected and observed alpha codes do not match:\n{test_alpha_codes_output_2}.")
 #3.)
-        test_alpha_codes_ouput_3, _ = get_alpha_codes_list(test_alpha_codes_3)   #438,lux,ma,mdg
-        self.assertEqual(test_alpha_codes_ouput_3, ['LI', 'LU', 'MA', 'MG'], f"Expected and observed alpha codes do not match:\n{test_alpha_codes_ouput_3}.")
+        test_alpha_codes_output_3, _ = get_alpha_codes_list(test_alpha_codes_3)   #438,lux,ma,mdg
+        self.assertEqual(test_alpha_codes_output_3, ['LI', 'LU', 'MA', 'MG'], f"Expected and observed alpha codes do not match:\n{test_alpha_codes_output_3}.")
 #4.)
-        test_alpha_codes_ouput_4, _ = get_alpha_codes_list(test_alpha_codes_4)   #TR
-        self.assertEqual(test_alpha_codes_ouput_4, ['TR'], f"Expected and observed alpha codes do not match:\n{test_alpha_codes_ouput_4}.")
+        test_alpha_codes_output_4, _ = get_alpha_codes_list(test_alpha_codes_4)   #TR
+        self.assertEqual(test_alpha_codes_output_4, ['TR'], f"Expected and observed alpha codes do not match:\n{test_alpha_codes_output_4}.")
 #5.)
-        test_alpha_codes_range_ouput_1 = get_alpha_codes_list(alpha_codes_range=test_alpha_codes_range_1)   #AD-DJ 
+        test_alpha_codes_range_output_1 = get_alpha_codes_list(alpha_codes_range=test_alpha_codes_range_1)   #AD-DJ 
         test_alpha_codes_range_output_list_1 = ['AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AW', 'AX', 'AZ', 'BA', 
             'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BL', 'BM', 'BN', 'BO', 'BQ', 'BR', 'BS', 'BT', 'BV', 'BW', 'BY', 'BZ', 'CA', 'CC', 'CD', 
             'CF', 'CG', 'CH', 'CI', 'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ', 'DE', 'DJ']
-        self.assertEqual(test_alpha_codes_range_ouput_1, (test_alpha_codes_range_output_list_1, test_alpha_codes_range_1), f"Expected and observed range of alpha codes do not match:\n{test_alpha_codes_range_ouput_1}.")
+        self.assertEqual(test_alpha_codes_range_output_1, (test_alpha_codes_range_output_list_1, test_alpha_codes_range_1), f"Expected and observed range of alpha codes do not match:\n{test_alpha_codes_range_output_1}.")
 #6.)
-        test_alpha_codes_range_ouput_2 = get_alpha_codes_list(alpha_codes_range=test_alpha_codes_range_2)   #NAM-PLW
+        test_alpha_codes_range_output_2 = get_alpha_codes_list(alpha_codes_range=test_alpha_codes_range_2)   #NAM-PLW
         test_alpha_codes_range_output_list_2 = ['NA', 'NC', 'NE', 'NF', 'NG', 'NI', 'NL', 'NO', 'NP', 'NR', 'NU', 'NZ', 'OM', 'PA', 'PE', 'PF', 'PG', 'PH', 'PK', 'PL', 'PM', 'PN', 'PR', 'PS', 'PT', 'PW']
-        self.assertEqual(test_alpha_codes_range_ouput_2, (test_alpha_codes_range_output_list_2, 'NA-PW'), f"Expected and observed range of alpha codes do not match:\n{test_alpha_codes_range_ouput_2}.")
+        self.assertEqual(test_alpha_codes_range_output_2, (test_alpha_codes_range_output_list_2, 'NA-PW'), f"Expected and observed range of alpha codes do not match:\n{test_alpha_codes_range_output_2}.")
 #7.)
-        test_alpha_codes_range_ouput_3 = get_alpha_codes_list(alpha_codes_range=test_alpha_codes_range_3)   #ZW-VU
+        test_alpha_codes_range_output_3 = get_alpha_codes_list(alpha_codes_range=test_alpha_codes_range_3)   #ZW-VU
         test_alpha_codes_range_output_list_3 = ['VU', 'WF', 'WS', 'YE', 'YT', 'ZA', 'ZM', 'ZW']
-        self.assertEqual(test_alpha_codes_range_ouput_3, (test_alpha_codes_range_output_list_3, 'VU-ZW'), f"Expected and observed range of alpha codes do not match:\n{test_alpha_codes_range_ouput_3}.")
+        self.assertEqual(test_alpha_codes_range_output_3, (test_alpha_codes_range_output_list_3, 'VU-ZW'), f"Expected and observed range of alpha codes do not match:\n{test_alpha_codes_range_output_3}.")
 #8.)
-        test_alpha_codes_range_ouput_4 = get_alpha_codes_list(alpha_codes_range=test_alpha_codes_range_4)   #WLF-740
+        test_alpha_codes_range_output_4 = get_alpha_codes_list(alpha_codes_range=test_alpha_codes_range_4)   #WLF-740
         test_alpha_codes_range_output_list_4 = ['SR', 'SS', 'ST', 'SV', 'SX', 'SY', 'SZ', 'TC', 'TD', 'TF', 'TG', 'TH', 'TJ', 'TK', 'TL', 'TM', 'TN', 'TO', 'TR', 'TT', 'TV', 'TW', 'TZ', 'UA', 'UG', 
             'UM', 'US', 'UY', 'UZ', 'VA', 'VC', 'VE', 'VG', 'VI', 'VN', 'VU', 'WF']
-        self.assertEqual(test_alpha_codes_range_ouput_4, (test_alpha_codes_range_output_list_4, "SR-WF"), f"Expected and observed range of alpha codes do not match:\n{test_alpha_codes_range_ouput_4}.")
+        self.assertEqual(test_alpha_codes_range_output_4, (test_alpha_codes_range_output_list_4, "SR-WF"), f"Expected and observed range of alpha codes do not match:\n{test_alpha_codes_range_output_4}.")
 #9.)
         with self.assertRaises(ValueError):
             get_alpha_codes_list("ABC")
@@ -422,7 +422,7 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
 
     # @unittest.skip("")
     def test_parse_date(self):
-        """ Testing auxillary conversion function that converts a string date into YYYY-MM-DD format. """
+        """ Testing auxiliary conversion function that converts a string date into YYYY-MM-DD format. """
         test_parse_date_1 = "2024-25-12"
         test_parse_date_2 = "14/02/1999"
         test_parse_date_3 = "29/1/2000"
@@ -462,7 +462,7 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
 
     # @unittest.skip("")
     def test_get_year(self):
-        """ Testing auxillary function that parses the year format from the Date Issued column. """
+        """ Testing auxiliary function that parses the year format from the Date Issued column. """
         test_get_year_1 = "2012-01-01"
         test_get_year_2 = "2008-12-21"
         test_get_year_3 = "2020-03-30"
@@ -491,7 +491,7 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
 
     # @unittest.skip("")
     def test_extract_corrected_date(self):
-        """ Testing auxillary function that extracts the 'corrected' date from the Date Issued column. """
+        """ Testing auxiliary function that extracts the 'corrected' date from the Date Issued column. """
         test_extract_corrected_date_1 = "2011-02-02 (corrected 2011-02-09)"
         test_extract_corrected_date_2 = "2010-01-08 (corrected 2010-02-09)"
         test_extract_corrected_date_3 = "2020-03-30 (corrected 2025-06-17)"
@@ -525,7 +525,7 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
 
     # @unittest.skip("")
     def test_remove_corrected_date(self):
-        """ Testing auxillary function that removes the 'corrected' date from the Date Issued column. """
+        """ Testing auxiliary function that removes the 'corrected' date from the Date Issued column. """
         test_remove_corrected_date_1 = "2013-04-11 (corrected 2013-06-12)"
         test_remove_corrected_date_2 = "2015-07-12 (corrected 2015-08-12)"
         test_remove_corrected_date_3 = "2005-02-18 (corrected 2005-09-18)"
@@ -588,12 +588,13 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
 
     # @unittest.skip("")
     def test_export_updates(self):
-        """ Testing functionality for exporting the exported updates data to the JSON and CSV. """
+        """ Testing functionality for exporting the exported updates data to the JSON, CSV and XML. """
 #1.)    
-        export_updates({"AD": self.iso3166_data["AD"]}, export_folder=self.test_export_folder, export_filename="test-iso3166-export-1", export_json=True, export_csv=True)
+        export_updates({"AD": self.iso3166_data["AD"]}, export_folder=self.test_export_folder, export_filename="test-iso3166-export-1", export_json=True, export_csv=True, export_xml=True)
         
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, "test-iso3166-export-1.json")), "Expected JSON export file to be in test folder.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, "test-iso3166-export-1.csv")), "Expected CSV export file to be in test folder.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, "test-iso3166-export-1.xml")), "Expected XML export file to be in test folder.")
 
         with open(os.path.join(self.test_export_folder, "test-iso3166-export-1.json")) as output_json:
             test_export_updates_ad_json = json.load(output_json)
@@ -607,10 +608,11 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
         self.assertEqual(test_export_updates_ad_json, ad_expected_json, f"Observed and expected output dicts do not match:\n{test_export_updates_ad_json}")
 #2.)
         test_export_updates_co_ec_fi = {"CO": self.iso3166_data["CO"], "EC": self.iso3166_data["EC"], "FI": self.iso3166_data["FI"]}
-        export_updates(test_export_updates_co_ec_fi, export_folder=self.test_export_folder, export_filename="test-iso3166-export-2", export_json=True, export_csv=True)
+        export_updates(test_export_updates_co_ec_fi, export_folder=self.test_export_folder, export_filename="test-iso3166-export-2", export_json=True, export_csv=True, export_xml=True)
 
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, "test-iso3166-export-2.json")), "Expected JSON export file to be in test folder.")
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, "test-iso3166-export-2.csv")), "Expected CSV export file to be in test folder.")
+        self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, "test-iso3166-export-2.xml")), "Expected XML export file to be in test folder.")
 
         with open(os.path.join(self.test_export_folder, "test-iso3166-export-2.json")) as output_json:
             test_export_updates_co_ec_fi_json = json.load(output_json)
@@ -635,10 +637,11 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
 
         self.assertEqual(test_export_updates_co_ec_fi_json, co_ec_fi_expected_json, f"Observed and expected output dicts do not match:\n{test_export_updates_co_ec_fi_json}")
 #3.)
-        export_updates({"SK": self.iso3166_data["SK"]}, export_folder=self.test_export_folder, export_filename="test-iso3166-export-3", export_json=True, export_csv=True)
+        export_updates({"SK": self.iso3166_data["SK"]}, export_folder=self.test_export_folder, export_filename="test-iso3166-export-3", export_json=True, export_csv=True, export_xml=True)
         
         self.assertTrue(os.path.isfile(os.path.join(self.test_export_folder, "test-iso3166-export-3.json")), "Expected JSON export file to be in test folder.")
         self.assertFalse(os.path.isfile(os.path.join(self.test_export_folder, "test-iso3166-export-3.csv")), "Expected CSV export file to be in test folder.")
+        self.assertFalse(os.path.isfile(os.path.join(self.test_export_folder, "test-iso3166-export-3.xml")), "Expected XML export file to be in test folder.")
 
         with open(os.path.join(self.test_export_folder, "test-iso3166-export-3.json")) as output_json:
             test_export_updates_sk_json = json.load(output_json)

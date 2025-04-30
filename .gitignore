@@ -132,7 +132,7 @@ iso3166_updates_venv/
 # mkdocs documentation
 /site
 
-Dockerfile
+# Dockerfile
 
 # mypy
 .mypy_cache/
@@ -153,4 +153,4 @@ iso3166_check_for_updates/old
 
 successful_tests/
 
-.github/workflows/TODO.md
+TODO.md

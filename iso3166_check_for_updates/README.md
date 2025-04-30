@@ -20,7 +20,7 @@ GCP Cloud Architecture
 Requirements
 ------------
 * [python][python] >= 3.9
-* [iso3166-updates][iso3166-updates] >= 1.8.0
+* [iso3166-updates][iso3166-updates] >= 1.8.2
 * [pandas][pandas] >= 1.4.3
 * [requests][requests] >= 2.28.1
 * [beautifulsoup4][beautifulsoup4] >= 4.11.1
@@ -31,10 +31,12 @@ Requirements
 * [emoji-country-flag][emoji-country-flag] == 1.3.0
 * [selenium][selenium] >= 4.10.0
 * [flask][flask] >= 2.3.2
-* [gunicorn][gunicorn] >= 21.2.0
+* [gunicorn][gunicorn] >= 23.0.0
 * [lxml][lxml] >=  4.9.3
 * [tqdm][tqdm] >= 4.64.0
 * [PyGithub][PyGithub] >= 2.3.0
+* [python-dateutil] >= 2.9.0.post0
+* [fake_useragent][fake_useragent] >= 1.5.0
 
 Create check-for-updates microservice
 -------------------------------------
@@ -53,15 +55,19 @@ gcloud builds submit --tag gcr.io/iso3166-updates/{CONTAINER_NAME}
 ```bash
 gcloud beta run deploy {APP_NAME} --image gcr.io/iso3166-updates/{CONTAINER_NAME} \
   --region {REGION_NAME} --platform managed --memory 1024Mi --timeout 2700 --service-account {SERVICE_ACCOUNT} \
-  --update-env-vars GITHUB_OWNER="",GITHUB_REPOS="",GITHUB_API_TOKEN="",MONTH_RANGE="",CREATE_ISSUE=1,EXPORT_JSON=1,EXPORT_CSV=1
+  --update-env-vars MONTH_RANGE="",BUCKET_NAME="",BLOB_NAME="",EXPORT_JSON=1,EXPORT_CSV=1,EXPORT_XML=1,CREATE_ISSUE=1,GITHUB_OWNER="",GITHUB_REPOS="",GITHUB_API_TOKEN="",ALPHA_CODES_RANGE=""
 
+#MONTH_RANGE: number of months from script execution to get updates from (default=6). 
+#BUCKET_NAME: name of the GCP storage bucket to upload the exported updates data to.
+#BLOB_NAME: name of the file/blob of the exported data to be uploaded to the bucket.
+#EXPORT_JSON: set to 1 to export latest ISO 3166 updates JSON to storage bucket (default=1).
+#EXPORT_CSV: set to 1 to export latest ISO 3166 updates in CSV format to storage bucket (default=1).
+#EXPORT_XML: set to 1 to export latest ISO 3166 updates in XML format to storage bucket (default=1).
+#CREATE_ISSUE: set to 1 to create Issues on the GitHub repos outlining the latest ISO 3166 updates (default=0).
 #GITHUB_OWNER: owner of GitHub repos.
 #GITHUB_REPOS: list of GitHub repos where to create Issue outlining the latest ISO 3166 updates.
 #GITHUB_API_TOKEN: GitHub API token for creating an Issue on the repos.
-#MONTH_RANGE: number of months from script execution to get updates from (default=6). 
-#CREATE_ISSUE: set to 1 to create Issues on the GitHub repos outlining the latest ISO 3166 updates (default=0).
-#EXPORT_JSON: set to 1 to export latest ISO 3166 updates JSON to storage bucket (default=1).
-#EXPORT_CSV: set to 1 to export latest ISO 3166 updates in CSV format to storage bucket (default=1).
+#ALPHA_CODES_RANGE: subset/range of alpha country codes to get updates data for, primarily used for testing.
 ```
 
 **Run Cloud Run application/script:**
@@ -79,8 +85,7 @@ gcloud run services delete {APP_NAME} --region {REGION_NAME}
 docker build -t {CONTAINER_NAME} . && gcloud builds submit --tag gcr.io/{APP_NAME}/{CONTAINER_NAME} && \
   yes | gcloud beta run deploy {APP_NAME} --image gcr.io/iso3166-updates/{CONTAINER_NAME} \
     --region {REGION_NAME} --platform managed --memory 1024Mi --timeout 2700 --service-account {SERVICE_ACCOUNT} \
-    --update-env-vars GITHUB_OWNER="",GITHUB_REPOS="",GITHUB_API_TOKEN="",MONTH_RANGE="",CREATE_ISSUE=0,EXPORT_JSON=1,EXPORT_CSV=1 && \
-    curl "$(gcloud run services describe {APP_NAME} --region {REGION_NAME} --format 'value(status.url)')"
+    --update-env-vars MONTH_RANGE="",BUCKET_NAME="",BLOB_NAME="",EXPORT_JSON=1,EXPORT_CSV=1,EXPORT_XML=1,CREATE_ISSUE=1,GITHUB_OWNER="",GITHUB_REPOS="",GITHUB_API_TOKEN="",ALPHA_CODES_RANGE="" && curl "$(gcloud run services describe {APP_NAME} --region {REGION_NAME} --format 'value(status.url)')"
 
 gcloud run services delete {APP_NAME} --region {REGION_NAME}
 ```
@@ -108,3 +113,5 @@ https://stackoverflow.com/questions/53073411/selenium-webdriverexceptionchrome-f
 [iso3166]: https://github.com/deactivated/python-iso3166
 [tqdm]: https://github.com/tqdm/tqdm
 [PyGithub]: https://github.com/PyGithub/PyGithub
+[python-dateutil]: https://pypi.org/project/python-dateutil/
+[fake_useragent]: https://pypi.org/project/fake-useragent/

@@ -5,7 +5,7 @@ from iso3166_updates_export.utils import *
 from iso3166_updates_export.get_updates_data import *
 
 def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166-updates", export_folder: str="iso3166-updates-output",
-        alpha_codes_range: str="", concat_updates: bool=True, export_json: bool=True, export_csv: bool=False, verbose: bool=True, 
+        alpha_codes_range: str="", concat_updates: bool=True, export_json: bool=True, export_csv: bool=True, export_xml: bool=False, verbose: bool=True, 
         use_selenium: bool=True, use_wiki: bool=True, include_remarks_data: bool=True, save_each_iteration=False) -> Dict[str, Union[List[Dict], pd.DataFrame]]:
     """
     Get all listed changes/updates to a country's ISO 3166-2 subdivision codes/names. The two data
@@ -66,9 +66,11 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
         or into separately named files in export folder (concat_updates=False). By default all country's 
         updates will be compiled into the same files.
     :export_json: bool (default=True)
-        export all ISO 3166 updates for inputted countries into json format in export folder.
-    :export_csv: bool (default=False)
-        export all ISO 3166 updates for inputted countries into csv format in export folder.
+        export all ISO 3166 updates for inputted countries into JSON format in export folder.
+    :export_csv: bool (default=True)
+        export all ISO 3166 updates for inputted countries into CSV format in export folder.
+    :export_xml: bool (default=False)
+        export all ISO 3166 updates for inputted countries into XML format in export folder.
     :verbose: bool (default=False)
         Set to 1 to print out progress of updates functionality, 0 will not print progress.
     :use_selenium: bool (default=True)
@@ -79,7 +81,7 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
         data is pulled.
     :include_remarks_data: bool (default=True)
         whether to include the remarks text in country updates export. Remarks are additional 
-        notes on the change published by the ISO and are prevelant throughout the ISO pages;
+        notes on the change published by the ISO and are prevalent throughout the ISO pages;
         sometimes the remarks may be split up until parts (1 to 4). If True then the remarks 
         data will be parsed and added in brackets after their mention. By default the remarks
         are added to ensure all the info is captured from the updates data.
@@ -169,7 +171,7 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
         else:
             raise ValueError("No data exported as both bools are set to False, use_selenium & use_wiki = False.")
         
-        #if updates dataframe is emtpy, skip to next iteration
+        #if updates dataframe is empty, skip to next iteration
         if (iso3166_df.empty):
             continue
 
@@ -177,11 +179,11 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
         if (year and year != ['']):
             iso3166_df = filter_year(iso3166_df, year, year_range, year_greater_than, year_less_than, year_not_equal)
 
-        #if updates dataframe is emtpy, skip to next iteration
+        #if updates dataframe is empty, skip to next iteration
         if (iso3166_df.empty):
             continue
             
-        #drop any duplicate rows in object, e.g rows that have the same publicaiton date and change/description of change attribute values
+        #drop any duplicate rows in object, e.g rows that have the same publication date and change/description of change attribute values
         iso3166_df = remove_duplicates(iso3166_df)
 
         if (use_selenium):
@@ -208,15 +210,15 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
 
         #save the updates data export at current iteration, useful in the case where the Selenium session might timeout
         if (save_each_iteration):
-            export_updates(all_iso3166_updates, export_folder=export_folder, export_filename=export_filename, export_json=export_json, 
-                           export_csv=False, concat_updates=True, alpha_codes=alpha2, alpha_codes_range=alpha_codes_range, year=year, 
-                           year_range=year_range, year_greater_than=year_greater_than, year_less_than=year_less_than, year_not_equal=year_not_equal)    
+            export_updates(all_iso3166_updates, export_folder, export_filename, export_json, export_csv, export_xml, 
+                           concat_updates, alpha2, alpha_codes_range, year, year_range, year_greater_than, 
+                           year_less_than, year_not_equal)    
 
     #end elapsed time counter and calculate
     end = time.time()
     elapsed = end - start
 
-    #auxillary function to remove all empty nested dicts within object
+    #auxiliary function to remove all empty nested dicts within object
     def _del(_d: dict):
         return {a:_del(b) if isinstance(b, dict) else b for a, b in _d.items() if b and not a.startswith('_')}
 
@@ -224,14 +226,14 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
     # if (year != [''] and year != ""):
     #     all_iso3166_updates = _del(all_iso3166_updates)    
 
-    if ((year != [''] and year) and (input_alpha_codes == "" or input_alpha_codes == [''])): #**double check and retest
+    if ((year != [''] and year) and (input_alpha_codes == "" or input_alpha_codes == [''])):
         all_iso3166_updates = _del(all_iso3166_updates)    
 
     #add manual updates data to the output object, filter by year if applicable - temporary function
     all_iso3166_updates = manual_updates(all_iso3166_updates, year, year_range, year_greater_than, year_less_than, year_not_equal)
 
     #export all pulled ISO 3166 updates to JSON/CSV
-    export_updates(all_iso3166_updates, export_folder, export_filename, export_json, export_csv, concat_updates, alpha_codes_list, 
+    export_updates(all_iso3166_updates, export_folder, export_filename, export_json, export_csv, export_xml, concat_updates, alpha_codes_list, 
         alpha_codes_range, year, year_range, year_greater_than, year_less_than, year_not_equal)
     #export_updates(all_iso3166_updates, **export_params)
 
@@ -244,7 +246,7 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
 if __name__ == "__main__":
     """ 
     Main entry script for full ISO 3166 Updates export pipeline. The get_iso3166_updates function is called function 
-    that parses any input paramegters using argparse library, passing in all the required parameters.
+    that parses any input parameters using argparse library, passing in all the required parameters.
     """
     parser = argparse.ArgumentParser(description='Get latest changes/updates for all countries in the ISO 3166-1/3166-2 standards.')
     parser.add_argument('-alpha_codes', '--alpha_codes', type=str, required=False, default="", 
@@ -261,6 +263,8 @@ if __name__ == "__main__":
         help='Whether to export all found updates to json in export folder.')
     parser.add_argument('-export_csv', '--export_csv', required=False, action=argparse.BooleanOptionalAction, default=1,
         help='Whether to export all found updates to csv files in export folder.')
+    parser.add_argument('-export_xml', '--export_xml', required=False, action=argparse.BooleanOptionalAction, default=0,
+        help='Whether to export all found updates to xml files in export folder.')
     parser.add_argument('-concat_updates', '--concat_updates', required=False, action=argparse.BooleanOptionalAction, default=1,
         help='Whether to concatenate updates of individual countries into the same json or csv files or to individual files.')
     parser.add_argument('-verbose', '--verbose', type=int, required=False, action=argparse.BooleanOptionalAction, default=1, 

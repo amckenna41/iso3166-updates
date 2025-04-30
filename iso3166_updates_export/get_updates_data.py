@@ -36,10 +36,10 @@ def get_updates_df_wiki(alpha_code: str) -> pd.DataFrame:
     ValueError:
         If the "Changes" section or table cannot be found on page.
     """
-    #validate alpha code, convert to alpha-2 if requried
+    #validate alpha code, convert to alpha-2 if required
     alpha2 = convert_to_alpha2(alpha_code)
 
-    #set random user-agent string for requests library to avoid detection, using fake_useragent package
+    #set random user-agent string for requests library to avoid detection, using fake-useragent package
     user_agent = UserAgent()
     user_agent_header = user_agent.random
 
@@ -124,7 +124,7 @@ def get_updates_df_selenium(alpha_code: str, include_remarks_data: bool=True) ->
         If the 3 letter alpha-3 or numeric code are input then convert to alpha-2.
     :include_remarks_data: bool (default=True)
         whether to include the remarks text in country updates export. Remarks are additional 
-        notes on the change published by the ISO and are prevelant throughout the ISO pages;
+        notes on the change published by the ISO and are prevalent throughout the ISO pages;
         sometimes the remarks may be split up until parts (1 to 4). If True then the remarks 
         data will be parsed and added in brackets after their mention. By default the remarks
         are added to ensure all the info is captured from the updates data.
@@ -147,7 +147,7 @@ def get_updates_df_selenium(alpha_code: str, include_remarks_data: bool=True) ->
     #initialise dataframe to hold updates data obtained from ISO pages
     iso3166_df_selenium = pd.DataFrame()
     
-    #validate alpha code, convert to alpha-2 if requried
+    #validate alpha code, convert to alpha-2 if required
     alpha2 = convert_to_alpha2(alpha_code)
     
     #parse Changes section table on webpage, using the header of the section
@@ -162,7 +162,7 @@ def get_updates_df_selenium(alpha_code: str, include_remarks_data: bool=True) ->
     #base URL for country ISO pages
     iso_base_url = "https://www.iso.org/obp/ui/en/#iso:code:3166:"
 
-    #try parsing the updates data on the page, with mulitple retries, if retry limit reached then raise error 
+    #try parsing the updates data on the page, with multiple retries, if retry limit reached then raise error 
     while (selenium_retry_attempts > 0 and changes_section == None):
       #initialise driver object before try block
       driver = None

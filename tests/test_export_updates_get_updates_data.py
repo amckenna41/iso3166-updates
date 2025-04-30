@@ -5,10 +5,12 @@ except:
 import iso3166
 import requests
 import pandas as pd
+import warnings
 from fake_useragent import UserAgent
 from pandas.testing import assert_frame_equal
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
+warnings.simplefilter("ignore", ResourceWarning)
 
 class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
     """
@@ -138,7 +140,7 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
 #5.)
         py_updates_df = get_updates_df_wiki(test_alpha_py) #Paraguay
 
-        self.assertIsInstance(py_updates_df, pd.DataFrame, f"Ouput of function should be a dataframe, got {type(py_updates_df)}.")
+        self.assertIsInstance(py_updates_df, pd.DataFrame, f"Output of function should be a dataframe, got {type(py_updates_df)}.")
         self.assertTrue(py_updates_df.empty, "Expected output dataframe to be empty.")
 #6.)    
         with self.assertRaises(ValueError):
@@ -238,7 +240,7 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
         vu_updates_df, vn_remarks = get_updates_df_selenium(test_alpha_vu) #Vanuatu
         vn_expected_remarks = {}
 
-        self.assertIsInstance(vu_updates_df, pd.DataFrame, f"Ouput of function should be a dataframe, got {type(vu_updates_df)}.")
+        self.assertIsInstance(vu_updates_df, pd.DataFrame, f"Output of function should be a dataframe, got {type(vu_updates_df)}.")
         self.assertTrue(vu_updates_df.empty, "Expected output to be an empty dataframe.")
         self.assertEqual(vn_remarks, vn_expected_remarks, f"Expected and observed remarks object for VN do not match:\n{vn_remarks}")
 #6.)

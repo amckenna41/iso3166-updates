@@ -11,7 +11,7 @@ The ISO 3166 standard by the ISO (International Organization for Standardisation
 special areas of geographical interest, consolidated into the ISO 3166-1 standard, and their principal subdivisions (e.g. provinces, states, 
 departments, regions), which comprise the ISO 3166-2 standard. The ISO 3166-1 was first published in 1974 and currently comprises 249 countries, 
 193 of which are sovereign states that are members of the United Nations 🇺🇳. The ISO 3166-2 was first published in 1998 and as of November 2023 
-there are **5,039** codes defined in it.
+there are **5,046** codes defined in it.
 
 The ISO is a very dynamic organisation and they regularly change, update and or remove entries within its library of standards, including the ISO 3166. 
 Additions, changes and deletions to country/territorial codes occur less often in the ISO 3166-1, but changes are more frequent for the ISO 3166-2 
@@ -31,6 +31,14 @@ Each ISO 3166 update entry has 4 main data attributes:
 * *Date Issued*: date that the change was communicated/published.
 * *Source*: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform (OBP) page.
 
+Version
+=======
+The **iso3166-updates** software is currently at version |version_link|.
+
+.. |version_link| raw:: html
+
+   <a href="https://pypi.org/project/iso3166-updates/" target="_blank">v1.8.2</a>
+
 Last Updated
 ============
 The list of ISO 3166 updates was last updated on **April 2025**. A log of the latest ISO 3166 updates can be seen in the |updates_md_location_link| file.
@@ -46,6 +54,28 @@ License
 .. |demo_location_link| raw:: html
 
    <a href="https://colab.research.google.com/drive/1oGF3j3_9b_g2qAmBtv3n-xO2GzTYRJjf?usp=sharing" target="_blank">here</a>
+
+
+Contributing
+============
+
+If you have found a bug or an issue in the software or API then please raise an issue on the 
+repository's |issues_link| tab.
+
+If you would like to contribute any functional/feature changes to the software, please make a pull
+request on the |repo_link|.
+
+Any other queries or issues, please contact me via email: amckenna41@qub.ac.uk 😁
+
+.. |issues_link| raw:: html
+
+   <a href="https://github.com/amckenna41/iso3166-updates/issues/" target="_blank">Issues</a>
+
+.. |repo_link| raw:: html
+
+   <a href="https://github.com/amckenna41/iso3166-updates/" target="_blank">repository</a>
+
+
 
 .. note::
 
@@ -110,4 +140,3 @@ Contents
 .. toctree::
    usage
    api
-   contributing

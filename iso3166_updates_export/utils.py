@@ -3,12 +3,13 @@ import os
 import json
 from itertools import product
 from datetime import datetime
-from difflib import SequenceMatcher
 import iso3166
 from bs4 import BeautifulSoup, Tag
 import pandas as pd
+import xml.etree.ElementTree as ET
+from xml.dom import minidom
 
-def remove_duplicates(iso3166_updates_df: pd.DataFrame, apply_corrected_logic: bool = True) -> pd.DataFrame:
+def remove_duplicates(iso3166_updates_df: pd.DataFrame) -> pd.DataFrame:
     """
     Remove duplicate update objects rows. There is 3 criterion for what objects are
     regarded as duplicates in the output object:
@@ -33,11 +34,11 @@ def remove_duplicates(iso3166_updates_df: pd.DataFrame, apply_corrected_logic: b
     records_by_key = {}
 
     def extract_dates(date_str):
-        """ Auxillary function for extracting all date values from 'Date Issued', including corrected ones. """
+        """ Auxiliary function for extracting all date values from 'Date Issued', including corrected ones. """
         return re.findall(r"\d{4}-\d{2}-\d{2}", date_str)
 
     def get_completeness_score(row):
-        """ Auxillary function that returns a score based on how complete the row is (more fields = higher score). """
+        """ Auxiliary function that returns a score based on how complete the row is (more fields = higher score). """
         return sum(bool(str(row[col]).strip()) for col in ["Change", "Description of Change", "Source", "Date Issued"])
 
     #iterate over rows and search for duplicates using removal logic
@@ -105,7 +106,7 @@ def remove_duplicates(iso3166_updates_df: pd.DataFrame, apply_corrected_logic: b
 
 def convert_to_alpha2(alpha_code: str) -> str:
     """ 
-    Auxillary function that converts an ISO 3166 country's 3 letter alpha-3 
+    Auxiliary function that converts an ISO 3166 country's 3 letter alpha-3 
     or numeric country code into its 2 letter alpha-2 counterpart. The 
     function also validates the input alpha-2 or converted alpha-2 code, 
     raising an error if it is invalid. 
@@ -304,7 +305,7 @@ def filter_year(iso3166_updates_df: pd.DataFrame, year: list, year_range: bool=F
     TypeError:
         Input data isn't a DataFrame.
     """      
-    #raise type error if input isnt a dataframe
+    #raise type error if input isn't a dataframe
     if not (isinstance(iso3166_updates_df, pd.DataFrame)):
         raise TypeError("Input ISO 3166 updates data should be a DataFrame.")
 
@@ -410,7 +411,7 @@ def get_alpha_codes_list(alpha_codes: str="", alpha_codes_range: str="") -> tupl
             #alpha codes range parameter set to validated and converted start and end alpha code
             alpha_codes_range = start_alpha_code + "-" + end_alpha_code
 
-            #get full range of alpha codes from range parametet 
+            #get full range of alpha codes from range parameter 
             alpha_codes_list = [code for code in sorted_alpha_codes if start_alpha_code <= code <= end_alpha_code]
     else:
         #using all ISO 3166 alpha codes
@@ -624,7 +625,7 @@ def table_to_array(table_tag: Tag, soup: BeautifulSoup) -> tuple:
 
             def ensure_balanced_parentheses(value: str) -> str:
                 """
-                Auxillary function that ensures parentheses in the text are balanced. 
+                Auxiliary function that ensures parentheses in the text are balanced. 
                 Add a closing parenthesis if needed.
                 """
                 #count number of open & close brackets
@@ -793,13 +794,13 @@ def remove_extra_spacing(row: str):
     return re.sub(' +', ' ', row)
 
 def export_updates(iso3166_updates_data: dict, export_folder: str="iso3166-updates-output", export_filename: str="iso3166-updates", 
-    export_json: bool=True, export_csv: bool=False, concat_updates: bool=True, alpha_codes: list=[], alpha_codes_range: str="", year: list=[], 
+    export_json: bool=True, export_csv: bool=False, export_xml: bool=False, concat_updates: bool=True, alpha_codes: list=[], alpha_codes_range: str="", year: list=[], 
     year_range: bool=False, year_greater_than: bool=False, year_less_than: bool=False, year_not_equal: bool=False) -> None:
     """
-    Export the exported ISO 3166 updates data to JSON or CSV files in export folder. The various input 
-    parameters are required for the naming of the exported files which differ depending on the alpha 
-    codes and year parameters. If the concat_updates parameter is set then the data objects will be 
-    exported to the one JSON file otherwise they will be exported to separate files. By default, the
+    Export the exported ISO 3166 updates data to JSON, CSV or XML files in export folder. The various 
+    input parameters are required for the naming of the exported files which differ depending on the 
+    alpha codes and year parameters. If the concat_updates parameter is set then the data objects will 
+    be exported to the one JSON file otherwise they will be exported to separate files. By default, the
     data will be exported to a JSON. 
 
     Parameters
@@ -819,6 +820,8 @@ def export_updates(iso3166_updates_data: dict, export_folder: str="iso3166-updat
         export all ISO 3166 updates for inputted countries into JSON format in export folder.
     :export_csv: bool (default=False)
         export all ISO 3166 updates for inputted countries into CSV format in export folder.
+    :export_xml: bool (default=False)
+        export all ISO 3166 updates for inputted countries into XML format in export folder.
     :alpha_codes: list (default=[])
         comma separated list of ISO 3166-1 alpha-2, alpha-3 or numeric country codes,
         to get the latest ISO 3166 updates from. Any alpha-3 or numeric codes input 
@@ -858,8 +861,8 @@ def export_updates(iso3166_updates_data: dict, export_folder: str="iso3166-updat
         Input data is not of correct type list.
     """
     #both export bool parameters not set
-    if (not export_json and not export_csv):
-        print("Both export JSON and export CSV parameters set to False so ISO 3166 Updates data not exported.")
+    if (not export_json and not export_csv and not export_xml):
+        print("Export JSON, CSV and XML parameters all set to False so ISO 3166 Updates data not exported to any format.")
         return None
     
     #create export folder if it doesn't exist
@@ -885,7 +888,7 @@ def export_updates(iso3166_updates_data: dict, export_folder: str="iso3166-updat
     #check to see if dictionary only contains empty country updates data, if so csv export is skipped
     all_empty = all(isinstance(value, list) and not value for value in iso3166_updates_data.values())
 
-    #if exporting to CSV need to add country code column to identify each row's updtes
+    #if exporting to CSV need to add country code column to identify each row's updates
     if (export_csv and not all_empty):
         #dataframe for csv export
         csv_iso3166_df = pd.DataFrame()
@@ -907,7 +910,7 @@ def export_updates(iso3166_updates_data: dict, export_folder: str="iso3166-updat
             #reindex columns in dataframe
             csv_iso3166_df = csv_iso3166_df[['Country Code', 'Change', 'Description of Change', 'Date Issued', 'Source']]
 
-            #remove country code column if only one country's updates data exported, otherwsie sort them alphabetically
+            #remove country code column if only one country's updates data exported, otherwise sort them alphabetically
             if (csv_iso3166_df["Country Code"].nunique() == 1):
                 csv_iso3166_df.drop("Country Code", axis=1, inplace=True)
             else:
@@ -915,6 +918,20 @@ def export_updates(iso3166_updates_data: dict, export_folder: str="iso3166-updat
 
             #iterate over dict, removing 'Country Code' from nested dicts which isn't required for JSON export
             iso3166_updates_data = {k: [{key: val for key, val in record.items() if key != 'Country Code'} for record in v] for k, v in iso3166_updates_data.items()}
+
+    #export to XML if bool set and data is non-empty
+    if (export_xml and not all_empty):
+        
+        #create XML tree element 
+        xml_root = ET.Element("ISO3166Updates")
+        #iterate through country code and updates data, appending each as a child/sub element of the XML tree
+        for country_code, updates in iso3166_updates_data.items():
+            country_elem = ET.SubElement(xml_root, "Country", code=country_code)
+            for update in updates:
+                update_elem = ET.SubElement(country_elem, "Update")
+                for key, value in update.items():
+                    child = ET.SubElement(update_elem, key.replace(" ", "_"))
+                    child.text = str(value)
 
     #construct export filename when we are concatenating all exported updates into one output file
     if (concat_updates):
@@ -950,6 +967,20 @@ def export_updates(iso3166_updates_data: dict, export_folder: str="iso3166-updat
         if (export_csv and not all_empty):
             csv_iso3166_df.to_csv(os.path.join(export_folder, os.path.splitext(export_filename_concat_updates)[0] + ".csv"), index=False)
             print(f"\nAll ISO 3166 updates exported to CSV: {os.path.join(export_folder, export_filename_concat_updates)}.csv")
+        #export updates into the same XML 
+        if (export_xml and not all_empty):
+
+            #convert ElementTree to a pretty-printed XML string
+            long_xml_string = ET.tostring(xml_root, 'utf-8')
+            parsed_xml_elem = minidom.parseString(long_xml_string)
+            pretty_xml_as_string = parsed_xml_elem.toprettyxml(indent="  ")
+
+            #write to file
+            with open(os.path.join(export_folder, os.path.splitext(export_filename_concat_updates)[0] + ".xml"), "w", encoding="utf-8") as f:
+                f.write(pretty_xml_as_string)
+
+            print(f"\nAll ISO 3166 updates exported to XML: {os.path.join(export_folder, export_filename_concat_updates)}.xml")
+
     #updates data being exported to different individual files
     else:
         #iterate over each updates object, getting its export filename
@@ -982,6 +1013,17 @@ def export_updates(iso3166_updates_data: dict, export_folder: str="iso3166-updat
                 current_update_df = csv_iso3166_df[csv_iso3166_df['Country Code'] == update]
                 current_update_df = current_update_df.drop("Country Code", axis=1)
                 current_update_df.to_csv(os.path.join(export_folder, export_filename_no_concat_updates + ".csv"), index=False)
+            #export updates to XML 
+            if (export_xml and not all_empty):
+
+                #convert ElementTree to a pretty-printed XML string
+                long_xml_string = ET.tostring(xml_root, 'utf-8')
+                parsed_xml_elem = minidom.parseString(long_xml_string)
+                pretty_xml_as_string = parsed_xml_elem.toprettyxml(indent="  ")
+
+                #write to file
+                with open(os.path.join(export_folder, os.path.splitext(export_filename_no_concat_updates)[0] + ".xml"), "w", encoding="utf-8") as f:
+                    f.write(pretty_xml_as_string)
 
         print(f"All ISO 3166 updates exported to output folder: {export_folder}.")    
 
@@ -992,7 +1034,7 @@ def add_remarks_data(iso3166_df: pd.DataFrame, remarks_data: dict, add_once_per_
     info on the specific update and are split into parts, usually 1 to 3. By default, 
     the remarks are appended to the end of each update where they are mentioned but 
     if the parameter add_once_per_part is set to True, the individual remarks will 
-    only be appended once per country updates object. The remarks data is seperately 
+    only be appended once per country updates object. The remarks data is separately 
     parsed from the get_updates_df_selenium function.
 
     Parameters
@@ -1139,7 +1181,7 @@ def manual_updates(iso3166_updates: dict, year: str, year_range: bool=False, yea
         match = re.search(r"\d{4}-\d{2}-\d{2}", date_str)
         return datetime.strptime(match.group(), "%Y-%m-%d")
 
-    #iterate over manin updates object, making the changes, additions or deletions to the existing updates object 
+    #iterate over main updates object, making the changes, additions or deletions to the existing updates object 
     for country_code, updates_list in manual_updates.items():
         for update in updates_list:
             #parse individual attributes from updates object, including addition/deletion flags
@@ -1151,7 +1193,7 @@ def manual_updates(iso3166_updates: dict, year: str, year_range: bool=False, yea
             #create default value for Source attribute when adding a manual update
             source = update.get("Source", f"Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:{country_code}.")
 
-            #skip to next iteration if current country code of updates isnt in the main dict
+            #skip to next iteration if current country code of updates isn't in the main dict
             if country_code not in iso3166_updates:
                 continue
             

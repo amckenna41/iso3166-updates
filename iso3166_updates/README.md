@@ -2,7 +2,7 @@
 
 [![iso3166_updates](https://img.shields.io/pypi/v/iso3166-updates)](https://pypi.org/project/iso3166-updates/)
 [![pytest](https://github.com/amckenna41/iso3166-updates/workflows/Building%20and%20Testing/badge.svg)](https://github.com/amckenna41/iso3166-updates/actions?query=workflowBuilding%20and%20Testing)
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/amckenna41/iso3166-updates/tree/main.svg?style=svg&circle-token=9b0c0a9f6cc032f255dc28842c95600401aa4426)](https://dl.circleci.com/status-badge/redirect/gh/amckenna41/iso3166-updates/tree/main)
+<!-- [![CircleCI](https://dl.circleci.com/status-badge/img/gh/amckenna41/iso3166-updates/tree/main.svg?style=svg&circle-token=9b0c0a9f6cc032f255dc28842c95600401aa4426)](https://dl.circleci.com/status-badge/redirect/gh/amckenna41/iso3166-updates/tree/main) -->
 [![PythonV](https://img.shields.io/pypi/pyversions/iso3166-updates?logo=2)](https://pypi.org/project/iso3166-updates/)
 [![Platforms](https://img.shields.io/badge/platforms-linux%2C%20macOS%2C%20Windows-green)](https://pypi.org/project/iso3166-updates/)
 [![License: MIT](https://img.shields.io/github/license/amckenna41/iso3166-updates)](https://opensource.org/licenses/MIT)
@@ -91,9 +91,9 @@ iso.search("addition, deletion", likeness_score=0.8)
 iso.date_range("2012-03-12,2015-06-25")
 ```
 
-**Get any listed ISO 3166 changes/updates published from the date range 2021-10-02, inclusive:**
+**Get any listed ISO 3166 changes/updates published from the date range 2021-10-02, inclusive, sort by date rather than country code:**
 ```python
-iso.date_range("2021-10-02")
+iso.date_range("2021-10-02", sort_by_date=True)
 ```
 
 **Add custom ISO 3166 change/update to main iso3166-updates.json object:**
@@ -125,10 +125,10 @@ iso.check_for_updates()  #compares local dataset with the latest version in the 
 
 The output to the above functions for the updates/changes to an ISO 3166 country returns 4 attributes: 
 
-* Change: overall summary of change/update made.
-* Description of Change: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
-* Date Issued: date that the change was communicated.
-* Source: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform (OBP) page.
+* **Change**: overall summary of change/update made.
+* **Description of Change**: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
+* **Date Issued**: date that the change was communicated.
+* **Source**: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform (OBP) page.
 
 [python]: https://www.python.org/downloads/release/python-360/
 [iso3166]: https://github.com/deactivated/python-iso3166

@@ -5,6 +5,7 @@ from importlib.metadata import metadata
 from jsonschema import validate
 import jsonschema
 import shutil
+from datetime import date
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 
@@ -30,8 +31,6 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         testing correct functionality for year() function in Updates class.
     test_search:
         testing correct functionality for search() function in Updates class
-    test_updates_months:
-        testing correct functionality for months() function in Updates class.
     test_date_range:
         testing correct functionality for date_range() function in Updates class.
     test_custom_updates:
@@ -65,8 +64,8 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("Skipping metadata unit tests.")    
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        # self.assertEqual(metadata('iso3166-updates')['version'], "1.8.1", 
-        #     f"iso3166-updates version is not correct, expected 1.8.1, got {metadata('iso3166-updates')['version']}.")
+        # self.assertEqual(metadata('iso3166-updates')['version'], "1.8.2", 
+        #     f"iso3166-updates version is not correct, expected 1.8.2, got {metadata('iso3166-updates')['version']}.")
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             f"iso3166-updates software name is not correct, expected iso3166-updates, got {metadata('iso3166-updates')['name']}.")
         # self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna", 
@@ -146,7 +145,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     def test_updates_individual_totals(self):
         """ Testing the individual total number of updates per country. """
         #expected updates counts per country
-        self.expected_counts = {'AD': 3, 'AE': 3, 'AF': 6, 'AG': 3, 'AI': 1, 'AL': 6, 'AM': 1, 'AO': 6, 'AQ': 1, 
+        expected_counts = {'AD': 3, 'AE': 3, 'AF': 6, 'AG': 3, 'AI': 1, 'AL': 6, 'AM': 1, 'AO': 6, 'AQ': 1, 
                                 'AR': 1, 'AS': 1, 'AT': 2, 'AU': 3, 'AW': 3, 'AX': 3, 'AZ': 3, 'BA': 6, 'BB': 3, 
                                 'BD': 6, 'BE': 2, 'BF': 3, 'BG': 9, 'BH': 2, 'BI': 4, 'BJ': 3, 'BL': 5, 'BM': 1, 
                                 'BN': 4, 'BO': 5, 'BQ': 7, 'BR': 2, 'BS': 3, 'BT': 5, 'BV': 3, 'BW': 3, 'BY': 5, 
@@ -175,7 +174,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                                 'UZ': 3, 'VA': 3, 'VC': 4, 'VE': 8, 'VG': 1, 'VI': 1, 'VN': 7, 'VU': 0, 'WF': 2, 
                                 'WS': 3, 'YE': 7, 'YT': 2, 'ZA': 4, 'ZM': 3, 'ZW': 1}
 #1.)
-        for code, expected_count in self.expected_counts.items():
+        for code, expected_count in expected_counts.items():
             actual_count = len(self.all_updates.all.get(code, []))
             self.assertEqual(actual_count, expected_count, 
                 f"Incorrect updates total for code {code}. Expected {expected_count}, got {actual_count}.")
@@ -395,11 +394,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         for update in test_year_not_equal_2019_updates:
             for row in range(0, len(test_year_not_equal_2019_updates[update])):
                 #convert year in Date Issued column to string of year, remove "corrected" date if applicable
-                if ("corrected" in test_year_not_equal_2019_updates[update][row]["Date Issued"]):
-                    current_updates_year = str(datetime.strptime(re.sub("[(].*[)]", "", test_year_not_equal_2019_updates[update][row]["Date Issued"]).replace(' ', "").
-                                                    replace(".", '').replace('\n', ''), '%Y-%m-%d').year)
-                else:
-                    current_updates_year = str(datetime.strptime(test_year_not_equal_2019_updates[update][row]["Date Issued"].replace('\n', ''), '%Y-%m-%d').year)
+                current_updates_year = extract_date(test_year_not_equal_2019_updates[update][row]["Date Issued"]).year
                 test_year_not_equal_2019_updates_total+=1
                 self.assertTrue(current_updates_year != 2019, f"Expected year of updates output to not equal 2019, got {test_year_not_equal_2019_updates[update][row]['Date Issued']}.")
         
@@ -411,11 +406,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         for update in test_year_not_equal_2005_2009_updates:
             for row in range(0, len(test_year_not_equal_2005_2009_updates[update])):
                 #convert year in Date Issued column to string of year, remove "corrected" date if applicable
-                if ("corrected" in test_year_not_equal_2005_2009_updates[update][row]["Date Issued"]):
-                    current_updates_year = str(datetime.strptime(re.sub("[(].*[)]", "", test_year_not_equal_2005_2009_updates[update][row]["Date Issued"]).replace(' ', "").
-                                                    replace(".", '').replace('\n', ''), '%Y-%m-%d').year)
-                else:
-                    current_updates_year = str(datetime.strptime(test_year_not_equal_2005_2009_updates[update][row]["Date Issued"].replace('\n', ''), '%Y-%m-%d').year)
+                current_updates_year = extract_date(test_year_not_equal_2005_2009_updates[update][row]["Date Issued"]).year
                 test_year_not_equal_2005_2009_updates_total+=1
                 self.assertTrue(current_updates_year != 2005 and current_updates_year != 2009, f"Expected year of updates output to not equal 2005 or 2009, got {test_year_not_equal_2005_2009_updates[update][row]['Date Issued']}.")
 
@@ -435,8 +426,10 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     def test_updates_search(self):
         """ Testing the search function that returns the updates per input search terms. """
         test_search_australia = "AU-NSW"
-        test_search_parishes = "parish"
+        test_search_parishes = "parishes"
         test_search_governorates = "governorates"
+        test_search_date = "2024-02-29"
+        test_search_date_2 = "2021-11-25,2023-11-23"
         test_search_addition_deletion = "Addition,Deletion"
         test_search_subdivision = "subdivision,region"
         test_search_zzz = "zzz"
@@ -446,54 +439,73 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         test_search_error3 = True
 #1.)
         test_search_australia_updates = self.all_updates.search(test_search_australia)
-        expected_search_australia_updates = [{'Country Code': 'AU', 'Update': 
-            {'Change': 'Codes: New South Wales: AU-NS -> AU-NSW. Queensland: AU-QL -> AU-QLD. Tasmania: AU-TS -> AU-TAS. Victoria: AU-VI -> AU-VIC. Australian Capital Territory: AU-CT -> AU-ACT.', 
-             'Description of Change': 'Change of subdivision code in accordance with Australian Standard AS 4212-1994.', 'Date Issued': '2004-03-08', 
-             'Source': 'Newsletter I-6 - https://web.archive.org/web/20081218103224/http://www.iso.org/iso/iso_3166-2_newsletter_i-6_en.pdf.'}, 'Match Score': 100}]
+        expected_search_australia_updates = [{'Country Code': 'AU', 'Change': 'Codes: New South Wales: AU-NS -> AU-NSW. Queensland: AU-QL -> AU-QLD. Tasmania: AU-TS -> AU-TAS. Victoria: AU-VI -> AU-VIC. Australian Capital Territory: AU-CT -> AU-ACT.', 
+                                            'Description of Change': 'Change of subdivision code in accordance with Australian Standard AS 4212-1994.', 'Date Issued': '2004-03-08', 
+                                            'Source': 'Newsletter I-6 - https://web.archive.org/web/20081218103224/http://www.iso.org/iso/iso_3166-2_newsletter_i-6_en.pdf.', 'Match Score': 100}]
 
         self.assertEqual(test_search_australia_updates, expected_search_australia_updates, f"Expected and observed search output do not match:\n{test_search_australia_updates}")
 #2.)
-        test_search_parishes_updates = self.all_updates.search(test_search_parishes, likeness_score=0.9)
-        expected_search_parishes_updates = [{'Country Code': 'AD', 'Update': {'Change': 'Subdivisions added: 7 parishes.', 'Description of Change': 'Addition of the administrative subdivisions and of their code elements.', 'Date Issued': '2007-04-17', 
-            'Source': 'Newsletter I-8 - https://web.archive.org/web/20120330105926/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.'}, 'Match Score': 100}, {'Country Code': 'AG', 'Update': {'Change': 'Subdivisions added: 6 parishes, 1 dependency.', 
-            'Description of Change': 'Addition of the administrative subdivisions and of their code elements.', 'Date Issued': '2007-04-17', 'Source': 'Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.'}, 
-            'Match Score': 100}, {'Country Code': 'BB', 'Update': {'Change': 'Subdivisions added: 11 parishes.', 'Description of Change': 'Addition of the administrative subdivisions and of their code elements.', 'Date Issued': '2007-04-17', 
-            'Source': 'Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.'}, 'Match Score': 100}, {'Country Code': 'DM', 'Update': {'Change': 'Subdivisions added: 10 parishes.', 
-            'Description of Change': 'Addition of the administrative subdivisions and of their code elements.', 'Date Issued': '2007-04-17', 'Source': 'Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.'}, 
-            'Match Score': 100}, {'Country Code': 'GD', 'Update': {'Change': 'Subdivisions added: 6 parishes, 1 dependency.', 'Description of Change': 'Addition of the administrative subdivisions and of their code elements.', 'Date Issued': '2007-04-17', 
-            'Source': 'Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.'}, 'Match Score': 100}, {'Country Code': 'KN', 'Update': {'Change': 'Subdivisions added: 2 states, 14 parishes.', 
-            'Description of Change': 'Addition of the administrative subdivisions and of their code elements.', 'Date Issued': '2007-04-17', 'Source': 'Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.'}, 
-            'Match Score': 100}, {'Country Code': 'VC', 'Update': {'Change': 'Subdivisions added: 6 parishes.', 'Description of Change': 'Addition of the administrative subdivisions and of their code elements.', 'Date Issued': '2007-04-17', 
-            'Source': 'Newsletter I-8 - https://web.archive.org/web/20120330105926/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.'}, 'Match Score': 100}]
+        test_search_parishes_updates = self.all_updates.search(test_search_parishes, likeness_score=80)
+        expected_search_parishes_updates = [{'Country Code': 'AD', 'Change': 'Subdivisions added: 7 parishes.', 'Description of Change': 'Addition of the administrative subdivisions and of their code elements.', 'Date Issued': '2007-04-17', 
+                                             'Source': 'Newsletter I-8 - https://web.archive.org/web/20120330105926/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.', 'Match Score': 100}, 
+                                             {'Country Code': 'AG', 'Change': 'Subdivisions added: 6 parishes, 1 dependency.', 'Description of Change': 'Addition of the administrative subdivisions and of their code elements.', 
+                                             'Date Issued': '2007-04-17', 'Source': 'Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.', 'Match Score': 100}, 
+                                             {'Country Code': 'BB', 'Change': 'Subdivisions added: 11 parishes.', 'Description of Change': 'Addition of the administrative subdivisions and of their code elements.', 'Date Issued': '2007-04-17', 
+                                             'Source': 'Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.', 'Match Score': 100}, 
+                                             {'Country Code': 'DM', 'Change': 'Subdivisions added: 10 parishes.', 'Description of Change': 'Addition of the administrative subdivisions and of their code elements.', 'Date Issued': '2007-04-17', 
+                                             'Source': 'Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.', 'Match Score': 100}, 
+                                             {'Country Code': 'GD', 'Change': 'Subdivisions added: 6 parishes, 1 dependency.', 'Description of Change': 'Addition of the administrative subdivisions and of their code elements.', 'Date Issued': '2007-04-17', 
+                                             'Source': 'Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.', 'Match Score': 100}, 
+                                             {'Country Code': 'KN', 'Change': 'Subdivisions added: 2 states, 14 parishes.', 'Description of Change': 'Addition of the administrative subdivisions and of their code elements.', 'Date Issued': '2007-04-17', 
+                                             'Source': 'Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.', 'Match Score': 100}, 
+                                             {'Country Code': 'VC', 'Change': 'Subdivisions added: 6 parishes.', 'Description of Change': 'Addition of the administrative subdivisions and of their code elements.', 'Date Issued': '2007-04-17', 
+                                             'Source': 'Newsletter I-8 - https://web.archive.org/web/20120330105926/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.', 'Match Score': 100}]
 
         self.assertEqual(test_search_parishes_updates, expected_search_parishes_updates, f"Expected and observed search output do not match:\n{test_search_parishes_updates}")
 #3.)
         test_search_governorates_updates = self.all_updates.search(test_search_governorates)
-        expected_search_governorates_updates = [{'Country Code': 'BH', 'Update': {'Change': 'Subdivision layout: 12 regions -> 5 governorates.', 'Description of Change': 'Modification of the administrative structure.', 'Date Issued': '2007-04-17', 
-            'Source': 'Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.'}, 'Match Score': 100}, 
-            {'Country Code': 'GN', 'Update': {'Change': 'Change Subdivision category special zone to governorate (GN-C); change governorates to administrative regions; update List Source.', 'Description of Change': '', 'Date Issued': '2014-10-30', 
-            'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:GN.'}, 'Match Score': 100}, 
-            {'Country Code': 'OM', 'Update': {'Change': 'Change of subdivision category from region to governate for OM-BA, OM-DA, OM-SH, OM-WU, OM-ZA; change of subdivision code from OM-BA to OM-BJ, from OM-SH to OM-SJ; change of spelling of OM-BJ, OM-SJ; addition of governorates OM-BS, OM-SS; addition of local variations of OM-MA, OM-ZU; update List Source.', 'Description of Change': '', 
-            'Date Issued': '2015-11-27', 'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:OM.'}, 'Match Score': 100},
-            {'Country Code': 'PS', 'Update': {'Change': 'Subdivisions added: 16 governorates.', 'Description of Change': 'Administrative division taken into account.', 'Date Issued': '2011-12-13 (corrected 2011-12-15)', 
-            'Source': 'Newsletter II-3 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf.'}, 'Match Score': 100}, 
-            {'Country Code': 'YE', 'Update': {'Change': "Subdivisions added: YE-DA Aḑ Ḑāli'. YE-AM 'Amrān.", 'Description of Change': 'Addition of two governorates.', 'Date Issued': '2002-12-10', 
-            'Source': 'Newsletter I-4 - https://web.archive.org/web/20081218103210/http://www.iso.org/iso/iso_3166-2_newsletter_i-4_en.pdf.'}, 'Match Score': 100}]
+        expected_search_governorates_updates = [{'Country Code': 'BH', 'Change': 'Subdivision layout: 12 regions -> 5 governorates.', 'Description of Change': 'Modification of the administrative structure.', 'Date Issued': '2007-04-17', 
+                                                 'Source': 'Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf.', 'Match Score': 100}, 
+                                                 {'Country Code': 'GN', 'Change': 'Change Subdivision category special zone to governorate (GN-C); change governorates to administrative regions; update List Source.', 
+                                                 'Description of Change': '', 'Date Issued': '2014-10-30', 'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:GN.', 'Match Score': 100}, 
+                                                 {'Country Code': 'OM', 'Change': 'Change of subdivision category from region to governate for OM-BA, OM-DA, OM-SH, OM-WU, OM-ZA; change of subdivision code from OM-BA to OM-BJ, from OM-SH to OM-SJ; change of spelling of OM-BJ, OM-SJ; addition of governorates OM-BS, OM-SS; addition of local variations of OM-MA, OM-ZU; update List Source.', 
+                                                 'Description of Change': '', 'Date Issued': '2015-11-27', 'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:OM.', 'Match Score': 100}, 
+                                                 {'Country Code': 'PS', 'Change': 'Subdivisions added: 16 governorates.', 'Description of Change': 'Administrative division taken into account.', 'Date Issued': '2011-12-13 (corrected 2011-12-15)', 
+                                                 'Source': 'Newsletter II-3 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf.', 'Match Score': 100}, 
+                                                 {'Country Code': 'YE', 'Change': "Subdivisions added: YE-DA Aḑ Ḑāli'. YE-AM 'Amrān.", 'Description of Change': 'Addition of two governorates.', 'Date Issued': '2002-12-10', 
+                                                 'Source': 'Newsletter I-4 - https://web.archive.org/web/20081218103210/http://www.iso.org/iso/iso_3166-2_newsletter_i-4_en.pdf.', 'Match Score': 100}]
 
         self.assertEqual(test_search_governorates_updates, expected_search_governorates_updates, f"Expected and observed search output do not match:\n{test_search_governorates_updates}")
 #4.)
-        test_search_addition_deletion_updates = self.all_updates.search(test_search_addition_deletion)
-        self.assertEqual(len(test_search_addition_deletion_updates), 318, f"Expected 318 search output, got {len(test_search_addition_deletion_updates)}")
+        test_search_date_updates = self.all_updates.search(test_search_date, exclude_match_score=1) 
+        expected_search_date_updates = {'BO': {'Change': 'Change of short name upper case: replace the parentheses with a coma.', 'Description of Change': '', 'Date Issued': '2024-02-29', 
+                                              'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BO.'}, 
+                                        'FM': {'Change': 'Change of short name upper case: replace the parentheses with a coma and correct the remark in English of the entry of Micronesia Federate states (removing duplicated text).', 
+                                              'Description of Change': '', 'Date Issued': '2024-02-29', 'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:FM.'}, 
+                                        'IR': {'Change': 'Change of short name upper case: replace the parentheses with a comma.', 'Description of Change': '', 'Date Issued': '2024-02-29', 
+                                              'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:IR.'}, 
+                                        'KP': {'Change': 'Change of short name upper case in eng: replace the parentheses with a coma.', 'Description of Change': '', 'Date Issued': '2024-02-29', 
+                                              'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:KP.'}, 
+                                        'VE': {'Change': 'Change of short name upper case: replace the parentheses with a comma.', 'Description of Change': '', 'Date Issued': '2024-02-29', 
+                                              'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:VE.'}}
+
+        self.assertEqual(test_search_date_updates, expected_search_date_updates, f"Expected and observed search output do not match:\n{test_search_date}")
 #5.)
-        test_search_subdivision_region_updates = self.all_updates.search(test_search_subdivision)
-        self.assertEqual(len(test_search_subdivision_region_updates), 241, f"Expected 241 search output, got {len(test_search_subdivision_region_updates)}")
+        test_search_date_updates_2 = self.all_updates.search(test_search_date_2)
+        self.assertEqual(len(test_search_date_updates_2), 23, f"Expected 23 search outputs, got {len(test_search_date_updates_2)}")
 #6.)
+        test_search_addition_deletion_updates = self.all_updates.search(test_search_addition_deletion)
+        self.assertEqual(len(test_search_addition_deletion_updates), 318, f"Expected 318 search outputs, got {len(test_search_addition_deletion_updates)}")
+#7.)
+        test_search_subdivision_region_updates = self.all_updates.search(test_search_subdivision)
+        self.assertEqual(len(test_search_subdivision_region_updates), 241, f"Expected 241 search outputs, got {len(test_search_subdivision_region_updates)}")
+#8.)
         test_search_zzz_updates = self.all_updates.search(test_search_zzz)
         self.assertEqual(test_search_zzz_updates, [], f"Expected no search outputs, got {test_search_zzz_updates}")
-#7.)
+#9.)
         test_search_blah_updates = self.all_updates.search(test_search_blahblah)
         self.assertEqual(test_search_blah_updates, [], f"Expected no search outputs, got {test_search_blah_updates}")
-#8.)    
+#10.)    
         with self.assertRaises(TypeError):
             self.all_updates.search(test_search_error1) #["Belfast,Dublin,Donegal"]
             self.all_updates.search(test_search_error2) #12345
@@ -506,29 +518,25 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         test_date_range2 = "2007-01-01,2007-12-25"
         test_date_range3 = "2013-09-11"
         test_date_range4 = "12/04/2015,07/05/2010" 
+        test_date_range5 = "1996-04-03,1996-05-03"
         test_error_date_range1 = "2019-08-16"
         test_error_date_range2 = "05-10-2008"
         test_error_date_range3 = "2002-10-05,2004-12-15,2019-08-16"
 #1.)
-        test_date_range1_updates = self.all_updates.date_range(test_date_range1)
+        test_date_range1_updates = self.all_updates.date_range(test_date_range1) #2002-10-05,2004-12-15
         test_date_range1_updates_expected = ['AF', 'AL', 'AU', 'BI', 'BW', 'CA', 'CH', 'CN', 'CO', 'CZ', 'EC', 'ES', 'ET', 'GE', 'ID', 
                                              'IN', 'KG', 'KH', 'KP', 'KZ', 'LA', 'LY', 'MA', 'MD', 'MU', 'MY', 'RO', 'SI', 'SN', 'TJ', 
                                              'TL', 'TM', 'TN', 'TW', 'TZ', 'UG', 'UZ', 'VE', 'YE', 'ZA']
-
+        
         for country_code, updates in test_date_range1_updates.items():
             for update in updates:
-                if ("corrected" in update["Date Issued"]):
-                    current_updates_date = datetime.strptime(re.sub("[(].*[)]", "", update["Date Issued"]).replace(' ', "").replace(".", '').replace('\n', ''), '%Y-%m-%d')
-                else:
-                    current_updates_date = datetime.strptime(update["Date Issued"].replace('\n', ''), '%Y-%m-%d')
-
+                current_updates_date = extract_date(update["Date Issued"])
                 self.assertTrue(datetime.strptime("2002-10-05", "%Y-%m-%d") <= current_updates_date <= datetime.strptime("2004-12-15", "%Y-%m-%d"), 
                     f"Expected update of object to be between the dates 2002-10-05 and 2004-12-15, got date {current_updates_date}.")        
-
         self.assertEqual(list(test_date_range1_updates), test_date_range1_updates_expected, 
             f"Expected and observed country code objects do not match:\n{list(test_date_range1_updates)}.")
 #2.)
-        test_date_range2_updates = self.all_updates.date_range(test_date_range2)
+        test_date_range2_updates = self.all_updates.date_range(test_date_range2) #2007-01-01,2007-12-25
         test_date_range2_updates_expected = ['AD', 'AG', 'BA', 'BB', 'BG', 'BH', 'BL', 'CI', 'CZ', 'DM', 'DO', 'EG', 'FR', 'GB', 'GD', 'GE', 'GG', 
                                              'GN', 'GP', 'HT', 'IM', 'IR', 'IT', 'JE', 'KE', 'KN', 'KW', 'LB', 'LC', 'LI', 'LR', 'ME', 'MF', 'MK', 
                                              'MT', 'NR', 'PF', 'PW', 'RE', 'RS', 'RU', 'RW', 'SB', 'SC', 'SD', 'SG', 'SM', 'TD', 'TF', 'TO', 'TV', 
@@ -536,18 +544,13 @@ class ISO3166_Updates_Tests(unittest.TestCase):
 
         for country_code, updates in test_date_range2_updates.items():
             for update in updates:
-                if ("corrected" in update["Date Issued"]):
-                    current_updates_date = datetime.strptime(re.sub("[(].*[)]", "", update["Date Issued"]).replace(' ', "").replace(".", '').replace('\n', ''), '%Y-%m-%d')
-                else:
-                    current_updates_date = datetime.strptime(update["Date Issued"].replace('\n', ''), '%Y-%m-%d')
-
+                current_updates_date = extract_date(update["Date Issued"])
                 self.assertTrue(datetime.strptime("2007-01-01", "%Y-%m-%d") <= current_updates_date <= datetime.strptime("2007-12-25", "%Y-%m-%d"), 
                     f"Expected update of object to be between the dates 2005-08-09 and 2005-09-19, got date {current_updates_date}.")    
-                
         self.assertEqual(list(test_date_range2_updates), test_date_range2_updates_expected, 
             f"Expected and observed country code objects do not match:\n{list(test_date_range2_updates)}.")
 #3.)
-        test_date_range3_updates = self.all_updates.date_range(test_date_range3)
+        test_date_range3_updates = self.all_updates.date_range(test_date_range3) #2013-09-11
         test_date_range3_updates_expected = ['AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AS', 'AT', 'AU', 'AW', 'AX', 'AZ', 'BA', 'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 
                                              'BJ', 'BL', 'BM', 'BN', 'BO', 'BQ', 'BR', 'BS', 'BT', 'BV', 'BW', 'BY', 'BZ', 'CA', 'CC', 'CD', 'CG', 'CH', 'CI', 'CK', 'CL', 'CM', 'CN', 
                                              'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ', 'DE', 'DJ', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'EH', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FK', 
@@ -562,45 +565,59 @@ class ISO3166_Updates_Tests(unittest.TestCase):
 
         for country_code, updates in test_date_range3_updates.items():
             for update in updates:
-                if ("corrected" in update["Date Issued"]):
-                    current_updates_date = datetime.strptime(re.sub("[(].*[)]", "", update["Date Issued"]).replace(' ', "").replace(".", '').replace('\n', ''), '%Y-%m-%d')
-                else:
-                    current_updates_date = datetime.strptime(update["Date Issued"].replace('\n', ''), '%Y-%m-%d')
-
+                current_updates_date = extract_date(update["Date Issued"])
                 self.assertTrue(datetime.strptime("2013-09-11", "%Y-%m-%d") <= current_updates_date <= datetime.today(), 
                     f"Expected update of object to be between the dates 2013-09-11 and today's date, got date {current_updates_date}.")   
-
         self.assertEqual(list(test_date_range3_updates), test_date_range3_updates_expected, 
             f"Expected and observed country code objects do not match:\n{list(test_date_range3_updates)}.")
 #4.)
-        test_date_range4_updates = self.all_updates.date_range(test_date_range4)
-        test_date_range4_updates_expected = ['AD', 'AF', 'AG', 'AL', 'AO', 'AR', 'AT', 'AW', 'AX', 'AZ', 'BA', 'BB', 'BD', 'BE', 'BF', 'BG', 'BI', 'BL', 'BN', 'BO', 'BQ', 'BS', 
-                                             'BT', 'BV', 'BW', 'BY', 'BZ', 'CA', 'CF', 'CG', 'CL', 'CM', 'CR', 'CU', 'CV', 'CW', 'CY', 'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ', 'EC', 
-                                             'EE', 'EG', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FM', 'FR', 'GA', 'GB', 'GD', 'GH', 'GL', 'GM', 'GN', 'GQ', 'GR', 'GT', 'GY', 'HN', 'HR', 
-                                             'HT', 'HU', 'ID', 'IE', 'IL', 'IN', 'IQ', 'IR', 'IT', 'JE', 'JM', 'JO', 'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 'KP', 'KR', 'KW', 'LA', 
-                                             'LC', 'LI', 'LK', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK', 'MM', 'MR', 'MV', 'MW', 'MX', 'NA', 
-                                             'NE', 'NG', 'NL', 'NO', 'NP', 'NR', 'NU', 'NZ', 'OM', 'PA', 'PE', 'PG', 'PH', 'PK', 'PL', 'PS', 'PT', 'QA', 'RO', 'RS', 'RU', 'SA', 
-                                             'SB', 'SC', 'SD', 'SE', 'SH', 'SI', 'SM', 'SN', 'SO', 'SR', 'SS', 'SV', 'SX', 'SY', 'TC', 'TD', 'TJ', 'TL', 'TM', 'TN', 'TR', 'TZ', 
-                                             'UA', 'UG', 'UM', 'US', 'UY', 'VA', 'VC', 'VE', 'VN', 'WS', 'YE', 'ZM']
+        test_date_range4_updates = self.all_updates.date_range(test_date_range4, sort_by_date=True) #12/04/2015,07/05/2010
+        test_date_range4_updates_country_codes_expected = ['AD', 'AF', 'AG', 'AL', 'AO', 'AR', 'AT', 'AW', 'AX', 'AZ', 'BA', 'BB', 'BD', 
+                                                           'BE', 'BF', 'BG', 'BI', 'BL', 'BN', 'BO', 'BQ', 'BS', 'BT', 'BV', 'BW', 'BY', 
+                                                           'BZ', 'CA', 'CF', 'CG', 'CL', 'CM', 'CR', 'CU', 'CV', 'CW', 'CY', 'DE', 'DJ', 
+                                                           'DK', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FM', 
+                                                           'FR', 'GA', 'GB', 'GD', 'GH', 'GL', 'GM', 'GN', 'GQ', 'GR', 'GT', 'GY', 'HN', 
+                                                           'HR', 'HT', 'HU', 'ID', 'IE', 'IL', 'IN', 'IQ', 'IR', 'IT', 'JE', 'JM', 'JO', 
+                                                           'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 'KP', 'KR', 'KW', 'LA', 'LC', 'LI', 'LK', 
+                                                           'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK', 
+                                                           'MM', 'MR', 'MV', 'MW', 'MX', 'NA', 'NE', 'NG', 'NL', 'NO', 'NP', 'NR', 'NU', 
+                                                           'NZ', 'OM', 'PA', 'PE', 'PG', 'PH', 'PK', 'PL', 'PS', 'PT', 'QA', 'RO', 'RS', 
+                                                           'RU', 'SA', 'SB', 'SC', 'SD', 'SE', 'SH', 'SI', 'SM', 'SN', 'SO', 'SR', 'SS', 
+                                                           'SV', 'SX', 'SY', 'TC', 'TD', 'TJ', 'TL', 'TM', 'TN', 'TR', 'TZ', 'UA', 'UG', 
+                                                           'UM', 'US', 'UY', 'VA', 'VC', 'VE', 'VN', 'WS', 'YE', 'ZM']
+        test_date_range4_updates_country_codes_observed = []
 
-        for country_code, updates in test_date_range4_updates.items():
-            for update in updates:
-                if ("corrected" in update["Date Issued"]):
-                    current_updates_date = datetime.strptime(re.sub("[(].*[)]", "", update["Date Issued"]).replace(' ', "").replace(".", '').replace('\n', ''), '%Y-%m-%d')
-                else:
-                    current_updates_date = datetime.strptime(update["Date Issued"].replace('\n', ''), '%Y-%m-%d')
+        for updates in test_date_range4_updates:
+            #append country code of each object
+            test_date_range4_updates_country_codes_observed.append(updates["Country Code"])
 
-                self.assertTrue(datetime.strptime("2010-05-07", "%Y-%m-%d") <= current_updates_date <= datetime.strptime("2015-04-12", "%Y-%m-%d"), 
-                    f"Expected update of object to be between the dates 2010-05-07 and 2015-04-12, got date {current_updates_date}.")   
-            
-        self.assertEqual(list(test_date_range4_updates), test_date_range4_updates_expected, 
-            f"Expected and observed country code objects do not match:\n{list(test_date_range4_updates)}.")
+            current_updates_date = extract_date(updates["Date Issued"])
+            self.assertTrue(datetime.strptime("2010-05-07", "%Y-%m-%d") <= current_updates_date <= datetime.strptime("2015-04-12", "%Y-%m-%d"), 
+                f"Expected update of object to be between the dates 2010-05-07 and 2015-04-12, got date {current_updates_date}.")   
+            self.assertEqual(list(updates), ["Country Code", "Change", "Description of Change", "Date Issued", "Source"], f"Expected and observed attributes list do not match\n{list(updates)}.")
+
+        #sort observed list of country codes
+        test_date_range4_updates_country_codes_observed = sorted(set(test_date_range4_updates_country_codes_observed))
+
+        self.assertEqual(test_date_range4_updates_country_codes_observed, test_date_range4_updates_country_codes_expected, 
+            f"Expected and observed country code objects do not match:\n{test_date_range4_updates_country_codes_observed}.")
 #5.)
+        test_date_range5_updates = self.all_updates.date_range(test_date_range5, sort_by_date=True) #1996-04-03,1996-05-03
+        test_date_range5_updates_expected = ['VA']
+
+        for country_code, updates in test_date_range5_updates.items():
+            for update in updates:
+                current_updates_date = extract_date(update["Date Issued"])
+                self.assertTrue(datetime.strptime("1996-04-03", "%Y-%m-%d") <= current_updates_date <= datetime.strptime("1996-05-03", "%Y-%m-%d"), 
+                    f"Expected update of object to be between the dates 1996-04-03 and 1996-05-03, got date {current_updates_date}.")   
+        self.assertEqual(list(test_date_range5_updates), test_date_range5_updates_expected, 
+            f"Expected and observed country code objects do not match:\n{list(test_date_range5_updates)}.")
+#6.)
         with self.assertRaises(ValueError):
             self.all_updates.date_range(test_error_date_range1)
             self.all_updates.date_range(test_error_date_range2)
             self.all_updates.date_range(test_error_date_range3)
-#6.)
+#7.)
         with self.assertRaises(TypeError):
             self.all_updates.date_range(False)
             self.all_updates.date_range(10.5)
@@ -657,7 +674,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                 current_date = self.all_updates.all[country][update]["Date Issued"]
 
                 #extract the original and corrected date from attribute, if applicable
-                match = re.search(r"\d{4}-\d{2}-\d{2}", current_date)  #
+                match = re.search(r"\d{4}-\d{2}-\d{2}", current_date)  
                 corrected_match = re.search(r"\(corrected (\d{4}-\d{2}-\d{2})\)", current_date) 
 
                 #find matching date and corrected date
@@ -670,7 +687,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                 else:
                     corrected_date = None  # No corrected date found
 
-                #auxillary function to validate date format
+                #auxiliary function to validate date format
                 def is_valid_date(date_str):
                     try:
                         datetime.strptime(date_str, "%Y-%m-%d")
@@ -681,12 +698,14 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                 #validate original date
                 if original_date:
                     self.assertTrue(is_valid_date(original_date), f"Date in country {country} is not in valid YYYY-MM-DD format: {original_date}.")
+                    self.assertLessEqual(datetime.strptime(original_date, "%Y-%m-%d").date(), date.today(), f"Expected no future publication dates, got: {original_date}.") #*****
 
                 #validate corrected date, if applicable
                 if corrected_date:
                     self.assertTrue(is_valid_date(corrected_date), f"Corrected date in country {country} is not in valid YYYY-MM-DD format: {corrected_date}.")
+                    self.assertLessEqual(datetime.strptime(corrected_date, "%Y-%m-%d").date(), date.today(), f"Expected no future publication dates, got: {corrected_date}.")
 
-    @unittest.skip("")
+    # @unittest.skip("")
     def test_check_for_updates(self): 
         """ Testing functionality that pulls the latest object from repo and compares with object in current version of software. """
         self.all_updates.check_for_updates()
@@ -699,8 +718,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("")
     def test_updates_sizeof(self):
         """ Testing __sizeof__ function returns correct output for class object. """
-        print("size of", self.all_updates.__sizeof__())
-        self.assertEqual(self.all_updates.__sizeof__(), 0.328, f"Expected and observed output for sizeoff function do not match:\n{self.all_updates.__sizeof__()}.")
+        self.assertEqual(self.all_updates.__sizeof__(), 0.328, f"Expected and observed output for sizeof function do not match:\n{self.all_updates.__sizeof__()}.")
         
     # @unittest.skip("")
     def test_updates_len(self):
@@ -716,11 +734,36 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         self.assertFalse("AA" in self.all_updates, "Expected AA updates data to be in object.")
         self.assertFalse("ZZ" in self.all_updates, "Expected ZZ updates data to be in object.")
 
+    # @unittest.skip("")
     def tearDown(self):
         """ Delete instance of Updates class. """
         del self.all_updates
-        shutil.rmtree(self.test_export_folder)
-        
+        # shutil.rmtree(self.test_export_folder)
+    
+def extract_date(date_str: str) -> datetime:
+    """
+    Extract the original and corrected date from the Date Issued column,
+    return Datetime object.
+
+    Parameters
+    ==========
+    :date_str: str
+        input publication date.
+
+    Returns
+    =======
+    :parsed_date: datetime
+        converted date as a datetime object.
+    """
+    #if date is 'corrected', parse new date 
+    if "corrected" in date_str:
+        cleaned = re.sub(r"[(].*[)]", "", date_str)
+        cleaned = cleaned.replace(' ', '').replace('.', '').replace('\n', '')
+        return datetime.strptime(cleaned, "%Y-%m-%d")
+    #parse original date
+    else:
+        return datetime.strptime(date_str.replace('\n', ''), "%Y-%m-%d")
+    
 if __name__ == '__main__':
     #run all unit tests
     unittest.main(verbosity=2)
