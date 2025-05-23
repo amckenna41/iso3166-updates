@@ -60,7 +60,7 @@ This software and accompanying API is for anyone working with country data at th
 
 Last Updated
 ------------
-The list of ISO 3166 updates was last updated on **April 2025**, with **912** individual published updates. A log of the latest ISO 3166 updates can be seen in the [UPDATES.md][updates_md]. 
+The list of ISO 3166 updates was last updated on **April 2025**, with **910** individual published updates. A log of the latest ISO 3166 updates can be seen in the [UPDATES.md][updates_md]. 
 
 <!-- <strong> The earliest date for any ISO 3166 updates is 1996-03-04, and the most recent is 2024-11-11. </strong> -->
 
@@ -95,34 +95,53 @@ The other endpoints available in the API are:
 * https://iso3166-updates.vercel.app/api/alpha/<input_alpha>
 * https://iso3166-updates.vercel.app/api/year/<input_year>
 * https://iso3166-updates.vercel.app/api/search/<input_search>
-* https://iso3166-updates.vercel.app/api/alpha/<input_alpha>/year/<input_year>
-* https://iso3166-updates.vercel.app/api/search/<input_search>/year/<input_year>
 * https://iso3166-updates.vercel.app/api/date_range/<input_date_range>
+* https://iso3166-updates.vercel.app/api/alpha/<input_alpha>/year/<input_year>
 * https://iso3166-updates.vercel.app/api/date_range/<input_date_range>/alpha/<input_alpha>
-* https://iso3166-updates.vercel.app/api/date_range/<input_date_range>/search/<input_search>
+* https://iso3166-updates.vercel.app/api/date_range/<input_date_range>/year/<input_year>
 
-The main paths/endpoints available in the API are `/api/all`, `/api/alpha`, `/api/year`, `/api/search`, and `/api/date_range`.
-
-* `/api`: main homepage and API documentation.
+The main paths/endpoints available in the API are - `/api/all`, `/api/alpha`, `/api/year`, `/api/country_name`, `/api/search` and `/api/date_range`.
 
 * `/api/all`: get all of the ISO 3166 updates/changes data for all countries and publication years.
 
-* `/api/alpha`: get all the ISO 3166 updates/changes data for one or more countries according to their ISO 3166-1 alpha-2, alpha-3 or numeric country codes. A single alpha code or a list of them can be passed to the API e.g. `/api/alpha/AL`, `/api/alpha/BW`, `/api/alpha/FR,DE,HUN,IDN,504`. If an invalid alpha code is input then an error will be returned. This endpoint can be used in conjunction with the **year** and **date_range** endpoints to get the country updates for a specific country and year, and the country updates for a specific country over a specific date range, respectively. This will be in the format: `/api/alpha/<input_alpha>/year/<input_year>` and `/api/alpha/<input_alpha>/date_range/<input_date_range>`, respectively.
+* `/api/alpha`: get all the ISO 3166 updates/changes data for one or more countries according to their ISO 3166-1 alpha-2, alpha-3 or numeric country codes. A single alpha code or a list of them can be passed to the API e.g. `/api/alpha/AL`, `/api/alpha/BWA`, `/api/alpha/FR,DE,HUN,IDN,504`. If an invalid alpha code is input then an error will be returned. This endpoint can be used in conjunction with the **year** and **date_range** endpoints to get the country updates for a specific country and year, and the country updates over a specific date range, respectively. This will be in the format: `/api/alpha/<input_alpha>/year/<input_year>` and `/api/alpha/<input_alpha>/date_range/<input_date_range>`, respectively.
 
-* `/api/year`: get all the ISO 3166 updates/changes data for one or more countries according to a specific year, year range, a cut-off year to get updates less than/more than a year or all updates except for a year, e.g. `/api/year/2017`, `/api/year/2010-2015`, `/api/year/<2009`, `/api/year/>2002`, `/api/year/<>2020`. If an invalid year is input then an error will be returned. This endpoint can be used in conjunction with the **alpha** and **search** endpoints to get the country updates for a specific list of keywords and year. This will be in in the format `/api/alpha/<input_alpha>/year/<input_year>` and `/api/search/<input_search>/year/<input_year>`, respectively. 
+* `/api/year`: get all the ISO 3166 updates/changes data for one or more countries according to a specific year, year range, a cut-off year to get updates less than/more than a year or all updates except for a year, e.g. `/api/year/2017`, `/api/year/2010-2015`, `/api/year/<2009`, `/api/year/>2002` and `/api/year/<>2020`. If an invalid year is input then an error will be returned. This endpoint can be used in conjunction with the **alpha** endpoint to get the country updates for a specific country and year. This will be in in the format `/api/alpha/<input_alpha>/year/<input_year>`.
 
-* `/api/search`: get all the ISO 3166 updates/changes data for one or more countries that have the inputted search terms. A single keyword/term or list of them can be passed to the API e.g. `/api/search/Brazil`, `/api/search/Addition,deletion`, `/api/name/new subdivision`. A closeness function is used to search through the updates objects, finding any applicable matches to the keywords input, using a fuzzy search algorithm. If an explicit date is input to the endpoint, the Date Issued attribute will be searched in addition to the Change attribute e.g `/api/search/2015-11-27`. If no matching objects found then an error will be returned. This endpoint can be used in conjunction with the **year** and **date_range** endpoints to get the country updates that have specific keywords and year and the country updates over a specified date range, respectively. This will be in the format: `/api/search/<input_search>/year/<input_year>` and `/api/search/<input_search>/date_range/<input_date_range>`, respectively. 
+* `/api/country_name`: get all the ISO 3166 updates/changes data for one or more countries according to their name, as it is commonly known in English, e.g. `/api/country_name/Tajikistan`, `/api/country_name/Benin,Togo`, `/api/country_name/Russia,Sudan,Swaziland`. If an invalid country name is input then an error will be returned. This endpoint can be used in conjunction with the **year** endpoint to get the country updates for a specific country and year. This will be in in the format `/api/country_name/<input_country_name>/year/<input_year>`.
 
-* `/api/date_range`: get all the ISO 3166 updates/changes data for one or more countries that were published within a specified input date range e.g. `/api/date_range/2011-12-09,2014-01-10`, `/api/date_range/2013-08-02,2015-07-10`. If an invalid date type/format value is input then an error will be returned.
+* `/api/search`: get all the ISO 3166 updates/changes data for one or more countries that have the inputted search terms. A single keyword/term or list of them can be passed to the API e.g. `/api/search/Brazil`, `/api/search/Addition,deletion`, `/api/search/2017-11-23`. A closeness function is used to search through the updates objects, finding any applicable matches to the keywords input via the Change and Description of Change attributes. If a date is explicitly input then the Date Issued attributes will also be searched. If no matching objects found then an error will be returned. 
 
-The API was originally hosted and built using GCP, with a Cloud Function being used in the backend, fronted by an api gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON where all ISO 3166 updates are stored. Although, due to the cost of infrastructure, the hosting was switched to Vercel (https://vercel.com/).
+* `/api/date_range`: get all the ISO 3166 updates/changes data for one or more countries that were published within a specified input date range e.g. `/api/date_range/2011-12-09,2014-01-10`, `/api/date_range/2013-08-02,2015-07-10`, `/api/date_range/2018-05-12`. If a single date is input it will act as the starting date within the date range, with the end of the range being the current day. If an invalid date type/format value is input then an error will be returned. This endpoint can be used in conjunction with the **alpha** endpoint to get the country updates for a specific country and date range. This will be in in the format `/api/alpha/<input_alpha>/date_range/<input_date_range>`.
 
-The full list of attributes available for each country are:
+* `/api`: main homepage and API documentation.
 
-* **Change**: overall summary of change/update made.
-* **Description of change**: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
-* **Date Issued**: date that the change was communicated.
-* **Source**: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform page.
+### Attributes
+There are three main query string parameters that can be passed through several of the endpoints of the API:
+
+* <b>Change</b>: overall summary of change/update made.
+* <b>Description of Change</b>: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
+* <b>Date Issue</b>: date that the change was communicated.
+* <b>Source</b>: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform page.
+
+### Query String Parameters
+There are three main query string parameters that can be passed through several of the endpoints of the API:
+
+* <b>sortBy</b>: sort the output results by publication date (Date Issued), either descending or ascending. By default, 
+the updates data will be returned alphabetically, according to ISO 3166 2 letter country code, but you can order 
+by date. The parameter accepts two values: dateDesc and dateAsc - sorting the output by date descending or 
+ascending, respectively. If an invalid value input then the output is sorted by country code. This can be appended 
+to all of the endpoints, e.g ``/api/all?sortBy=dateDesc``, ``/api/year/2010-2015?sortBy=dateAsc``, 
+``/api/date_range/2019-01-01?sortBy=""`` (sorted by country code).
+* <b>likeness</b>: this is a value between 1 and 100 that increases or reduces the % of similarity/likeness that the 
+inputted search terms have to match to the updates data in the Change and Desc of Change attributes. This can 
+only be used in the /api/search endpoint. Having a higher value should return more exact and less matches and 
+having a lower value will return less exact but more matches, e.g ``/api/search/Paris?likeness=50``, 
+``/api/search/canton?likeness=90`` (default=100).
+* <b>excludeMatchScore</b>: exclude the matchScore` attribute from the search results when using the /api/search endpoint. 
+The match score is the % of a match each returned updates data object is to the search terms, with 100% being an 
+exact match. By default the match score is returned for each object, e.g ``/api/search/addition?excludeMatchScore=1``, 
+``/api/search/New York?excludeMatchScore=1`` (default=0).
 
 
 <!-- <p align="center">
@@ -131,7 +150,7 @@ The full list of attributes available for each country are:
 
 Staying up to date
 ------------------
-The list of ISO 3166 updates was last updated on <strong>April 2025</strong>.
+The list of ISO 3166 updates was last updated on <strong>May 2025</strong>.
 
 The object storing all updates - iso3166-updates.json - for the software package is consistently checked for the latest updates using a Google Cloud Run microservice ([iso3166-check-for-updates](https://github.com/amckenna41/iso3166-updates/tree/main/iso3166-check-for-updates)). The application is built using a custom Docker container that uses the `iso3166-updates` Python software to pull all the latest updates/changes from the various data sources, to check for the latest updates within a certain period e.g. the past 6-12 months (this month range is used as the ISO usually publishes their updates at the end of the year with occasional mid-year updates). The app compares the generated output with that of the updates JSON currently in the software package and will replace this json to integrate the latest updates found, such that the API will have the most **up-to-date** and **accurate** data. A Cloud Scheduler is used to call the application on the aforementioned schedule. 
 
@@ -215,9 +234,9 @@ iso.search("addition, deletion", likeness_score=0.8)
 iso.date_range("2012-03-12,2015-06-25")
 ```
 
-**Get any listed ISO 3166 changes/updates published from the date range 2021-10-02, inclusive, sort by date rather than country code:**
+**Get any listed ISO 3166 changes/updates published from the date range 2021-10-02, inclusive, sort by date descending rather than country code:**
 ```python
-iso.date_range("2021-10-02", sort_by_date=True)
+iso.date_range("2021-10-02", sort_by_date="dateDesc")
 ```
 
 **Add custom ISO 3166 change/update to main iso3166-updates.json object:**

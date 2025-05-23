@@ -159,7 +159,9 @@ For example, <>2004 and <>2019:
 Get all ISO 3166 updates from a specific date range
 ---------------------------------------------------
 Return all the ISO 3166 updates data published within a specified date range, inclusive, using the ``date_range()`` function
-within an object instance of the ``Updates`` class, passing in the required date range range as parameter.
+within an object instance of the ``Updates`` class, passing in the required date range range as parameter. You can also sort
+the output by publication date via the ``sort_by_date`` parameter. The accepted values are dateDesc and dateAsc which will
+sort the outputs date descending and ascending, respectively.
 
 For example, 2012-04-15 to 2013-11-11:
 
@@ -173,8 +175,8 @@ For example, 2012-04-15 to 2013-11-11:
    #get all updates within specified date range, inclusive
    iso.date_range("2012-04-15,2013-11-11")
 
-   #get all updates from specified date range, inclusive, sort by Date Issued rather than default Country Code
-   iso.date_range("12/04/2015,07/05/2010", sort_by_date=1)
+   #get all updates from specified date range, inclusive, sort by Date Issued rather than default Country Code, can be sorted descending or ascending 
+   iso.date_range("12/04/2015,07/05/2010", sort_by_date="dateDesc")
 
    #get all updates from specified date, inclusive
    iso.date_range("2012-04-15")
@@ -240,7 +242,7 @@ For example, adding custom Kenyan and Belfast updates:
    iso.custom_update("IE", change="Brand new Belfast subdivision", date_issued="2020-05-12", description_of_change="", source="https:...")
 
 
-If you need to remove the custom updates you can set the ``delete`` parameter in the same function, e.g custom Kenyan and Belfast updates:
+If you need to remove the custom updates you can set the ``delete`` parameter in the same function to True, e.g custom Kenyan and Belfast updates:
 
 .. code-block:: python
 

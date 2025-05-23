@@ -154,3 +154,5 @@ iso3166_check_for_updates/old
 successful_tests/
 
 TODO.md
+
+setup_gcp.sh

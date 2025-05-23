@@ -7,8 +7,11 @@ import jsonschema
 import shutil
 from datetime import date
 import unittest
+from unittest.mock import patch
+import io
 unittest.TestLoader.sortTestMethodsUsing = None
 
+# @unittest.skip("Skipping main iso3166-updates package tests.")
 class ISO3166_Updates_Tests(unittest.TestCase):
     """
     Test suite for testing the iso3166-updates Python software package. 
@@ -41,6 +44,8 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         testing correct format and validity for dates in updates object.
     test_updates_str:
         testing correct functionality for __str__ in-built function in class.
+    test_updates_repr:
+        testing correct functionality for __repr__ in-built function in class.
     test_updates_sizeof:
         testing correct functionality for __sizeof__ in-built function in class.
     test_updates_len:
@@ -64,8 +69,8 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("Skipping metadata unit tests.")    
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        # self.assertEqual(metadata('iso3166-updates')['version'], "1.8.2", 
-        #     f"iso3166-updates version is not correct, expected 1.8.2, got {metadata('iso3166-updates')['version']}.")
+        # self.assertEqual(metadata('iso3166-updates')['version'], "1.8.3", 
+        #     f"iso3166-updates version is not correct, expected 1.8.3, got {metadata('iso3166-updates')['version']}.")
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             f"iso3166-updates software name is not correct, expected iso3166-updates, got {metadata('iso3166-updates')['name']}.")
         # self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna", 
@@ -423,7 +428,8 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             self.all_updates.year(test_year_error6) #True
 
     # @unittest.skip("")
-    def test_updates_search(self):
+    @patch('iso3166_updates.sys.stdout', new_callable=io.StringIO)
+    def test_updates_search(self, mock_stdout):
         """ Testing the search function that returns the updates per input search terms. """
         test_search_australia = "AU-NSW"
         test_search_parishes = "parishes"
@@ -571,7 +577,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         self.assertEqual(list(test_date_range3_updates), test_date_range3_updates_expected, 
             f"Expected and observed country code objects do not match:\n{list(test_date_range3_updates)}.")
 #4.)
-        test_date_range4_updates = self.all_updates.date_range(test_date_range4, sort_by_date=True) #12/04/2015,07/05/2010
+        test_date_range4_updates = self.all_updates.date_range(test_date_range4, sort_by_date="dateAsc") #12/04/2015,07/05/2010, sort output ascending
         test_date_range4_updates_country_codes_expected = ['AD', 'AF', 'AG', 'AL', 'AO', 'AR', 'AT', 'AW', 'AX', 'AZ', 'BA', 'BB', 'BD', 
                                                            'BE', 'BF', 'BG', 'BI', 'BL', 'BN', 'BO', 'BQ', 'BS', 'BT', 'BV', 'BW', 'BY', 
                                                            'BZ', 'CA', 'CF', 'CG', 'CL', 'CM', 'CR', 'CU', 'CV', 'CW', 'CY', 'DE', 'DJ', 
@@ -602,7 +608,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         self.assertEqual(test_date_range4_updates_country_codes_observed, test_date_range4_updates_country_codes_expected, 
             f"Expected and observed country code objects do not match:\n{test_date_range4_updates_country_codes_observed}.")
 #5.)
-        test_date_range5_updates = self.all_updates.date_range(test_date_range5, sort_by_date=True) #1996-04-03,1996-05-03
+        test_date_range5_updates = self.all_updates.date_range(test_date_range5, sort_by_date="dateDesc") #1996-04-03,1996-05-03, sort output descending
         test_date_range5_updates_expected = ['VA']
 
         for country_code, updates in test_date_range5_updates.items():
@@ -706,14 +712,22 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                     self.assertLessEqual(datetime.strptime(corrected_date, "%Y-%m-%d").date(), date.today(), f"Expected no future publication dates, got: {corrected_date}.")
 
     # @unittest.skip("")
-    def test_check_for_updates(self): 
+    @patch('iso3166_updates.sys.stdout', new_callable=io.StringIO)
+    def test_check_for_updates(self, mock_stdout): 
         """ Testing functionality that pulls the latest object from repo and compares with object in current version of software. """
         self.all_updates.check_for_updates()
 
     # @unittest.skip("")
     def test_updates_str(self):
-        """ Testing __str__ function returns correct string for class object. """
-        self.assertEqual(str(self.all_updates), f"Instance of ISO 3166 Updates class: Version {self.all_updates.__version__}.", f"Expected and observed string output for object do not match:\n{str(self.all_updates)}.")
+        """ Testing __str__ function returns correct string representation for class object. """
+        self.assertEqual(str(self.all_updates), f"Instance of ISO 3166 Updates class: Version {self.all_updates.__version__}.", 
+                f"Expected and observed string output for class instance do not match:\n{str(self.all_updates)}.")
+
+    # @unittest.skip("")
+    def test_updates_repr(self):
+        """ Testing __repr__ function returns correct object representation for class object. """
+        self.assertEqual(repr(self.all_updates), "<Updates(version='1.8.3', countries_loaded=249, total_updates=910, source_file='test-iso3166-updates.json')>",
+                f"Expected and observed object representation for class instance do not match:\n{repr(self.all_updates)}.")
 
     # @unittest.skip("")
     def test_updates_sizeof(self):
@@ -738,7 +752,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     def tearDown(self):
         """ Delete instance of Updates class. """
         del self.all_updates
-        # shutil.rmtree(self.test_export_folder)
+        shutil.rmtree(self.test_export_folder)
     
 def extract_date(date_str: str) -> datetime:
     """

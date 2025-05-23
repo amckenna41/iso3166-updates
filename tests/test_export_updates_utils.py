@@ -14,6 +14,7 @@ from fake_useragent import UserAgent
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 
+# @unittest.skip("Skipping utils tests.")
 class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
     """
     Test suite for testing the utils module in the ISO 3166 updates export directory. 

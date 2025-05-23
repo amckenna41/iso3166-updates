@@ -397,7 +397,7 @@
             "Source": "Newsletter II-3 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf."
         },
         {
-            "Change": "Subdivisions added: BD-6 Sylhet bibhag. Subdivisions deleted: 21 regions .",
+            "Change": "Subdivisions added: BD-6 Sylhet bibhag. Subdivisions deleted: 21 regions.",
             "Description of Change": "New list source. One division added. 31 regions cancelled. Allocation of districts to divisions instead of regions. Correction of one spelling error.",
             "Date Issued": "2002-05-21",
             "Source": "Newsletter I-2 - https://web.archive.org/web/20081218103157/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf."
@@ -1399,7 +1399,7 @@
             "Source": "ISO 3166-2:2007 - http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718."
         },
         {
-            "Change": "Codes: format changed .",
+            "Change": "Codes: format changed.",
             "Description of Change": "Introduction of new subdivision code elements taken from the Dominican Statistics Code. Correction of alphabetic sorting of subdivision names. Addition of 1 alternative name form.",
             "Date Issued": "2000-06-21",
             "Source": "Newsletter I-1 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_i-1_en.pdf."
@@ -2211,7 +2211,7 @@
             "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:GR."
         },
         {
-            "Change": "Codes: format changed .",
+            "Change": "Codes: format changed.",
             "Description of Change": "Addition of the country code prefix as the first code element, reallocation of 3166-2 alpha-2 codes to avoid duplication, addition of names in administrative languages.",
             "Date Issued": "2010-02-03 (corrected 2010-02-19)",
             "Source": "Newsletter II-1 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-1_corrected_2010-02-19.pdf."
@@ -2739,7 +2739,7 @@
             "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:IT."
         },
         {
-            "Change": "Subdivisions deleted: 8 provinces . Subdivisions added: IT-SD Sud Sardegna. Category changes: IT-AG, IT-CL, IT-EN, IT-RG, IT-SR, IT-TP: province -> free communal consortia. IT-BA, IT-BO, IT-CA, IT-CT, IT-FI, IT-GE, IT-ME, IT-MI, IT-NA, IT-PA, IT-RC, IT-RM, IT-TO, IT-VE: province -> metropolitan city.",
+            "Change": "Subdivisions deleted: 8 provinces. Subdivisions added: IT-SD Sud Sardegna. Category changes: IT-AG, IT-CL, IT-EN, IT-RG, IT-SR, IT-TP: province -> free communal consortia. IT-BA, IT-BO, IT-CA, IT-CT, IT-FI, IT-GE, IT-ME, IT-MI, IT-NA, IT-PA, IT-RC, IT-RM, IT-TO, IT-VE: province -> metropolitan city.",
             "Description of Change": "Addition of province IT-SD; Addition of category names free communal consortia and metropolitan cities in eng, fra and ita; Change of category name from province to free communal consortia for IT-AG, IT-CL, IT-EN, IT-RG, IT-SR, IT-TP; Change of category name from province to metropolitan city for IT-BA, IT-BO, IT-CA, IT-CT, IT-FI, IT-GE, IT-ME, IT-MI, IT-NA, IT-PA, IT-RC, IT-RM, IT-TO, IT-VE; Deletion of provinces IT-CI, IT-GO, IT-OG, IT-OT, IT-PN, IT-TS, IT-UD, IT-VS; Update List Source.",
             "Date Issued": "2019-04-09",
             "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:IT."
@@ -3067,7 +3067,7 @@
             "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:KP."
         },
         {
-            "Change": "Subdivisions deleted: KP-KAE Kaesong-si. KP-NAM Nampo-si. Codes: format changed .",
+            "Change": "Subdivisions deleted: KP-KAE Kaesong-si. KP-NAM Nampo-si. Codes: format changed.",
             "Description of Change": "Administrative update, replacement of alphabetical characters with numeric characters in second code element.",
             "Date Issued": "2010-02-03 (corrected 2010-02-19)",
             "Source": "Newsletter II-1 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-1_corrected_2010-02-19.pdf."
@@ -3755,7 +3755,7 @@
             "Source": "Newsletter II-3 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf."
         },
         {
-            "Change": "Codes: format changed .",
+            "Change": "Codes: format changed.",
             "Description of Change": "Addition of numeric code elements.",
             "Date Issued": "2007-11-28",
             "Source": "Newsletter I-9 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/newsletter_i-9.pdf."
@@ -4005,7 +4005,7 @@
     ],
     "MY": [
         {
-            "Change": "Subdivisions added: MY-16 Wilayah Persekutuan Putrajaya. Codes: format changed .",
+            "Change": "Subdivisions added: MY-16 Wilayah Persekutuan Putrajaya. Codes: format changed.",
             "Description of Change": "Addition of one federal territory. Inclusion of new codes. List source updated. Code source updated.",
             "Date Issued": "2003-09-05",
             "Source": "Newsletter I-5 - https://web.archive.org/web/20081218103244/http://www.iso.org/iso/iso_3166-2_newsletter_i-5_en.pdf."
@@ -5564,7 +5564,7 @@
             "Source": "Newsletter I-9 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/newsletter_i-9.pdf."
         },
         {
-            "Change": "Subdivisions added: UG-213 Kaberamaido. UG-413 Kamwenge. UG-414 Kanungu. UG-112 Kayunga. UG-415 Kyenjojo. UG-214 Mayuge. UG-311 Nakapiripirit. UG-312 Pader. UG-215 Sironko. UG-113 Wakiso. UG-313 Yumbe. Codes: format changed .",
+            "Change": "Subdivisions added: UG-213 Kaberamaido. UG-413 Kamwenge. UG-414 Kanungu. UG-112 Kayunga. UG-415 Kyenjojo. UG-214 Mayuge. UG-311 Nakapiripirit. UG-312 Pader. UG-215 Sironko. UG-113 Wakiso. UG-313 Yumbe. Codes: format changed.",
             "Description of Change": "Addition of 11 new districts. List source updated. Code source updated.",
             "Date Issued": "2003-09-05",
             "Source": "Newsletter I-5 - https://web.archive.org/web/20081218103244/http://www.iso.org/iso/iso_3166-2_newsletter_i-5_en.pdf."

@@ -132,27 +132,30 @@ def convert_to_alpha2(alpha_code: str) -> str:
     if not (isinstance(alpha_code, str)):
         raise TypeError(f"Expected input alpha code to be a string, got {type(alpha_code)}.")
 
-    #uppercase alpha code, remove leading/trailing whitespace
-    alpha_code = alpha_code.upper().strip()
-    
+    #uppercase alpha code, initial_alpha_code var maintains the original alpha code pre-uppercasing
+    alpha_code = alpha_code.upper()
+    initial_alpha_code = alpha_code
+
+    print("alpha_code", alpha_code)
     #use iso3166 package to find corresponding alpha-2 code from its numeric code, return error if numeric code not found
     if (alpha_code.isdigit()):
         if not (alpha_code in list(iso3166.countries_by_numeric.keys())):
-            raise ValueError(f"Invalid alpha numeric country code input {alpha_code}.")
+            raise ValueError(f"Invalid ISO 3166-1 alpha numeric country code input: {initial_alpha_code}.")
         return iso3166.countries_by_numeric[alpha_code].alpha2
 
     #return input alpha code if its valid, return error if alpha-2 code not found
     if len(alpha_code) == 2:
         if not (alpha_code in list(iso3166.countries_by_alpha2.keys())):
-            raise ValueError(f"Invalid alpha-2 country code input {alpha_code}.")
+            raise ValueError(f"Invalid ISO 3166-1 alpha-2 country code input: {initial_alpha_code}.")
         return alpha_code
 
     #use iso3166 package to find corresponding alpha-2 code from its alpha-3 code, return error if code not found
     if len(alpha_code) == 3:
+        print(iso3166.countries_by_alpha3)
         if not (alpha_code in list(iso3166.countries_by_alpha3.keys())):
-            raise ValueError(f"Invalid alpha-3 country code: {alpha_code}.")
+            raise ValueError(f"Invalid ISO 3166-1 alpha-3 country code: {initial_alpha_code}.")
         return iso3166.countries_by_alpha3[alpha_code].alpha2
-    
+
     #return error by default if input code not returned already
     raise ValueError(f"Invalid alpha country code input {alpha_code}.")
 
@@ -376,7 +379,7 @@ def get_alpha_codes_list(alpha_codes: str="", alpha_codes_range: str="") -> tupl
         elif not isinstance(alpha_codes, str):
             raise TypeError(f"Input parameter alpha_codes should be a list or string, got {type(alpha_codes)}.")
         #get list of alpha-2 codes, convert to alpha-2 if applicable
-        alpha_codes_list = [convert_to_alpha2(code) for code in alpha_codes.split(',')]
+        alpha_codes_list = [convert_to_alpha2(code) for code in alpha_codes.replace(' ', '').split(',')]
         alpha_codes_range = ""
     elif alpha_codes_range:
     
@@ -384,7 +387,7 @@ def get_alpha_codes_list(alpha_codes: str="", alpha_codes_range: str="") -> tupl
         sorted_alpha_codes = sorted(iso3166.countries_by_alpha2.keys())
 
         #raise error if alpha codes range parameter is not a string
-        if not isinstance(alpha_codes, str):
+        if not isinstance(alpha_codes_range, str):
             raise TypeError(f"Input parameter alpha_codes_range should be a string, got {type(alpha_codes_range)}.")
     
         #if 2 alpha-2 codes separated by '-' not in parameter then the single alpha code will serve as the starting point
@@ -788,10 +791,12 @@ def remove_extra_spacing(row: str):
         
     Returns
     =======
-    :re.sub(' +', ' ', row): str
-        string with extra spacing removed. 
+    :row: str
+        row string with extra spacing removed. 
     """
-    return re.sub(' +', ' ', row)
+    row = re.sub(' +', ' ', row)
+    row = re.sub(r' \.', '.', row) 
+    return row
 
 def export_updates(iso3166_updates_data: dict, export_folder: str="iso3166-updates-output", export_filename: str="iso3166-updates", 
     export_json: bool=True, export_csv: bool=False, export_xml: bool=False, concat_updates: bool=True, alpha_codes: list=[], alpha_codes_range: str="", year: list=[], 
@@ -979,7 +984,7 @@ def export_updates(iso3166_updates_data: dict, export_folder: str="iso3166-updat
             with open(os.path.join(export_folder, os.path.splitext(export_filename_concat_updates)[0] + ".xml"), "w", encoding="utf-8") as f:
                 f.write(pretty_xml_as_string)
 
-            print(f"\nAll ISO 3166 updates exported to XML: {os.path.join(export_folder, export_filename_concat_updates)}.xml")
+            print(f"\nAll ISO 3166 updates exported to XML: {os.path.join(export_folder, export_filename_concat_updates)}.xml\n")
 
     #updates data being exported to different individual files
     else:

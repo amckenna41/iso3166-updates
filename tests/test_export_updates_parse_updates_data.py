@@ -5,7 +5,7 @@ except:
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 
-@unittest.skip("")
+@unittest.skip("Skipping parse_updates_data tests.")
 class ISO3166_Export_Updates_Parse_Updates_Data_Tests(unittest.TestCase):
     """
     Test suite for testing the parse_updates_data module in the ISO 3166
@@ -28,10 +28,10 @@ class ISO3166_Export_Updates_Parse_Updates_Data_Tests(unittest.TestCase):
     def test_parse_updates_table(self):
         """ Testing functionality that parses the updates table data into valid format. """
 #1.)
-        test_input_data = [
+        test_input_data = test_input_data = [
             ["Change", "Description of Change", "Date Issued", "Source"],
             ["New entry", "Added new subdivision", "2023-01-01", "Official"],
-            ["â†’ Change", "Name updated", "2024-02-15", "ISO OBP"],
+            ["→ Change", "Name updated", "2024-02-15", "ISO OBP"],
             ["Correction", "Boundary adjustment", "2022-08-10 (corrected 2023-05-20)", "Gov Report"],
             ["Deletion", "Removed obsolete entry", "2021-12-31", "Official Doc"],
             ["Merge", "Merged two regions", "2020-05-20", "ISO Official"],
@@ -41,7 +41,7 @@ class ISO3166_Export_Updates_Parse_Updates_Data_Tests(unittest.TestCase):
         test_expected_output = pd.DataFrame(
             {
                 "Change": ["Change", "Correction", "New entry", "Deletion", "Merge", "Split", "Renaming"],
-                "Description of Change": ["", "", "Added new subdivision", "Removed obsolete entry", "Merged two regions", "Split one region into two", "Country renamed"],
+                "Description of Change": ["", "Boundary adjustment", "Added new subdivision", "Removed obsolete entry", "Merged two regions", "Split one region into two", "Country renamed"],
                 "Date Issued": ["2024-02-15", "2022-08-10 2023-05-20", "2023-01-01", "2021-12-31", "2020-05-20", "2019-07-15", "2018-11-30"],
                 "Source": [
                     "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:US.",
@@ -51,7 +51,7 @@ class ISO3166_Export_Updates_Parse_Updates_Data_Tests(unittest.TestCase):
         )
         #test resultant and expected dataframes are equal
         result = parse_updates_table("US", test_input_data)
-        pd.testing.assert_frame_equal(result, test_expected_output)
+        pd.testing.assert_frame_equal(result.reset_index(drop=True), test_expected_output.reset_index(drop=True))
 #2.)
         with self.assertRaises(TypeError):
             parse_updates_table("US", {})

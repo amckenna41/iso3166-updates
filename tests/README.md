@@ -1,6 +1,7 @@
 # iso3166-updates Tests 🧪 <a name="TOP"></a>
 
-All of the modules and functionalities of iso3166-updates are thoroughly tested using the Python [unittest][unittest] framework. Currently there are 3 test cases with 23 unit tests functions made up of several unit tests.
+All of the modules and functionalities of iso3166-updates are thoroughly tested using the Python [unittest][unittest] framework. Currently there are 7 test cases with 56 unit tests functions made up of several unit tests.
+
 ## Module tests:
 
 * `test_iso3166_updates` - unit tests for iso3166-updates package.

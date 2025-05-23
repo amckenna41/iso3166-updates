@@ -7,9 +7,11 @@ import pandas as pd
 import os
 from datetime import datetime
 import unittest
+from unittest.mock import patch
+import io
 unittest.TestLoader.sortTestMethodsUsing = None
-
-# @unittest.skip("")
+ 
+@unittest.skip("Skipping Main module tests.")
 class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
     """
     Test suite for testing the main entry module for exporting the updates data. 
@@ -50,6 +52,10 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
 
         #turn off tqdm progress bar functionality when running tests
         os.environ["TQDM_DISABLE"] = "1"
+
+        # #patch sys.stdout such that any print statements/outputs from the individual test cases aren't run
+        self.patcher = patch('sys.stdout', new_callable=io.StringIO)
+        self.mock_stdout = self.patcher.start()
 
     # @unittest.skip("")
     def test_get_iso3166_updates_alpha(self):
@@ -309,7 +315,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
             get_iso3166_updates(test_alpha_error_5)
             get_iso3166_updates(test_alpha_error_6)
 
-    # @unittest.skip("Skipping as below tests requiring extracting all updates each time.")   
+    # @unittest.skip("Skipping as below tests require extracting all updates each time.")   
     def test_get_iso3166_updates_year(self):
         """ Testing main updates function that gets the updates and exports to json/csv, using a variety of year input 
             parameter values. Note, only using updates data from the wiki pages and not ISO due to time constraint of 

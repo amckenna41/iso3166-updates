@@ -106,8 +106,6 @@ def check_for_updates_main() -> tuple[dict, int]:
     #call get_updates function to scrape all the latest country updates from data sources
     latest_iso3166_updates = get_iso3166_updates()
 
-    print("latest_iso3166_updates here")
-    print(latest_iso3166_updates)
     #iterate over all alpha-2 codes, check for any updates in specified months range in updates json 
     for alpha2 in list(latest_iso3166_updates.keys()):
         latest_iso3166_updates_after_date_filter[alpha2] = []
@@ -155,11 +153,11 @@ def check_for_updates_main() -> tuple[dict, int]:
             if (create_github_issue_success_code != -1 and export_to_bucket_success_code != -1):
                 success_message["message"] = f"New ISO 3166 updates found and successfully exported to bucket {bucket_name} and GitHub Issues created."
             elif (create_github_issue_success_code != -1 and export_to_bucket_success_code == -1):
-                success_message["message"] = f"New ISO 3166 updates found and GitHub Issues created. There was an error exporting to the GCP storage bucket, double check the BUCKET_NAME ({bucket_name}) and BLOB_NAME ({blob_name}) environment variables are set and correct, and that the bucket exists."
+                success_message["message"] = f"New ISO 3166 updates found and GitHub Issues created. There was an error exporting to the GCP storage bucket, Bucket Name: ({bucket_name}), Blob Name: ({blob_name})."
             elif (create_github_issue_success_code == -1 and export_to_bucket_success_code != -1):
                 success_message["message"] = f"New ISO 3166 updates found and successfully exported to bucket {bucket_name}. There was an error creating the GitHub Issues, double check the required environment variables are set and correct."
             else:
-                success_message["message"] = f"New ISO 3166 updates found but there was an error exporting to the GCP storage bucket {bucket_name}, double check the required environment variables for both functionalities are set and correct."
+                success_message["message"] = f"New ISO 3166 updates found but there was an error exporting to the GCP storage bucket, Bucket Name: ({bucket_name}), Blob Name: ({blob_name})."
         #set success message if create issue functionality enabled
         elif (create_issue):
             if (create_github_issue_success_code != -1):
@@ -171,7 +169,7 @@ def check_for_updates_main() -> tuple[dict, int]:
             if (export_to_bucket_success_code != -1):
                 success_message["message"] = f"New ISO 3166 updates found and successfully exported to bucket {bucket_name}."
             else:
-                success_message["message"] = f"New ISO 3166 updates found, but there was an error exporting to the GCP storage bucket, double check the BUCKET_NAME ({bucket_name}) and BLOB_NAME ({blob_name}) environment variables are set and correct, and that the bucket exists."
+                success_message["message"] = f"New ISO 3166 updates found, but there was an error exporting to the GCP storage bucket, Bucket Name: ({bucket_name}), Blob Name: ({blob_name})."
     #if no updates found but export functionality still enabled, export to bucket and return success message 
     else:
         if (export_json or export_csv or export_xml):
@@ -179,7 +177,7 @@ def check_for_updates_main() -> tuple[dict, int]:
             if (export_to_bucket_success_code != -1):
                 success_message["message"] = f"ISO 3166 updates object successfully exported to bucket: {bucket_name}."
             else:
-                success_message["message"] = f"There was an error exporting to the GCP storage bucket, double check the BUCKET_NAME ({bucket_name}) and BLOB_NAME ({blob_name}) environment variables are set and correct, and that the bucket exists."
+                success_message["message"] = f"There was an error exporting to the GCP storage bucket, Bucket Name: ({bucket_name}), Blob Name: ({blob_name})."
         #set success message when no updates found and export functionality not enabled
         else:
             success_message["message"] = f"No new ISO 3166 updates found, object not exported to bucket."
@@ -423,12 +421,14 @@ def export_to_bucket(latest_iso3166_updates: dict, bucket_name: str, blob_name: 
     """
     #initialise storage client
     storage_client = storage.Client()
-    try:
-        #create a bucket object for the bucket, raise error if bucket not found
-        bucket = storage_client.get_bucket(bucket_name)
-    except exceptions.NotFound:
-        print(f"Error retrieving updates data json storage bucket: {bucket_name}.")
-        return -1
+
+    #double check if bucket exists according to env var
+    bucket = storage_client.lookup_bucket(bucket_name)
+
+    #if bucket doesn't exist, create it
+    if bucket is None:
+        bucket = storage_client.create_bucket(bucket_name)
+        print(f"Bucket '{bucket_name}' not present, now created successfully.")
 
     #use blob name specified by env var if applicable, else use default name
     if (blob_name is None or blob_name == ""):
@@ -500,10 +500,10 @@ def export_to_bucket(latest_iso3166_updates: dict, bucket_name: str, blob_name: 
             else:
                 csv_iso3166_df.sort_values('Country Code', inplace=True)
 
+            csv_blob_name = os.path.splitext(blob_name)[0] + ".csv"
+
             #create a blob object from the blob name
             blob = bucket.blob(csv_blob_name)
-
-            csv_blob_name = os.path.splitext(blob_name)[0] + ".csv"
 
             #temp path for exported csv
             tmp_updated_csv_path = os.path.join("/tmp", csv_blob_name)
@@ -512,7 +512,6 @@ def export_to_bucket(latest_iso3166_updates: dict, bucket_name: str, blob_name: 
 
             #upload new updated json using gcp sdk, replacing current updates json 
             blob.upload_from_filename(tmp_updated_csv_path)            
-
 
     #EXPORT_XML env var determines if the object is to be exported to a XML on the bucket, true by default
     if (os.environ.get("EXPORT_XML") and latest_iso3166_updates):
@@ -621,62 +620,5 @@ def parse_env_vars() -> tuple[int, bool, bool, bool, str, bool]:
 
 #run Cloud Run Flask app on port 8080
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))  # Cloud Run provides this
+    port = int(os.environ.get("PORT", 8080)) 
     app.run(host="0.0.0.0", port=port)
-
-# def push_to_repo(latest_iso3166_updates: dict, version: float, commit_message: str):
-#     """
-#     """    
-#     github_api_path = f"https://api.github.com/repos/{os.environ.get("GITHUB_OWNER")}/iso3166-updates/branches/master" 
-#     # https://api.github.com/repos/amckenna41/iso3166-updates/contents/iso3166-updates.json
-#     # https://stackoverflow.com/questions/11801983/how-to-create-a-commit-and-push-into-repo-with-github-api-v3/63461333#63461333
-
-#     gh = Github(os.environ.get("GITHUB_API_TOKEN"))
-
-#     # ** add validation for iso3166-updates.json 
-#       ** need to update pyproject.toml as well 
-#     #create GitHub repo object
-#     remote_repo = gh.get_repo("amckenna41/iso3166-updates")
-
-#     # Update files:
-#     #   data/example-04/latest_datetime_01.txt
-#     #   data/example-04/latest_datetime_02.txt
-#     # with the current date.
-
-#     file_to_update_01 = "data/example-04/latest_datetime_01.txt"
-#     file_to_update_02 = "data/example-04/latest_datetime_02.txt"
-#     blob_name = "iso3166-updates.json"
-
-#     #temp path for exported json
-#     tmp_updated_json_path = os.path.join("/tmp", blob_name)
-
-#     #export updated json to temp folder
-#     with open(tmp_updated_json_path, 'w', encoding='utf-8') as output_json:
-#         json.dump(latest_iso3166_updates, output_json, ensure_ascii=False, indent=4)
-
-#     # #temp path for exported json
-#     # tmp_updated_json_path = os.path.join("/tmp", blob_name)
-
-#     now = datetime.datetime.now()
-
-#     blob_name_content = str(now)
-
-#     blob1 = remote_repo.create_git_blob(blob_name_content, "utf-8")
-#     element1 = Github.InputGitTreeElement(
-#         path=file_to_update_01, mode='100644', type='blob', sha=blob1.sha)
-
-#     commit_message = f'Example 04: update datetime to {now}'
-
-#     branch_sha = remote_repo.get_branch("master").commit.sha
-   
-#     base_tree = remote_repo.get_git_tree(sha=branch_sha)
- 
-#     tree = remote_repo.create_git_tree([element1], base_tree)
-
-#     parent = remote_repo.get_git_commit(sha=branch_sha)
-
-#     commit = remote_repo.create_git_commit(commit_message, tree, [parent])
-
-#     branch_refs = remote_repo.get_git_ref(f'heads/"master')
-
-#     branch_refs.edit(sha=commit.sha)

@@ -49,7 +49,7 @@ class Updates():
     year(input_year):
         get all listed updates/changes in the updates json object for an input year, set of years,
         year range, greater than/less than year or not equal to a year.
-    date_range(input_date_range, sort_by_date=False):
+    date_range(input_date_range, sort_by_date=""):
         get all listed updates/changes in the updates json that were published within the input date
         range, inclusive. If only one date input then get all updates from this date, inclusive.
     search(search_term, likeness_score=1.0, exclude_match_score=0):
@@ -73,6 +73,8 @@ class Updates():
         convert the inputted date into the YYYY-MM-DD format. 
     __str__:
         string representation of class instance.
+    __repr__:
+        object representation of class instance.
     __len__:
         get total length of ISO 3166 Updates object - number of country updates objects.
     __contains__:
@@ -126,8 +128,8 @@ class Updates():
     #get all listed country updates/changes data that have Addition or Deletion keywords in them
     iso.search("addition, deletion")
 
-    #get all listed country updates/changes data that were published between 2004-10-03 and 2006-07-07, inclusive
-    iso.date_range("2004-10-03,2006-07-07")
+    #get all listed country updates/changes data that were published between 2004-10-03 and 2006-07-07, inclusive, sort by date ascending
+    iso.date_range("2004-10-03,2006-07-07", sort_by_date="dateAsc")
 
     #get all listed country updates/changes data that were published from 2020-03-10, inclusive
     iso.date_range("2020-03-10")
@@ -143,7 +145,7 @@ class Updates():
     """
     def __init__(self, country_code: str="", custom_updates_filepath: str="") -> None:
         
-        self.__version__ = "1.8.2"
+        self.__version__ = "1.8.3"
         self.iso3166_updates_json_filename = "iso3166-updates.json"
         self.country_code = country_code
 
@@ -262,8 +264,8 @@ class Updates():
         if not (isinstance(alpha_code, str)):
             raise TypeError(f'Input parameter {alpha_code} is not of correct datatype string, got {type(alpha_code)}.')       
     
-        #stripping input of whitespace, uppercasing, separating multiple alpha codes, if applicable and sort list, remove any leading/trailing commas
-        alpha_code = sorted([code for code in alpha_code.strip().upper().replace(' ', '').split(',') if code])
+        #stripping input of whitespace, separating multiple alpha codes, if applicable and sort list, remove any leading/trailing commas
+        alpha_code = sorted([code for code in alpha_code.strip().replace(' ', '').split(',') if code])
 
         #object to store country data, it is a dict if more than one country or list if only one country
         iso3166_updates_dict = {}
@@ -273,7 +275,7 @@ class Updates():
 
             #convert 3 letter alpha-3 or numeric code into its 2 letter alpha-2 counterpart, if alpha-2 code then validate it
             converted_alpha_code = self.convert_to_alpha2(alpha_code[code])
-               
+            
             #raise error if invalid alpha-2 code input or country data not imported on object instantiation 
             if not (converted_alpha_code in self.valid_alpha2_codes):
                 raise ValueError(f"Invalid ISO 3166-1 alpha-2 code input: {alpha_code[code]}.")
@@ -354,7 +356,7 @@ class Updates():
 
                 #validate year format
                 if not re.match(r"^1[0-9]{3}$|^2[0-9]{3}$", y):
-                    raise ValueError(f"Invalid year input, must be a year >= 1996, got {year_}.")
+                    raise ValueError(f"Invalid year input, must be a valid year >= 1996, got {year_}.")
 
         #a '-' separating 2 years implies a year range of sought country updates
         #a ',' separating 2 years implies a list of years
@@ -446,7 +448,7 @@ class Updates():
 
         return country_output_dict
 
-    def date_range(self, date: str|list, sort_by_date: bool=False) -> dict|list:
+    def date_range(self, date: str|list, sort_by_date: str="") -> dict|list:
         """
         Get all listed updates/changes in the updates json object that have publication dates within
         the inputted date range, inclusive. The function accepts a comma separated list of 2 dates
@@ -457,17 +459,18 @@ class Updates():
         Parameters
         ==========
         :date: str|list 
-            string of 2 comma separated dates or a list of date elements. 
-        :sort_by_date: bool
-            set to True to sort the output by date descending, otherwise they are sorted by 
-            the country code, alphabetically. 
+            string of 1 or 2 comma separated dates or a list of date elements.
+        :sort_by_date: str (default="")
+            whether to sort by publication date ascending or descending. Acceptable values are
+            "dateAsc" and "dateDesc", representing date ascending or descending, respectively. 
+            If data other than these are input then objects not sorted by date.
 
         Returns
         =======
         :date_filtered_data: dict|list
             object of all found updates/changes that were published within the input date range. 
             If the sort_by_date parameter is set a list of updates, sorted by date descending
-            will be returned.
+            or ascending will be returned.
 
         Raises
         ======
@@ -505,9 +508,6 @@ class Updates():
         #swap dates if start_date is later than end_date
         if start_date > end_date:
             start_date, end_date = end_date, start_date
-
-        print(start_date, end_date)
-
 
         #object to store date filtered updates data
         date_filtered_data = {}
@@ -549,8 +549,8 @@ class Updates():
             if filtered_changes:
                 date_filtered_data[country_code] = filtered_changes
 
-        #sort the updates output by date descending, latest first, skip if only one data element in output 
-        if (sort_by_date and len(date_filtered_data) > 1):
+        #sort the updates output by date descending or ascending, skip if only one data element in output 
+        if ((sort_by_date.lower() == "dateasc" or sort_by_date == "datedesc") and len(date_filtered_data) > 1):
             
             #list of flattened outputs
             flattened_updates = []
@@ -573,8 +573,11 @@ class Updates():
                     #append object to list
                     flattened_updates.append(update_with_code)
 
-            #sort list of outputs by Date Issued
-            flattened_updates.sort(key=lambda x: x["sortable_date"], reverse=True)
+            #sort list of outputs by Date Issued, descending or ascending depending on input parameter
+            if (sort_by_date == "datedesc"):
+                flattened_updates.sort(key=lambda x: x["sortable_date"], reverse=True)
+            else:
+                flattened_updates.sort(key=lambda x: x["sortable_date"], reverse=False)
 
             #remove parsed temp date attribute
             for update in flattened_updates:
@@ -973,25 +976,25 @@ class Updates():
         #print out any found updates 
         if (updates_found):
 
-            print("New ISO 3166 Updates data found, please update the iso3166-updates software to incorporate these latest changes, you can do this by running:")
-            print("pip install iso3166-updates --upgrade\n\n\n")
+            print("New ISO 3166 Updates data found, please update the iso3166-updates software to incorporate these latest changes, you can do this by running: pip install iso3166-updates --upgrade\n")
 
             #get total sum of new data updates for all countries in json
             total_updates = sum(len(v) for v in new_iso3166_updates.values())
             total_countries = len(new_iso3166_updates)
             
             print(f"{total_updates} update(s) found for {total_countries} country/countries, these are outlined below")
-            print("============================================================================\n\n")
+            print("===================================================================\n\n")
             
             #iterate over new data in json, append to updates object
             for code in list(new_iso3166_updates.keys()):
                 
                 #output current country name and code
-                print(f"{iso3166.countries_by_alpha2[code].name} ({code})")
+                print(f"{iso3166.countries_by_alpha2[code].name} ({code}):")
                 
                 #iterate over rows of new data and pretty print json
                 for row in range(0, len(new_iso3166_updates[code])):
                     pprint.pprint(new_iso3166_updates[code][row], compact=True)
+                    print("\n")
         else:
             print("No new updates found for iso3166-updates.")
         
@@ -1027,25 +1030,26 @@ class Updates():
         if not (isinstance(alpha_code, str)):
             raise TypeError(f"Expected input alpha code to be a string, got {type(alpha_code)}.")
 
-        #uppercase alpha code
+        #uppercase alpha code, initial_alpha_code var maintains the original alpha code pre-uppercasing
         alpha_code = alpha_code.upper()
+        initial_alpha_code = alpha_code
         
         #use iso3166 package to find corresponding alpha-2 code from its numeric code, return error if numeric code not found
         if (alpha_code.isdigit()):
             if not (alpha_code in list(iso3166.countries_by_numeric.keys())):
-                raise ValueError(f"Invalid ISO 3166-1 alpha numeric country code input: {alpha_code}.")
+                raise ValueError(f"Invalid ISO 3166-1 alpha numeric country code input: {initial_alpha_code}.")
             return iso3166.countries_by_numeric[alpha_code].alpha2
 
         #return input alpha code if its valid, return error if alpha-2 code not found
         if len(alpha_code) == 2:
             if not (alpha_code in list(iso3166.countries_by_alpha2.keys())):
-                raise ValueError(f"Invalid ISO 3166-1 alpha-2 country code input: {alpha_code}.")
+                raise ValueError(f"Invalid ISO 3166-1 alpha-2 country code input: {initial_alpha_code}.")
             return alpha_code
 
         #use iso3166 package to find corresponding alpha-2 code from its alpha-3 code, return error if code not found
         if len(alpha_code) == 3:
             if not (alpha_code in list(iso3166.countries_by_alpha3.keys())):
-                raise ValueError(f"Invalid ISO 3166-1 alpha-3 country code: {alpha_code}.")
+                raise ValueError(f"Invalid ISO 3166-1 alpha-3 country code: {initial_alpha_code}.")
             return iso3166.countries_by_alpha3[alpha_code].alpha2
 
         return None
@@ -1116,6 +1120,13 @@ class Updates():
     def __str__(self) -> str:
         """ Get string representation of class instance. """
         return f"Instance of ISO 3166 Updates class: Version {self.__version__}."
+    
+    def __repr__(self) -> str:
+        """ Object representation of class instance. """
+        return (f"<Updates(version={self.__version__!r}, "
+        f"countries_loaded={len(self.all)}, "
+        f"total_updates={len(self)}, "
+        f"source_file={os.path.basename(self.iso3166_updates_path)!r})>")
 
     def __sizeof__(self) -> float:
         """ Return size of instance of ISO 3166 Updates JSON in MB. """

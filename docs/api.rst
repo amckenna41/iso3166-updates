@@ -11,12 +11,12 @@ The other endpoints available in the API are:
 * https://iso3166-updates.vercel.app/api/all
 * https://iso3166-updates.vercel.app/api/alpha/<input_alpha>  
 * https://iso3166-updates.vercel.app/api/year/<input_year>
-* https://iso3166-updates.vercel.app/api/search/<input_search>
+* https://iso3166-updates.vercel.app/api/country_name/<country_name>
 * https://iso3166-updates.vercel.app/api/date_range/<input_date_range>
+* https://iso3166-updates.vercel.app/api/search/<input_search>
 * https://iso3166-updates.vercel.app/api/alpha/<input_alpha>/year/<input_year>
-* https://iso3166-updates.vercel.app/api/search/<input_search>/year/<input_year>
+* https://iso3166-updates.vercel.app/api/country_name/<input_country_name>/year/<input_year>
 * https://iso3166-updates.vercel.app/api/date_range/<input_date_range>/alpha/<input_alpha>
-* https://iso3166-updates.vercel.app/api/date_range/<input_date_range>/search/<input_search>
 
 Below are some example usage of the API and the above endpoints, utilising the **Python Requests** library.
  
@@ -38,8 +38,8 @@ Query String Parameters
 -----------------------
 There are 3 main query string parameters available throughout the API that can be appended to your GET request:
 
-* **likeness** - this is a parameter between 1 and 100 that increases or reduces the % of similarity/likeness that the inputted search terms have to match to the updates data in the Change and Desc of Change attributes. This can only be used in the `/api/search` endpoint. Having a higher value should return more exact and less matches and having a lower value will return less exact but more matches, e.g `/api/search/Paris?likeness=50`, `/api/search/canton?likeness=90` (**default=100**).
-* **sortBy** - this parameter allows you to sort the output results by publication date (Date Issued). By default, the updates data will be returned alphabetically, according to their ISO 3166 2 letter country code. The parameter accepts the values: `dateIssued` and `date`, by default the output is sorted by country code. The output will only be sorted by date if there is more than 1 output result. This can be appended to all of the endpoints, e.g `/api/all?sortBy=dateIssued` `/api/year/2010-2015?sortBy=date`, `/api/date_range/2019-01-01?sortBy` (**default=""**).
+* **likeness** - this is a parameter between 1 and 100 that increases or reduces the % of similarity/likeness that the inputted search terms have to match to the updates data in the Change and Desc of Change attributes. This can be used with the `/api/search`  and `/api/country_name` endpoints. Having a higher value should return more exact and less matches and having a lower value will return less exact but more matches, e.g `/api/search/Paris?likeness=50`, `/api/search/canton?likeness=90` (**default=100**).
+* **sortBy** - this parameter allows you to sort the output results by publication date (Date Issued), ascending or descending. By default, the updates data will be returned alphabetically, according to their ISO 3166 2 letter country code. The parameter accepts the values: `dateAsc` and `dateDesc`, which will sort the objects ascending or descending, respectively. A `countryCode` attribute is added to each object to identify the corresponding country. This can be appended to all of the endpoints, e.g `/api/all?sortBy=dateAsc` `/api/year/2010-2015?sortBy=dateDesc`, `/api/date_range/2019-01-01?sortBy` (**default=""**).
 * **excludeMatchScore** - this parameter allows you to exclude the *matchScore* attribute from the search results when using the `/api/search` endpoint. The match score is the % of a match each returned updates data object is to the search terms, with 100% being an exact match. By default the match score is returned for each object, but setting this parameter to True will exclude the attribute and sort the results by country code,  e.g `/api/search/addition?excludeMatchScore=1`, `/api/search/New York?excludeMatchScore=1` (**default=0**).
 
 
@@ -66,7 +66,7 @@ curl::
 Get all ISO 3166 updates for a country using its ISO 3166-1 alpha code (alpha-2, alpha-3, numeric)
 --------------------------------------------------------------------------------------------------
 Return all the latest and historic ISO 3166 updates data for 1 or more countries, using their ISO 3166-1 2 letter 
-alpha-2, 3 letter alpha-3 or numeric country codes and the ``/api/alpha`` endpoint. The endpoint also accepts a  
+alpha-2, 3 letter alpha-3 or numeric country codes via the ``/api/alpha`` endpoint. The endpoint also accepts a  
 comma separated list of multiple alpha country codes. 
 
 For example, France (FR,FRA,250), Germany (DE,DEU,276) and Hungary (HU,HUN,348):
@@ -102,43 +102,43 @@ curl::
 This endpoint can also be used in conjunction with the ``/api/year`` and ``/api/date_range`` endpoints.
 
 
-.. Get all ISO 3166 updates for a country using its country name
-.. -------------------------------------------------------------
-.. Return all the latest and historic ISO 3166 updates data for 1 or more countries, using their ISO 3166-1 country name,
-.. as it is most commonly known in English, and the ``/api/name`` endpoint. The endpoint also accepts a comma separated 
-.. list of multiple country names.
+Get all ISO 3166 updates for a country using its country name
+-------------------------------------------------------------
+Return all the latest and historic ISO 3166 updates data for 1 or more countries, using their ISO 3166-1 country name,
+as it is most commonly known in English, via the ``/api/country_name`` endpoint. The endpoint also accepts a comma separated 
+list of multiple country names.
 
-.. For example, Tajikistan (TJ,TJK,762), Seychelles (SC,SYC,690) and Uganda (UG,UGA,800):
+For example, Tajikistan (TJ,TJK,762), Seychelles (SC,SYC,690) and Uganda (UG,UGA,800):
 
-.. .. code-block:: python
+.. code-block:: python
 
-..     import requests
+    import requests
 
-..     base_url = "https://iso3166-updates.vercel.app/api/"
+    base_url = "https://iso3166-updates.vercel.app/api/"
 
-..     #Tajikistan 
-..     input_name = "Tajikistan" 
-..     tajikistan_updates_data = requests.get(base_url + f'name/{input_name}').json()
-..     tajikistan_updates_data["TJ"] 
+    #Tajikistan 
+    input_name = "Tajikistan" 
+    tajikistan_updates_data = requests.get(base_url + f'country_name/{input_country_name}').json()
+    tajikistan_updates_data["TJ"] 
     
-..     #Seychelles
-..     input_name = "Seychelles" 
-..     seychelles_updates_data = requests.get(base_url + f'name/{input_name}').json()
-..     seychelles_updates_data["SC"] 
+    #Seychelles
+    input_name = "Seychelles" 
+    seychelles_updates_data = requests.get(base_url + f'country_name/{input_country_name}').json()
+    seychelles_updates_data["SC"] 
 
-..     #Uganda
-..     request_url = base_url + f"name/{input_name}"
-..     uganda_updates_data = requests.get(base_url + f'name/{input_name}').json()
-..     uganda_updates_data["UG"] 
+    #Uganda
+    input_name = "Uganda" 
+    seychelles_updates_data = requests.get(base_url + f'country_name/{input_country_name}').json()
+    uganda_updates_data["UG"] 
 
-.. curl
+curl::
 
-..     $ curl -i https://iso3166-updates.vercel.app/api/name/Tajikistan
-..     $ curl -i https://iso3166-updates.vercel.app/api/name/Seychelles
-..     $ curl -i https://iso3166-updates.vercel.app/api/name/Uganda
-..     $ curl -i https://iso3166-updates.vercel.app/api/name/Tajikistan,Seychelles,Uganda
+    $ curl -i https://iso3166-updates.vercel.app/api/country_name/Tajikistan
+    $ curl -i https://iso3166-updates.vercel.app/api/country_name/Seychelles
+    $ curl -i https://iso3166-updates.vercel.app/api/country_name/Uganda
+    $ curl -i https://iso3166-updates.vercel.app/api/country_name/Tajikistan,Seychelles,Uganda
 
-.. This endpoint can also be used in conjunction with the ``/api/year`` endpoint.
+This endpoint can also be used in conjunction with the ``/api/year`` endpoint.
 
 
 Get all ISO 3166 updates from a year or list of years
@@ -185,18 +185,18 @@ For example, 2009-2015 and 2001-2008:
 
     base_url = "https://iso3166-updates.vercel.app/api/"
 
-    #2009-2015
+    #2009-2015, sort by date descending
     input_year = "2009-2015" 
-    _2009_2015_updates = requests.get(f'{base_url}year/{input_year}', params={"sortBy": "dateIssued"}).json()
+    _2009_2015_updates = requests.get(f'{base_url}year/{input_year}', params={"sortBy": "dateDesc"}).json()
 
-    #2001-2008
+    #2001-2008, sort by date ascending
     input_year = "2001-2008" 
-    _2001_2008_updates = requests.get(f'{base_url}year/{input_year}', params={"sortBy": "dateIssued"}).json()
+    _2001_2008_updates = requests.get(f'{base_url}year/{input_year}', params={"sortBy": "dateAsc"}).json()
 
 curl::
 
-    $ curl -i https://iso3166-updates.vercel.app/api/year/2009-2015?sortBy=dateIssued
-    $ curl -i https://iso3166-updates.vercel.app/api/year/2001-2008?sortBy=dateIssued
+    $ curl -i https://iso3166-updates.vercel.app/api/year/2009-2015?sortBy=dateDesc
+    $ curl -i https://iso3166-updates.vercel.app/api/year/2001-2008?sortBy=dateAsc
 
 Get all ISO 3166 updates greater than or less than a year
 ---------------------------------------------------------
@@ -213,11 +213,11 @@ For example, <2010 and >2012:
 
     #<2010
     input_year = "<2010" 
-    lt_2010 = requests.get(f'{base_url}year/{input_year}', params={"sortBy": "dateIssued"}).json()
+    lt_2010 = requests.get(f'{base_url}year/{input_year}').json()
 
     #>2012
     input_year = ">2012" 
-    gt_2012 = requests.get(f'{base_url}year/{input_year}', params={"sortBy": "dateIssued"}).json()
+    gt_2012 = requests.get(f'{base_url}year/{input_year}').json()
 
 curl::
 
@@ -258,7 +258,7 @@ Return all ISO 3166 updates for an input country that were published in a year, 
 greater than or less than a specified year or not equal to a year/list of years, using the endpoint 
 ``/api/alpha/{input_alpha}/year/{input_year}`` or ``/api/year/{input_year}/alpha/{input_alpha}``.
 
-For example, Andorra for 2007, Argentina for 2010, 2015, 2017, Bulgaria 2003-2008, Ecuador for <2019 and Japan <>2018:
+For example, Andorra - 2007, Argentina - 2010, 2015, 2017, Bulgaria - 2003-2008, Ecuador - <2019 and Japan - <>2018:
 
 .. code-block:: python
 
@@ -342,11 +342,13 @@ curl::
 
 Search for all ISO 3166 updates that have specific keywords
 -----------------------------------------------------------
-Return all available country's ISO 3166 updates data that have the inputted search terms in them, using the 
-``/api/search`` endpoint. The query string parameter ``likeness`` can be used to return a more exact match or 
-to increase the search space to return more approximate matches. Additionally, the query string parameter 
-``excludeMatchScore`` can be set to True to exclude the match score from the search results, which shows the 
-% match that the returned result is. If this is set to True the output will be sorted by country code.
+Return all the ISO 3166 updates data who’s changes/description of change attributes feature the inputted search 
+terms, using the ``/api/search`` endpoint. The query string parameter ``likeness`` sets a % of likeness that the 
+input search term can be to the matching updates, by default a likeness of 100 (an exact match) is used. If a 
+date is explicitly input to the search function, the Date Issued column will additionally be added to the search 
+space. The outputs from the search are ordered by match_score, highest match first. This score can be excluded 
+from the output by setting the ``excludeMatchScore`` to 1, meaning the outputs will be ordered alphabetically 
+by country code.
 
 For example, searching for all updates that have "Parishes" or "Canton" in them:
 

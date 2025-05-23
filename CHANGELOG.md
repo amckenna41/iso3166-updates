@@ -1,6 +1,6 @@
 # Change Log
 
-## v1.8.0/v1.8.1/v1.8.2 - April 2025
+## v1.8.0-v1.8.3 - April/May 2025
 
 
 ### Added
@@ -29,6 +29,11 @@
 - Added sort_by_date parameter to date_range function that allows you to sort the output of the function by date, latest first
 - Added exclude_match_score parameter to search function which excludes the % match the updates are to the search terms. If not excluded a list of results returned, otherwise a dict is returned
 - Added export to XML functionality, unit tests added
+- Date range functionality added to export pipeline, allowing user to export updates from a specified date range
+- __repr__ function added to iso3166-updates class
+- Added patching to several unit test cases, suppressing any print statements that are generated from the module being tested. Patch code only required in one test module as its impact is global
+- In software package in date_range function, an additional parameter allows you to sort by date descending or ascending
+- Latest version of accompanying API pushed & unit tests added to /tests folder
 
 ### Changed
 - Class name changed from ISO3166_Updates to Updates
@@ -55,6 +60,8 @@
 - Likeness score for search changed from float to an int between 1 and 100
 - check-for-updates microservice updated with latest version of code 
 - Updated alpha code error messages in software
+- In check-for-updates script, if bucket doesn't exist, it is created
+- Update api docs to include /country_name
 
 ### Fixed
 - Errors when running the get_updates script from the cmd line/terminal
@@ -82,6 +89,8 @@
 - In the date_range function, when the sort_by parameter is set but there is only one output object, the correct object format is returned
 - For multiple endpoints, if there was a trailing or leading comma in the input parameter, an error would be returned, this comma is now just removed 
 - Several fixes to Dockerfile & scripts in check-for-updates app
+- Small fix for issue with double spacing before some data in Change attribute " ." - utils function updated
+- Layout fix for check-for-updates function 
 
 ## v1.7.1 - May 2024
 

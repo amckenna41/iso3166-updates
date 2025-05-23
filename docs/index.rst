@@ -37,11 +37,11 @@ The **iso3166-updates** software is currently at version |version_link|.
 
 .. |version_link| raw:: html
 
-   <a href="https://pypi.org/project/iso3166-updates/" target="_blank">v1.8.2</a>
+   <a href="https://pypi.org/project/iso3166-updates/" target="_blank">v1.8.3</a>
 
 Last Updated
 ============
-The list of ISO 3166 updates was last updated on **April 2025**. A log of the latest ISO 3166 updates can be seen in the |updates_md_location_link| file.
+The list of ISO 3166 updates was last updated on **May 2025**. A log of the latest ISO 3166 updates can be seen in the |updates_md_location_link| file.
 
 .. |updates_md_location_link| raw:: html
 

@@ -7,6 +7,7 @@ from unittest.mock import MagicMock, patch
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 
+# @unittest.skip("Skipping Selenium Driver tests.")
 class ISO3166_Export_Updates_Driver_Tests(unittest.TestCase):
     """
     Test suite for testing the driver module script that initialises the Selenium 

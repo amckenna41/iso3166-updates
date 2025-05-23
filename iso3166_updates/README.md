@@ -91,9 +91,9 @@ iso.search("addition, deletion", likeness_score=0.8)
 iso.date_range("2012-03-12,2015-06-25")
 ```
 
-**Get any listed ISO 3166 changes/updates published from the date range 2021-10-02, inclusive, sort by date rather than country code:**
+**Get any listed ISO 3166 changes/updates published from the date range 2021-10-02, inclusive, sort by date descending rather than country code:**
 ```python
-iso.date_range("2021-10-02", sort_by_date=True)
+iso.date_range("2021-10-02", sort_by_date="dateDesc")
 ```
 
 **Add custom ISO 3166 change/update to main iso3166-updates.json object:**

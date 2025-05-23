@@ -12,6 +12,7 @@ import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 warnings.simplefilter("ignore", ResourceWarning)
 
+# @unittest.skip("Skipping get_updates_data tests.")
 class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
     """
     Test suite for testing the get_updates_data module in the ISO 3166
@@ -154,6 +155,7 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
             get_updates_df_wiki(test_alpha_error_6)
 
     # @unittest.skip("Skipping to save having to go through process of installing Selenium and Chromedriver - tested locally.")
+    # @patch('iso3166_updates_export.get_updates_data.sys.stdout', new_callable=io.StringIO)
     def test_get_iso3166_updates_selenium_df(self):
         """ Test function that pulls the updates data from the country's ISO page, using Selenium and Chromedriver. """
         test_alpha_bs = "BS" #Barbados
