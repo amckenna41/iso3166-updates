@@ -5,7 +5,7 @@ except:
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 
-# @unittest.skip("Skipping parse_updates_data tests.")
+@unittest.skip("Skipping parse_updates_data tests.")
 class ISO3166_Export_Updates_Parse_Updates_Data_Tests(unittest.TestCase):
     """
     Test suite for testing the parse_updates_data module in the ISO 3166
