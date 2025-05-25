@@ -35,12 +35,13 @@ Table of Contents
 - [Documentation](#documentation)
 - [API](#api)
 - [Usage](#usage)
-<!-- - [Usage (iso3166_updates_export scripts)](#usage-iso3166_updates_export-scripts) -->
 - [Staying up to date](#staying-up-to-date)
 - [Directories](#Directories)
 - [Issues](#Issues)
 - [Contact](#contact)
 - [References](#references)
+- [Support](#support)
+<!-- - [Usage (iso3166_updates_export scripts)](#usage-iso3166_updates_export-scripts) -->
 
 Introduction
 ------------
