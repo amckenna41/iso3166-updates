@@ -1,7 +1,8 @@
-try:
-    from iso3166_updates_export.get_updates_data import *
-except:
-    from ..iso3166_updates_export.get_updates_data import *
+# try:
+from iso3166_updates_export.get_updates_data import *
+from iso3166_updates_export.driver import *
+# except:
+#     from ..iso3166_updates_export.get_updates_data import *
 import iso3166
 import requests
 import pandas as pd
@@ -46,6 +47,9 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
         #turn off tqdm progress bar functionality when running tests
         os.environ["TQDM_DISABLE"] = "1"
 
+        #create Selenium Chromedriver instance for get_updates_df_selenium function
+        self.driver = create_driver()
+
     @unittest.skip("Skipping to not overload Wiki or ISO servers on test suite run.")
     def test_data_sources_url(self):
         """ Test each ISO 3166-2 wiki URL and ISO endpoint to check valid status code 200 is returned. """
@@ -60,7 +64,7 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
             request = requests.get(self.iso_base_url + code, headers={"headers": self.user_agent_header}, timeout=15)
             self.assertEqual(request.status_code, 200, f"Expected status code 200, got {request.status_code}.")
 
-    # @unittest.skip("")
+    @unittest.skip("")
     def test_get_iso3166_updates_wiki_df(self): 
         """ Test function that pulls the updates data from the country's wiki page. """
         test_alpha_az = "AZ" #Azerbaijan 
@@ -154,7 +158,7 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
             get_updates_df_wiki(test_alpha_error_5)
             get_updates_df_wiki(test_alpha_error_6)
 
-    # @unittest.skip("Skipping to save having to go through process of installing Selenium and Chromedriver - tested locally.")
+    @unittest.skip("Skipping to save having to go through process of installing Selenium and Chromedriver - tested locally.")
     # @patch('iso3166_updates_export.get_updates_data.sys.stdout', new_callable=io.StringIO)
     def test_get_iso3166_updates_selenium_df(self):
         """ Test function that pulls the updates data from the country's ISO page, using Selenium and Chromedriver. """

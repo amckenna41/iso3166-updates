@@ -14,6 +14,11 @@ All of the modules and functionalities of iso3166-updates are thoroughly tested 
 
 ## Running Tests
 
+Prior to running any of the tests, ensure you have the required packages installed, all the packages can be downloaded via the requirements.txt
+```bash
+pip install -r tests/requirements.txt
+```
+
 To run all unittests, make sure you are in the main `iso3166-updates` directory and from a terminal/cmd-line run:
 ```bash
 python -m unittest discover tests -v

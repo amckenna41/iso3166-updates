@@ -69,8 +69,8 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("Skipping metadata unit tests.")    
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        # self.assertEqual(metadata('iso3166-updates')['version'], "1.8.3", 
-        #     f"iso3166-updates version is not correct, expected 1.8.3, got {metadata('iso3166-updates')['version']}.")
+        # self.assertEqual(metadata('iso3166-updates')['version'], "1.8.4", 
+        #     f"iso3166-updates version is not correct, expected 1.8.4, got {metadata('iso3166-updates')['version']}.")
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             f"iso3166-updates software name is not correct, expected iso3166-updates, got {metadata('iso3166-updates')['name']}.")
         # self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna", 
@@ -126,17 +126,17 @@ class ISO3166_Updates_Tests(unittest.TestCase):
 
         self.assertIsInstance(test_all_updates, dict, 
             f"Expected output object to be of type dict, got {type(test_all_updates)}.")
-        self.assertEqual(len(test_all_updates), 249, 
-            f"Expected there to be 249 country keys in output object, got {len(test_all_updates)}.")
+        self.assertEqual(len(test_all_updates), 250, 
+            f"Expected there to be 250 country keys in output object, got {len(test_all_updates)}.")
         for iso_code in list(test_all_updates.keys()):
             self.assertIn(iso_code, list(iso3166.countries_by_alpha2.keys()),
                     f"Alpha-2 code {iso_code} not found in list of available codes.")
 #2.)
-        iso3166_updates_empty = ["MZ", "PY", "SK", "VU"]  #testing only these country updates objects have empty arrays
+        iso3166_updates_empty = ["MZ", "PY", "SK", "VU", "XK"]  #testing only these country updates objects have empty arrays
         for iso_code in test_all_updates:
              if (test_all_updates[iso_code] == []):
                   self.assertTrue(iso_code in iso3166_updates_empty, 
-                        f"Expected country code's updates object to be empty:\n{test_all_updates[iso_code]}.")
+                        f"Expected country code's updates object {iso_code} to be empty:\n{test_all_updates[iso_code]}.")
     
     # @unittest.skip("")
     def test_updates_duplicates(self):
@@ -516,6 +516,10 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             self.all_updates.search(test_search_error1) #["Belfast,Dublin,Donegal"]
             self.all_updates.search(test_search_error2) #12345
             self.all_updates.search(test_search_error3) #True
+#11.)
+        with self.assertRaises(ValueError):
+            self.all_updates.search(test_search_australia, likeness_score=150) #likeness_score=150
+            self.all_updates.search(test_search_australia, likeness_score=0) #likeness_score=0
 
     # @unittest.skip("")
     def test_updates_date_range(self):
@@ -726,7 +730,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("")
     def test_updates_repr(self):
         """ Testing __repr__ function returns correct object representation for class object. """
-        self.assertEqual(repr(self.all_updates), "<Updates(version='1.8.3', countries_loaded=249, total_updates=910, source_file='test-iso3166-updates.json')>",
+        self.assertEqual(repr(self.all_updates), "<Updates(version='1.8.4', countries_loaded=250, total_updates=910, source_file='test-iso3166-updates.json')>",
                 f"Expected and observed object representation for class instance do not match:\n{repr(self.all_updates)}.")
 
     # @unittest.skip("")

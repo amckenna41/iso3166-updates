@@ -1,12 +1,20 @@
 import argparse
+import time
 from typing import Dict, List, Union
+from fp.fp import FreeProxy
 from tqdm import tqdm
+import flag
+import sys, os
+
+#adding previous dir to sys path so script can be called from main dir or iso3166_updates_export dir
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from iso3166_updates_export.utils import *
 from iso3166_updates_export.get_updates_data import *
 
 def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166-updates", export_folder: str="iso3166-updates-output",
         alpha_codes_range: str="", concat_updates: bool=True, export_json: bool=True, export_csv: bool=True, export_xml: bool=False, verbose: bool=True, 
-        use_selenium: bool=True, use_wiki: bool=True, include_remarks_data: bool=True, save_each_iteration=False) -> Dict[str, Union[List[Dict], pd.DataFrame]]:
+        use_selenium: bool=True, use_wiki: bool=True, include_remarks_data: bool=True, save_each_iteration=False, use_proxy: bool=True) -> Dict[str, Union[List[Dict], pd.DataFrame]]:
     """
     Get all listed changes/updates to a country's ISO 3166-2 subdivision codes/names. The two data
     sources for the updates data are via the "Changes" section on its wiki page as well as any listed
@@ -86,12 +94,16 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
         data will be parsed and added in brackets after their mention. By default the remarks
         are added to ensure all the info is captured from the updates data.
     :save_each_iteration: bool (default=False)
-        if this parameter is set then during each country code iteration, the exports data will be 
+        if this parameter is set then during each country code iteration, the exported data will be 
         saved to the export dir, rather than at the end all in one go. This was implemented as 
         sometimes the Selenium session would timeout, loosing all the progress of the previous 
-        iterations. This is only for the JSON exports. The exported JSON on each iteration will 
-        contain all the exported data up until and including the current iteration and not just 
-        the current iteration data. 
+        iterations. This is only for the JSON export. The exported JSON on each iteration will 
+        contain all the exported data up to and including the current iteration and not just 
+        the current iteration's data. 
+    :use_proxy: bool (default=False)
+        if set to True then use a proxy IP when creating the Chromedriver via the create_driver
+        module/function. This was implemented to help the Chromedriver stop getting blocked via 
+        429 errors.
 
     Returns
     =======
@@ -129,6 +141,19 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
 
     #object to store all country updates/changes
     all_iso3166_updates = {}
+    
+    #by default, set proxy to None
+    proxy = None
+
+    use_proxy = True
+    #set random proxy IP if using it
+    if (use_proxy):
+        #create instance of Free Proxy class & get random proxy
+        proxy = FreeProxy().get()
+
+    #create webdriver instance if using Selenium, pass in proxy IP, if applicable
+    if (use_selenium):
+        driver = create_driver(proxy)
 
     #start elapsed time counter
     start = time.time()
@@ -138,7 +163,8 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
 
     #iterate over all input ISO 3166-1 country codes
     for alpha2 in progress_bar:
-        progress_bar.set_description(f"{iso3166.countries_by_alpha2[alpha2].name.title()} ({alpha2})")        
+        flag_icon = flag.flag(alpha2) if alpha2 != "XK" else "" #get flag icon from emoji-country-flag library
+        progress_bar.set_description(f"{iso3166.countries_by_alpha2[alpha2].name.title()} ({alpha2}) {flag_icon}")        
 
         #initialise object of updates for current alpha-2 code
         all_iso3166_updates[alpha2] = []
@@ -150,7 +176,7 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
             iso3166_df_wiki = get_updates_df_wiki(alpha2)
 
             #use Selenium Chromedriver to parse country's updates data from official ISO website
-            iso_website_df, remarks_data = get_updates_df_selenium(alpha2, include_remarks_data)
+            iso_website_df, remarks_data = get_updates_df_selenium(alpha2, driver, include_remarks_data)
 
             #concatenate two updates dataframes
             iso3166_df = pd.concat([iso3166_df_wiki, iso_website_df], ignore_index=True, sort=False)
@@ -165,7 +191,7 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
         elif (use_selenium):
 
             #use Selenium Chromedriver to parse country's updates data from official ISO website
-            iso3166_df, remarks_data = get_updates_df_selenium(alpha2, include_remarks_data)
+            iso3166_df, remarks_data = get_updates_df_selenium(alpha2, driver, include_remarks_data)
         
         #raise error if both bools are set to False, no data being exported
         else:
@@ -277,9 +303,12 @@ if __name__ == "__main__":
         help="Append the remarks data from the country's ISO page to each of the updates data objects.")
     parser.add_argument('-save_each_iteration', '--save_each_iteration', type=int, required=False, action=argparse.BooleanOptionalAction, default=0, 
         help="Export the updates data per each individual country iteration, useful for if Selenium might timeout and export progress is lost.")
-    
+    parser.add_argument('-use_proxy', '--use_proxy', type=int, required=False, action=argparse.BooleanOptionalAction, default=0, 
+        help="Use a proxy IP when exporting data from the 2 data sources to avoid requests getting rejected.")
+
     #parse input args
     args = parser.parse_args()
 
     #output ISO 3166 updates/changes for selected alpha code(s) and year(s)
-    all_iso3166_updates = get_iso3166_updates(**vars(args))
+    # all_iso3166_updates = get_iso3166_updates(**vars(args))
+    compare_updates_files("/Users/adammckenna/github-repos/iso3166-updates/iso3166_updates/iso3166-updates.json", "/Users/adammckenna/github-repos/iso3166-updates/iso3166-updates_2025-07-24_master_original.json", export_differences=1)

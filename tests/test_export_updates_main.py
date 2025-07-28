@@ -53,7 +53,7 @@ class ISO3166_Export_Updates_Main_Tests(unittest.TestCase):
         #turn off tqdm progress bar functionality when running tests
         os.environ["TQDM_DISABLE"] = "1"
 
-        # #patch sys.stdout such that any print statements/outputs from the individual test cases aren't run
+        #patch sys.stdout such that any print statements/outputs from the individual test cases aren't run
         self.patcher = patch('sys.stdout', new_callable=io.StringIO)
         self.mock_stdout = self.patcher.start()
 

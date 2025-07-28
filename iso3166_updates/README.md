@@ -1,3 +1,5 @@
+<a name="TOP"></a>
+
 # iso3166-updates
 
 [![iso3166_updates](https://img.shields.io/pypi/v/iso3166-updates)](https://pypi.org/project/iso3166-updates/)
@@ -129,6 +131,8 @@ The output to the above functions for the updates/changes to an ISO 3166 country
 * **Description of Change**: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
 * **Date Issued**: date that the change was communicated.
 * **Source**: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform (OBP) page.
+
+[Back to top](#TOP)
 
 [python]: https://www.python.org/downloads/release/python-360/
 [iso3166]: https://github.com/deactivated/python-iso3166

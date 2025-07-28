@@ -13,6 +13,8 @@ tqdm
 PyGithub
 python-dateutil
 fake_useragent
+emoji-country-flag>=1.3.0
+free-proxy
 # chromedriver-binary==77.0.3865.40.0
 # requests==2.9.1
 # urllib3>=1.26.15,<2

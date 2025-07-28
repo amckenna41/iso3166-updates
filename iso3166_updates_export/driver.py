@@ -4,16 +4,22 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.common.exceptions import WebDriverException
 
-def create_driver() -> webdriver.Chrome:
+def create_driver(proxy: bool=False) -> webdriver.Chrome:
     """
     Create instance of Selenium Chromedriver for each country's individual page on the 
     official ISO website. The site requires a session to be created and Javascript to
     be run, therefore the page's data cannot be directly webscraped. For some countries 
     their ISO page contains extra data not on the country's wiki page. 
 
+    Additional functionality has been added that allows you to use proxy IPs when 
+    creating the Selenium Chromedriver instance, this is useful to avoid IP getting
+    blocked. 
+
     Parameters
     ==========
-    None
+    :proxy: str (default=None)
+        proxy IP to use when parsing data from ISO page via Chromedriver. This was implemented 
+        to help the request stop getting blocked via 429 errors. By default no proxy is used.
 
     Returns
     =======
@@ -43,6 +49,10 @@ def create_driver() -> webdriver.Chrome:
         brew install chromedriver
     - Find where chromedriver is installed:
         which chromedriver
+    - If a TimeoutException error occurs during extraction process, double check XPATH and element waiting for actually
+        exists on page.
+    - If getting 429 error and getting rate-limited by the data sources, try using a custom user-agent rather than a
+        random user agent from fake_user_agent.
     
     Raises
     ======
@@ -89,6 +99,12 @@ def create_driver() -> webdriver.Chrome:
     chrome_options.add_argument('--disable-blink-features=AutomationControlled')
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"]) 
     chrome_options.add_experimental_option("useAutomationExtension", False) 
+    
+    #set random proxy IP if proxy parameter is not None
+    if (proxy):
+        # print("Using Proxy IP: ", proxy)
+        #add proxy option to Chromedriver
+        chrome_options.add_argument(f'--proxy-server={proxy}')
 
     #list of possible Chrome binary paths
     possible_binary_paths = [

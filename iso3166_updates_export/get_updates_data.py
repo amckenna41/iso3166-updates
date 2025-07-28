@@ -3,15 +3,18 @@ import pandas as pd
 import requests
 import random
 from fake_useragent import UserAgent
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from bs4 import BeautifulSoup
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 from iso3166_updates_export.driver import *
 from iso3166_updates_export.parse_updates_data import *
 from iso3166_updates_export.utils import *
 
-def get_updates_df_wiki(alpha_code: str) -> pd.DataFrame:
+def get_updates_df_wiki(alpha_code: str, proxy: str=None) -> pd.DataFrame:
     """
     Pull all related ISO 3166 updates/changes for a given input country from the country's
     respective wiki page. Selenium is not a requirement for web scraping wiki pages. Convert
@@ -22,6 +25,9 @@ def get_updates_df_wiki(alpha_code: str) -> pd.DataFrame:
     :alpha_code: str
         single string of an alpha ISO 3166-1 country code to get the latest ISO 3166 updates 
         for. If the 3 letter alpha-3 or numeric code are input then convert to alpha-2.
+    :proxy: str (default=None)
+        proxy IP to use when parsing data from wiki page via requests.get. This was implemented to 
+        help the request stop getting blocked via 429 errors. By default no proxy is used.
 
     Returns
     =======
@@ -39,18 +45,45 @@ def get_updates_df_wiki(alpha_code: str) -> pd.DataFrame:
     #validate alpha code, convert to alpha-2 if required
     alpha2 = convert_to_alpha2(alpha_code)
 
+    def get_session_with_retries():
+        """ Auxiliary function for creating retry/backoff factor for HTTP requests to Wiki
+            in the case of 429 errors. """
+        #crete instance of retry strategy
+        retry_strategy = Retry(
+            total=5,
+            backoff_factor=2,  # Waits 2s, 4s, 8s, etc.
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["HEAD", "GET", "OPTIONS"]
+        )
+        #create HTTP adaptor object and requests session object, mount adaptor and retry strategy 
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        session = requests.Session()
+        session.mount("https://", adapter)
+        session.mount("http://", adapter)
+        return session
+
+    #create requests session with backoff factor & retries
+    session = get_session_with_retries()
+
     #set random user-agent string for requests library to avoid detection, using fake-useragent package
     user_agent = UserAgent()
     user_agent_header = user_agent.random
+    
+    #create proxy addresses for http & https, set to None if not using proxies
+    proxy_ip = None
+    if (proxy):
+        proxy_ip = {"http": proxy, "https": proxy}
 
     #base URL for country wiki pages
     wiki_base_url = "https://en.wikipedia.org/wiki/ISO_3166-2:"
 
-    #get html content from wiki of ISO 3166 page, raise exception if status code != 200
+    #get html content from wiki of ISO 3166 page, raise exception if status code != 200, add proxies if using one
     try:
-        response = requests.get(wiki_base_url + alpha2, headers={"User-Agent": user_agent_header}, timeout=15)
+        time.sleep(2) 
+        # response = session.get(wiki_base_url + alpha2, headers={"User-Agent": user_agent_header}, timeout=15)
+        response = session.get(wiki_base_url + alpha2, headers={"User-Agent": user_agent_header, "Accept-Language": "en-US,en;q=0.9"}, proxies=proxy_ip, timeout=15)
         response.raise_for_status()
-        soup = BeautifulSoup(response.content, "html.parser")
+        # soup = BeautifulSoup(response.content, "html.parser")
     except requests.exceptions.RequestException as e:
         raise requests.exceptions.HTTPError(f"Error retrieving Wikipedia page for {alpha2} ({wiki_base_url + alpha2}): {e}")
 
@@ -108,7 +141,7 @@ def get_updates_df_wiki(alpha_code: str) -> pd.DataFrame:
 
     return iso3166_df_wiki
 
-def get_updates_df_selenium(alpha_code: str, include_remarks_data: bool=True) -> pd.DataFrame:
+def get_updates_df_selenium(alpha_code: str, driver: webdriver=None, include_remarks_data: bool=True) -> pd.DataFrame:
     """
     Pull all related ISO 3166 updates/changes for a given input country from the official ISO
     website. The Selenium Chromedriver tool is utilised prior to the BS4 web scraper as JavaScript
@@ -122,6 +155,8 @@ def get_updates_df_selenium(alpha_code: str, include_remarks_data: bool=True) ->
     :alpha_code: str
         single string of an alpha ISO 3166-1 country code to get the latest ISO 3166 updates for. 
         If the 3 letter alpha-3 or numeric code are input then convert to alpha-2.
+    :driver: webdriver
+        instance of Selenium Chromedriver. 
     :include_remarks_data: bool (default=True)
         whether to include the remarks text in country updates export. Remarks are additional 
         notes on the change published by the ISO and are prevalent throughout the ISO pages;
@@ -136,7 +171,7 @@ def get_updates_df_selenium(alpha_code: str, include_remarks_data: bool=True) ->
         from official ISO website.
     :remarks_data: dict
         country updates remarks data from ISO page, parts 1 to 4, where applicable. 
-    
+
     Raises
     ======
     ValueError:
@@ -156,8 +191,11 @@ def get_updates_df_selenium(alpha_code: str, include_remarks_data: bool=True) ->
     #counter that determines the max number of retries for the Selenium function, retry required if an error occurs when accessing the html of a country's ISO page
     selenium_retry_attempts = 3
 
+    #error message that will be propagated through the try, except and finally blocks below
+    e = None
+
     #selenium factor by which the wait time increases after each retry of create driver function
-    backoff_factor = 2
+    backoff_factor = 4
     
     #base URL for country ISO pages
     iso_base_url = "https://www.iso.org/obp/ui/en/#iso:code:3166:"
@@ -170,24 +208,32 @@ def get_updates_df_selenium(alpha_code: str, include_remarks_data: bool=True) ->
         #add recursive backoff on multiple attempts 
         if (selenium_retry_attempts != 3):
             wait_time = backoff_factor * (2 ** (selenium_retry_attempts - 1)) + random.uniform(0, 1)
-            print(f"Attempt {selenium_retry_attempts} failed: {e}. Retrying in {wait_time:.2f} seconds...")
+            print(f"Attempt {selenium_retry_attempts} failed.\nError Message: {e}.\nRetrying in {wait_time:.2f} seconds...")
             time.sleep(wait_time)
 
-        #create instance of chromedriver
-        driver = create_driver()
-
         #create session for input country's ISO section
-        driver.get(iso_base_url + alpha2.upper())
+        driver.get(iso_base_url + alpha2)
+
+        #wait for complete page load
+        WebDriverWait(driver, 45).until(lambda d: d.execute_script("return document.readyState") == "complete")
+        time.sleep(4)
 
         #pause for 4 seconds
         # WebDriverWait(driver, 4)
         # WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 
-        #pause for 20 seconds before searching for h3 element
-        WebDriverWait(driver, 20).until(
-            EC.presence_of_element_located((By.XPATH, "//h3[contains(text(), 'Change history of country code')] | //h3[contains(text(), 'Historique des modifications des codes de pays')]"))
-            # EC.presence_of_element_located((By.XPATH, "//h3[normalize-space(text())='Change history of country code']"))
-        )
+        print("\nAll <h3> elements:")
+        for h3 in driver.find_elements(By.TAG_NAME, "h3"):
+            print("-", h3.text)
+
+        #pause for 30 seconds before searching for h3 element, raise Timeout exception error if section not found
+        try:
+            WebDriverWait(driver, 45).until(
+                EC.presence_of_element_located((By.XPATH, "//h3[contains(text(), 'Change history of country code')] | //h3[contains(text(), 'Historique des modifications des codes de pays')]"))
+                # EC.presence_of_element_located((By.XPATH, "//h3[normalize-space(text())='Change history of country code']"))
+            )
+        except:
+            raise TimeoutException(f"⚠️ Warning: No change history section found for {alpha_code}.")
 
         #get page html source and create parsed BeautifulSoup object
         table_html = driver.page_source
@@ -198,9 +244,6 @@ def get_updates_df_selenium(alpha_code: str, include_remarks_data: bool=True) ->
             driver.execute_script('window.scrollTo(0, ' + random.choice(["200", "300", "400", "500", "600", "700"]) + ')')
             time.sleep(1)
 
-        #pause for 2.5 seconds
-        # time.sleep(2.5)
-
         #have to run below code again to get page html source and create parsed BeautifulSoup object, seems to be error in page loading time
         table_html = driver.page_source
         soup = BeautifulSoup(table_html, 'html.parser')
@@ -210,7 +253,7 @@ def get_updates_df_selenium(alpha_code: str, include_remarks_data: bool=True) ->
             if (('change history of country code' in header.text.lower()) or ('historique des modifications des codes de pays' in header.text.lower())):
                 changes_section = header.find_next("table")
                 break
-
+        
         #break to next while loop iteration if Changes html table data is blank
         if not (changes_section):
             print (f"No Changes section found for {alpha2} on page: {iso_base_url + alpha2.upper()}.")
@@ -223,17 +266,29 @@ def get_updates_df_selenium(alpha_code: str, include_remarks_data: bool=True) ->
         iso3166_df_selenium = parse_updates_table(alpha2, changes_section_converted)
 
       #decrement counter, raise exception if recursive threshold has been reached
-      except Exception as e:
+      except Exception as exc:
+        e = exc
         selenium_retry_attempts -= 1
         if selenium_retry_attempts == 0:
-            raise RuntimeError(f"Failed to parse ISO page for {alpha2} at URL {iso_base_url + alpha2.upper()} after 3 attempts:\n\n{e}.")
+            raise RuntimeError(f"Failed to parse ISO page for {alpha2} at URL {iso_base_url + alpha2.upper()} after 3 attempts:\n\nError: {type(e).__name__}: {e}.")
       finally:
         #always close the WebDriver session, raise an error if driver is None which means error when creating it
-        if ('driver' in locals() and driver is not None):
-            driver.quit()
-        else:
-            raise RuntimeError(f"Failed to initialise a Chromedriver instance for {alpha2} at URL {iso_base_url + alpha2.upper()}.")
-
+        try:
+            if ('driver' in locals() and driver is not None):
+                driver.quit()
+        except Exception as quit_error:
+            if (e is not None):
+                # raise RuntimeError(f"Failed to initialise a Chromedriver instance for {alpha2} at URL {iso_base_url + alpha2.upper()}.")
+                raise RuntimeError(
+                    f"Error occurred while quitting driver after failure to parse {alpha2} at URL {iso_base_url + alpha2.upper()}:\n\n"
+                    f"Original Error: {type(e).__name__}: {e}\n"
+                    f"Driver Quit Error: {type(quit_error).__name__}: {quit_error}"
+                ) from e
+            else:
+                raise RuntimeError(
+                    f"Driver quit failed for {alpha2} at URL {iso_base_url + alpha2.upper()}:\n\n{type(quit_error).__name__}: {quit_error}"
+                )
+            
     #swapping the Change and Description of Change values from ISO page
     if not (iso3166_df_selenium.empty):
         #create a mask of rows where the "Change" column is empty

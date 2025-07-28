@@ -1,3 +1,4 @@
+#packages required for testing 
 beautifulsoup4
 iso3166
 lxml

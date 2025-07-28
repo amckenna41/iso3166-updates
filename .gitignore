@@ -156,3 +156,10 @@ successful_tests/
 TODO.md
 
 setup_gcp.sh
+
+.github/workflows/check_for_updates_old.yml
+
+iso3166_update_differences_with_descriptions.csv
+iso3166_update_differences.csv
+iso3166-updates_2025-07-24_master_original.json
+iso3166-updates_2025-07-24_master.json

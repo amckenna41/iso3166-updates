@@ -26,10 +26,10 @@ and naming conventions.
 
 Each ISO 3166 update entry has 4 main data attributes:
 
-* *Change*: overall summary of change/update made.
-* *Description of Change*: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
-* *Date Issued*: date that the change was communicated/published.
-* *Source*: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform (OBP) page.
+* **Change**: overall summary of change/update made.
+* **Description of Change**: more in-depth info about the change/update that was made, including any remarks listed on the official ISO page.
+* **Date Issued**: date that the change was communicated/published.
+* **Source**: name and or edition of newsletter that the ISO 3166 change/update was communicated in (pre 2013), or the link to the country's ISO Online Browsing Platform (OBP) page.
 
 Version
 =======
@@ -37,7 +37,7 @@ The **iso3166-updates** software is currently at version |version_link|.
 
 .. |version_link| raw:: html
 
-   <a href="https://pypi.org/project/iso3166-updates/" target="_blank">v1.8.3</a>
+   <a href="https://pypi.org/project/iso3166-updates/" target="_blank">v1.8.4</a>
 
 Last Updated
 ============

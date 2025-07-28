@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup, Tag
 import pandas as pd
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
+import pprint
 
 def remove_duplicates(iso3166_updates_df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -132,11 +133,14 @@ def convert_to_alpha2(alpha_code: str) -> str:
     if not (isinstance(alpha_code, str)):
         raise TypeError(f"Expected input alpha code to be a string, got {type(alpha_code)}.")
 
+    #raise error if more than 1 country code input
+    if ("," in alpha_code):
+        raise ValueError(f"Only one country code should be input into the function: {alpha_code}.")
+        
     #uppercase alpha code, initial_alpha_code var maintains the original alpha code pre-uppercasing
     alpha_code = alpha_code.upper()
     initial_alpha_code = alpha_code
 
-    print("alpha_code", alpha_code)
     #use iso3166 package to find corresponding alpha-2 code from its numeric code, return error if numeric code not found
     if (alpha_code.isdigit()):
         if not (alpha_code in list(iso3166.countries_by_numeric.keys())):
@@ -151,7 +155,6 @@ def convert_to_alpha2(alpha_code: str) -> str:
 
     #use iso3166 package to find corresponding alpha-2 code from its alpha-3 code, return error if code not found
     if len(alpha_code) == 3:
-        print(iso3166.countries_by_alpha3)
         if not (alpha_code in list(iso3166.countries_by_alpha3.keys())):
             raise ValueError(f"Invalid ISO 3166-1 alpha-3 country code: {initial_alpha_code}.")
         return iso3166.countries_by_alpha3[alpha_code].alpha2
@@ -971,7 +974,7 @@ def export_updates(iso3166_updates_data: dict, export_folder: str="iso3166-updat
         #export updates into the same CSV 
         if (export_csv and not all_empty):
             csv_iso3166_df.to_csv(os.path.join(export_folder, os.path.splitext(export_filename_concat_updates)[0] + ".csv"), index=False)
-            print(f"\nAll ISO 3166 updates exported to CSV: {os.path.join(export_folder, export_filename_concat_updates)}.csv")
+            print(f"\nAll ISO 3166 updates exported to CSV: {os.path.join(export_folder, export_filename_concat_updates)}.csv.")
         #export updates into the same XML 
         if (export_xml and not all_empty):
 
@@ -984,7 +987,7 @@ def export_updates(iso3166_updates_data: dict, export_folder: str="iso3166-updat
             with open(os.path.join(export_folder, os.path.splitext(export_filename_concat_updates)[0] + ".xml"), "w", encoding="utf-8") as f:
                 f.write(pretty_xml_as_string)
 
-            print(f"\nAll ISO 3166 updates exported to XML: {os.path.join(export_folder, export_filename_concat_updates)}.xml\n")
+            print(f"\nAll ISO 3166 updates exported to XML: {os.path.join(export_folder, export_filename_concat_updates)}.xml.\n")
 
     #updates data being exported to different individual files
     else:
@@ -1167,7 +1170,8 @@ def manual_updates(iso3166_updates: dict, year: str, year_range: bool=False, yea
                             "SI": [{"Date Issued": "2010-06-30", "Change": "Subdivisions added: SI-195 Apače. SI-196 Cirkulane. SI-207 Gorje. SI-197 Kostanjevica na Krki. SI-208 Log-Dragomer. SI-198 Makole. SI-199 Mokronog-Trebelno. SI-200 Poljčane. SI-209 Rečica ob Savinji. SI-201 Renče-Vogrsko. SI-202 Središče ob Dravi. SI-203 Straža. SI-204 Sveta Trojica v Slovenskih goricah. SI-210 Sveti Jurij v Slovenskih goricah. SI-205 Sveti Tomaž. SI-211 Šentrupert. SI-206 Šmarješke Toplice.", "Description of Change": "Update of the administrative structure and languages and update of the list source", "Source": "Newsletter II-2 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf."}],
                             "SS": [{"Date Issued": "2011-12-13 (corrected 2011-12-15)", "Description of Change": "Addition of code and its administrative subdivisions to align ISO 3166-1 and ISO 3166-2."}],
                             "TD": [{"Date Issued": "2020-11-24", "Description of Change": "Change of subdivision category region to province; Modification of spelling for TD-BA, TD-LO, TD-LR, TD-TA, TD-WF in ara; Addition of local variation for TD-BG in fra; Addition of subdivision name of TD-EE, TD-EO in ara; Update List Source."}],
-                            "TZ": [{"Date Issued": "2019-02-14", "Delete": 1}]}
+                            "TZ": [{"Date Issued": "2019-02-14", "Delete": 1}],
+                            "XK": []}
 
     #manual updates for India, error with parsing Indian data from wiki - updated in next version release 
     manual_updates_in = [{"Change": "IN-DH Dadra and Nagar Haveli and IN-DD Diu and Daman; Addition of Indian system of transliteration.", "Description of Change": "Deletion of Union territory; Addition of Union territory; Correction of spelling; Update list source and correction of the code source.", "Date Issued": "2024-11-11", "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:IN."},
@@ -1274,3 +1278,142 @@ def manual_updates(iso3166_updates: dict, year: str, year_range: bool=False, yea
         iso3166_updates = filtered
 
     return iso3166_updates
+
+def merge_update_files(update_folder_path: str="") -> None:
+    """
+    Merge individually exported update files, generated when the save_each_iteration parameter has 
+    been set, into one single file. The individual files should be within one exported folder and
+    each file will be individually iterated over, merging them all into one master updates file.
+
+    Parameters
+    ==========
+    :update_folder_path: str (default="")
+        filepath to folder where individual files are exported.
+
+    Returns
+    =======
+    None
+
+    Raises
+    ======
+    OSError:
+        Folder of individually exported updates files can't be found.
+    """
+    #exported filename
+    merged_iso3166_updates_filepath = "merged_iso3166_updates.json"
+
+    #raise error if folder not found
+    if not (os.path.isdir(update_folder_path)):
+        raise OSError(f"Export directory not found: {update_folder_path}.")
+
+    #merged updates data
+    merged_data = []
+
+    #iterate over exported updates file in the directory
+    for filename in os.listdir(update_folder_path):
+        if filename.startswith("iso3166_updates_") and filename.endswith(".json"):
+            file_path = os.path.join(update_folder_path, filename)
+            with open(file_path, "r", encoding="utf-8") as f:
+                try:
+                    data = json.load(f)
+                    merged_data.append(data)
+                except json.JSONDecodeError:
+                    print(f"Warning: Could not decode updates JSON: {filename}")
+
+    #write merged data to output file
+    with open(os.path.join(update_folder_path, merged_iso3166_updates_filepath), "w", encoding="utf-8") as f:
+        json.dump(merged_data, f, indent=4)
+
+    print(f"Merged {len(merged_data)} JSON files into {merged_iso3166_updates_filepath}.")
+
+# def compare_updates_files(updates1_filepath: str, updates2_filepath: str, export_differences: bool=0) -> str:
+#     """
+#     This function allows you to import 2 separate exported updates JSON files and
+#     directly compare their object contents. Returned will be any missing or differing
+#     subdivision data between the 2 objects. This is similar to the check_for_updates
+#     function in the main iso3166-updates software but it allows you to import 2 files
+#     directly. check_for_updates is a fixed comparison between two objects.
+
+#     Parameters
+#     ==========
+#     :updates1_filepath: str
+#         filepath for first updates JSON.
+#     :updates2_filepath: str
+#         filepath for second updates JSON.
+#     :export_differences: bool
+#         export the differences between the 2 files to a CSV.
+
+#     Returns
+#     =======
+#     None
+
+#     Raises
+#     ======
+#     OSError:
+#         Invalid filepath to either of the two JSONs
+#     """
+#     #raise error if any of the two input update object files are invalid
+#     if not (os.path.isfile(updates1_filepath)):
+#         raise OSError(f"Invalid filepath for updates file: {updates1_filepath}.")
+#     if not (os.path.isfile(updates2_filepath)):
+#         raise OSError(f"Invalid filepath for updates file: {updates2_filepath}.")
+
+#     #separate object that holds any differences, if applicable, between the 2 objects
+#     iso3166_updates_differences = {}
+
+#     #open 2 updates object JSONs
+#     with open(updates1_filepath, "r", encoding="utf-8") as f:
+#         iso3166_updates_json1 = json.load(f)
+#     with open(updates2_filepath, "r", encoding="utf-8") as f:
+#         iso3166_updates_json2 = json.load(f)
+
+#     # print(iso3166_updates_json2)
+#     #iterate over all ISO 3166 updates data in 1st object, if update/row not found in second json, append to difference object
+#     for alpha_code, entries in iso3166_updates_json1.items():
+#         current_entries = iso3166_updates_json2.get(alpha_code, {})
+#         iso3166_updates_differences[alpha_code] = []
+
+#         #iterate over individual updates entries, add to object if not in existing other updates object
+#         for update in entries:
+#             print("update", update)
+#             print("entries", entries)
+
+#             if update not in current_entries:
+#                 updates_found = True
+#                 iso3166_updates_differences[alpha_code].append(update)
+
+#         #if current alpha-2 code has no new ISO 3166 updates associated with it, remove from temp object
+#         if not iso3166_updates_differences[alpha_code]:
+#             iso3166_updates_differences.pop(alpha_code, None)
+
+#     #print out any found updates 
+#     if (updates_found):
+
+#         print("Differences found between two ISO 3166 Updates data objects\n")
+
+#         #get total sum of new data updates for all countries in json
+#         total_updates = sum(len(v) for v in iso3166_updates_differences.values())
+#         total_countries = len(iso3166_updates_differences)
+        
+#         print(f"{total_updates} update(s) found for {total_countries} country/countries, these are outlined below")
+#         print("===================================================================\n\n")
+        
+#         #iterate over differences data in json
+#         for code in list(iso3166_updates_differences.keys()):
+            
+#             #output current country name and code
+#             print(f"{iso3166.countries_by_alpha2[code].name} ({code}):")
+            
+#             #iterate over rows of differences data and pretty print json
+#             for row in range(0, len(iso3166_updates_differences[code])):
+#                 pprint.pprint(iso3166_updates_differences[code][row], compact=True)
+#                 print("\n")
+#     else:
+#         print("No differences found between two input update objects.")
+
+#     print("iso3166_updates_differences")
+#     print(iso3166_updates_differences)
+#     #export the differences between the 2 objects to a CSV
+#     # if (export_differences):
+    
+#     return

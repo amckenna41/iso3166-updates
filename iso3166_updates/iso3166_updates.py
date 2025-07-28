@@ -4,7 +4,6 @@ import json
 import re
 from datetime import datetime
 import iso3166
-import platform
 import requests
 import pprint
 from thefuzz import fuzz
@@ -52,7 +51,7 @@ class Updates():
     date_range(input_date_range, sort_by_date=""):
         get all listed updates/changes in the updates json that were published within the input date
         range, inclusive. If only one date input then get all updates from this date, inclusive.
-    search(search_term, likeness_score=1.0, exclude_match_score=0):
+    search(search_term, likeness_score=100, exclude_match_score=0):
         get all listed updates/changes in the updates JSON object for an input search keyword/item. For
         example searching for a specific subdivision/country name. The function can also accept a list 
         of keywords. A likeness score is used to allow you to ge the percentage of likeness for search 
@@ -136,6 +135,9 @@ class Updates():
 
     #add custom update object to Liechtenstein
     iso.custom_update("LI", change="Brand new LI subdivision", date_issued="2025-01-01", description_of_change="Short description here.")
+    
+    #delete above custom updates object
+    iso.custom_update("LI", change="Brand new LI subdivision", date_issued="2025-01-01", delete=1)
 
     #get total number of updates in updates object
     len(iso)
@@ -145,7 +147,7 @@ class Updates():
     """
     def __init__(self, country_code: str="", custom_updates_filepath: str="") -> None:
         
-        self.__version__ = "1.8.3"
+        self.__version__ = "1.8.4"
         self.iso3166_updates_json_filename = "iso3166-updates.json"
         self.country_code = country_code
 
@@ -159,25 +161,15 @@ class Updates():
         if not (os.path.isfile(self.iso3166_updates_path)):
             raise OSError(f"Issue finding iso3166-updates.json in dir: {self.iso3166_updates_path}.")
 
-        #importing all updates data from JSON, open iso3166-updates json file and load it into class variable, loading in a JSON is different in Windows & Unix/Linux systems
-        #raise error if issue finding file or JSON
-        if (platform.system() != "Windows"):
-            try:
-                with open(self.iso3166_updates_path, "r", encoding="utf-8") as f:
-                    self.all = json.load(f)
-            except FileNotFoundError:
-                raise OSError("Error: The ISO 3166 updates file was not found.")
-            except json.JSONDecodeError:
-                raise ValueError("Error: The ISO 3166 updates file contains invalid JSON.")
-        else:
-            try:
-                with open(self.iso3166_updates_path, encoding="utf-8") as iso3166_updates_json:
-                    self.all = json.loads(iso3166_updates_json.read())
-            except FileNotFoundError:
-                raise OSError("Error: The ISO 3166 updates file was not found.")
-            except json.JSONDecodeError:
-                raise ValueError("Error: The ISO 3166 updates file contains invalid JSON.")
-            
+        #importing all updates data from JSON, open iso3166-updates json file and load it into class variable, raise error if issue finding file or JSON
+        try:
+            with open(self.iso3166_updates_path, "r", encoding="utf-8") as f:
+                self.all = json.load(f)
+        except FileNotFoundError:
+            raise OSError("Error ❗: The ISO 3166 updates file was not found.")
+        except json.JSONDecodeError:
+            raise ValueError("Error ❗: The ISO 3166 updates file contains invalid JSON.")
+
         #make all updates object subscriptable using Map class
         # self.all = Map(self.all)
 
@@ -613,7 +605,7 @@ class Updates():
             likeness score between 1 and 100 that sets the percentage of likeness the input 
             search term is to the updates data in the dataset. The default value of 100 will 
             look for exact matches to the input search terms.
-        :exclude_match_score: bool (default=0)
+        :exclude_match_score: bool (default=0) 
             set to True to exclude the % match the returned updates objects are to the input
             search keywords. If this attribute is excluded from the output, a dict of outputs
             will be returned, sorted alphabetically by country code, otherwise a list will be 
@@ -638,17 +630,12 @@ class Updates():
         if not (isinstance(search_term, str)):
             raise TypeError(f"Input search term should be of type str, got {type(search_term)}.")
 
-        #normalise likeness_score if input is less than 1, convert to int
-        if likeness_score < 1:
-            likeness_score *= 100
-            likeness_score = int(likeness_score)
-
-        #raise error if invalid likeness score input
-        if (likeness_score > 100):
+        #raise error if invalid (1-100) likeness score input
+        if not (0 <= likeness_score <= 100):
             raise ValueError(f"Likeness score must be between 1 and 100, got {likeness_score}.")
 
         #split search terms into comma separated list 
-        search_terms = [term.strip() for term in search_term.split(",")]
+        search_terms = [term.strip().lower() for term in search_term.split(",")]
 
         #store search results
         search_results = []
@@ -661,7 +648,6 @@ class Updates():
 
                 #iterate over all input search terms
                 for term in search_terms:
-                    term = term.lower()
                     #if input term has a date in it, try to parse into supported YYYY-MM-DD format, else return None
                     input_date_original = self.convert_date_format(term)
 
@@ -752,8 +738,8 @@ class Updates():
         :alpha_code: str
             ISO 3166-1 alpha-2, alpha-3 or numeric country code.
         :custom_update_object: dict (default={})
-            object of the new custom object with the required attributes and values. If this object
-            is populated, the values in this object will be prioritised over the individual 
+            object of the new custom updates object with the required attributes and values. If this 
+            object is populated, the values in this object will be prioritised over the individual 
             parameter values. 
         :change: str (default="")
             ISO 3166 change/updates.
@@ -985,7 +971,7 @@ class Updates():
             print(f"{total_updates} update(s) found for {total_countries} country/countries, these are outlined below")
             print("===================================================================\n\n")
             
-            #iterate over new data in json, append to updates object
+            #iterate over new data in json
             for code in list(new_iso3166_updates.keys()):
                 
                 #output current country name and code
@@ -1030,6 +1016,10 @@ class Updates():
         if not (isinstance(alpha_code, str)):
             raise TypeError(f"Expected input alpha code to be a string, got {type(alpha_code)}.")
 
+        #raise error if more than 1 country code input
+        if ("," in alpha_code):
+            raise ValueError(f"Only one country code should be input into the function: {alpha_code}.")
+        
         #uppercase alpha code, initial_alpha_code var maintains the original alpha code pre-uppercasing
         alpha_code = alpha_code.upper()
         initial_alpha_code = alpha_code

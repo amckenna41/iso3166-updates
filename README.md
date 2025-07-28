@@ -1,3 +1,5 @@
+<a name="TOP"></a>
+
 # iso3166-updates 🌎
 
 [![iso3166_updates](https://img.shields.io/pypi/v/iso3166-updates)](https://pypi.org/project/iso3166-updates/)
@@ -22,10 +24,10 @@
 Quick Start 🏃
 -------------
 * A **demo** of the software and API is available [here][demo_iso3166_updates].
-* A **demo** of the script used to pull and export all the latest updates is available [here][demo_get_all_iso3166_updates].
-* A **Medium** article that dives deeper into `iso3166-updates` is available [here][medium].
 * The front-end **API** is available [here][api].
 * The **documentation** for the software & API is available [here](https://iso3166-updates.readthedocs.io/en/latest/).
+* A **Medium** article that dives deeper into `iso3166-updates` is available [here][medium].
+* A **demo** of the script used to pull and export all the latest updates is available [here][demo_get_all_iso3166_updates].
 
 Table of Contents
 -----------------
@@ -87,21 +89,13 @@ Documentation for the software and accompanying API is available on the software
 
 API
 ---
-The main API endpoint is:
+The main API endpoint and homepage is:
 
 > https://iso3166-updates.vercel.app/
 
-The other endpoints available in the API are:
-* https://iso3166-updates.vercel.app/api/all
-* https://iso3166-updates.vercel.app/api/alpha/<input_alpha>
-* https://iso3166-updates.vercel.app/api/year/<input_year>
-* https://iso3166-updates.vercel.app/api/search/<input_search>
-* https://iso3166-updates.vercel.app/api/date_range/<input_date_range>
-* https://iso3166-updates.vercel.app/api/alpha/<input_alpha>/year/<input_year>
-* https://iso3166-updates.vercel.app/api/date_range/<input_date_range>/alpha/<input_alpha>
-* https://iso3166-updates.vercel.app/api/date_range/<input_date_range>/year/<input_year>
+The other endpoints available in the API are `/api/all`, `/api/alpha/<input_alpha>`, `/api/year/<input_year>`, `/api/country_name/<input_country_name>`, `/api/search/<input_search>` and `/api/date_range/<input_date_range>`.
 
-The main paths/endpoints available in the API are - `/api/all`, `/api/alpha`, `/api/year`, `/api/country_name`, `/api/search` and `/api/date_range`.
+* `/api`: main homepage and API documentation.
 
 * `/api/all`: get all of the ISO 3166 updates/changes data for all countries and publication years.
 
@@ -111,11 +105,9 @@ The main paths/endpoints available in the API are - `/api/all`, `/api/alpha`, `/
 
 * `/api/country_name`: get all the ISO 3166 updates/changes data for one or more countries according to their name, as it is commonly known in English, e.g. `/api/country_name/Tajikistan`, `/api/country_name/Benin,Togo`, `/api/country_name/Russia,Sudan,Swaziland`. If an invalid country name is input then an error will be returned. This endpoint can be used in conjunction with the **year** endpoint to get the country updates for a specific country and year. This will be in in the format `/api/country_name/<input_country_name>/year/<input_year>`.
 
-* `/api/search`: get all the ISO 3166 updates/changes data for one or more countries that have the inputted search terms. A single keyword/term or list of them can be passed to the API e.g. `/api/search/Brazil`, `/api/search/Addition,deletion`, `/api/search/2017-11-23`. A closeness function is used to search through the updates objects, finding any applicable matches to the keywords input via the Change and Description of Change attributes. If a date is explicitly input then the Date Issued attributes will also be searched. If no matching objects found then an error will be returned. 
+* `/api/search`: get all the ISO 3166 updates/changes data for one or more countries that match the inputted search terms. A single keyword/term or list of them can be passed to the API e.g. `/api/search/Brazil`, `/api/search/Addition,deletion`, `/api/search/2017-11-23`. A closeness function is used to search through the updates objects, finding any applicable matches to the keywords input via the Change and Description of Change attributes. If a date is explicitly input then the Date Issued attributes will also be searched. If no matching objects found then an error will be returned. 
 
 * `/api/date_range`: get all the ISO 3166 updates/changes data for one or more countries that were published within a specified input date range e.g. `/api/date_range/2011-12-09,2014-01-10`, `/api/date_range/2013-08-02,2015-07-10`, `/api/date_range/2018-05-12`. If a single date is input it will act as the starting date within the date range, with the end of the range being the current day. If an invalid date type/format value is input then an error will be returned. This endpoint can be used in conjunction with the **alpha** endpoint to get the country updates for a specific country and date range. This will be in in the format `/api/alpha/<input_alpha>/date_range/<input_date_range>`.
-
-* `/api`: main homepage and API documentation.
 
 ### Attributes
 There are three main query string parameters that can be passed through several of the endpoints of the API:
@@ -136,7 +128,7 @@ to all of the endpoints, e.g ``/api/all?sortBy=dateDesc``, ``/api/year/2010-2015
 ``/api/date_range/2019-01-01?sortBy=""`` (sorted by country code).
 * <b>likeness</b>: this is a value between 1 and 100 that increases or reduces the % of similarity/likeness that the 
 inputted search terms have to match to the updates data in the Change and Desc of Change attributes. This can 
-only be used in the /api/search endpoint. Having a higher value should return more exact and less matches and 
+only be used in the `/api/search` endpoint. Having a higher value should return more exact and less matches and 
 having a lower value will return less exact but more matches, e.g ``/api/search/Paris?likeness=50``, 
 ``/api/search/canton?likeness=90`` (default=100).
 * <b>excludeMatchScore</b>: exclude the matchScore` attribute from the search results when using the /api/search endpoint. 
@@ -478,7 +470,7 @@ Support
 [<img src="https://img.shields.io/github/stars/amckenna41/iso3166-updates?color=green&label=star%20it%20on%20GitHub" width="132" height="20" alt="Star it on GitHub">](https://github.com/amckenna41/iso3166-updates) <br><br>
 <a href="https://www.buymeacoffee.com/amckenna41" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
-[Back to top](#iso3166-updates)
+[Back to top](#TOP)
 
 [demo_iso3166_updates]: https://colab.research.google.com/drive/1oGF3j3_9b_g2qAmBtv3n-xO2GzTYRJjf?usp=sharing
 [demo_get_all_iso3166_updates]: https://colab.research.google.com/drive/161aclDjGkWQJhis7KxBO1e6H_ghQOPRG?usp=sharing

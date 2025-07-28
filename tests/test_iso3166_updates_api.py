@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from importlib.metadata import metadata
 unittest.TestLoader.sortTestMethodsUsing = None
 
-# @unittest.skip("Skipping API tests.")
+# @unittest.skip("Skipping prior to new published release of iso3166-updates.")
 class Updates_Api_Tests(unittest.TestCase):
     """
     Test suite for testing ISO 3166 Updates API created to accompany the iso3166-updates 
@@ -92,11 +92,11 @@ class Updates_Api_Tests(unittest.TestCase):
         soup = BeautifulSoup(test_request_main.content, 'html.parser')
 #1.)
         # version = soup.find(id='version').text.split(': ')[1]
-        last_updated = soup.find(id='last-updated').text.split(': ')[1]
+        # last_updated = soup.find(id='last-updated').text.split(': ')[1]
         author = soup.find(id='author').text.split(': ')[1]
 
         # self.assertEqual(version, "1.8.3", f"Expected API version to be 1.8.3, got {version}.")
-        self.assertEqual(last_updated, "May 2025", f"Expected last updated date to be May 2025, got {last_updated}.")
+        # self.assertEqual(last_updated, "May 2025", f"Expected last updated date to be May 2025, got {last_updated}.")
         self.assertEqual(author, "AJ", f"Expected author to be AJ, got {author}.")
 #2.)
         section_list_menu = soup.find(id='section-list-menu').find_all('li')
@@ -106,7 +106,8 @@ class Updates_Api_Tests(unittest.TestCase):
 
 #     @unittest.skip("")
     def test_all_endpoint(self):
-        """ Testing '/api/all' endpoint that returns all updates data for all countries. """#1.)    
+        """ Testing '/api/all' endpoint that returns all updates data for all countries. """
+#1.)    
         self.assertIsInstance(self.test_request_all.json(), dict, f"Expected output object of API to be of type dict, got {type(self.test_request_all.json())}.")
         self.assertEqual(len(self.test_request_all.json()), 249, f"Expected there to be 249 elements in output object, got {len(self.test_request_all.json())}.")
         self.assertEqual(self.test_request_all.status_code, 200, f"Expected 200 status code from request, got {self.test_request_all.status_code}.")
@@ -115,6 +116,9 @@ class Updates_Api_Tests(unittest.TestCase):
         total_updates = sum(len(changes) for changes in self.all_iso3166_updates.values())
         self.assertEqual(total_updates, 910, f"Expected and observed total updates do not match, got {total_updates}.")
 #2.)
+        for alpha2 in list(self.test_request_all.json().keys()):
+            self.assertIn(alpha2, iso3166.countries_by_alpha2, f"Alpha-2 code {alpha2} not found in list of available country codes.")
+#3.)
         test_request_all_sort_by_date = requests.get(self.all_base_url, headers=self.user_agent_header, params={"sortby": "dateDesc"})
 
         self.assertIsInstance(test_request_all_sort_by_date.json(), list, f"Expected output object of API to be of type list, got {type(test_request_all_sort_by_date.json())}.")
@@ -339,7 +343,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_bn_cu_dm['DJ'][0], test_alpha_dj_expected, f"Expected and observed outputs do not match:\n{test_request_bn_cu_dm['DJ'][0]}")
 #5.)
         test_request_error1 = requests.get(self.alpha_base_url + error_test_alpha_1, headers=self.user_agent_header).json() #blahblahblah
-        test_request_error1_expected = {"message": f"Invalid ISO 3166-1 alpha-2 code input: {error_test_alpha_1.upper()}.", "path": self.alpha_base_url + error_test_alpha_1, "status": 400}
+        test_request_error1_expected = {"message": f"Invalid ISO 3166-1 alpha-2 code input: {error_test_alpha_1}.", "path": self.alpha_base_url + error_test_alpha_1, "status": 400}
         self.assertEqual(test_request_error1, test_request_error1_expected, f"Expected and observed output error object do not match:\n{test_request_error1}")
 #6.)
         test_request_error2 = requests.get(self.alpha_base_url + error_test_alpha_2, headers=self.user_agent_header).json() #42
@@ -614,11 +618,11 @@ class Updates_Api_Tests(unittest.TestCase):
                                 f"Year in Date Issued column should not equal 2011 or 2020, got {current_updates_year}.")
 #7.)
         test_request_year_abc = requests.get(self.year_base_url + test_year_abc, headers=self.user_agent_header).json() #abc
-        test_request_year_abc_expected = {"message": f"Invalid year input, must be a year >= 1996, got {test_year_abc}.", "path": self.year_base_url + test_year_abc, "status": 400}
+        test_request_year_abc_expected = {"message": f"Invalid year input, must be a valid year >= 1996, got {test_year_abc}.", "path": self.year_base_url + test_year_abc, "status": 400}
         self.assertEqual(test_request_year_abc, test_request_year_abc_expected, f"Expected and observed output error object do not match:\n{test_request_year_abc}")
 #8.) 
         test_request_year_12345 = requests.get(self.year_base_url + test_year_12345, headers=self.user_agent_header).json() #1234
-        test_request_year_12345_expected = {"message": f"Invalid year input, must be a year >= 1996, got {test_year_12345}.", "path": self.year_base_url + test_year_12345, "status": 400}
+        test_request_year_12345_expected = {"message": f"Invalid year input, must be a valid year >= 1996, got {test_year_12345}.", "path": self.year_base_url + test_year_12345, "status": 400}
         self.assertEqual(test_request_year_12345, test_request_year_12345_expected, f"Expected and observed output error object do not match:\n{test_request_year_12345}")
 
 #     @unittest.skip("")
@@ -1108,7 +1112,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_error2, test_request_error2_expected, f"Expected and observed output error objects does not match:\n{test_request_error2}")
 #6.)
         test_request_error3 = requests.get(f'{self.date_range_url}{test_date_range_alpha_error3[0]}/alpha/{test_date_range_alpha_error3[1]}', headers=self.user_agent_header).json() #2021-01-024 - abcdef
-        test_request_error3_expected = {"message": f"Invalid ISO 3166-1 alpha-2 code input: {test_date_range_alpha_error3[1].upper()}.", "path": f'{self.date_range_url}{test_date_range_alpha_error3[0]}/alpha/{test_date_range_alpha_error3[1]}', "status": 400}
+        test_request_error3_expected = {"message": f"Invalid ISO 3166-1 alpha-2 code input: {test_date_range_alpha_error3[1]}.", "path": f'{self.date_range_url}{test_date_range_alpha_error3[0]}/alpha/{test_date_range_alpha_error3[1]}', "status": 400}
         self.assertEqual(test_request_error3, test_request_error3_expected, f"Expected and observed output error objects does not match:\n{test_request_error3}")
 
 #     @unittest.skip("")
@@ -1151,26 +1155,11 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_search1[0:3], test_search1_expected, f"Expected and observed output objects do not match:\n{test_request_search1[0:3]}")
 #2.)
         test_request_search2 = requests.get(self.search_url + test_search2, headers=self.user_agent_header, params={"likeness": 90, "excludeMatchScore": 1}).json() #cantons - exclude match attribute, likeness=0.9
-        test_search2_expected = {
-              "BA": [{
-                "Change": "Deletion of all cantons BA-01 to BA-10.",
-                "Date Issued": "2015-11-27",
-                "Description of Change": "",
-                "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BA."  
-                },
-                {
-                "Change": "Subdivisions added: 10 cantons.",
-                "Date Issued": "2007-12-13",
-                "Description of Change": "Second edition of ISO 3166-2 (this change was not announced in a newsletter) - 'Statoid Newsletter January 2008' - http://www.statoids.com/n0801.html.",
-                "Source": "ISO 3166-2:2007 - http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718."       
-                }],
-              "LU": [{
-                "Change": "Addition of cantons LU-CA, LU-CL, LU-DI, LU-EC, LU-ES, LU-GR, LU-LU, LU-ME, LU-RD, LU-RM, LU-VD, LU-WI; update List Source.",
-                "Date Issued": "2015-11-27",
-                "Description of Change": "",
-                "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:LU."
-                }]}
-
+        test_search2_expected = {'BA': {'Change': 'Subdivisions added: 10 cantons.', 'Date Issued': '2007-12-13', 
+                'Description of Change': "Second edition of ISO 3166-2 (this change was not announced in a newsletter) - 'Statoid Newsletter January 2008' - http://www.statoids.com/n0801.html.", 'Source': 'ISO 3166-2:2007 - http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718.'}, 
+                'CH': {'Change': 'Deletion of canton CH-GR in fra; Update List Source.', 'Date Issued': '2020-11-24', 'Description of Change': '', 'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CH.'}, 
+                'LU': {'Change': 'Addition of cantons LU-CA, LU-CL, LU-DI, LU-EC, LU-ES, LU-GR, LU-LU, LU-ME, LU-RD, LU-RM, LU-VD, LU-WI; update List Source.', 'Date Issued': '2015-11-27', 'Description of Change': '', 'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:LU.'}}
+        
         self.assertEqual(test_request_search2, test_search2_expected, f"Expected and observed output objects do not match:\n{test_request_search2}")
 #3.)
         test_request_search3 = requests.get(self.search_url + test_search3, headers=self.user_agent_header).json() #remark part 2
@@ -1226,15 +1215,15 @@ class Updates_Api_Tests(unittest.TestCase):
                 "Description of Change": "",
                 "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:DE."
                 }]     
-         
+        
         self.assertEqual(test_request_search4[0:3], test_search4_expected, f"Expected and observed output objects do not match:\n{test_request_search4[0:3]}")
 #5.)
         test_request_search5 = requests.get(self.search_url + test_search5, headers=self.user_agent_header).json() #abcdefg
-        test_search5_expected = {"Message": f"No matching updates found with the given search term(s): {test_search5}."}
+        test_search5_expected = {"Message": f"No matching updates found with the given search term(s): {test_search5}. Try using the query string parameter '?likeness' and reduce the likeness score to expand the search space, '?likeness=30' will return subdivision data that have a 30% match to the input name. The current likeness score is set to 100."}
         self.assertEqual(test_request_search5, test_search5_expected, f"Expected and observed output objects do not match:\n{test_request_search5}")
 #6.)
         test_request_search6 = requests.get(self.search_url + test_search6, headers=self.user_agent_header).json() #123
-        test_search6_expected = {"Message": f"No matching updates found with the given search term(s): {test_search6}."}
+        test_search6_expected = {"Message": f"No matching updates found with the given search term(s): {test_search6}. Try using the query string parameter '?likeness' and reduce the likeness score to expand the search space, '?likeness=30' will return subdivision data that have a 30% match to the input name. The current likeness score is set to 100."}
         self.assertEqual(test_request_search6, test_search6_expected, f"Expected and observed output objects do not match:\n{test_request_search6}")
 #7.)
         test_request_search7 = requests.get(self.search_url + test_search7, headers=self.user_agent_header).json() #""

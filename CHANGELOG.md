@@ -34,6 +34,11 @@
 - Added patching to several unit test cases, suppressing any print statements that are generated from the module being tested. Patch code only required in one test module as its impact is global
 - In software package in date_range function, an additional parameter allows you to sort by date descending or ascending
 - Latest version of accompanying API pushed & unit tests added to /tests folder
+- In extract updates script, optional proxy functionality added to wiki and ISO scraping functions to help avoid 429 errors and timeout errors
+- Added country flag emoji to country name + country code in tqdm loop in extraction process
+- Added empty XK updates object
+- Added scheduled CRON workflow that exports the updates data on a schedule and exports to Google Drive, aimed at alleviating timeouts and errors when exporting all the updates daya
+- Added additional header to Selenium call
 
 ### Changed
 - Class name changed from ISO3166_Updates to Updates
@@ -62,6 +67,8 @@
 - Updated alpha code error messages in software
 - In check-for-updates script, if bucket doesn't exist, it is created
 - Update api docs to include /country_name
+- Removed the circleci Ci/CD
+- Instead of creating a Selenium Chromedriver instance at each country code iteration, create instance once and pass into get_updates_df_selenium function
 
 ### Fixed
 - Errors when running the get_updates script from the cmd line/terminal
@@ -91,6 +98,8 @@
 - Several fixes to Dockerfile & scripts in check-for-updates app
 - Small fix for issue with double spacing before some data in Change attribute " ." - utils function updated
 - Layout fix for check-for-updates function 
+- Fixed several module import errors when calling scripts from main dir
+- Error raised when an invalid likeness score is input into the search function
 
 ## v1.7.1 - May 2024
 

@@ -8,7 +8,6 @@ from operator import itemgetter
 from dateutil.relativedelta import relativedelta
 from iso3166_updates import *
 import requests
-from google.cloud import storage, exceptions
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 from get_all_iso3166_updates import *
@@ -60,6 +59,7 @@ def check_for_updates_main() -> tuple[dict, int]:
     MONTH_RANGE: number of months from script execution to get updates from (default=6). 
     BUCKET_NAME: name of the GCP storage bucket to upload the exported updates data to.
     BLOB_NAME: name of the file/blob of the exported data to be uploaded to the bucket.
+    USE_PROXY: set to 1 to use a proxy IP when parsing the ISO data via Selenium.
     EXPORT_JSON: set to 1 to export latest ISO 3166 updates JSON to storage bucket (default=1).
     EXPORT_CSV: set to 1 to export latest ISO 3166 updates in CSV format to storage bucket (default=1).
     EXPORT_XML: set to 1 to export latest ISO 3166 updates in XML format to storage bucket (default=1).
@@ -84,8 +84,8 @@ def check_for_updates_main() -> tuple[dict, int]:
     #object containing latest iso3166-2 updates after month range date filter applied
     latest_iso3166_updates_after_date_filter = {}
     
-    #parse 7 of the main env vars required for normal app execution, validating them & assigning default values if they aren't set
-    month_range, export_json, export_csv, export_xml, bucket_name, blob_name, create_issue = parse_env_vars()
+    #parse 8 of the main env vars required for normal app execution, validating them & assigning default values if they aren't set
+    month_range, export_json, export_csv, export_xml, bucket_name, blob_name, create_issue, use_proxy = parse_env_vars()
 
     #get last date that iso3166-updates.json object was updated on the repo, using github client and library 
     github_client = Github()
@@ -104,7 +104,7 @@ def check_for_updates_main() -> tuple[dict, int]:
         print(f"The iso3166-updates.json object was last updated {date_diff.months} months ago on: {latest_commit_date.strftime('%Y-%m-%d')}.")
 
     #call get_updates function to scrape all the latest country updates from data sources
-    latest_iso3166_updates = get_iso3166_updates()
+    latest_iso3166_updates = get_iso3166_updates(export_json=export_json, export_csv=export_csv, export_xml=export_xml, use_proxy=use_proxy)
 
     #iterate over all alpha-2 codes, check for any updates in specified months range in updates json 
     for alpha2 in list(latest_iso3166_updates.keys()):
@@ -549,7 +549,7 @@ def export_to_bucket(latest_iso3166_updates: dict, bucket_name: str, blob_name: 
 
     return 0
 
-def parse_env_vars() -> tuple[int, bool, bool, bool, str, bool]:
+def parse_env_vars() -> tuple[int, bool, bool, bool, str, bool, bool]:
     """
     Parse, validate and extract the relevant environment variables required for 
     the export app. If any of the env vars are invalid or not in the correct
@@ -575,6 +575,8 @@ def parse_env_vars() -> tuple[int, bool, bool, bool, str, bool]:
         name of blob for object in GCP storage bucket. 
     create_issue: bool
         whether to create the GitHub Issue or not.
+    use_proxy: bool
+        whether to use a proxy IP service when parsing ISO data via Selenium.
     """
     #month range to get latest updates from, default of 12 months used if env var empty or not a valid int
     if ((os.environ.get("MONTH_RANGE") is None) or (os.environ.get("MONTH_RANGE") == "") or str(os.environ.get("MONTH_RANGE")).isdigit()):
@@ -616,7 +618,13 @@ def parse_env_vars() -> tuple[int, bool, bool, bool, str, bool]:
     else:
         create_issue = bool(int(os.environ.get("CREATE_ISSUE"))) #env var should be 0 or 1
 
-    return month_range, export_json, export_csv, export_xml, bucket_name, blob_name, create_issue
+    #get use_proxy bool env var which determines if a proxy IP is used when parsing ISO data via Selenium
+    if (os.environ.get("USE_PROXY") is None or os.environ.get("USE_PROXY") == ""):
+        use_proxy = False
+    else:
+        use_proxy = bool(int(os.environ.get("USE_PROXY"))) #env var should be 0 or 1
+
+    return month_range, export_json, export_csv, export_xml, bucket_name, blob_name, create_issue, use_proxy
 
 #run Cloud Run Flask app on port 8080
 if __name__ == "__main__":
