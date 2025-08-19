@@ -27,7 +27,7 @@ class Updates():
     input parameter.
 
     Currently there are 249 country's listed in the updates json with updates dating from 1996 up
-    to the present year, with 910 individual published updates.
+    to the present year, with 911 individual published updates.
 
     Parameters
     ==========
@@ -59,12 +59,13 @@ class Updates():
     check_for_updates():
         pulling the latest updates object from the repo and comparing it with the current version
         of the object, outlining any changes that need to be implemented.
-    custom_update():
+    custom_update(alpha_code, custom_update_object={}, change="", date_issued="", description_of_change="", 
+                      source="", delete=0, save_new=0, save_new_filename="iso3166_updates_copy.json"):
         add or delete a custom Update to an existing country on the main iso3166-updates.json 
         object. Custom Updates can be used for in-house/bespoke applications that are using 
         the iso3166-updates software but require additional custom updates to be included.
         These can be added to the default object that the software imports or on a custom
-        updates object.
+        updates object that can be exported.
     convert_to_alpha2(alpha_code):
         convert the inputted ISO 3166-1 alpha-3 or numeric country codes into their 2 letter 
         alpha-2 counterpart.
@@ -147,7 +148,7 @@ class Updates():
     """
     def __init__(self, country_code: str="", custom_updates_filepath: str="") -> None:
         
-        self.__version__ = "1.8.4"
+        self.__version__ = "1.8.5"
         self.iso3166_updates_json_filename = "iso3166-updates.json"
         self.country_code = country_code
 
@@ -727,11 +728,13 @@ class Updates():
         of the added Update, but also setting the 'delete' parameter to 1/True. You can 
         also uninstall and reinstall. 
 
+        To avoid writing over the main existing updates file you can export to a separate object 
+        via the `save_new` and `save_new_filename` parameters.
+
         Note that this is a destructive yet temporary functionality. Adding a new custom 
         change/update will make the dataset out of sync with the official ISO 3166 Updates data, 
         therefore it is the user's responsibility to keep track of any custom Updates
-        and delete them when necessary. Although you can also create the required changes to a
-        temp object, specified by the save_new_filename parameter. 
+        and delete them when necessary.
 
         Parameters
         ==========

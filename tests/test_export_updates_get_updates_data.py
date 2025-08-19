@@ -64,7 +64,7 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
             request = requests.get(self.iso_base_url + code, headers={"headers": self.user_agent_header}, timeout=15)
             self.assertEqual(request.status_code, 200, f"Expected status code 200, got {request.status_code}.")
 
-    @unittest.skip("")
+    # @unittest.skip("")
     def test_get_iso3166_updates_wiki_df(self): 
         """ Test function that pulls the updates data from the country's wiki page. """
         test_alpha_az = "AZ" #Azerbaijan 
@@ -158,7 +158,7 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
             get_updates_df_wiki(test_alpha_error_5)
             get_updates_df_wiki(test_alpha_error_6)
 
-    @unittest.skip("Skipping to save having to go through process of installing Selenium and Chromedriver - tested locally.")
+    # @unittest.skip("Skipping to save having to go through process of installing Selenium and Chromedriver - tested locally.")
     # @patch('iso3166_updates_export.get_updates_data.sys.stdout', new_callable=io.StringIO)
     def test_get_iso3166_updates_selenium_df(self):
         """ Test function that pulls the updates data from the country's ISO page, using Selenium and Chromedriver. """
@@ -174,16 +174,17 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
         test_alpha_error_5 = 1234
         test_alpha_error_6 = False
 #1.)
-        bs_updates_df, bs_remarks = get_updates_df_selenium(test_alpha_bs) #Barbados
+        bs_updates_df, bs_remarks = get_updates_df_selenium(test_alpha_bs, driver=self.driver) #Barbados
         bs_expected_df = pd.DataFrame(
             [
+                ['By a letter dated 10 April 2025, the Permanent Representative of The Bahamas confirmed the name of the country, which should be styled with a capital T.', '', '2025-07-22', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS.'],
                 ['Addition of island BS-NP; Addition of Remark; Update List Source.', '', '2018-11-26', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS.'],
                 ['Correction of NL II-2 for toponyms and typographical errors, one deletion and source list update.', '', '2011-12-13', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS.'],
                 ['Update of the administrative structure and of the list source.', '', '2010-06-30', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS.']
             ],
             columns=['Change', 'Description of Change', 'Date Issued', 'Source']
         )   
-        bs_expected_remarks = {'part1': '', 'part2': 'The island of New Providence, where the capital Nassau is located, is administered directly by the national government', 'part3': '', 'part4': ''}
+        bs_expected_remarks = {'part1': 'Source UNTERM - United Nations', 'part2': 'The island of New Providence, where the capital Nassau is located, is administered directly by the national government', 'part3': '', 'part4': ''}
 
         try:
             assert_frame_equal(bs_updates_df, bs_expected_df)
@@ -191,7 +192,7 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
             self.fail(f"Expected and actual dataframe of BS updates data does not match:\n{bs_updates_df}")
         self.assertEqual(bs_remarks, bs_expected_remarks, f"Expected and observed remarks object for BS do not match:\n{bs_remarks}")
 #2.)
-        cm_updates_df, cm_remarks = get_updates_df_selenium(test_alpha_cm) #Cameroon
+        cm_updates_df, cm_remarks = get_updates_df_selenium(test_alpha_cm, driver=self.driver) #Cameroon
         cm_expected_df = pd.DataFrame(
             [
                 ['Update List Source.', '', '2015-11-27', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CM.'],
@@ -207,7 +208,7 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
             self.fail(f"Expected and actual dataframe of CM updates data does not match:\n{cm_updates_df}")
         self.assertEqual(cm_remarks, cm_expected_remarks, f"Expected and observed remarks object for BS do not match:\n{cm_remarks}")
 #3.)
-        mn_updates_df, mn_remarks = get_updates_df_selenium(test_alpha_mn) #Mongolia
+        mn_updates_df, mn_remarks = get_updates_df_selenium(test_alpha_mn, driver=self.driver) #Mongolia
         mn_expected_df = pd.DataFrame(
             [
                 ['Correction of the romanization system label.', '', '2018-11-26', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:MN.']
@@ -222,7 +223,7 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
             self.fail(f"Expected and actual dataframe of MN updates data does not match:\n{mn_updates_df}")
         self.assertEqual(mn_remarks, mn_expected_remarks, f"Expected and observed remarks object for BS do not match:\n{mn_remarks}")
 #4.)
-        si_updates_df, si_remarks = get_updates_df_selenium(test_alpha_si) #Slovenia
+        si_updates_df, si_remarks = get_updates_df_selenium(test_alpha_si, driver=self.driver) #Slovenia
         si_expected_df = pd.DataFrame(
             [
                 ['Change of spelling of SI-044, SI-197; Addition of category urban municipality; Change of category name from municipality to urban municipality for SI-011, SI-050, SI-052, SI-054, SI-061, SI-070, SI-080, SI-084, SI-085, SI-096, SI-112, SI-133; Update List Source.', '', '2022-11-29', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:SI.'],
@@ -243,7 +244,7 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
             self.fail(f"Expected and actual dataframe of SI updates data does not match:\n{si_updates_df}")
         self.assertEqual(si_remarks, si_expected_remarks, f"Expected and observed remarks object for BS do not match:\n{si_remarks}")
 #5.)
-        vu_updates_df, vn_remarks = get_updates_df_selenium(test_alpha_vu) #Vanuatu
+        vu_updates_df, vn_remarks = get_updates_df_selenium(test_alpha_vu, driver=self.driver) #Vanuatu
         vn_expected_remarks = {}
 
         self.assertIsInstance(vu_updates_df, pd.DataFrame, f"Output of function should be a dataframe, got {type(vu_updates_df)}.")
@@ -251,14 +252,18 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
         self.assertEqual(vn_remarks, vn_expected_remarks, f"Expected and observed remarks object for VN do not match:\n{vn_remarks}")
 #6.)
         with self.assertRaises(ValueError):
-            get_updates_df_selenium(test_alpha_error_1)
-            get_updates_df_selenium(test_alpha_error_2)
-            get_updates_df_selenium(test_alpha_error_3)
+            get_updates_df_selenium(test_alpha_error_1, driver=self.driver)
+            get_updates_df_selenium(test_alpha_error_2, driver=self.driver)
+            get_updates_df_selenium(test_alpha_error_3, driver=self.driver)
 #7.)
         with self.assertRaises(TypeError):        
-            get_updates_df_selenium(test_alpha_error_4)
-            get_updates_df_selenium(test_alpha_error_5)
-            get_updates_df_selenium(test_alpha_error_6)
+            get_updates_df_selenium(test_alpha_error_4, driver=self.driver)
+            get_updates_df_selenium(test_alpha_error_5, driver=self.driver)
+            get_updates_df_selenium(test_alpha_error_6, driver=self.driver)
+#8.)
+        with self.assertRaises(RuntimeError):        
+            get_updates_df_selenium(test_alpha_bs, driver=None)
+            get_updates_df_selenium(test_alpha_cm)
 
 if __name__ == '__main__':
     #run all unit tests

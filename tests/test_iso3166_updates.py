@@ -69,8 +69,8 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("Skipping metadata unit tests.")    
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        # self.assertEqual(metadata('iso3166-updates')['version'], "1.8.4", 
-        #     f"iso3166-updates version is not correct, expected 1.8.4, got {metadata('iso3166-updates')['version']}.")
+        # self.assertEqual(metadata('iso3166-updates')['version'], "1.8.5", 
+        #     f"iso3166-updates version is not correct, expected 1.8.5, got {metadata('iso3166-updates')['version']}.")
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             f"iso3166-updates software name is not correct, expected iso3166-updates, got {metadata('iso3166-updates')['name']}.")
         # self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna", 
@@ -153,7 +153,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         expected_counts = {'AD': 3, 'AE': 3, 'AF': 6, 'AG': 3, 'AI': 1, 'AL': 6, 'AM': 1, 'AO': 6, 'AQ': 1, 
                                 'AR': 1, 'AS': 1, 'AT': 2, 'AU': 3, 'AW': 3, 'AX': 3, 'AZ': 3, 'BA': 6, 'BB': 3, 
                                 'BD': 6, 'BE': 2, 'BF': 3, 'BG': 9, 'BH': 2, 'BI': 4, 'BJ': 3, 'BL': 5, 'BM': 1, 
-                                'BN': 4, 'BO': 5, 'BQ': 7, 'BR': 2, 'BS': 3, 'BT': 5, 'BV': 3, 'BW': 3, 'BY': 5, 
+                                'BN': 4, 'BO': 5, 'BQ': 7, 'BR': 2, 'BS': 4, 'BT': 5, 'BV': 3, 'BW': 3, 'BY': 5, 
                                 'BZ': 2, 'CA': 4, 'CC': 1, 'CD': 3, 'CF': 3, 'CG': 4, 'CH': 2, 'CI': 4, 'CK': 1, 
                                 'CL': 4, 'CM': 2, 'CN': 6, 'CO': 2, 'CR': 2, 'CU': 2, 'CV': 6, 'CW': 3, 'CX': 1, 
                                 'CY': 5, 'CZ': 10, 'DE': 4, 'DJ': 6, 'DK': 1, 'DM': 3, 'DO': 6, 'DZ': 4, 'EC': 3, 
@@ -182,7 +182,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         for code, expected_count in expected_counts.items():
             actual_count = len(self.all_updates.all.get(code, []))
             self.assertEqual(actual_count, expected_count, 
-                f"Incorrect updates total for code {code}. Expected {expected_count}, got {actual_count}.")
+                f"Incorrect updates total for country code {code}. Expected {expected_count}, got {actual_count}.")
 
     # @unittest.skip("")
     def test_updates_alpha(self):
@@ -348,11 +348,11 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                     f"Expected year of updates output to be either 2000, 2001 or 2002, got {test_year_2000_2001_2002_updates[update][row]['Date Issued']}.")    
 #4.)
         test_year_gt_2021_updates = self.all_updates.year(test_year_gt_2021)
-        test_year_gt_2021_expected_keys = ['BO', 'CI', 'CN', 'DZ', 'ET', 'FI', 'FM', 'FR', 'GB', 'GF', 'GP', 'GT', 'HU', 'ID', 'IN', 'IQ', 'IR', 'IS', 'KH', 'KP', 
-                                           'KR', 'KZ', 'LT', 'LV', 'ME', 'MQ', 'MX', 'NL', 'NP', 'NZ', 'PA', 'PH', 'PL', 'RE', 'RU', 'SI', 'SS', 'TR', 'VE', 'YT']
+        test_year_gt_2021_expected_keys = ['BO', 'BS', 'CI', 'CN', 'DZ', 'ET', 'FI', 'FM', 'FR', 'GB', 'GF', 'GP', 'GT', 'HU', 'ID', 'IN', 'IQ', 'IR', 'IS', 'KH', 
+                                           'KP', 'KR', 'KZ', 'LT', 'LV', 'ME', 'MQ', 'MX', 'NL', 'NP', 'NZ', 'PA', 'PH', 'PL', 'RE', 'RU', 'SI', 'SS', 'TR', 'VE', 'YT']
 
-        self.assertEqual(len(test_year_gt_2021_updates), 40, 
-            f"Expected 40 updates in output object, got {len(test_year_gt_2021_updates)}.")
+        self.assertEqual(len(test_year_gt_2021_updates), 41, 
+            f"Expected 41 updates in output object, got {len(test_year_gt_2021_updates)}.")
         self.assertEqual(list(test_year_gt_2021_updates), test_year_gt_2021_expected_keys, 
             f"Expected and observed list of country codes do not match:\n{list(test_year_gt_2021_updates)}.")
         for update in test_year_gt_2021_updates:
@@ -403,7 +403,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                 test_year_not_equal_2019_updates_total+=1
                 self.assertTrue(current_updates_year != 2019, f"Expected year of updates output to not equal 2019, got {test_year_not_equal_2019_updates[update][row]['Date Issued']}.")
         
-        self.assertEqual(test_year_not_equal_2019_updates_total, 885, f"Expected 885 updates in output object, got {test_year_not_equal_2019_updates_total}.")
+        self.assertEqual(test_year_not_equal_2019_updates_total, 886, f"Expected 886 updates in output object, got {test_year_not_equal_2019_updates_total}.")
 #8.)
         test_year_not_equal_2005_2009_updates = self.all_updates.year(test_year_not_equal_2005_2009)
         test_year_not_equal_2005_2009_updates_total = 0
@@ -415,7 +415,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                 test_year_not_equal_2005_2009_updates_total+=1
                 self.assertTrue(current_updates_year != 2005 and current_updates_year != 2009, f"Expected year of updates output to not equal 2005 or 2009, got {test_year_not_equal_2005_2009_updates[update][row]['Date Issued']}.")
 
-        self.assertEqual(test_year_not_equal_2005_2009_updates_total, 896, f"Expected 896 updates in output object, got {test_year_not_equal_2005_2009_updates_total}.")
+        self.assertEqual(test_year_not_equal_2005_2009_updates_total, 897, f"Expected 897 updates in output object, got {test_year_not_equal_2005_2009_updates_total}.")
 #9.)
         with self.assertRaises(ValueError):
             self.all_updates.year(test_year_error1) #1234
@@ -730,18 +730,18 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("")
     def test_updates_repr(self):
         """ Testing __repr__ function returns correct object representation for class object. """
-        self.assertEqual(repr(self.all_updates), "<Updates(version='1.8.4', countries_loaded=250, total_updates=910, source_file='test-iso3166-updates.json')>",
+        self.assertEqual(repr(self.all_updates), "<Updates(version='1.8.5', countries_loaded=250, total_updates=911, source_file='test-iso3166-updates.json')>",
                 f"Expected and observed object representation for class instance do not match:\n{repr(self.all_updates)}.")
 
     # @unittest.skip("")
     def test_updates_sizeof(self):
         """ Testing __sizeof__ function returns correct output for class object. """
-        self.assertEqual(self.all_updates.__sizeof__(), 0.328, f"Expected and observed output for sizeof function do not match:\n{self.all_updates.__sizeof__()}.")
+        self.assertEqual(self.all_updates.__sizeof__(), 0.329, f"Expected and observed output for sizeof function do not match:\n{self.all_updates.__sizeof__()}.")
         
     # @unittest.skip("")
     def test_updates_len(self):
         """ Testing __len__ function returns the correct length for the updates object. """
-        self.assertEqual(len(self.all_updates), 910, f"Expected the length of updates object to be 910, got {len(self.all_updates)}.")
+        self.assertEqual(len(self.all_updates), 911, f"Expected the length of updates object to be 911, got {len(self.all_updates)}.")
 
     # @unittest.skip("")
     def test_updates_contains(self):

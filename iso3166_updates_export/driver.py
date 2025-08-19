@@ -4,7 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.common.exceptions import WebDriverException
 
-def create_driver(proxy: bool=False) -> webdriver.Chrome:
+def create_driver(proxy: str=None) -> webdriver.Chrome:
     """
     Create instance of Selenium Chromedriver for each country's individual page on the 
     official ISO website. The site requires a session to be created and Javascript to
@@ -39,7 +39,7 @@ def create_driver(proxy: bool=False) -> webdriver.Chrome:
     - If Chrome Binary and Chromedriver versions are incompatible, remove chromedriver and reinstall: 
         find / -name chromedriver 2>/dev/null (find chromedriver)
         sudo rm /usr/local/bin/chromedriver (remove)
-        chromedriver --version (verify uninstall)
+        chromedriver --version (verify uninstall, will show error)
         brew install chromedriver (reinstall)
         chromedriver --version (verify install)
     - If there is a Runtime Error in the function that is calling create_driver(), the error might be in this
@@ -102,7 +102,6 @@ def create_driver(proxy: bool=False) -> webdriver.Chrome:
     
     #set random proxy IP if proxy parameter is not None
     if (proxy):
-        # print("Using Proxy IP: ", proxy)
         #add proxy option to Chromedriver
         chrome_options.add_argument(f'--proxy-server={proxy}')
 

@@ -12,14 +12,14 @@
 [![Issues](https://img.shields.io/github/issues/amckenna41/iso3166-updates)](https://github.com/amckenna41/iso3166-updates/issues)
 <!-- [![Size](https://img.shields.io/github/repo-size/amckenna41/iso3166-updates)](https://github.com/amckenna41/iso3166-updates) -->
 <!-- [![Commits](https://img.shields.io/github/commit-activity/w/amckenna41/iso3166-updates)](https://github.com/iso3166-updates) -->
-<!-- [![codecov](https://codecov.io/gh/amckenna41/iso3166-updates/graph/badge.svg?token=XOBSBVH8XA)](https://codecov.io/gh/amckenna41/iso3166-updates) -->
+<!-- [![codecov](https://codecov.io/gh/amckenna41/iso3166-updates/branch/main/graph/badge.svg)](https://codecov.io/gh/amckenna41/iso3166-updates) -->
 
 <div alt="images" style="justify-content: center; display:flex; margin-left=10px;">
   <img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Flag-map_of_the_world_%282017%29.png" alt="globe" height="300" width="600"/>
   <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/ISO_Logo_%28Red_square%29.svg" alt="iso" height="300" width="400"/> -->
 </div>
 
-> Software and accompanying REST API that checks for any updates/changes to the ISO 3166-1 and ISO 3166-2 country codes and subdivision naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui). Available via a lightweight Python software package & REST API. 
+> Software and accompanying RESTful API that checks for any updates/changes to the ISO 3166-1 and ISO 3166-2 country codes and subdivision naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui). Available via a lightweight Python software package & REST API. 
 
 Quick Start 🏃
 -------------
@@ -63,7 +63,7 @@ This software and accompanying API is for anyone working with country data at th
 
 Last Updated
 ------------
-The list of ISO 3166 updates was last updated on **April 2025**, with **910** individual published updates. A log of the latest ISO 3166 updates can be seen in the [UPDATES.md][updates_md]. 
+The list of ISO 3166 updates was last updated on **August 2025**, with **911** individual published updates. A log of the latest ISO 3166 updates can be seen in the [UPDATES.md][updates_md]. 
 
 <!-- <strong> The earliest date for any ISO 3166 updates is 1996-03-04, and the most recent is 2024-11-11. </strong> -->
 
@@ -452,7 +452,7 @@ Other ISO 3166 repositories
 Below are some of my other custom-built repositories that relate to the ISO 3166 standard.
 
 * [iso3166-updates-api](https://github.com/amckenna41/iso3166-updates-api): frontend API for iso3166-updates.
-* [iso3166-2](https://github.com/amckenna41/iso3166-2): a lightweight custom-built Python package, and accompanying API, that can be used to access all of the world's ISO 3166-2 subdivision data. A plethora of data attributes are available per country and subdivision including: name, local name, code, parent code, type, lat/longitude and flag. Currently, the package and API supports data from 250 countries/territories, according to the ISO 3166-1 standard.
+* [iso3166-2](https://github.com/amckenna41/iso3166-2): a lightweight bespoke custom-built Python package and dataset, and accompanying API, that can be used to access all of the world's ISO 3166-2 subdivision data. A plethora of data attributes are available per country and subdivision including: name, local name, code, parent code, type, lat/longitude and flag. Currently, the package and API supports data from 250 countries/territories, according to the ISO 3166-1 standard and >5000 subdivisions, according to the ISO 3166-2 standard.
 * [iso3166-2-api](https://github.com/amckenna41/iso3166-2-api): frontend API for iso3166-2.
 * [iso3166-flag-icons](https://github.com/amckenna41/iso3166-flag-icons): a comprehensive library of over 3500 country and regional flags from the ISO 3166-1 and ISO 3166-2 standards.
 

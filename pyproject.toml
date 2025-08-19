@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "iso3166-updates"
-version = "1.8.4"
+version = "1.8.5"
 description = "Get the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest." 
 authors = ["AJ McKenna <amckenna41@qub.ac.uk>"]
 maintainers = ["AJ McKenna <amckenna41@qub.ac.uk>"]

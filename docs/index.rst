@@ -35,26 +35,13 @@ Version
 =======
 The **iso3166-updates** software is currently at version |version_link|.
 
-.. |version_link| raw:: html
-
-   <a href="https://pypi.org/project/iso3166-updates/" target="_blank">v1.8.4</a>
-
 Last Updated
 ============
-The list of ISO 3166 updates was last updated on **May 2025**. A log of the latest ISO 3166 updates can be seen in the |updates_md_location_link| file.
-
-.. |updates_md_location_link| raw:: html
-
-   <a href="https://github.com/amckenna41/iso3166-updates/blob/main/UPDATES.MD" target="_blank">UPDATES.md</a>
+The list of ISO 3166 updates was last updated on **August 2025**, with **911** individual published updates. A log of the latest ISO 3166 updates can be seen in the |updates_md_location_link| file.
 
 License
 =======
 **iso3166-updates** is distributed under the MIT license.
-
-.. |demo_location_link| raw:: html
-
-   <a href="https://colab.research.google.com/drive/1oGF3j3_9b_g2qAmBtv3n-xO2GzTYRJjf?usp=sharing" target="_blank">here</a>
-
 
 Contributing
 ============
@@ -65,7 +52,28 @@ repository's |issues_link| tab.
 If you would like to contribute any functional/feature changes to the software, please make a pull
 request on the |repo_link|.
 
-Any other queries or issues, please contact me via email: amckenna41@qub.ac.uk 😁
+Any other queries or issues, please contact me via email: amckenna41@qub.ac.uk.
+
+
+Credits
+=======
+The Python software and accompanying API are solely developed and maintained by |me_link| 😁. 
+
+.. note::
+
+    A demo of the software and accompanying API is available |demo_location_link|!
+
+.. |version_link| raw:: html
+
+   <a href="https://pypi.org/project/iso3166-updates/" target="_blank">v1.8.5</a>
+
+.. |updates_md_location_link| raw:: html
+
+   <a href="https://github.com/amckenna41/iso3166-updates/blob/main/UPDATES.MD" target="_blank">UPDATES.md</a>
+
+.. |demo_location_link| raw:: html
+
+   <a href="https://colab.research.google.com/drive/1oGF3j3_9b_g2qAmBtv3n-xO2GzTYRJjf?usp=sharing" target="_blank">here</a>
 
 .. |issues_link| raw:: html
 
@@ -75,12 +83,10 @@ Any other queries or issues, please contact me via email: amckenna41@qub.ac.uk �
 
    <a href="https://github.com/amckenna41/iso3166-updates/" target="_blank">repository</a>
 
+.. |me_link| raw:: html
 
+   <a href="https://github.com/amckenna41" target="_blank">me</a>
 
-.. note::
-
-    A demo of the software and accompanying API is available |demo_location_link|!
-   
 .. Changelog
 .. =========
 

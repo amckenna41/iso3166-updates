@@ -1,7 +1,21 @@
-# Change Log
+# Change Log 📝
 
-## v1.8.0-v1.8.3 - April/May 2025
+## v1.8.5 - August 2025
 
+### Added
+- Added utilities function that exports input JSON to csv and xml
+- Added new updates object for Bahamas: 2025-07-22. Total updates counter incremented and unit tests updated to incorporate new data
+- Added iso3166-updates CSV and XML to main repo dir
+
+### Changed
+
+
+### Fixed
+- Fixed recursive backoff
+- Updated a few source url entries in data object from http -> https
+
+
+## v1.8.0-v1.8.4 - April/May 2025
 
 ### Added
 - New function in Updates class that checks for any new updates to the updates object, comparing against the current version installed and outputting the difference between the two if any are found. 
@@ -37,7 +51,7 @@
 - In extract updates script, optional proxy functionality added to wiki and ISO scraping functions to help avoid 429 errors and timeout errors
 - Added country flag emoji to country name + country code in tqdm loop in extraction process
 - Added empty XK updates object
-- Added scheduled CRON workflow that exports the updates data on a schedule and exports to Google Drive, aimed at alleviating timeouts and errors when exporting all the updates daya
+- Added scheduled CRON workflow that exports the updates data on a schedule and exports to Google Drive, aimed at alleviating timeouts and errors when exporting all the updates data
 - Added additional header to Selenium call
 
 ### Changed

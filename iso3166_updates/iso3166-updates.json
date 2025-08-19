@@ -711,6 +711,12 @@
     ],
     "BS": [
         {
+            "Change": "By a letter dated 10 April 2025, the Permanent Representative of The Bahamas confirmed the name of the country, which should be styled with a capital T.",
+            "Description of Change": "",
+            "Date Issued": "2025-07-22",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS."
+        },
+        {
             "Change": "Subdivision added: BS-NP New Providence.",
             "Description of Change": "Addition of island BS-NP; Addition of Remark; Update List Source.",
             "Date Issued": "2018-11-26",
@@ -2115,10 +2121,10 @@
             "Source": "Newsletter II-1 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-1_corrected_2010-02-19.pdf."
         },
         {
-            "Change": "Second edition of ISO 3166-2 (this change was not announced in a newsletter) - 'Statoid Newsletter January 2008' - http://www.statoids.com/n0801.html.",
+            "Change": "Second edition of ISO 3166-2 (this change was not announced in a newsletter) - 'Statoid Newsletter January 2008' - https://www.statoids.com/n0801.html.",
             "Description of Change": "",
             "Date Issued": "2007-12-13",
-            "Source": "ISO 3166-2:2007 - http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718."
+            "Source": "ISO 3166-2:2007 - https://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718."
         },
         {
             "Change": "Codes: (to correct duplicate use). Koundara: GN-KD -> GN-KN.",
@@ -5911,7 +5917,7 @@
             "Change": "Codes: Gauteng: ZA-GP -> ZA-GT. KwaZulu-Natal: ZA-ZN -> ZA-NL.",
             "Description of Change": "Second edition of ISO 3166-2 (not announced in a newsletter).",
             "Date Issued": "2007-12-13",
-            "Source": "ISO 3166-2:2007 - http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718."
+            "Source": "ISO 3166-2:2007 - https://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718."
         },
         {
             "Change": "Codes: (not marked with red colour in newsletter). Gauteng: ZA-GT -> ZA-GP. KwaZulu-Natal: ZA-NL -> ZA-ZN.",

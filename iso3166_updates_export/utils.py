@@ -1326,6 +1326,107 @@ def merge_update_files(update_folder_path: str="") -> None:
 
     print(f"Merged {len(merged_data)} JSON files into {merged_iso3166_updates_filepath}.")
 
+def export_to_csv_xml(input_json_path: str="", export_filename: str="") -> None:
+    """
+    Export the input JSON object to CSV and XML. By default, in the export pipeline, only 
+    the JSON is exported. This function allows the JSON to be exported to CSV and XML after
+    the processing.
+
+    Parameters
+    ==========
+    :input_json_path: str (default="")
+        filepath to exported JSON.
+    :export_filename: str (default="")
+        export filename for csv and xml files. If no value input it
+        will be the same as the input JSON file.
+
+    Returns
+    =======
+    None
+
+    Raises
+    ======
+    OSError:
+        Filepath to JSON is invalid.
+    ValueError:
+        Error parsing JSON.
+    """
+    #raise error if invalid JSON object path
+    if not os.path.isfile(input_json_path):
+        raise OSError(f"Invalid filepath to JSON object: {input_json_path}.")
+
+    #open JSON object, raise error if issue parsing
+    try:
+        with open(input_json_path, "r", encoding="utf-8") as f:
+            iso3166_updates_data = json.load(f)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Invalid JSON: {e}.") from e
+
+    #check to see if dictionary only contains empty country updates data, if so csv export is skipped
+    all_empty = all(isinstance(value, list) and not value for value in iso3166_updates_data.values())
+
+    #if exporting to CSV need to add country code column to identify each row's updates
+    if not (all_empty):
+        #dataframe for csv export
+        csv_iso3166_df = pd.DataFrame()
+
+        #flatten the dictionary and add the "Country Code" column
+        flattened_data = []
+        for country_code, updates in iso3166_updates_data.items():
+            for update in updates:
+                flattened_update = {**update, 'Country Code': country_code}
+                flattened_data.append(flattened_update)
+
+        #convert flattened data to DataFrame
+        csv_iso3166_df = pd.DataFrame(flattened_data)
+
+        #if non-empty dataframe, add columns and data
+        if not (csv_iso3166_df.empty):
+            #reindex columns in dataframe
+            csv_iso3166_df = csv_iso3166_df[['Country Code', 'Change', 'Description of Change', 'Date Issued', 'Source']]
+
+            #remove country code column if only one country's updates data exported, otherwise sort them alphabetically
+            if (csv_iso3166_df["Country Code"].nunique() == 1):
+                csv_iso3166_df.drop("Country Code", axis=1, inplace=True)
+            else:
+                csv_iso3166_df.sort_values('Country Code', inplace=True)
+
+            #iterate over dict, removing 'Country Code' from nested dicts which isn't required for JSON export
+            iso3166_updates_data = {k: [{key: val for key, val in record.items() if key != 'Country Code'} for record in v] for k, v in iso3166_updates_data.items()}
+
+    #export to XML if bool set and data is non-empty
+    # if not (all_empty):
+    #create XML tree element 
+    xml_root = ET.Element("ISO3166Updates")
+    #iterate through country code and updates data, appending each as a child/sub element of the XML tree
+    for country_code, updates in iso3166_updates_data.items():
+        country_elem = ET.SubElement(xml_root, "Country", code=country_code)
+        for update in updates:
+            update_elem = ET.SubElement(country_elem, "Update")
+            for key, value in update.items():
+                child = ET.SubElement(update_elem, key.replace(" ", "_"))
+                child.text = str(value)
+
+    #get export filename, use basename of JSON filepath by default
+    if (export_filename == ""):
+        export_filename = os.path.basename(os.path.splitext(input_json_path)[0])
+
+    #export updates to a CSV and xml
+    if not (all_empty):
+        csv_iso3166_df.to_csv(export_filename + ".csv", index=False)
+        print(f"\nAll ISO 3166 updates exported to CSV: {export_filename}.csv.")
+
+    #convert ElementTree to a pretty-printed XML string
+    long_xml_string = ET.tostring(xml_root, 'utf-8')
+    parsed_xml_elem = minidom.parseString(long_xml_string)
+    pretty_xml_as_string = parsed_xml_elem.toprettyxml(indent="  ")
+
+    #write to file
+    with open(export_filename + ".xml", "w", encoding="utf-8") as f:
+        f.write(pretty_xml_as_string)
+
+    print(f"\nAll ISO 3166 updates exported to XML: {export_filename}.xml.\n")
+
 # def compare_updates_files(updates1_filepath: str, updates2_filepath: str, export_differences: bool=0) -> str:
 #     """
 #     This function allows you to import 2 separate exported updates JSON files and

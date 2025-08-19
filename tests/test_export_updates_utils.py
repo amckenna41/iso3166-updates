@@ -6,7 +6,6 @@ import json
 import re
 from datetime import datetime
 import os 
-import platform
 import shutil
 import pandas as pd
 import requests
@@ -52,16 +51,14 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
         testing the functionality for exporting the exported updates data to the JSON, CSV and XML.
     test_remove_duplicates:
         testing the functionality that removes duplicate objects from the dataframe export. 
+    test_export_to_csv_xml:
+        testing the functionality that just exports an input JSON into XML and CSV.
     """
     def setUp(self):
         """ Initialise test variables, import json. """
-        #importing all test updates data from JSON, open iso3166-updates json file and load it into class variable, loading in a JSON is different in Windows & Unix/Linux systems
-        if (platform.system() != "Windows"):
-            with open(os.path.join("tests", "test-iso3166-updates.json")) as input_json:
-                self.iso3166_data = json.load(input_json)
-        else:
-            with open(os.path.join("tests", "test-iso3166-updates.json"), encoding="utf-8") as input_json:
-                self.iso3166_data = json.loads(input_json.read())
+        #import test JSON object
+        with open(os.path.join("tests", "test-iso3166-updates.json"), encoding="utf-8") as input_json:
+            self.iso3166_data = json.loads(input_json.read())
 
         #normalize JSON data for conversion into dataframe, some functions require data to be dataframe
         flat_data = []
@@ -752,6 +749,15 @@ class ISO3166_Export_Updates_Utils_Tests(unittest.TestCase):
 
         result = remove_duplicates(df_test_5)
         self.assertEqual(len(result), 1, f"Expected one object in output, got {len(result)}.")
+
+    # @unittest.skip("")
+    def test_export_to_csv_xml(self):
+        """ Testing export of JSON into CSV and XML. """
+#1.)
+        export_to_csv_xml(os.path.join("tests", "test-iso3166-updates.json"))
+
+        self.assertTrue(os.path.isfile("test-iso3166-updates.csv"), "Expected output CSV file to be exported.")
+        self.assertTrue(os.path.isfile("test-iso3166-updates.xml"), "Expected output XML file to be exported.")
 
     def tearDown(self):
         """ Delete test directory. """

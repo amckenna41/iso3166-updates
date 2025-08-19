@@ -2,11 +2,19 @@
 
 # ISO 3166 latest changes (2022-) 🔄
 
+## 2025-07-22
+
+| Country Code | Change | Description of Change | Date Issued | Source |   
+|:-------------------|:------------|-----------------------------------:|------------------------:|-------------:|
+| The Bahamas (BS)        | By a letter dated 10 April 2025, the Permanent Representative of The Bahamas confirmed the name of the country, which should be styled with a capital T. | | 2025-07-22 | Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS. | 
+
+
 ## 2024-11-11
 
 | Country Code | Change | Description of Change | Date Issued | Source |   
 |:-------------------|:------------|-----------------------------------:|------------------------:|-------------:|
 | India (IN)        | IN-DH Dadra and Nagar Haveli and IN-DD Diu and Daman; Addition of Indian system of transliteration. | Deletion of Union territory; Addition of Union territory; Correction of spelling; Update list source and correction of the code source. | 2024-11-11 | Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:IN. | 
+
 
 ## 2024-02-29 
 

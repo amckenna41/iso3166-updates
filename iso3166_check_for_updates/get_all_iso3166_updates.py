@@ -226,10 +226,9 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
         #drop any duplicate rows in object, e.g rows that have the same publication date and change/description of change attribute values
         iso3166_df = remove_duplicates(iso3166_df)
 
-        if (use_selenium):
-            if (include_remarks_data):
-                if (remarks_data):
-                    iso3166_df = add_remarks_data(iso3166_df, remarks_data)
+        #add remarks data from ISO country summary table, if applicable
+        if (use_selenium and include_remarks_data and remarks_data):
+          iso3166_df = add_remarks_data(iso3166_df, remarks_data)
 
         #create a mask of rows where the "Change" column is empty
         empty_change_mask = iso3166_df["Change"] == ""
@@ -283,7 +282,7 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
 
     return all_iso3166_updates
 
-def create_driver(proxy: bool=False) -> webdriver.Chrome:
+def create_driver(proxy: str=None) -> webdriver.Chrome:
     """
     Create instance of Selenium Chromedriver for each country's individual page on the 
     official ISO website. The site requires a session to be created and Javascript to
@@ -381,7 +380,6 @@ def create_driver(proxy: bool=False) -> webdriver.Chrome:
     
     #set random proxy IP if proxy parameter is not None
     if (proxy):
-        print("Using Proxy IP: ", proxy)
         #add proxy option to Chromedriver
         chrome_options.add_argument(f'--proxy-server={proxy}')
 
@@ -496,7 +494,7 @@ def get_updates_df_wiki(alpha_code: str, proxy: str=None) -> pd.DataFrame:
     try:
         time.sleep(2) 
         # response = session.get(wiki_base_url + alpha2, headers={"User-Agent": user_agent_header}, timeout=15)
-        response = session.get(wiki_base_url + alpha2, headers={"User-Agent": user_agent_header}, proxies=proxy_ip, timeout=15)
+        response = session.get(wiki_base_url + alpha2, headers={"User-Agent": user_agent_header, "Accept-Language": "en-US,en;q=0.9"}, proxies=proxy_ip, timeout=15)
         response.raise_for_status()
         # soup = BeautifulSoup(response.content, "html.parser")
     except requests.exceptions.RequestException as e:
@@ -593,6 +591,7 @@ def get_updates_df_selenium(alpha_code: str, driver: webdriver=None, include_rem
         Invalid alpha-2 country code input.
     RuntimeError:
         Error when parsing country's ISO updates data.
+        Invalid Webdriver instance passed in.
     """
     #initialise dataframe to hold updates data obtained from ISO pages
     iso3166_df_selenium = pd.DataFrame()
@@ -600,8 +599,13 @@ def get_updates_df_selenium(alpha_code: str, driver: webdriver=None, include_rem
     #validate alpha code, convert to alpha-2 if required
     alpha2 = convert_to_alpha2(alpha_code)
     
-    #parse Changes section table on webpage, using the header of the section
+    #raise error if Webdriver is None
+    if (driver is None):
+      raise RuntimeError("A valid Webdriver instance should be passed in, driver is None.")
+    
+    #parse Changes section table on webpage, using the header of the section, initialise soup object
     changes_section = None
+    soup = None
 
     #counter that determines the max number of retries for the Selenium function, retry required if an error occurs when accessing the html of a country's ISO page
     selenium_retry_attempts = 3
@@ -618,12 +622,13 @@ def get_updates_df_selenium(alpha_code: str, driver: webdriver=None, include_rem
     #try parsing the updates data on the page, with multiple retries, if retry limit reached then raise error 
     while (selenium_retry_attempts > 0 and changes_section == None):
       #initialise driver object before try block
-      driver = None
+    #   driver = None
       try:
         #add recursive backoff on multiple attempts 
-        if (selenium_retry_attempts != 3):
-            wait_time = backoff_factor * (2 ** (selenium_retry_attempts - 1)) + random.uniform(0, 1)
-            print(f"Attempt {selenium_retry_attempts} failed.\nError Message: {e}.\nRetrying in {wait_time:.2f} seconds...")
+        attempt_num = (3 - selenium_retry_attempts) + 1
+        if (attempt_num > 1):
+            wait_time = backoff_factor * (2 ** (attempt_num - 2)) + random.uniform(0, 1)
+            print(f"Attempt {attempt_num - 1} failed.\nError Message: {e}.\nRetrying in {wait_time:.2f} seconds...")
             time.sleep(wait_time)
 
         #create session for input country's ISO section
@@ -636,10 +641,6 @@ def get_updates_df_selenium(alpha_code: str, driver: webdriver=None, include_rem
         #pause for 4 seconds
         # WebDriverWait(driver, 4)
         # WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-
-        print("\nAll <h3> elements:")
-        for h3 in driver.find_elements(By.TAG_NAME, "h3"):
-            print("-", h3.text)
 
         #pause for 30 seconds before searching for h3 element, raise Timeout exception error if section not found
         try:
@@ -672,7 +673,7 @@ def get_updates_df_selenium(alpha_code: str, driver: webdriver=None, include_rem
         #break to next while loop iteration if Changes html table data is blank
         if not (changes_section):
             print (f"No Changes section found for {alpha2} on page: {iso_base_url + alpha2.upper()}.")
-            return pd.DataFrame
+            return pd.DataFrame, {}
 
         #convert html table into 2D array
         changes_section_converted = table_to_array(changes_section, soup)
@@ -686,23 +687,23 @@ def get_updates_df_selenium(alpha_code: str, driver: webdriver=None, include_rem
         selenium_retry_attempts -= 1
         if selenium_retry_attempts == 0:
             raise RuntimeError(f"Failed to parse ISO page for {alpha2} at URL {iso_base_url + alpha2.upper()} after 3 attempts:\n\nError: {type(e).__name__}: {e}.")
-      finally:
-        #always close the WebDriver session, raise an error if driver is None which means error when creating it
-        try:
-            if ('driver' in locals() and driver is not None):
-                driver.quit()
-        except Exception as quit_error:
-            if (e is not None):
-                # raise RuntimeError(f"Failed to initialise a Chromedriver instance for {alpha2} at URL {iso_base_url + alpha2.upper()}.")
-                raise RuntimeError(
-                    f"Error occurred while quitting driver after failure to parse {alpha2} at URL {iso_base_url + alpha2.upper()}:\n\n"
-                    f"Original Error: {type(e).__name__}: {e}\n"
-                    f"Driver Quit Error: {type(quit_error).__name__}: {quit_error}"
-                ) from e
-            else:
-                raise RuntimeError(
-                    f"Driver quit failed for {alpha2} at URL {iso_base_url + alpha2.upper()}:\n\n{type(quit_error).__name__}: {quit_error}"
-                )
+    #   finally:
+    #     #always close the WebDriver session, raise an error if driver is None which means error when creating it
+    #     try:
+    #         if ('driver' in locals() and driver is not None):
+    #             driver.quit()
+    #     except Exception as quit_error:
+    #         if (e is not None):
+    #             # raise RuntimeError(f"Failed to initialise a Chromedriver instance for {alpha2} at URL {iso_base_url + alpha2.upper()}.")
+    #             raise RuntimeError(
+    #                 f"Error occurred while quitting driver after failure to parse {alpha2} at URL {iso_base_url + alpha2.upper()}:\n\n"
+    #                 f"Original Error: {type(e).__name__}: {e}\n"
+    #                 f"Driver Quit Error: {type(quit_error).__name__}: {quit_error}"
+    #             ) from e
+    #         else:
+    #             raise RuntimeError(
+    #                 f"Driver quit failed for {alpha2} at URL {iso_base_url + alpha2.upper()}:\n\n{type(quit_error).__name__}: {quit_error}"
+    #             )
             
     #swapping the Change and Description of Change values from ISO page
     if not (iso3166_df_selenium.empty):
@@ -718,11 +719,10 @@ def get_updates_df_selenium(alpha_code: str, driver: webdriver=None, include_rem
     #initialise remarks object
     remarks_data = {}
 
-    if (include_remarks_data):
-        if not (iso3166_df_selenium.empty):
-            #find remarks table html, if applicable
-            country_summary_table = soup.find(class_='core-view-summary')
-            iso3166_df_selenium, remarks_data = parse_remarks_table(iso3166_df_selenium, country_summary_table)
+    if (include_remarks_data and not iso3166_df_selenium.empty and soup is not None):
+          #find remarks table html, if applicable
+          country_summary_table = soup.find(class_='core-view-summary')
+          iso3166_df_selenium, remarks_data = parse_remarks_table(iso3166_df_selenium, country_summary_table)
 
     return iso3166_df_selenium, remarks_data
 

@@ -223,6 +223,8 @@ change/update already exists then an error will be raised, otherwise it will be 
 If the added change/update is required to be deleted from the object, then you can call the same function with the "Change" and "Date Issued" 
 parameters/attributes of the added change/update, but also setting the 'delete' parameter to 1/True. You can also uninstall and reinstall to reset the main object.
 
+To avoid writing over the main existing updates file you can export to a separate object via the `save_new` and `save_new_filename` parameters.
+
 *Note that this is a destructive yet temporary functionality. Adding a new custom change/update will make the dataset out of sync with the official 
 ISO 3166 Updates data, therefore it is the user's responsibility to keep track of any custom changes/updates and delete them when necessary.*
 
@@ -238,9 +240,9 @@ For example, adding custom Kenyan and Belfast updates:
    #adding custom update object for Kenya
    iso.custom_update(alpha_code="KE", change="New subdivision added", date_issued="2025-01-01", description_of_change="big ole description")
 
-   #adding custom update object for Belfast
-   iso.custom_update("IE", change="Brand new Belfast subdivision", date_issued="2020-05-12", description_of_change="", source="https:...")
-
+   #adding custom update object for Belfast, save to new file
+   iso.custom_update("IE", change="Brand new Belfast subdivision", date_issued="2020-05-12", description_of_change="", source="https:...", 
+      save_new=1, save_new_filename="ie-custom-update.json")
 
 If you need to remove the custom updates you can set the ``delete`` parameter in the same function to True, e.g custom Kenyan and Belfast updates:
 

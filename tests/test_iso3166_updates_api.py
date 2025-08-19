@@ -109,12 +109,12 @@ class Updates_Api_Tests(unittest.TestCase):
         """ Testing '/api/all' endpoint that returns all updates data for all countries. """
 #1.)    
         self.assertIsInstance(self.test_request_all.json(), dict, f"Expected output object of API to be of type dict, got {type(self.test_request_all.json())}.")
-        self.assertEqual(len(self.test_request_all.json()), 249, f"Expected there to be 249 elements in output object, got {len(self.test_request_all.json())}.")
+        self.assertEqual(len(self.test_request_all.json()), 250, f"Expected there to be 250 elements in output object, got {len(self.test_request_all.json())}.")
         self.assertEqual(self.test_request_all.status_code, 200, f"Expected 200 status code from request, got {self.test_request_all.status_code}.")
         self.assertEqual(self.test_request_all.headers["content-type"], "application/json", f"Expected Content type to be application/json, got {self.test_request_all.headers['content-type']}.")
 
         total_updates = sum(len(changes) for changes in self.all_iso3166_updates.values())
-        self.assertEqual(total_updates, 910, f"Expected and observed total updates do not match, got {total_updates}.")
+        self.assertEqual(total_updates, 911, f"Expected and observed total updates do not match, got {total_updates}.")
 #2.)
         for alpha2 in list(self.test_request_all.json().keys()):
             self.assertIn(alpha2, iso3166.countries_by_alpha2, f"Alpha-2 code {alpha2} not found in list of available country codes.")

@@ -1,9 +1,6 @@
 name: Build and Deploy to Cloud Run
 
 on:
-  push:
-    branches: [main]
-
   #allow for workflow to be manually initiated from the Actions tab
   workflow_dispatch:
 
@@ -19,7 +16,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: iso3166-updates
-          service_account_email: iso3166-updates-custom@iso3166-updates.iam.gserviceaccount.com
+          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
@@ -41,5 +38,5 @@ jobs:
             --platform managed \
             --memory 2Gi \
             --timeout 1800 \
-            --service-account=iso3166-updates-custom@iso3166-updates.iam.gserviceaccount.com \
+            --service-account=${{ secrets.GCP_SA_EMAIL }} \
             --env-vars-file=env.yaml

@@ -151,6 +151,7 @@ iso3166_updates_export/remove_duplicates.py
 
 iso3166_check_for_updates/old
 
+iso3166
 successful_tests/
 
 TODO.md

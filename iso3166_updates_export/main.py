@@ -212,10 +212,9 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
         #drop any duplicate rows in object, e.g rows that have the same publication date and change/description of change attribute values
         iso3166_df = remove_duplicates(iso3166_df)
 
-        if (use_selenium):
-            if (include_remarks_data):
-                if (remarks_data):
-                    iso3166_df = add_remarks_data(iso3166_df, remarks_data)
+        #add remarks data from ISO country summary table, if applicable
+        if (use_selenium and include_remarks_data and remarks_data):
+          iso3166_df = add_remarks_data(iso3166_df, remarks_data)
 
         #create a mask of rows where the "Change" column is empty
         empty_change_mask = iso3166_df["Change"] == ""
@@ -310,5 +309,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     #output ISO 3166 updates/changes for selected alpha code(s) and year(s)
-    # all_iso3166_updates = get_iso3166_updates(**vars(args))
-    compare_updates_files("/Users/adammckenna/github-repos/iso3166-updates/iso3166_updates/iso3166-updates.json", "/Users/adammckenna/github-repos/iso3166-updates/iso3166-updates_2025-07-24_master_original.json", export_differences=1)
+    all_iso3166_updates = get_iso3166_updates(**vars(args))

@@ -25,6 +25,7 @@ class ISO3166_Export_Updates_Parse_Updates_Data_Tests(unittest.TestCase):
         #turn off tqdm progress bar functionality when running tests
         os.environ["TQDM_DISABLE"] = "1"
 
+    # @unittest.skip("")
     def test_parse_updates_table(self):
         """ Testing functionality that parses the updates table data into valid format. """
 #1.)
@@ -58,6 +59,7 @@ class ISO3166_Export_Updates_Parse_Updates_Data_Tests(unittest.TestCase):
             parse_updates_table("AD", "")
             parse_updates_table("DE", 1.04)
 
+    # @unittest.skip("")
     def test_parse_remarks_table(self):
         """ Testing functionality that parses the remarks table data from ISO page. """
         class MockTag:
