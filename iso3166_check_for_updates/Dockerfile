@@ -23,7 +23,7 @@ RUN set -ex && \
     rm -rf /tmp/chromedriver.zip /tmp/chromedriver-linux64
 
 #copy requirements.txt to working directory
-COPY requirements.txt .
+COPY iso3166_check_for_updates/requirements.txt .
 
 #install Python dependencies
 RUN pip install --no-cache-dir selenium -r requirements.txt
