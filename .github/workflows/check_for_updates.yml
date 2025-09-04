@@ -27,7 +27,7 @@ jobs:
       - name: Build and Push Docker Image to Artifact Registry
         run: |
           IMAGE="us-central1-docker.pkg.dev/iso3166-updates/cloud-run-deployments/check_for_updates"
-          docker build -f /iso3166_check_for_updates/Dockerfile -t "$IMAGE" .
+          docker build -f iso3166_check_for_updates/Dockerfile -t "$IMAGE" .
           docker push $IMAGE
 
       - name: Deploy to Cloud Run
