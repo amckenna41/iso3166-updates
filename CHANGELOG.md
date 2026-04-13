@@ -1,21 +1,72 @@
-# Change Log 📝
+# Changelog
 
-## v1.8.5 - August 2025
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.8.6] - 2026-03-25
+
+### Added
+- Added module-level `_load_updates_json` function with `@lru_cache` to cache the ISO 3166 updates JSON on first load, reducing repeated disk I/O when multiple `Updates` instances are created in long-running services
+- Added `py.typed` PEP 561 marker file to `iso3166_updates/` package, enabling downstream type checkers to recognise the package as typed
+- Added `pytest-cov` to dev dependencies in `pyproject.toml` and updated CI workflow to run tests with `--cov=iso3166_updates` coverage reporting
+- Added Codecov upload step (`codecov/codecov-action@v4`) to the build and test workflow
+- Added `Programming Language :: Python :: 3.9` to PyPI trove classifiers in `pyproject.toml`
+- Added date validation to `custom_update` — the `date_issued` parameter and the `Date Issued` field of `custom_update_object` are now validated via `convert_date_format`, raising a `ValueError` on an unrecognised format
+- Added `Note` section to `year()`, `date_range()`, and `search()` docstrings clarifying that results are scoped to the initialised `country_code` when that parameter was set at construction
+- Added threading and parallelism to the export pipeline, allowing multiple country codes to be processed concurrently to reduce overall export time
+- Added `macos-latest` to the OS matrix in the `build_test` CI workflow, expanding test coverage across platforms
+- Added `.github/dependabot.yml` with weekly automated dependency updates for both `pip` and `github-actions` ecosystems
+- Added fuzzy search parametrised tests (`test_updates_search_fuzzy`) covering `exclude_match_score` return types, `likeness_score` boundary behaviour, multi-term queries, country-scoped searches, and `ValueError` on out-of-range scores
+- Added pip dependency caching (`actions/cache@v4`) to both the `build_test` and `security_check` jobs in the CI workflow
+
+### Fixed
+- Removed unreachable `except FileNotFoundError` branch in `__init__` — the preceding `os.path.isfile()` guard already raises before the `open()` call, making the `FileNotFoundError` handler dead code
+- Removed commented-out dead code `# self.all = Map(self.all)` from `__init__`
+- Fixed `delete`, `save_new` parameters of `custom_update` defaulting to integer `0` instead of `False`; fixed `exclude_match_score` parameter of `search` likewise — all bool parameters now default to `False`
+- Added `_load_updates_json.cache_clear()` call after `custom_update` writes back to the original JSON file, ensuring subsequent instantiations reload the updated data rather than serving stale cached content
+- Fixed mutable default argument bug in `custom_update`: `custom_update_object` parameter now defaults to `None` and is set to `{}` inside the function body, preventing unintended state sharing across calls
+- Fixed unnecessary `list(self.all.keys())` conversion in `__getitem__` replaced with direct `in self.all` membership test, eliminating an O(n) allocation
+- Fixed missing error guard in `year()` date parsing: a `try/except ValueError` now wraps the `datetime.strptime` calls so malformed `Date Issued` values are skipped gracefully rather than raising an unhandled exception
+- Fixed `--no-sandbox` Chrome flag in `driver.py` being set unconditionally; it is now gated behind `os.getenv('CI')` so it only applies in containerised/CI environments
+- Fixed `Map.__getattr__` silently returning `None` for missing attributes; it now raises `AttributeError` with a descriptive message, matching standard Python dict-subclass behaviour
+- Fixed `convert_date_format()` docstring `Returns` description which incorrectly stated the function returned a formatted `YYYY-MM-DD` string; it returns a `datetime` object
+- Fixed `auto_update_iso3166_updates.yml`: removed pinned `chromedriver-version: '125.0.6422.60'` so the action auto-detects the correct version matching the runner's Chrome installation
+- Fixed `auto_update_iso3166_updates.yml`: `OPENAI_API_KEY` was not passed into the export step environment, causing a hard `ValueError` at runtime; it is now injected via `env: OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}`
+- Fixed `auto_update_iso3166_updates.yml`: PR body referenced wrong workflow filename (`auto_update_iso3166.yml`); corrected to `auto_update_iso3166_updates.yml`
+- Fixed `auto_update_iso3166_updates.yml`: updated JSON was being copied to `tests/iso3166-updates.json` (non-existent path); corrected target to `tests/test-iso3166-updates.json`
+- Fixed broken variable references `input_country_name` → `input_name` in `docs/api.rst` `country_name` code examples; also corrected the Uganda variable assignment from `seychelles_updates_data` to `uganda_updates_data`
+- Removed dead `include_remarks_data` parameter from `get_updates_df_selenium()` signature and docstring
+
+### Changed
+- Removed `selenium`, `chromedriver`, and `beautifulsoup` from PyPI keywords in `pyproject.toml` — these are implementation details of the export scripts and misleading for users of the installable `iso3166-updates` package
+- Updated `actions/setup-python` from `v3` to `v5` in both the `build_test` and `security_check` jobs in the CI workflow
+- Moved `CHANGELOG.md` from `.github/workflows/` to the repository root, its conventional location
+- Added clarifying comment to `deploy_pypi.yml` trigger confirming the workflow is not triggered by direct pushes to `main`
+- Refactored `auto_update_iso3166_updates.yml` country-code union from `sorted(set(list(...) + list(...)))` to `sorted(new_data.keys() | existing_data.keys())`, eliminating redundant allocations
+- Enabled `--save_each_iteration` flag in `auto_update_iso3166_updates.yml` export step so partial results are persisted per country during long-running exports
+- Removed `python-dateutil` from `pyproject.toml` dependencies as it is not used by the package
+- Removed `iso3166` and `python-dateutil` from the main `README.md` requirements section; added `pycountry` which is the actual reverse-lookup dependency
+- Deleted `iso3166_updates_export/remove_duplicates.py` — the file contained only commented-out draft code; the live `remove_duplicates` function lives in `utils.py`
+- Pruned `TODO.md` to only the three remaining open items, removing hundreds of completed historical tasks
+
+## [1.8.5] - 2025-08-01
 
 ### Added
 - Added utilities function that exports input JSON to csv and xml
 - Added new updates object for Bahamas: 2025-07-22. Total updates counter incremented and unit tests updated to incorporate new data
 - Added iso3166-updates CSV and XML to main repo dir
-
-### Changed
-
+- Added Vercel webhook to the workflow, this redeploys the API vercel app once new version of the software released from this repo
+- Added version, cache and openapi endpoints to API
+- Added additional verbose flags to several of the get functions to display useful logging info when exporting info
 
 ### Fixed
 - Fixed recursive backoff
 - Updated a few source url entries in data object from http -> https
 
 
-## v1.8.0-v1.8.4 - April/May 2025
+## [1.8.0 - 1.8.4] - 2025-05-01
 
 ### Added
 - New function in Updates class that checks for any new updates to the updates object, comparing against the current version installed and outputting the difference between the two if any are found. 
@@ -115,7 +166,7 @@
 - Fixed several module import errors when calling scripts from main dir
 - Error raised when an invalid likeness score is input into the search function
 
-## v1.7.1 - May 2024
+## [1.7.1] - 2024-05-01
 
 
 ### Added 
@@ -137,7 +188,7 @@
 - Fixed authentication issue in check-for-updates workflow
 
 
-## v1.7.0 - April 2024
+## [1.7.0] - 2024-04-01
 
 
 ### Added
@@ -165,7 +216,7 @@
 - TestPyPI and PyPI workflows were executed even if the test workflow failed
 
 
-## v1.6.0 - Dec 2023
+## [1.6.0] - 2023-12-01
 
 
 ### Added

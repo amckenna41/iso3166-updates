@@ -89,7 +89,9 @@ def create_driver(proxy: str=None) -> webdriver.Chrome:
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--headless")
     # chrome_options.headless = False
-    chrome_options.add_argument('--no-sandbox')
+    if os.getenv('CI'):
+        #--no-sandbox is required in containerised/CI environments but should not be used in production
+        chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument("start-maximized")
@@ -97,13 +99,17 @@ def create_driver(proxy: str=None) -> webdriver.Chrome:
     chrome_options.add_argument("--disable-popup-blocking")  
     chrome_options.add_argument("--ignore-certificate-errors") 
     chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+    chrome_options.add_argument('--disable-background-networking')
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"]) 
     chrome_options.add_experimental_option("useAutomationExtension", False) 
     
-    #set random proxy IP if proxy parameter is not None
+    #set random proxy IP if proxy parameter is not None, otherwise disable proxies
     if (proxy):
         #add proxy option to Chromedriver
         chrome_options.add_argument(f'--proxy-server={proxy}')
+    else:
+        #explicitly disable proxy auto-detection when not using a proxy
+        chrome_options.add_argument('--no-proxy-server')
 
     #list of possible Chrome binary paths
     possible_binary_paths = [
@@ -140,11 +146,22 @@ def create_driver(proxy: str=None) -> webdriver.Chrome:
         # driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})") 
         
         #set random user-agent string for WebDriver to avoid detection, using fake_useragent package
-        user_agent_header = UserAgent().random
-        driver.execute_cdp_cmd("Network.setUserAgentOverride", {"userAgent": user_agent_header}) 
+        try:
+            user_agent_header = UserAgent().random
+            driver.execute_cdp_cmd("Network.setUserAgentOverride", {"userAgent": user_agent_header})
+        except Exception as ua_error:
+            #If user agent override fails (timeout, etc), continue without it - not critical
+            print(f"Warning: Failed to set user agent override: {str(ua_error)}")
+            pass
 
-    #raise exception if issue creating chromedriver, always close chromedriver with finally statement
+    #raise exception if issue creating chromedriver, close driver in finally block
     except Exception as e:
+        #Attempt to close driver if it was created
+        if driver is not None:
+            try:
+                driver.quit()
+            except:
+                pass
         raise RuntimeError(f"Failed to initialize WebDriver: {e}")
 
     return driver

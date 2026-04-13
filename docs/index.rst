@@ -1,8 +1,27 @@
 Welcome to ISO 3166 Update's documentation 🌎!
 ==============================================
 
-.. image:: https://upload.wikimedia.org/wikipedia/commons/3/3d/Flag-map_of_the_world_%282017%29.png
+.. image:: https://img.shields.io/pypi/v/iso3166-updates
+   :target: https://pypi.org/project/iso3166-updates/
+   :alt: iso3166_updates
 
+.. image:: https://github.com/amckenna41/iso3166-updates/workflows/Building%20and%20Testing/badge.svg
+   :target: https://github.com/amckenna41/iso3166-updates/actions?query=workflow:Building%20and%20Testing
+   :alt: pytest
+
+.. image:: https://img.shields.io/github/license/amckenna41/iso3166-updates
+   :target: https://opensource.org/licenses/MIT
+   :alt: License: MIT
+
+.. image:: https://codecov.io/gh/amckenna41/iso3166-updates/branch/main/graph/badge.svg
+   :target: https://codecov.io/gh/amckenna41/iso3166-updates
+   :alt: codecov
+
+.. image:: https://upload.wikimedia.org/wikipedia/commons/3/3d/Flag-map_of_the_world_%282017%29.png
+   :alt: World Map
+
+Introduction
+============
 **iso3166-updates** is a software and accompanying API that consists of a series of scripts that check for any updates/changes 
 to the ISO 3166 country codes and subdivision naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) 
 and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui). 
@@ -65,11 +84,11 @@ The Python software and accompanying API are solely developed and maintained by 
 
 .. |version_link| raw:: html
 
-   <a href="https://pypi.org/project/iso3166-updates/" target="_blank">v1.8.5</a>
+   <a href="https://pypi.org/project/iso3166-updates/" target="_blank">v1.8.6</a>
 
 .. |updates_md_location_link| raw:: html
 
-   <a href="https://github.com/amckenna41/iso3166-updates/blob/main/UPDATES.MD" target="_blank">UPDATES.md</a>
+   <a href="https://github.com/amckenna41/iso3166-updates/blob/main/updates.md" target="_blank">Updates.md</a>
 
 .. |demo_location_link| raw:: html
 

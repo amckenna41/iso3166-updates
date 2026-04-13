@@ -41,12 +41,12 @@ class ISO3166_Export_Updates_Parse_Updates_Data_Tests(unittest.TestCase):
         ]
         test_expected_output = pd.DataFrame(
             {
-                "Change": ["Change", "Correction", "New entry", "Deletion", "Merge", "Split", "Renaming"],
-                "Description of Change": ["", "Boundary adjustment", "Added new subdivision", "Removed obsolete entry", "Merged two regions", "Split one region into two", "Country renamed"],
-                "Date Issued": ["2024-02-15", "2022-08-10 2023-05-20", "2023-01-01", "2021-12-31", "2020-05-20", "2019-07-15", "2018-11-30"],
+                "Change": ["-> Change", "New entry", "Correction", "Deletion", "Merge", "Split", "Renaming"],
+                "Description of Change": ["Name updated", "Added new subdivision", "Boundary adjustment", "Removed obsolete entry", "Merged two regions", "Split one region into two", "Country renamed"],
+                "Date Issued": ["2024-02-15", "2023-01-01", "2022-08-10 (corrected 2023-05-20)", "2021-12-31", "2020-05-20", "2019-07-15", "2018-11-30"],
                 "Source": [
-                    "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:US.",
-                    "Gov Report", "Official", "Official Doc", "ISO Official", "ISO Update", "Gov Announcement"
+                    "ISO OBP",
+                    "Official", "Gov Report", "Official Doc", "ISO Official", "ISO Update", "Gov Announcement"
                 ]
             }
         )
@@ -67,13 +67,13 @@ class ISO3166_Export_Updates_Parse_Updates_Data_Tests(unittest.TestCase):
                 self.label_text = label_text
                 self.value_text = value_text
 
-            def find(self, class_name):
+            def find(self, class_=None):
                 class Dummy:
                     def __init__(self, text):
                         self.text = text
-                if class_name == "core-view-field-name":
+                if class_ == "core-view-field-name":
                     return Dummy(self.label_text)
-                elif class_name == "core-view-field-value":
+                elif class_ == "core-view-field-value":
                     return Dummy(self.value_text)
                 return None
 
@@ -96,7 +96,7 @@ class ISO3166_Export_Updates_Parse_Updates_Data_Tests(unittest.TestCase):
         self.assertEqual(remarks["part3"], "Third part goes here", f"Expected remark part 3 to be in output remarks table:\n{remarks['part3']}.")
         self.assertEqual(remarks["part4"], "Final remark part", f"Expected remark part 4 to be in output remarks table:\n{remarks['part4']}.")
 #2.)
-        self.assertEqual(["Change", "Description of Change", "Date Issued", "Source"], updated_df.columns, f"Expected and observed list of output columns do not match:\n{updated_df.columns}.")
+        self.assertEqual(["Change", "Description of Change", "Date Issued", "Source"], list(updated_df.columns), f"Expected and observed list of output columns do not match:\n{updated_df.columns}.")
 #3.)
         test_df = pd.DataFrame([
             ["Change", "Some update", "2024-01-01", "ISO"]
@@ -105,7 +105,7 @@ class ISO3166_Export_Updates_Parse_Updates_Data_Tests(unittest.TestCase):
         #test resultant and expected dataframes are equal
         result_df, remarks = parse_remarks_table(test_df, None)
         pd.testing.assert_frame_equal(test_df, result_df)
-        self.assertIsNone(remarks, "Expected there to be no remarks data output.") 
+        self.assertEqual(remarks, {}, "Expected there to be no remarks data output.") 
 #4.)        
         with self.assertRaises(TypeError):
             parse_remarks_table([], [])

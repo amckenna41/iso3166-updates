@@ -118,17 +118,17 @@ For example, Tajikistan (TJ,TJK,762), Seychelles (SC,SYC,690) and Uganda (UG,UGA
 
     #Tajikistan 
     input_name = "Tajikistan" 
-    tajikistan_updates_data = requests.get(base_url + f'country_name/{input_country_name}').json()
+    tajikistan_updates_data = requests.get(base_url + f'country_name/{input_name}').json()
     tajikistan_updates_data["TJ"] 
     
     #Seychelles
     input_name = "Seychelles" 
-    seychelles_updates_data = requests.get(base_url + f'country_name/{input_country_name}').json()
+    seychelles_updates_data = requests.get(base_url + f'country_name/{input_name}').json()
     seychelles_updates_data["SC"] 
 
     #Uganda
     input_name = "Uganda" 
-    seychelles_updates_data = requests.get(base_url + f'country_name/{input_country_name}').json()
+    uganda_updates_data = requests.get(base_url + f'country_name/{input_name}').json()
     uganda_updates_data["UG"] 
 
 curl::

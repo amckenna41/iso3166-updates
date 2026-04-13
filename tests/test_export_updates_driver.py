@@ -123,7 +123,9 @@ class ISO3166_Export_Updates_Driver_Tests(unittest.TestCase):
 
         with patch("selenium.webdriver.ChromeOptions") as mock_options:
             options_instance = mock_options.return_value
-            create_driver()
+            # set CI env var so --no-sandbox is included, matching production CI behaviour
+            with patch.dict("os.environ", {"CI": "true"}):
+                create_driver()
 
             expected_options = [
                 "--headless",

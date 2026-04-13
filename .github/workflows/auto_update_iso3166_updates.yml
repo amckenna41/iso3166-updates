@@ -1,0 +1,243 @@
+name: Auto Update ISO 3166 Data 🗺️
+
+# Run every 3 months on the 1st at 08:00 UTC (Jan, Apr, Jul, Oct)
+# Can also be triggered manually from the Actions tab
+on:
+  schedule:
+    - cron: '0 8 1 1,4,7,10 *'
+  workflow_dispatch:
+
+jobs:
+  check-and-update:
+    name: Check for ISO 3166 Updates and Open PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Chromedriver
+        uses: nanasess/setup-chromedriver@v2
+
+      - name: Start Chromedriver
+        run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install iso3166-updates
+          if [ -f iso3166_updates_export/requirements.txt ]; then
+            pip install -r iso3166_updates_export/requirements.txt
+          fi
+
+      - name: Run ISO 3166 updates export script
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          mkdir -p /tmp/iso3166-updates-output
+          python3 iso3166_updates_export/main.py \
+            --export_folder /tmp/iso3166-updates-output \
+            --export_filename iso3166-updates \
+            --export_json \
+            --no-export_csv \
+            --no-export_xml \
+            --save_each_iteration \
+            --verbose
+
+      - name: Compare exported JSON with existing JSON and generate PR body
+        id: compare
+        run: |
+          python3 - <<'PYEOF'
+          import json
+          import os
+          import sys
+          from datetime import date
+
+          new_path = "/tmp/iso3166-updates-output/iso3166-updates.json"
+          existing_path = "iso3166_updates/iso3166-updates.json"
+
+          if not os.path.exists(new_path):
+              print("ERROR: Exported JSON file not found at", new_path)
+              sys.exit(1)
+
+          with open(new_path, "r", encoding="utf-8") as f:
+              new_data = json.load(f)
+
+          with open(existing_path, "r", encoding="utf-8") as f:
+              existing_data = json.load(f)
+
+          # Determine countries with new or changed entries
+          added_entries = {}      # country_code -> list of new entries (in new but not existing)
+          removed_entries = {}    # country_code -> list of removed entries (in existing but not new)
+          new_countries = []      # country codes present in new_data but not existing_data
+          removed_countries = []  # country codes present in existing_data but not new_data
+
+          all_codes = sorted(new_data.keys() | existing_data.keys())
+
+          for code in all_codes:
+              new_entries = new_data.get(code, [])
+              existing_entries = existing_data.get(code, [])
+
+              if code not in existing_data:
+                  new_countries.append(code)
+                  added_entries[code] = new_entries
+                  continue
+
+              if code not in new_data:
+                  removed_countries.append(code)
+                  removed_entries[code] = existing_entries
+                  continue
+
+              # Compare entries as sets of (Date Issued, Change) tuples for quick diff
+              def entry_key(e):
+                  return (e.get("Date Issued", ""), e.get("Change", ""), e.get("Description of Change", ""))
+
+              existing_keys = {entry_key(e) for e in existing_entries}
+              new_keys = {entry_key(e) for e in new_entries}
+
+              added = [e for e in new_entries if entry_key(e) not in existing_keys]
+              removed = [e for e in existing_entries if entry_key(e) not in new_keys]
+
+              if added:
+                  added_entries[code] = added
+              if removed:
+                  removed_entries[code] = removed
+
+          has_changes = bool(added_entries or removed_entries or new_countries or removed_countries)
+
+          if not has_changes:
+              print("NO_CHANGES")
+              with open(os.environ["GITHUB_OUTPUT"], "a") as gh_out:
+                  gh_out.write("has_changes=false\n")
+              sys.exit(0)
+
+          # Count total new and removed entries
+          total_added = sum(len(v) for v in added_entries.values())
+          total_removed = sum(len(v) for v in removed_entries.values())
+          today = date.today().isoformat()
+
+          # Build markdown PR body
+          lines = []
+          lines.append("## ISO 3166 Updates — Automated Data Refresh")
+          lines.append("")
+          lines.append(f"**Date generated:** {today}")
+          lines.append("")
+          lines.append("This pull request was automatically created by the [Auto Update ISO 3166 Data]"
+                       "(.github/workflows/auto_update_iso3166_updates.yml) workflow. The newly exported "
+                       "`iso3166-updates.json` contains changes compared to the existing file in "
+                       "the repository and has been applied to both `iso3166_updates/iso3166-updates.json` "
+                       "and `tests/iso3166-updates.json`.")
+          lines.append("")
+          lines.append("---")
+          lines.append("")
+          lines.append("### Summary of Changes")
+          lines.append("")
+          lines.append(f"| Metric | Count |")
+          lines.append(f"|--------|-------|")
+          lines.append(f"| Countries with new entries | {len(added_entries)} |")
+          lines.append(f"| Countries with removed entries | {len(removed_entries)} |")
+          lines.append(f"| New country codes | {len(new_countries)} |")
+          lines.append(f"| Removed country codes | {len(removed_countries)} |")
+          lines.append(f"| Total new entries | {total_added} |")
+          lines.append(f"| Total removed entries | {total_removed} |")
+
+          if new_countries:
+              lines.append("")
+              lines.append("### New Country Codes Added")
+              lines.append("")
+              for code in new_countries:
+                  lines.append(f"- **{code}**")
+
+          if removed_countries:
+              lines.append("")
+              lines.append("### Country Codes Removed")
+              lines.append("")
+              for code in removed_countries:
+                  lines.append(f"- **{code}**")
+
+          if added_entries:
+              lines.append("")
+              lines.append("### New / Updated Entries by Country")
+              lines.append("")
+              for code in sorted(added_entries.keys()):
+                  entries = added_entries[code]
+                  lines.append(f"<details>")
+                  lines.append(f"<summary><strong>{code}</strong> — {len(entries)} new entry(ies)</summary>")
+                  lines.append("")
+                  lines.append("| Date Issued | Change | Description of Change | Source |")
+                  lines.append("|-------------|--------|-----------------------|--------|")
+                  for e in entries:
+                      date_issued = e.get("Date Issued", "").replace("|", "\\|")
+                      change = e.get("Change", "").replace("|", "\\|").replace("\n", " ")
+                      desc = e.get("Description of Change", "").replace("|", "\\|").replace("\n", " ")
+                      source = e.get("Source", "").replace("|", "\\|").replace("\n", " ")
+                      lines.append(f"| {date_issued} | {change} | {desc} | {source} |")
+                  lines.append("")
+                  lines.append("</details>")
+                  lines.append("")
+
+          if removed_entries:
+              lines.append("")
+              lines.append("### Removed Entries by Country")
+              lines.append("")
+              for code in sorted(removed_entries.keys()):
+                  entries = removed_entries[code]
+                  lines.append(f"<details>")
+                  lines.append(f"<summary><strong>{code}</strong> — {len(entries)} removed entry(ies)</summary>")
+                  lines.append("")
+                  lines.append("| Date Issued | Change | Description of Change | Source |")
+                  lines.append("|-------------|--------|-----------------------|--------|")
+                  for e in entries:
+                      date_issued = e.get("Date Issued", "").replace("|", "\\|")
+                      change = e.get("Change", "").replace("|", "\\|").replace("\n", " ")
+                      desc = e.get("Description of Change", "").replace("|", "\\|").replace("\n", " ")
+                      source = e.get("Source", "").replace("|", "\\|").replace("\n", " ")
+                      lines.append(f"| {date_issued} | {change} | {desc} | {source} |")
+                  lines.append("")
+                  lines.append("</details>")
+                  lines.append("")
+
+          pr_body = "\n".join(lines)
+
+          # Write PR body to a file so it can be used in subsequent steps
+          with open("/tmp/pr_body.md", "w", encoding="utf-8") as f:
+              f.write(pr_body)
+
+          # Write GitHub Actions output
+          with open(os.environ["GITHUB_OUTPUT"], "a") as gh_out:
+              gh_out.write("has_changes=true\n")
+              # Create a short one-line title
+              gh_out.write(f"pr_title=chore: automated ISO 3166 data update ({today})\n")
+          PYEOF
+
+      - name: Copy updated JSON files into repository
+        if: steps.compare.outputs.has_changes == 'true'
+        run: |
+          cp /tmp/iso3166-updates-output/iso3166-updates.json iso3166_updates/iso3166-updates.json
+          cp /tmp/iso3166-updates-output/iso3166-updates.json tests/test-iso3166-updates.json
+
+      - name: Create Pull Request
+        if: steps.compare.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update iso3166-updates.json with latest ISO 3166 data"
+          branch: auto-update/iso3166-updates-${{ github.run_id }}
+          delete-branch: true
+          title: ${{ steps.compare.outputs.pr_title }}
+          body-path: /tmp/pr_body.md
+          labels: |
+            automated
+            data-update

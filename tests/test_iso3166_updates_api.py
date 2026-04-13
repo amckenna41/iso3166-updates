@@ -6,11 +6,12 @@ from jsonschema import validate, ValidationError
 from datetime import datetime,date
 from fake_useragent import UserAgent
 from iso3166_updates import * 
+from pycountry import countries
 from bs4 import BeautifulSoup
 from importlib.metadata import metadata
 unittest.TestLoader.sortTestMethodsUsing = None
 
-# @unittest.skip("Skipping prior to new published release of iso3166-updates.")
+@unittest.skip("Skipping prior to new published release of iso3166-updates.")
 class Updates_Api_Tests(unittest.TestCase):
     """
     Test suite for testing ISO 3166 Updates API created to accompany the iso3166-updates 
@@ -114,15 +115,15 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(self.test_request_all.headers["content-type"], "application/json", f"Expected Content type to be application/json, got {self.test_request_all.headers['content-type']}.")
 
         total_updates = sum(len(changes) for changes in self.all_iso3166_updates.values())
-        self.assertEqual(total_updates, 911, f"Expected and observed total updates do not match, got {total_updates}.")
+        self.assertEqual(total_updates, 909, f"Expected and observed total updates do not match, got {total_updates}.")
 #2.)
         for alpha2 in list(self.test_request_all.json().keys()):
-            self.assertIn(alpha2, iso3166.countries_by_alpha2, f"Alpha-2 code {alpha2} not found in list of available country codes.")
+            self.assertIsNotNone(countries.get(alpha_2=alpha2), f"Alpha-2 code {alpha2} not found in list of available country codes.")
 #3.)
         test_request_all_sort_by_date = requests.get(self.all_base_url, headers=self.user_agent_header, params={"sortby": "dateDesc"})
 
         self.assertIsInstance(test_request_all_sort_by_date.json(), list, f"Expected output object of API to be of type list, got {type(test_request_all_sort_by_date.json())}.")
-        self.assertEqual(len(test_request_all_sort_by_date.json()), 910, f"Expected there to be 910 elements in output object, got {len(test_request_all_sort_by_date.json())}.")
+        self.assertEqual(len(test_request_all_sort_by_date.json()), 911, f"Expected there to be 911 elements in output object, got {len(test_request_all_sort_by_date.json())}.")
         self.assertEqual(test_request_all_sort_by_date.status_code, 200, f"Expected 200 status code from request, got {test_request_all_sort_by_date.status_code}.")
         self.assertEqual(test_request_all_sort_by_date.headers["content-type"], "application/json", f"Expected Content type to be application/json, got {test_request_all_sort_by_date.headers['content-type']}.")
 
@@ -188,7 +189,7 @@ class Updates_Api_Tests(unittest.TestCase):
         expected_counts = {'AD': 3, 'AE': 3, 'AF': 6, 'AG': 3, 'AI': 1, 'AL': 6, 'AM': 1, 'AO': 6, 'AQ': 1, 
                                 'AR': 1, 'AS': 1, 'AT': 2, 'AU': 3, 'AW': 3, 'AX': 3, 'AZ': 3, 'BA': 6, 'BB': 3, 
                                 'BD': 6, 'BE': 2, 'BF': 3, 'BG': 9, 'BH': 2, 'BI': 4, 'BJ': 3, 'BL': 5, 'BM': 1, 
-                                'BN': 4, 'BO': 5, 'BQ': 7, 'BR': 2, 'BS': 3, 'BT': 5, 'BV': 3, 'BW': 3, 'BY': 5, 
+                                'BN': 4, 'BO': 5, 'BQ': 7, 'BR': 2, 'BS': 4, 'BT': 5, 'BV': 3, 'BW': 3, 'BY': 5, 
                                 'BZ': 2, 'CA': 4, 'CC': 1, 'CD': 3, 'CF': 3, 'CG': 4, 'CH': 2, 'CI': 4, 'CK': 1, 
                                 'CL': 4, 'CM': 2, 'CN': 6, 'CO': 2, 'CR': 2, 'CU': 2, 'CV': 6, 'CW': 3, 'CX': 1, 
                                 'CY': 5, 'CZ': 10, 'DE': 4, 'DJ': 6, 'DK': 1, 'DM': 3, 'DO': 6, 'DZ': 4, 'EC': 3, 
@@ -477,7 +478,7 @@ class Updates_Api_Tests(unittest.TestCase):
                 "Change": "Codes: Gauteng: ZA-GP -> ZA-GT. KwaZulu-Natal: ZA-ZN -> ZA-NL.",
                 "Date Issued": "2007-12-13",
                 "Description of Change": "Second edition of ISO 3166-2 (not announced in a newsletter).",
-                "Source": "ISO 3166-2:2007 - http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718."
+                "Source": "ISO 3166-2:2007 - https://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718."
                 }
         #expected key outputs
         test_year_2004_2009_keys = ['AD', 'AF', 'AG', 'AL', 'AU', 'BA', 'BB', 'BG', 'BH', 'BL', 'BO', 'CF', 'CI', 'CN', 'CO', 'CZ', 'DJ', 'DM', 'DO', 'EG', 'FR', 
@@ -1000,8 +1001,8 @@ class Updates_Api_Tests(unittest.TestCase):
             f"Expected and observed country code objects do not match:\n{list(test_request_date_range2)}.")
 #3.)
         test_request_date_range3 = requests.get(self.date_range_url + test_date_range3, headers=self.user_agent_header).json() #2022-01-01
-        test_request_date_range3_expected = ['BO', 'CI', 'DZ', 'ET', 'FI', 'FM', 'GB', 'GF', 'GP', 'ID', 'IN', 'IQ', 'IR', 'IS', 'KP', 'KR', 
-                                             'KZ', 'ME', 'MQ', 'MX', 'NL', 'NP', 'NZ', 'PA', 'PH', 'PL', 'RE', 'SI', 'TR', 'VE', 'YT']
+        test_request_date_range3_expected = ['BO', 'BS', 'CI', 'DZ', 'ET', 'FI', 'FM', 'GB', 'GF', 'GP', 'ID', 'IN', 'IQ', 'IR', 'IS', 'KP', 'KR', 'KZ', 
+                                             'ME', 'MQ', 'MX', 'NL', 'NP', 'NZ', 'PA', 'PH', 'PL', 'RE', 'SI', 'TR', 'VE', 'YT']
 
         for country_code, updates in test_request_date_range3.items():
             for update in updates:

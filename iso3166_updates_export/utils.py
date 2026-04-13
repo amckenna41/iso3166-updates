@@ -3,11 +3,13 @@ import os
 import json
 from itertools import product
 from datetime import datetime
-import iso3166
+from pycountry import countries
 from bs4 import BeautifulSoup, Tag
 import pandas as pd
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
+import openai
+from dotenv import load_dotenv
 import pprint
 
 def remove_duplicates(iso3166_updates_df: pd.DataFrame) -> pd.DataFrame:
@@ -119,7 +121,7 @@ def convert_to_alpha2(alpha_code: str) -> str:
     
     Returns
     =======
-    :iso3166.countries_by_alpha3[alpha_code].alpha2|iso3166.countries_by_numeric[alpha_code].alpha: str
+    :pycountry.db.Data: str
         2 letter ISO 3166 alpha-2 country code. 
     
     Raises
@@ -136,28 +138,28 @@ def convert_to_alpha2(alpha_code: str) -> str:
     #raise error if more than 1 country code input
     if ("," in alpha_code):
         raise ValueError(f"Only one country code should be input into the function: {alpha_code}.")
-        
+    
     #uppercase alpha code, initial_alpha_code var maintains the original alpha code pre-uppercasing
     alpha_code = alpha_code.upper()
     initial_alpha_code = alpha_code
 
     #use iso3166 package to find corresponding alpha-2 code from its numeric code, return error if numeric code not found
     if (alpha_code.isdigit()):
-        if not (alpha_code in list(iso3166.countries_by_numeric.keys())):
+        if not (alpha_code in sorted([country.numeric for country in list(countries)])):
             raise ValueError(f"Invalid ISO 3166-1 alpha numeric country code input: {initial_alpha_code}.")
-        return iso3166.countries_by_numeric[alpha_code].alpha2
-
+        return countries.get(numeric=alpha_code).alpha_2
+    
     #return input alpha code if its valid, return error if alpha-2 code not found
     if len(alpha_code) == 2:
-        if not (alpha_code in list(iso3166.countries_by_alpha2.keys())):
+        if not (alpha_code in sorted([country.alpha_2 for country in list(countries)])):
             raise ValueError(f"Invalid ISO 3166-1 alpha-2 country code input: {initial_alpha_code}.")
-        return alpha_code
+        return countries.get(alpha_2=alpha_code).alpha_2
 
     #use iso3166 package to find corresponding alpha-2 code from its alpha-3 code, return error if code not found
     if len(alpha_code) == 3:
-        if not (alpha_code in list(iso3166.countries_by_alpha3.keys())):
+        if not (alpha_code in [country.alpha_3 for country in list(countries)]):
             raise ValueError(f"Invalid ISO 3166-1 alpha-3 country code: {initial_alpha_code}.")
-        return iso3166.countries_by_alpha3[alpha_code].alpha2
+        return countries.get(alpha_3=alpha_code).alpha_2
 
     #return error by default if input code not returned already
     raise ValueError(f"Invalid alpha country code input {alpha_code}.")
@@ -387,7 +389,7 @@ def get_alpha_codes_list(alpha_codes: str="", alpha_codes_range: str="") -> tupl
     elif alpha_codes_range:
     
         #sorted list of ISO 3166 alpha codes
-        sorted_alpha_codes = sorted(iso3166.countries_by_alpha2.keys())
+        sorted_alpha_codes = sorted([country.alpha_2 for country in list(countries)])
 
         #raise error if alpha codes range parameter is not a string
         if not isinstance(alpha_codes_range, str):
@@ -421,7 +423,7 @@ def get_alpha_codes_list(alpha_codes: str="", alpha_codes_range: str="") -> tupl
             alpha_codes_list = [code for code in sorted_alpha_codes if start_alpha_code <= code <= end_alpha_code]
     else:
         #using all ISO 3166 alpha codes
-        alpha_codes_list = sorted(iso3166.countries_by_alpha2.keys())
+        alpha_codes_list = sorted([country.alpha_2 for country in list(countries)])
 
     #sort list of alpha codes alphabetically
     alpha_codes_list.sort()
@@ -1427,6 +1429,7 @@ def export_to_csv_xml(input_json_path: str="", export_filename: str="") -> None:
 
     print(f"\nAll ISO 3166 updates exported to XML: {export_filename}.xml.\n")
 
+
 # def compare_updates_files(updates1_filepath: str, updates2_filepath: str, export_differences: bool=0) -> str:
 #     """
 #     This function allows you to import 2 separate exported updates JSON files and
@@ -1503,7 +1506,7 @@ def export_to_csv_xml(input_json_path: str="", export_filename: str="") -> None:
 #         for code in list(iso3166_updates_differences.keys()):
             
 #             #output current country name and code
-#             print(f"{iso3166.countries_by_alpha2[code].name} ({code}):")
+#             print(f"{countries.get(alpha_2=code).name} ({code}):")
             
 #             #iterate over rows of differences data and pretty print json
 #             for row in range(0, len(iso3166_updates_differences[code])):
@@ -1518,3 +1521,238 @@ def export_to_csv_xml(input_json_path: str="", export_filename: str="") -> None:
 #     # if (export_differences):
     
 #     return
+
+def anomaly_detection(json_path: str, output_csv_path: str = None, api_key: str = None) -> pd.DataFrame:
+    """
+    Detects anomalies in ISO 3166-2 update JSON using OpenAI API.
+    Validates every update entry for correctness, consistency, structure, and plausibility.
+    Outputs results to a CSV file with columns: country_code and anomaly_description.
+
+    Parameters:
+    ===========
+    :json_path: str:
+        Path to the iso3166-updates JSON file to analyze.
+    :output_csv_path: str (optional):
+        Path where the output CSV file will be saved. 
+        Defaults to 'anomalies.csv' in the current working directory.
+    :api_key: str (optional):
+        OpenAI API key. If not provided, will attempt to load from OPENAI_API_KEY 
+        environment variable via dotenv module.
+
+    Returns:
+    ========
+    :pd.DataFrame:
+        DataFrame containing anomaly results with columns: country_code, anomaly_description.
+
+    Raises:
+    =======
+    :FileNotFoundError: If the JSON file does not exist.
+    :ValueError: If OpenAI API key is not found in environment or parameters.
+    """
+    # Load environment variables from .env file
+    load_dotenv()
+
+    # Set default output path
+    if output_csv_path is None:
+        output_csv_path = "anomalies.csv"
+
+    # Validate input file exists
+    if not os.path.exists(json_path):
+        raise FileNotFoundError(f"JSON file not found: {json_path}")
+
+    # Load the JSON file
+    with open(json_path, 'r', encoding='utf-8') as f:
+        iso3166_data = json.load(f)
+
+    # Determine API key: parameter takes precedence over environment variable
+    if api_key is None:
+        api_key = os.getenv("OPENAI_API_KEY")
+    
+    if not api_key:
+        raise ValueError(
+            "OPENAI_API_KEY not found. Please provide the API key either:\n"
+            "1. Set OPENAI_API_KEY environment variable in a .env file\n"
+            "2. Pass api_key as a parameter to the function"
+        )
+
+    # Initialize OpenAI client
+    client = openai.OpenAI(api_key=api_key)
+
+    # Prepare the prompt with the JSON data
+    system_prompt = """You are a meticulous data quality auditor for a JSON dataset containing ISO 3166-2 update history ("updates.json"). You NEVER skip records and you NEVER silently ignore problems.
+
+Your job:
+
+Read ALL countries and ALL update entries in the JSON, regardless of length.
+
+Validate every update entry for correctness, consistency, structure, and plausibility.
+
+Return a structured, machine-readable report of all anomalies you find.
+
+Dataset description:
+
+The JSON maps ISO 3166-1 alpha-2 country codes (e.g. "AF", "AL", "BD") to arrays of historical update entries.
+
+Each update entry is expected to follow this schema:
+• Change: string (required, non-empty)
+• Description of Change: string (may be empty but must exist)
+• Date Issued: ISO date string (YYYY-MM-DD) with optional correction text
+• Source: string (required URL or reference), normally newsletter or OBP links
+
+Definitions:
+
+An "update entry" represents one historical ISO change event.
+
+An "anomaly" is any potential data quality issue, including schema issues, formatting inconsistencies, impossible dates, or logically contradictory changes.
+
+You MUST obey these rules:
+
+Do NOT summarise the dataset. Only report anomalies.
+
+Do NOT omit anomalies even if they seem minor.
+
+If the same anomaly occurs repeatedly, report it individually for each occurrence.
+
+If uncertain whether something is an error, flag it as a "possible_anomaly" with an explanation.
+
+Your final response MUST be valid JSON only, with no trailing commas, no commentary, and no additional text.
+
+Output format:
+Return a single JSON object with this structure:
+{
+"anomalies": [
+{
+"country_code": string,
+"index": number,
+"attribute": string,
+"value": any,
+"issue_type": string,
+"severity": "low" | "medium" | "high",
+"details": string
+}
+]
+}
+
+If there are no anomalies, return:
+{ "anomalies": [] }
+
+Validation rules:
+For every update entry of every country, detect anomalies including but not limited to:
+
+Schema and structure anomalies:
+
+Missing required fields (Change, Date Issued, Source)
+
+Wrong data types
+
+Empty objects
+
+Unexpected extra fields
+
+Content anomalies:
+
+Change is missing, blank, or only punctuation
+
+Description of Change missing (may be empty but must exist)
+
+Source missing, malformed, or non-URL where URL is expected
+
+Duplicate update entries (same Change + Date Issued + Source)
+
+Multiple countries referenced incorrectly in a single update entry
+
+Date anomalies:
+
+Invalid date syntax
+
+Incorrect format (not YYYY-MM-DD)
+
+Impossible dates (e.g. month/day out of range, year far outside plausible ISO issuance range)
+
+Malformed correction text
+
+Chronological contradictions within a country's sequence of updates
+
+Source anomalies:
+
+Non-HTTPS URLs where HTTPS is expected
+
+Malformed OBP URLs
+
+Broken newsletter URLs
+
+Archived URLs incorrectly formatted
+
+Typos in domains or URL paths
+
+Change content anomalies:
+
+Subdivision codes not matching ISO 3166-2 patterns
+
+Lowercase or malformed codes
+
+Changes referencing subdivisions that do not exist
+
+Logical contradictions (e.g. subdivision deleted then updated with no reinstatement entry)
+
+Redundant or duplicate updates
+
+Multiple unrelated changes in one entry without proper separation
+
+Severity rules:
+
+high: clearly invalid data (missing required fields, invalid dates, malformed structure)
+
+medium: suspicious or likely incorrect (damaged URLs, odd formats)
+
+low: minor inconsistencies (spacing, punctuation, stylistic issues)
+
+Do not skip any update entries. Do not output anything except the anomaly JSON object."""
+
+    user_prompt = f"""Analyze the following ISO 3166-2 updates JSON dataset for anomalies:
+
+{json.dumps(iso3166_data, indent=2)}"""
+
+    print("Sending data to OpenAI for anomaly detection analysis...")
+
+    # Call OpenAI API
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        max_tokens=4096,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ]
+    )
+
+    # Extract response text
+    response_text = response.choices[0].message.content
+
+    # Parse the JSON response
+    try:
+        anomalies_data = json.loads(response_text)
+    except json.JSONDecodeError:
+        print(f"Warning: Could not parse OpenAI response as JSON. Raw response:\n{response_text}")
+        anomalies_data = {"anomalies": []}
+
+    # Convert anomalies to DataFrame format
+    anomalies_list = []
+    for anomaly in anomalies_data.get("anomalies", []):
+        anomalies_list.append({
+            "country_code": anomaly.get("country_code", ""),
+            "anomaly_description": f"[{anomaly.get('severity', 'unknown').upper()}] {anomaly.get('attribute', '')}: {anomaly.get('details', '')} (Issue: {anomaly.get('issue_type', '')})"
+        })
+
+    # Create DataFrame
+    anomalies_df = pd.DataFrame(anomalies_list)
+
+    # Save to CSV
+    if anomalies_df.empty:
+        print(f"No anomalies detected. Creating empty CSV at {output_csv_path}")
+    else:
+        print(f"Found {len(anomalies_df)} anomalies. Saving to {output_csv_path}")
+
+    anomalies_df.to_csv(output_csv_path, index=False, encoding='utf-8')
+    print(f"Anomaly detection complete. Results saved to: {output_csv_path}")
+
+    return anomalies_df

@@ -23,11 +23,11 @@
 
 Quick Start 🏃
 -------------
-* A **demo** of the software and API is available [here][demo_iso3166_updates].
-* The front-end **API** is available [here][api].
-* The **documentation** for the software & API is available [here](https://iso3166-updates.readthedocs.io/en/latest/).
-* A **Medium** article that dives deeper into `iso3166-updates` is available [here][medium].
-* A **demo** of the script used to pull and export all the latest updates is available [here][demo_get_all_iso3166_updates].
+* 🚀 A **demo** of the software and API is available [here][demo_iso3166_updates].
+* 💻 The front-end **API** is available [here][api].
+* 📚 The **documentation** for the software & API is available [here](https://iso3166-updates.readthedocs.io/en/latest/).
+* 📄 A **Medium** article that dives deeper into `iso3166-updates` is available [here][medium].
+<!-- * 🚀 A **demo** of the script used to pull and export all the latest updates is available [here][demo_get_all_iso3166_updates]. -->
 
 Table of Contents
 -----------------
@@ -70,8 +70,7 @@ The list of ISO 3166 updates was last updated on **August 2025**, with **911** i
 Requirements
 ------------
 * [python][python] >= 3.9
-* [iso3166][iso3166] >= 2.1.1 
-* [python-dateutil][python-dateutil] >= 2.9.0
+* [pycountry][pycountry] >= 22.3.5
 * [thefuzz][thefuzz] >= 0.22.1
 * [requests][requests] >= 2.28.1
 
@@ -270,7 +269,7 @@ from the various data sources.
 * [pandas][pandas] >= 1.4.4
 * [requests][requests] >= 2.28.1
 * [beautifulsoup4][beautifulsoup4] >= 4.11.1
-* [iso3166][iso3166] >= 2.1.1
+* [pycountry][pycountry] >= 22.3.5
 * [selenium][selenium] >= 4.10.0
 * [tqdm][tqdm] >= 4.64.0
 * [fake_useragent][fake_useragent] >= 1.5.0
@@ -478,7 +477,7 @@ Support
 [medium]: https://medium.com/@ajmckenna69/iso3166-updates-d06b817af3a7
 [python]: https://www.python.org/downloads/release/python-360/
 [iso3166-updates]: https://github.com/amckenna41/iso3166-updates
-[python-dateutil]: https://pypi.org/project/python-dateutil/
+[pycountry]: https://pypi.org/project/pycountry/
 [thefuzz]: https://pypi.org/project/thefuzz/
 [fake_useragent]: https://pypi.org/project/fake-useragent/
 [pandas]: https://pandas.pydata.org/
@@ -494,6 +493,5 @@ Support
 [webdriver-manager]: https://pypi.org/project/webdriver-manager/
 [lxml]: https://lxml.de/
 [updates_md]: https://github.com/amckenna41/iso3166-updates/blob/main/UPDATES.md
-[iso3166]: https://github.com/deactivated/python-iso3166
 [PyPi]: https://pypi.org/project/iso3166-updates/
 [Issues]: https://github.com/amckenna41/iso3166-updates/issues

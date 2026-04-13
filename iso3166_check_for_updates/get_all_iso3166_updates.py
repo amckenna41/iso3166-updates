@@ -10,7 +10,7 @@ import requests
 import json
 import random
 import flag
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Tuple
 from fake_useragent import UserAgent
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -25,6 +25,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from tqdm import tqdm
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import threading
 
 def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str="iso3166-updates", export_folder: str="iso3166-updates-output",
         alpha_codes_range: str="", concat_updates: bool=True, export_json: bool=True, export_csv: bool=True, export_xml: bool=False, verbose: bool=True, 
@@ -168,90 +170,138 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
     #create webdriver instance if using Selenium, pass in proxy IP, if applicable
     if (use_selenium):
         driver = create_driver(proxy)
+    else:
+        driver = None
 
     #start elapsed time counter
     start = time.time()
     
-    #initalise tqdm progress bar, if less than 5 alpha-2 codes input then don't display progress bar, or print elapsed time
-    progress_bar = tqdm(alpha_codes_list, ncols=80, disable=(len(alpha_codes_list) < 5))
+    #create a lock for thread-safe driver access if using Selenium
+    driver_lock = threading.Lock() if use_selenium else None
+    
+    #helper function to process a single country's updates
+    def process_country(alpha2: str) -> Tuple[str, List[Dict]]:
+        """
+        Process updates for a single country.
+        Returns tuple of (alpha2 code, updates list)
+        """
+        try:
+            #pull wiki and ISO data depending on respective parameter bools
+            if (use_wiki and use_selenium):
+                #web scrape country's wiki data, convert html table/2D array to dataframe
+                iso3166_df_wiki = get_updates_df_wiki(alpha2)
 
-    #iterate over all input ISO 3166-1 country codes
-    for alpha2 in progress_bar:
-        flag_icon = flag.flag(alpha2) if alpha2 != "XK" else "" #get flag icon from emoji-country-flag library
-        progress_bar.set_description(f"{iso3166.countries_by_alpha2[alpha2].name.title()} ({alpha2}) {flag_icon}")        
+                #use Selenium Chromedriver to parse country's updates data from official ISO website
+                # Thread-safe access to driver
+                with driver_lock:
+                    iso_website_df, remarks_data = get_updates_df_selenium(alpha2, driver, include_remarks_data)
 
-        #initialise object of updates for current alpha-2 code
-        all_iso3166_updates[alpha2] = []
+                #concatenate two updates dataframes
+                iso3166_df = pd.concat([iso3166_df_wiki, iso_website_df], ignore_index=True, sort=False)
 
-        #pull wiki and ISO data depending on respective parameter bools
-        if (use_wiki and use_selenium):
+            #pull just wiki data 
+            elif (use_wiki):
+                #web scrape country's wiki data, convert html table/2D array to dataframe
+                iso3166_df = get_updates_df_wiki(alpha2)
+                remarks_data = None
 
-            #web scrape country's wiki data, convert html table/2D array to dataframe
-            iso3166_df_wiki = get_updates_df_wiki(alpha2)
-
-            #use Selenium Chromedriver to parse country's updates data from official ISO website
-            iso_website_df, remarks_data = get_updates_df_selenium(alpha2, driver, include_remarks_data)
-
-            #concatenate two updates dataframes
-            iso3166_df = pd.concat([iso3166_df_wiki, iso_website_df], ignore_index=True, sort=False)
-
-        #pull just wiki data 
-        elif (use_wiki):
-
-            #web scrape country's wiki data, convert html table/2D array to dataframe
-            iso3166_df = get_updates_df_wiki(alpha2)
-
-        #pull just ISO page data 
-        elif (use_selenium):
-
-            #use Selenium Chromedriver to parse country's updates data from official ISO website
-            iso3166_df, remarks_data = get_updates_df_selenium(alpha2, driver, include_remarks_data)
-        
-        #raise error if both bools are set to False, no data being exported
-        else:
-            raise ValueError("No data exported as both bools are set to False, use_selenium & use_wiki = False.")
-        
-        #if updates dataframe is empty, skip to next iteration
-        if (iso3166_df.empty):
-            continue
-
-        #if year parameter input, filter in/out the relevant rows depending on year values
-        if (year and year != ['']):
-            iso3166_df = filter_year(iso3166_df, year, year_range, year_greater_than, year_less_than, year_not_equal)
-
-        #if updates dataframe is empty, skip to next iteration
-        if (iso3166_df.empty):
-            continue
+            #pull just ISO page data 
+            elif (use_selenium):
+                #use Selenium Chromedriver to parse country's updates data from official ISO website
+                # Thread-safe access to driver
+                with driver_lock:
+                    iso3166_df, remarks_data = get_updates_df_selenium(alpha2, driver, include_remarks_data)
             
-        #drop any duplicate rows in object, e.g rows that have the same publication date and change/description of change attribute values
-        iso3166_df = remove_duplicates(iso3166_df)
+            #raise error if both bools are set to False, no data being exported
+            else:
+                raise ValueError("No data exported as both bools are set to False, use_selenium & use_wiki = False.")
+            
+            #if updates dataframe is empty, skip this country
+            if (iso3166_df.empty):
+                return (alpha2, [])
 
-        #add remarks data from ISO country summary table, if applicable
-        if (use_selenium and include_remarks_data and remarks_data):
-          iso3166_df = add_remarks_data(iso3166_df, remarks_data)
+            #if year parameter input, filter in/out the relevant rows depending on year values
+            if (year and year != ['']):
+                iso3166_df = filter_year(iso3166_df, year, year_range, year_greater_than, year_less_than, year_not_equal)
 
-        #create a mask of rows where the "Change" column is empty
-        empty_change_mask = iso3166_df["Change"] == ""
+            #if updates dataframe is empty after filtering, skip this country
+            if (iso3166_df.empty):
+                return (alpha2, [])
+                
+            #drop any duplicate rows in object, e.g rows that have the same publication date and change/description of change attribute values
+            iso3166_df = remove_duplicates(iso3166_df)
 
-        #swap Change and Description of Change if Change is empty
-        iso3166_df.loc[empty_change_mask, "Change"] = iso3166_df["Description of Change"]
+            #add remarks data from ISO country summary table, if applicable
+            if (use_selenium and include_remarks_data and remarks_data):
+              iso3166_df = add_remarks_data(iso3166_df, remarks_data)
 
-        #for rows that have been swapped, set Description of Change to empty
-        iso3166_df.loc[empty_change_mask, "Description of Change"] = ""
+            #create a mask of rows where the "Change" column is empty
+            empty_change_mask = iso3166_df["Change"] == ""
 
-        #sort rows by publication date descending
-        iso3166_df = iso3166_df.assign(
-            SortDate=pd.to_datetime(iso3166_df['Date Issued'].str.extract(r'^(\d{4}-\d{2}-\d{2})')[0], errors='coerce')
-        ).sort_values(by='SortDate', ascending=False).drop(columns=['SortDate']).reset_index(drop=True)
+            #swap Change and Description of Change if Change is empty
+            iso3166_df.loc[empty_change_mask, "Change"] = iso3166_df["Description of Change"]
 
-        #add ISO updates to object of all ISO 3166 updates, convert to json
-        all_iso3166_updates[alpha2] = iso3166_df.to_dict(orient="records")
+            #for rows that have been swapped, set Description of Change to empty
+            iso3166_df.loc[empty_change_mask, "Description of Change"] = ""
 
-        #save the updates data export at current iteration, useful in the case where the Selenium session might timeout
-        if (save_each_iteration):
-            export_updates(all_iso3166_updates, export_folder, export_filename, export_json, export_csv, export_xml, 
-                           concat_updates, alpha2, alpha_codes_range, year, year_range, year_greater_than, 
-                           year_less_than, year_not_equal)    
+            #sort rows by publication date descending
+            iso3166_df = iso3166_df.assign(
+                SortDate=pd.to_datetime(iso3166_df['Date Issued'].str.extract(r'^(\d{4}-\d{2}-\d{2})')[0], errors='coerce')
+            ).sort_values(by='SortDate', ascending=False).drop(columns=['SortDate']).reset_index(drop=True)
+
+            #convert to dict
+            updates = iso3166_df.to_dict(orient="records")
+            
+            return (alpha2, updates)
+            
+        except Exception as e:
+            if (verbose):
+                print(f"Error processing {alpha2}: {str(e)}")
+            return (alpha2, [])
+
+    #use ThreadPoolExecutor for parallel country fetching (10-20 concurrent workers)
+    max_workers = min(15, len(alpha_codes_list))  # Use 15 workers or number of countries, whichever is smaller
+    max_workers = max(1, max_workers)  # Ensure at least 1 worker
+    
+    #initalise tqdm progress bar, if less than 5 alpha-2 codes input then don't display progress bar
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        #submit all tasks to executor
+        futures = {executor.submit(process_country, alpha2): alpha2 for alpha2 in alpha_codes_list}
+        
+        #process completed futures with progress bar
+        progress_bar = tqdm(as_completed(futures), total=len(futures), ncols=80, disable=(len(alpha_codes_list) < 5))
+        
+        for future in progress_bar:
+            alpha2 = futures[future]
+            try:
+                result_alpha2, updates = future.result()
+                all_iso3166_updates[result_alpha2] = updates
+                
+                #update progress bar description with country info
+                flag_icon = flag.flag(result_alpha2) if result_alpha2 != "XK" else ""
+                country_name = iso3166.countries_by_alpha2.get(result_alpha2)
+                if country_name:
+                    progress_bar.set_description(f"{country_name.name.title()} ({result_alpha2}) {flag_icon}")
+                
+                #save the updates data export at current iteration if requested
+                if (save_each_iteration):
+                    export_updates(all_iso3166_updates, export_folder, export_filename, export_json, export_csv, export_xml, 
+                                   concat_updates, result_alpha2, alpha_codes_range, year, year_range, year_greater_than, 
+                                   year_less_than, year_not_equal)
+                    
+            except Exception as e:
+                if (verbose):
+                    print(f"Error retrieving result for {alpha2}: {str(e)}")
+        
+        progress_bar.close()
+    
+    #close Selenium webdriver if it was created
+    if (use_selenium and driver is not None):
+        try:
+            driver.quit()
+        except Exception as e:
+            if (verbose):
+                print(f"Warning: Error closing Selenium driver: {str(e)}")    
 
     #end elapsed time counter and calculate
     end = time.time()

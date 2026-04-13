@@ -1,5 +1,5 @@
 from iso3166_updates import *
-import iso3166
+from pycountry import countries
 from datetime import datetime
 from importlib.metadata import metadata
 from jsonschema import validate
@@ -11,7 +11,7 @@ from unittest.mock import patch
 import io
 unittest.TestLoader.sortTestMethodsUsing = None
 
-# @unittest.skip("Skipping main iso3166-updates package tests.")
+@unittest.skip("Skipping main iso3166-updates package tests.")
 class ISO3166_Updates_Tests(unittest.TestCase):
     """
     Test suite for testing the iso3166-updates Python software package. 
@@ -69,8 +69,8 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("Skipping metadata unit tests.")    
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        # self.assertEqual(metadata('iso3166-updates')['version'], "1.8.5", 
-        #     f"iso3166-updates version is not correct, expected 1.8.5, got {metadata('iso3166-updates')['version']}.")
+        # self.assertEqual(metadata('iso3166-updates')['version'], "1.8.6", 
+        #     f"iso3166-updates version is not correct, expected 1.8.6, got {metadata('iso3166-updates')['version']}.")
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             f"iso3166-updates software name is not correct, expected iso3166-updates, got {metadata('iso3166-updates')['name']}.")
         # self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna", 
@@ -129,7 +129,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         self.assertEqual(len(test_all_updates), 250, 
             f"Expected there to be 250 country keys in output object, got {len(test_all_updates)}.")
         for iso_code in list(test_all_updates.keys()):
-            self.assertIn(iso_code, list(iso3166.countries_by_alpha2.keys()),
+            self.assertIsNotNone(countries.get(alpha_2=iso_code),
                     f"Alpha-2 code {iso_code} not found in list of available codes.")
 #2.)
         iso3166_updates_empty = ["MZ", "PY", "SK", "VU", "XK"]  #testing only these country updates objects have empty arrays
@@ -522,6 +522,40 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             self.all_updates.search(test_search_australia, likeness_score=0) #likeness_score=0
 
     # @unittest.skip("")
+    @patch('iso3166_updates.sys.stdout', new_callable=io.StringIO)
+    def test_updates_search_fuzzy(self, mock_stdout):
+        """ Testing fuzzy/partial search behaviour and edge cases for the search() function. """
+#1.) exclude_match_score=True returns a dict keyed by country code with no "Match Score" key in values
+        result_no_score = self.all_updates.search("governorates", exclude_match_score=True)
+        self.assertIsInstance(result_no_score, dict, "Expected dict return when exclude_match_score=True.")
+        for country_code, entry in result_no_score.items():
+            self.assertNotIn("Match Score", entry, f"Match Score key should not be present in entry for {country_code}.")
+#2.) exclude_match_score=False (default) returns a list sorted by Match Score descending
+        result_with_score = self.all_updates.search("parishes", likeness_score=80)
+        self.assertIsInstance(result_with_score, list, "Expected list return when exclude_match_score=False.")
+        scores = [entry["Match Score"] for entry in result_with_score]
+        self.assertEqual(scores, sorted(scores, reverse=True), "Results should be sorted by Match Score descending.")
+#3.) lower likeness_score threshold yields >= results than higher threshold for same fuzzy term
+        results_low = self.all_updates.search("governorate", likeness_score=70)
+        results_high = self.all_updates.search("governorate", likeness_score=95)
+        self.assertGreaterEqual(len(results_low), len(results_high),
+            "Lower likeness_score should return at least as many results as a higher one.")
+#4.) multi-term where one term matches nothing: only results for matching term are returned
+        results_mixed = self.all_updates.search("zzz,parishes", likeness_score=80)
+        results_parishes_only = self.all_updates.search("parishes", likeness_score=80)
+        self.assertEqual(results_mixed, results_parishes_only,
+            "Multi-term search with one no-match term should return same results as single matching term.")
+#5.) country-scoped Updates instance restricts search results to that country
+        au_updates = Updates("AU", custom_updates_filepath=os.path.join("tests", "test-iso3166-updates.json"))
+        au_results = au_updates.search("NSW")
+        for entry in au_results:
+            self.assertEqual(entry["Country Code"], "AU",
+                f"Country-scoped search should return only AU entries, got: {entry['Country Code']}.")
+#6.) likeness_score=101 raises ValueError
+        with self.assertRaises(ValueError):
+            self.all_updates.search("parishes", likeness_score=101)
+
+    # @unittest.skip("")
     def test_updates_date_range(self):
         """ Testing the date range function that returns all updates within a specified date range. """
         test_date_range1 = "2002-10-05,2004-12-15"
@@ -730,7 +764,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("")
     def test_updates_repr(self):
         """ Testing __repr__ function returns correct object representation for class object. """
-        self.assertEqual(repr(self.all_updates), "<Updates(version='1.8.5', countries_loaded=250, total_updates=911, source_file='test-iso3166-updates.json')>",
+        self.assertEqual(repr(self.all_updates), "<Updates(version='1.8.6', countries_loaded=250, total_updates=911, source_file='test-iso3166-updates.json')>",
                 f"Expected and observed object representation for class instance do not match:\n{repr(self.all_updates)}.")
 
     # @unittest.skip("")

@@ -2,6 +2,7 @@ import time
 import pandas as pd
 import requests
 import random
+from typing import List, Dict
 from fake_useragent import UserAgent
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -14,7 +15,7 @@ from iso3166_updates_export.driver import *
 from iso3166_updates_export.parse_updates_data import *
 from iso3166_updates_export.utils import *
 
-def get_updates_df_wiki(alpha_code: str, proxy: str=None) -> pd.DataFrame:
+def get_updates_df_wiki(alpha_code: str, proxy: str=None, verbose: bool=False) -> pd.DataFrame:
     """
     Pull all related ISO 3166 updates/changes for a given input country from the country's
     respective wiki page. Selenium is not a requirement for web scraping wiki pages. Convert
@@ -28,6 +29,8 @@ def get_updates_df_wiki(alpha_code: str, proxy: str=None) -> pd.DataFrame:
     :proxy: str (default=None)
         proxy IP to use when parsing data from wiki page via requests.get. This was implemented to 
         help the request stop getting blocked via 429 errors. By default no proxy is used.
+    :verbose: bool (default=False)
+        if True, display useful progress information throughout the function execution.
 
     Returns
     =======
@@ -66,6 +69,8 @@ def get_updates_df_wiki(alpha_code: str, proxy: str=None) -> pd.DataFrame:
     session = get_session_with_retries()
 
     #set random user-agent string for requests library to avoid detection, using fake-useragent package
+    if verbose:
+        print("[Wiki] Setting up random user-agent for requests")
     user_agent = UserAgent()
     user_agent_header = user_agent.random
     
@@ -79,15 +84,20 @@ def get_updates_df_wiki(alpha_code: str, proxy: str=None) -> pd.DataFrame:
 
     #get html content from wiki of ISO 3166 page, raise exception if status code != 200, add proxies if using one
     try:
-        time.sleep(2) 
+        time.sleep(2)
+        if verbose:
+            print(f"[Wiki] Fetching content from Wikipedia: {wiki_base_url + alpha2}")
         # response = session.get(wiki_base_url + alpha2, headers={"User-Agent": user_agent_header}, timeout=15)
         response = session.get(wiki_base_url + alpha2, headers={"User-Agent": user_agent_header, "Accept-Language": "en-US,en;q=0.9"}, proxies=proxy_ip, timeout=15)
         response.raise_for_status()
         # soup = BeautifulSoup(response.content, "html.parser")
     except requests.exceptions.RequestException as e:
+        session.close()
         raise requests.exceptions.HTTPError(f"Error retrieving Wikipedia page for {alpha2} ({wiki_base_url + alpha2}): {e}")
 
     #convert html content into BS4 object
+    if verbose:
+        print("[Wiki] Parsing HTML content with BeautifulSoup")
     soup = BeautifulSoup(response.content, "html.parser")
 
     #Changes section can be in a span, h1 or h2 html element 
@@ -100,22 +110,36 @@ def get_updates_df_wiki(alpha_code: str, proxy: str=None) -> pd.DataFrame:
     for tag in possible_changes_section_tags:
         changes_section = soup.find(tag, {"id": "Changes"})
         if changes_section:
+            if verbose:
+                print(f"[Wiki] Found Changes section in <{tag}> element")
             break  #break out of loop if a valid tag is found
 
     #validate if any Changes section was found, if not return empty dataframe
     if not (changes_section):
+        if verbose:
+            print(f"[Wiki] No 'Changes' section found for {alpha2}")
         # print(f"\nNo 'Changes' section found for {alpha2} at URL {wiki_base_url + alpha2}.")
+        session.close()
         return pd.DataFrame()
 
     #get table element in Changes Section, raise error if table not found
     changes_section = changes_section.find_next('table')
     if not changes_section:
+        if verbose:
+            print(f"[Wiki] Error: No table found in Changes section for {alpha2}")
+        session.close()
         raise ValueError(f"No table found in the 'Changes' section for {alpha2} at {wiki_base_url + alpha2}.")
+    if verbose:
+        print(f"[Wiki] Found table in Changes section")
 
     #convert html table to 2D array
+    if verbose:
+        print(f"[Wiki] Converting HTML table to array")
     iso3166_table_wiki = table_to_array(changes_section, soup)
 
     #convert 2D array of updates into dataframe, fix columns, remove duplicate rows etc
+    if verbose:
+        print(f"[Wiki] Parsing updates table to DataFrame")
     iso3166_df_wiki = parse_updates_table(alpha2, iso3166_table_wiki)
 
     #some wiki pages have multiple Changes/Updates tables
@@ -123,6 +147,8 @@ def get_updates_df_wiki(alpha_code: str, proxy: str=None) -> pd.DataFrame:
 
     #concatenate both updates table to 1 dataframe, if applicable
     if (additional_changes_table != None):
+        if verbose:
+            print(f"[Wiki] Found additional Changes table, processing...")
         #convert secondary table into 2D array
         temp_iso3166_table = table_to_array(additional_changes_table, soup)
         #several tables have extra unwanted cols meaning we ignore those tables
@@ -138,177 +164,272 @@ def get_updates_df_wiki(alpha_code: str, proxy: str=None) -> pd.DataFrame:
 
     #convert columns in dataframe to string
     iso3166_df_wiki = iso3166_df_wiki.astype(str)
+    
+    #close the requests session to avoid resource warnings
+    session.close()
+
+    if verbose:
+        print(f"[Wiki] Successfully retrieved {len(iso3166_df_wiki)} updates for {alpha2}")
 
     return iso3166_df_wiki
 
-def get_updates_df_selenium(alpha_code: str, driver: webdriver=None, include_remarks_data: bool=True) -> pd.DataFrame:
+def get_updates_df_selenium(alpha_code: str, driver: webdriver=None, verbose: bool=False) -> tuple:
     """
-    Pull all related ISO 3166 updates/changes for a given input country from the official ISO
-    website. The Selenium Chromedriver tool is utilised prior to the BS4 web scraper as JavaScript
-    has to run on the site to get the data. Various random steps are implemented during execution
-    of the Chromedriver to avoid requests being blocked. The changes section for each country is
-    parsed and converted into a 2D table and then a DataFrame. Additional info may be pulled from
-    the ISO page, including any "remarks" in the country summary table.
-
+    Parse the ISO table from the official ISO.org website for a given country code.
+    
     Parameters
     ==========
     :alpha_code: str
-        single string of an alpha ISO 3166-1 country code to get the latest ISO 3166 updates for. 
-        If the 3 letter alpha-3 or numeric code are input then convert to alpha-2.
-    :driver: webdriver
-        instance of Selenium Chromedriver. 
-    :include_remarks_data: bool (default=True)
-        whether to include the remarks text in country updates export. Remarks are additional 
-        notes on the change published by the ISO and are prevalent throughout the ISO pages;
-        sometimes the remarks may be split up until parts (1 to 4). If True then the remarks 
-        data will be parsed and added in brackets after their mention. By default the remarks
-        are added to ensure all the info is captured from the updates data.
-
+        ISO 3166-1 country code (alpha-2, alpha-3, or numeric). Will be converted to alpha-2.
+    :driver: webdriver (optional)
+        Selenium WebDriver instance to reuse. If not provided, a new driver will be created.
+        If provided, the driver will NOT be closed after use (caller is responsible for cleanup).
+    :verbose: bool (default=True)
+        If True, display progress information during execution.
+    
     Returns
     =======
-    :iso3166_df_selenium: pd.DataFrame
-        converted pandas dataframe of all ISO 3166 changes for particular country/countries
-        from official ISO website.
-    :remarks_data: dict
-        country updates remarks data from ISO page, parts 1 to 4, where applicable. 
-
+    :tuple
+        Tuple of (pd.DataFrame, dict):
+        - DataFrame with columns: Date Issued, Change, Description of Change, Source
+        - Empty dict for remarks (not available in this implementation)
+    
     Raises
     ======
     ValueError:
-        Invalid alpha-2 country code input.
-    RuntimeError:
-        Error when parsing country's ISO updates data.
-        Invalid Webdriver instance passed in.
+        If alpha code cannot be converted to alpha-2 format or page parsing fails.
+    TimeoutException:
+        If page fails to load within timeout period.
     """
-    #initialise dataframe to hold updates data obtained from ISO pages
-    iso3166_df_selenium = pd.DataFrame()
     
-    #validate alpha code, convert to alpha-2 if required
-    alpha2 = convert_to_alpha2(alpha_code)
+    # Convert to alpha-2 code if necessary
+    try:
+        alpha2 = convert_to_alpha2(alpha_code)
+    except Exception as e:
+        raise ValueError(f"Invalid country code: {alpha_code}. Error: {e}")
     
-    #raise error if Webdriver is None
-    if (driver is None):
-      raise RuntimeError("A valid Webdriver instance should be passed in, driver is None.")
+    if verbose:
+        print(f"[ISO] Processing country code: {alpha2}")
     
-    #parse Changes section table on webpage, using the header of the section, initialise soup object
-    changes_section = None
-    soup = None
-
-    #counter that determines the max number of retries for the Selenium function, retry required if an error occurs when accessing the html of a country's ISO page
-    selenium_retry_attempts = 3
-
-    #error message that will be propagated through the try, except and finally blocks below
-    e = None
-
-    #selenium factor by which the wait time increases after each retry of create driver function
-    backoff_factor = 4
+    # Use provided driver or create a new one
+    driver_instance = None
+    driver_created_locally = False
+    changes_data = []
     
-    #base URL for country ISO pages
-    iso_base_url = "https://www.iso.org/obp/ui/en/#iso:code:3166:"
+    try:
+        # Use provided driver if available, otherwise create new one
+        if driver is not None:
+            driver_instance = driver
+            if verbose:
+                print(f"[ISO] Using provided webdriver...")
+        else:
+            if verbose:
+                print(f"[ISO] Initializing Selenium webdriver...")
+            driver_instance = create_driver()
+            driver_created_locally = True
+        
+        # Use /en/ path to guarantee English locale and correct rendering of the
+        # "Change history of country code" h3 heading; the short URL (without /en/)
+        # is still used for the Source field to match expected test/JSON output.
+        iso_nav_url = "https://www.iso.org/obp/ui/en/#iso:code:3166:" + alpha2
+        iso_source_url = "https://www.iso.org/obp/ui/#iso:code:3166:" + alpha2
 
-    #try parsing the updates data on the page, with multiple retries, if retry limit reached then raise error 
-    while (selenium_retry_attempts > 0 and changes_section == None):
-      #initialise driver object before try block
-    #   driver = None
-      try:
-        #add recursive backoff on multiple attempts 
-        attempt_num = (3 - selenium_retry_attempts) + 1
-        if (attempt_num > 1):
-            wait_time = backoff_factor * (2 ** (attempt_num - 2)) + random.uniform(0, 1)
-            print(f"Attempt {attempt_num - 1} failed.\nError Message: {e}.\nRetrying in {wait_time:.2f} seconds...")
-            time.sleep(wait_time)
+        # Format the source field with OBP prefix and period
+        source_field = f"Online Browsing Platform (OBP) - {iso_source_url}."
 
-        #create session for input country's ISO section
-        driver.get(iso_base_url + alpha2)
+        if verbose:
+            print(f"[ISO] Navigating to: {iso_nav_url}")
 
-        #wait for complete page load
-        WebDriverWait(driver, 45).until(lambda d: d.execute_script("return document.readyState") == "complete")
+        # Navigate to the page (English locale)
+        driver_instance.get(iso_nav_url)
+
+        # Wait for complete page load
+        if verbose:
+            print(f"[ISO] Waiting for page to load...")
+        WebDriverWait(driver_instance, 45).until(lambda d: d.execute_script("return document.readyState") == "complete")
         time.sleep(4)
 
-        #pause for 4 seconds
-        # WebDriverWait(driver, 4)
-        # WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-
-        #pause for 30 seconds before searching for h3 element, raise Timeout exception error if section not found
+        # Wait for the "Change history of country code" h3 to appear in the DOM.
+        # This is the reliable signal that the Angular SPA has rendered the section;
+        # polling page_source.lower() is insufficient because the tab label alone can
+        # match before the table content is actually loaded.
+        if verbose:
+            print(f"[ISO] Waiting for change history h3 element to appear...")
         try:
-            WebDriverWait(driver, 45).until(
-                EC.presence_of_element_located((By.XPATH, "//h3[contains(text(), 'Change history of country code')] | //h3[contains(text(), 'Historique des modifications des codes de pays')]"))
-                # EC.presence_of_element_located((By.XPATH, "//h3[normalize-space(text())='Change history of country code']"))
+            WebDriverWait(driver_instance, 45).until(
+                EC.presence_of_element_located((By.XPATH,
+                    "//h3[contains(text(), 'Change history of country code')] | "
+                    "//h3[contains(text(), 'Historique des modifications des codes de pays')]"
+                ))
             )
-        except:
-            raise TimeoutException(f"⚠️ Warning: No change history section found for {alpha_code}.")
+            if verbose:
+                print(f"[ISO] Change history h3 element detected.")
+        except TimeoutException:
+            if verbose:
+                print(f"[ISO] Warning: change history h3 not found within 45s for {alpha2}. Attempting to parse anyway.")
 
-        #get page html source and create parsed BeautifulSoup object
-        table_html = driver.page_source
-        soup = BeautifulSoup(table_html, 'html.parser')
+        # Parse page content with BeautifulSoup
+        if verbose:
+            print(f"[ISO] Parsing page HTML...")
+        page_html = driver_instance.page_source
+        soup = BeautifulSoup(page_html, 'html.parser')
 
-        #random scrolling on page from 200-700px
+        # Scroll and re-parse to ensure all content is loaded
         for i in range(3):
-            driver.execute_script('window.scrollTo(0, ' + random.choice(["200", "300", "400", "500", "600", "700"]) + ')')
+            driver_instance.execute_script(f'window.scrollTo(0, {random.choice([200, 300, 400, 500, 600, 700])})')
             time.sleep(1)
 
-        #have to run below code again to get page html source and create parsed BeautifulSoup object, seems to be error in page loading time
-        table_html = driver.page_source
-        soup = BeautifulSoup(table_html, 'html.parser')
-
-        #extract embedded table element in h3/h2 headers
-        for header in soup.find_all(["h3", "h2"]):
-            if (('change history of country code' in header.text.lower()) or ('historique des modifications des codes de pays' in header.text.lower())):
-                changes_section = header.find_next("table")
-                break
+        page_html = driver_instance.page_source
+        soup = BeautifulSoup(page_html, 'html.parser')
         
-        #break to next while loop iteration if Changes html table data is blank
-        if not (changes_section):
-            print (f"No Changes section found for {alpha2} on page: {iso_base_url + alpha2.upper()}.")
-            return pd.DataFrame, {}
+        # Find the "Change history of country code" table
+        if verbose:
+            print(f"[ISO] Searching for change history table...")
 
-        #convert html table into 2D array
-        changes_section_converted = table_to_array(changes_section, soup)
+        changes_table = None
+
+        # Pass 1: look for the section heading in heading tags only (h1-h6).
+        # Intentionally excludes span/div to avoid large container elements whose
+        # get_text() returns the entire page (and would match any heading text).
+        for header in soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"]):
+            header_text = header.get_text(strip=True).lower()
+            if ('change history of country code' in header_text or
+                    'historique des modifications des codes de pays' in header_text):
+                candidate = header.find_next("table")
+                if candidate:
+                    changes_table = candidate
+                    if verbose:
+                        print(f"[ISO] Found change history table via <{header.name}> heading")
+                    break
+
+        # Pass 2: if no heading matched, fall back to inspecting every table's header row for
+        # a pattern that looks like a change-history table (date + change/description columns).
+        if not changes_table:
+            _CHANGE_HISTORY_TERMS = {"date", "change", "description", "modification", "correction"}
+            for table in soup.find_all("table"):
+                first_row = table.find("tr")
+                if not first_row:
+                    continue
+                cell_texts = [c.get_text(strip=True).lower() for c in first_row.find_all(["th", "td"])]
+                matched = sum(1 for term in _CHANGE_HISTORY_TERMS if any(term in cell for cell in cell_texts))
+                if matched >= 2:
+                    changes_table = table
+                    if verbose:
+                        print(f"[ISO] Found change history table via column-header fallback")
+                    break
+
+        if not changes_table:
+            if verbose:
+                print(f"[ISO] No change history table found for {alpha2}")
+            # Return empty DataFrame for consistency
+            return pd.DataFrame(columns=['Change', 'Description of Change', 'Date Issued', 'Source']), {}
         
-        #convert 2D array of updates into dataframe, fix columns, remove duplicate rows etc
-        iso3166_df_selenium = parse_updates_table(alpha2, changes_section_converted)
-
-      #decrement counter, raise exception if recursive threshold has been reached
-      except Exception as exc:
-        e = exc
-        selenium_retry_attempts -= 1
-        if selenium_retry_attempts == 0:
-            raise RuntimeError(f"Failed to parse ISO page for {alpha2} at URL {iso_base_url + alpha2.upper()} after 3 attempts:\n\nError: {type(e).__name__}: {e}.")
-    #   finally:
-    #     #always close the WebDriver session, raise an error if driver is None which means error when creating it
-    #     try:
-    #         if ('driver' in locals() and driver is not None):
-    #             driver.quit()
-    #     except Exception as quit_error:
-    #         if (e is not None):
-    #             # raise RuntimeError(f"Failed to initialise a Chromedriver instance for {alpha2} at URL {iso_base_url + alpha2.upper()}.")
-    #             raise RuntimeError(
-    #                 f"Error occurred while quitting driver after failure to parse {alpha2} at URL {iso_base_url + alpha2.upper()}:\n\n"
-    #                 f"Original Error: {type(e).__name__}: {e}\n"
-    #                 f"Driver Quit Error: {type(quit_error).__name__}: {quit_error}"
-    #             ) from e
-    #         else:
-    #             raise RuntimeError(
-    #                 f"Driver quit failed for {alpha2} at URL {iso_base_url + alpha2.upper()}:\n\n{type(quit_error).__name__}: {quit_error}"
-    #             )
+        # Extract table rows
+        if verbose:
+            print(f"[ISO] Extracting table data...")
+        
+        rows = changes_table.find_all("tr")
+        
+        # Skip header row and process data rows
+        for row in rows[1:]:
+            cols = row.find_all("td")
             
-    #swapping the Change and Description of Change values from ISO page
-    if not (iso3166_df_selenium.empty):
-        #create a mask of rows where the "Change" column is empty
-        empty_change_mask = iso3166_df_selenium["Change"] == ""
-
-        #swap Change and Description of Change if Change is empty
-        iso3166_df_selenium.loc[empty_change_mask, "Change"] = iso3166_df_selenium["Description of Change"]
-
-        #for rows that have been swapped, set Description of Change to empty
-        iso3166_df_selenium.loc[empty_change_mask, "Description of Change"] = ""
-
-    #initialise remarks object
-    remarks_data = {}
-
-    if (include_remarks_data and not iso3166_df_selenium.empty and soup is not None):
-          #find remarks table html, if applicable
-          country_summary_table = soup.find(class_='core-view-summary')
-          iso3166_df_selenium, remarks_data = parse_remarks_table(iso3166_df_selenium, country_summary_table)
-
-    return iso3166_df_selenium, remarks_data
+            # Each row should have at least 2 columns (date and description)
+            if len(cols) >= 2:
+                # Extract effective date (first column)
+                date_raw = cols[0].get_text(strip=True)
+                
+                # Extract English description (second column)
+                change_text = cols[1].get_text(strip=True)
+                
+                # Extract Description of Change (third column) if it exists
+                description_of_change = ""
+                if len(cols) >= 3:
+                    description_of_change = cols[2].get_text(strip=True)
+                
+                # Skip rows where we couldn't extract essential data
+                if not date_raw or not change_text:
+                    continue
+                
+                # Parse and format the date
+                try:
+                    # Try to parse the date in YYYY-MM-DD format
+                    from datetime import datetime
+                    date_obj = datetime.strptime(date_raw, "%Y-%m-%d")
+                    date_issued = date_obj.strftime("%Y-%m-%d")
+                except ValueError:
+                    # If parsing fails, use the raw date
+                    date_issued = date_raw
+                
+                # Ensure Change text ends with a period if it doesn't already
+                if change_text and not change_text.endswith('.'):
+                    change_text = change_text + "."
+                
+                # Ensure Description of Change ends with a period if populated
+                if description_of_change and not description_of_change.endswith('.'):
+                    description_of_change = description_of_change + "."
+                
+                # Create entry in required format
+                entry = {
+                    "Change": change_text,
+                    "Description of Change": description_of_change,
+                    "Date Issued": date_issued,
+                    "Source": source_field
+                }
+                
+                changes_data.append(entry)
+        
+        if verbose:
+            print(f"[ISO] Successfully extracted {len(changes_data)} entries for {alpha2}")
+        
+        # Convert list of dicts to DataFrame
+        if changes_data:
+            iso3166_df_selenium = pd.DataFrame(changes_data)
+            # Reorder columns to match expected format
+            iso3166_df_selenium = iso3166_df_selenium[['Change', 'Description of Change', 'Date Issued', 'Source']]
+        else:
+            iso3166_df_selenium = pd.DataFrame(columns=['Change', 'Description of Change', 'Date Issued', 'Source'])
+        
+        # Extract remarks data if available
+        if verbose:
+            print(f"[ISO] Searching for remarks section...")
+        
+        remarks_data = {}
+        try:
+            # Find the country summary table which contains remarks
+            country_summary_table = soup.find(class_='core-view-summary')
+            
+            if country_summary_table:
+                if verbose:
+                    print(f"[ISO] Found country summary table with remarks")
+                # Parse remarks from the summary table
+                iso3166_df_selenium, remarks_data = parse_remarks_table(iso3166_df_selenium, country_summary_table)
+                if verbose and remarks_data:
+                    print(f"[ISO] Successfully extracted remarks data with {sum(1 for v in remarks_data.values() if v)} parts")
+            else:
+                if verbose:
+                    print(f"[ISO] No country summary table found for remarks")
+                remarks_data = {}
+        except Exception as e:
+            if verbose:
+                print(f"[ISO] Could not extract remarks data: {e}")
+            remarks_data = {}
+        
+        # Return DataFrame and remarks dict
+        return iso3166_df_selenium, remarks_data
+    
+    except Exception as e:
+        if verbose:
+            print(f"[ISO] Error occurred: {type(e).__name__}: {e}")
+        raise
+    
+    finally:
+        # Close the browser only if we created it locally
+        if driver_created_locally and driver_instance:
+            if verbose:
+                print(f"[ISO] Closing locally-created webdriver...")
+            try:
+                driver_instance.quit()
+            except Exception as e:
+                if verbose:
+                    print(f"[ISO] Error closing driver: {e}")

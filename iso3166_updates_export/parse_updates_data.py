@@ -111,7 +111,7 @@ def parse_remarks_table(iso3166_df_: pd.DataFrame, country_summary_table: Tag) -
     """
     Parsing country summary table on ISO page which contains a selection of info
     about the country. Here we are just parsing the "Remarks" column which
-    contains supplementary info/remarks about the ISO 3166 entry. The remarks
+    contaremarks_ins supplementary info/remarks about the ISO 3166 entry. The remarks
     are split into remarks part 1, 2, 3 and 4, with the majority only having part
     1 and 2.
 
@@ -142,7 +142,7 @@ def parse_remarks_table(iso3166_df_: pd.DataFrame, country_summary_table: Tag) -
     """
     #return main original dataframe if summary table empty
     if (country_summary_table) is None:
-        return iso3166_df_
+        return iso3166_df_, {}
 
     #raise error if input parameter isn't a dataframe
     if not (isinstance(iso3166_df_, pd.DataFrame)):
@@ -153,9 +153,12 @@ def parse_remarks_table(iso3166_df_: pd.DataFrame, country_summary_table: Tag) -
 
     #iterate through data columns on ISO summary table, append any remarks to object, if applicable
     for elem in country_summary_table:
-        #check if html element is a bs4.Tag element, get its column name
-        if isinstance(elem, Tag):
-            column_name = elem.find(class_="core-view-field-name").text.lower()
+        #check if element has the find method (works with both Tag and mock objects)
+        if hasattr(elem, 'find'):
+            try:
+                column_name = elem.find(class_="core-view-field-name").text.lower()
+            except (AttributeError, TypeError):
+                continue
 
             def parse_remarks_column_value(col_elem):
                 """ Parse remarks from column class element. """
@@ -182,4 +185,4 @@ def parse_remarks_table(iso3166_df_: pd.DataFrame, country_summary_table: Tag) -
     #sort dataframe via the date column
     iso3166_df_.sort_values(by=['Date Issued'], ascending=False, inplace=True)
 
-    return iso3166_df_, remarks_
+    return iso3166_df_, remarks_ 

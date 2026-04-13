@@ -1,9 +1,8 @@
 import argparse
 import time
 from typing import Dict, List, Union
-from fp.fp import FreeProxy
 from tqdm import tqdm
-import flag
+from pycountry import countries
 import sys, os
 
 #adding previous dir to sys path so script can be called from main dir or iso3166_updates_export dir
@@ -79,8 +78,8 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
         export all ISO 3166 updates for inputted countries into CSV format in export folder.
     :export_xml: bool (default=False)
         export all ISO 3166 updates for inputted countries into XML format in export folder.
-    :verbose: bool (default=False)
-        Set to 1 to print out progress of updates functionality, 0 will not print progress.
+    :verbose: bool (default=True)
+        Set to True to print out progress of updates functionality, False will not print progress.
     :use_selenium: bool (default=True)
         Gather all updates data for each country from its official page on the ISO website which
         requires Python Selenium and Chromedriver. By default this data is pulled.
@@ -116,6 +115,36 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
     TypeError:
         Invalid data types for input parameters.
     """
+    #print input parameters if verbose is True
+    if (verbose):
+        print("\n" + "="*80)
+        print("ISO 3166 Updates Export - Input Parameters:")
+        print("="*80)
+        print(f"alpha_codes: {alpha_codes}")
+        print(f"year: {year}")
+        print(f"export_filename: {export_filename}")
+        print(f"export_folder: {export_folder}")
+        print(f"alpha_codes_range: {alpha_codes_range}")
+        print(f"concat_updates: {concat_updates}")
+        print(f"export_json: {export_json}")
+        print(f"export_csv: {export_csv}")
+        print(f"export_xml: {export_xml}")
+        print(f"verbose: {verbose}")
+        print(f"use_selenium: {use_selenium}")
+        print(f"use_wiki: {use_wiki}")
+        print(f"include_remarks_data: {include_remarks_data}")
+        print(f"save_each_iteration: {save_each_iteration}")
+        print(f"use_proxy: {use_proxy}")
+        print("="*80 + "\n")
+    
+    # Define flag function to generate country flag emoji from ISO 3166-1 alpha-2 code
+    def flag(code):
+        """Generate country flag emoji from ISO 3166-1 alpha-2 code"""
+        try:
+            return ''.join(chr(127397 + ord(c)) for c in code.upper())
+        except:
+            return ""  # Return empty string if conversion fails
+    
     year_range = False
     year_greater_than = False
     year_less_than = False
@@ -142,18 +171,34 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
     #object to store all country updates/changes
     all_iso3166_updates = {}
     
+    #initialize driver to None (will be set if use_selenium is True and driver creation succeeds)
+    driver = None
+    
     #by default, set proxy to None
     proxy = None
 
-    use_proxy = True
     #set random proxy IP if using it
     if (use_proxy):
         #create instance of Free Proxy class & get random proxy
+        from fp.fp import FreeProxy
         proxy = FreeProxy().get()
 
     #create webdriver instance if using Selenium, pass in proxy IP, if applicable
     if (use_selenium):
-        driver = create_driver(proxy)
+        try:
+            driver = create_driver(proxy)
+        except Exception as e:
+            #If driver creation fails (timeout, browser issue), fall back to wiki-only mode
+            if verbose:
+                print(f"[Main] Warning: Failed to initialize Selenium WebDriver: {str(e)}")
+                print(f"[Main] Falling back to wiki-only data extraction")
+            use_selenium = False
+            
+    #Ensure at least one data source is available
+    if not (use_wiki or use_selenium):
+        use_wiki = True
+        if verbose:
+            print(f"[Main] Warning: Both use_wiki and use_selenium are disabled, enabling wiki data source")
 
     #start elapsed time counter
     start = time.time()
@@ -163,35 +208,68 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
 
     #iterate over all input ISO 3166-1 country codes
     for alpha2 in progress_bar:
-        flag_icon = flag.flag(alpha2) if alpha2 != "XK" else "" #get flag icon from emoji-country-flag library
-        progress_bar.set_description(f"{iso3166.countries_by_alpha2[alpha2].name.title()} ({alpha2}) {flag_icon}")        
+        flag_icon = flag(alpha2) if alpha2 != "XK" else "" #get flag icon from emoji-country-flag library
+        progress_bar.set_description(f"{countries.get(alpha_2=alpha2).name.title()} ({alpha2}) {flag_icon}")        
 
         #initialise object of updates for current alpha-2 code
         all_iso3166_updates[alpha2] = []
+        
+        #initialize remarks_data to empty dict (will be populated if Selenium is used successfully)
+        remarks_data = {}
 
+        print("alpha2", alpha2)
+        print("use_selenium", use_selenium)
         #pull wiki and ISO data depending on respective parameter bools
         if (use_wiki and use_selenium):
 
             #web scrape country's wiki data, convert html table/2D array to dataframe
-            iso3166_df_wiki = get_updates_df_wiki(alpha2)
+            iso3166_df_wiki = get_updates_df_wiki(alpha2, verbose=verbose)
 
+            print("iso3166_df_wiki")
+            print(iso3166_df_wiki)
             #use Selenium Chromedriver to parse country's updates data from official ISO website
-            iso_website_df, remarks_data = get_updates_df_selenium(alpha2, driver, include_remarks_data)
+            if verbose:
+                print(f"[Main] Calling get_updates_df_selenium for {alpha2}...")
+            try:
+                iso_website_df, remarks_data = get_updates_df_selenium(alpha2, driver, include_remarks_data, verbose=verbose)
 
-            #concatenate two updates dataframes
-            iso3166_df = pd.concat([iso3166_df_wiki, iso_website_df], ignore_index=True, sort=False)
+                print("iso_website_df")
+                print(iso_website_df)
+                
+
+                if verbose:
+                    print(f"[Main] get_updates_df_selenium returned DataFrame with shape {iso_website_df.shape}")
+                #concatenate two updates dataframes
+                iso3166_df = pd.concat([iso3166_df_wiki, iso_website_df], ignore_index=True, sort=False)
+            except Exception as e:
+                #Selenium failed (network error, timeout, etc.) - fall back to wiki data only
+                if verbose:
+                    print(f"[Main] Warning: Selenium failed for {alpha2}: {str(e)}")
+                    print(f"[Main] Falling back to wiki-only data for {alpha2}")
+                iso3166_df = iso3166_df_wiki
+
 
         #pull just wiki data 
         elif (use_wiki):
 
             #web scrape country's wiki data, convert html table/2D array to dataframe
-            iso3166_df = get_updates_df_wiki(alpha2)
+            iso3166_df = get_updates_df_wiki(alpha2, verbose=verbose)
 
         #pull just ISO page data 
         elif (use_selenium):
 
             #use Selenium Chromedriver to parse country's updates data from official ISO website
-            iso3166_df, remarks_data = get_updates_df_selenium(alpha2, driver, include_remarks_data)
+            if verbose:
+                print(f"[Main] Calling get_updates_df_selenium for {alpha2}...")
+            try:
+                iso3166_df, remarks_data = get_updates_df_selenium(alpha2, driver, include_remarks_data, verbose=verbose)
+                if verbose:
+                    print(f"[Main] get_updates_df_selenium returned DataFrame with shape {iso3166_df.shape}")
+            except Exception as e:
+                #Selenium failed (network error, timeout, etc.) - use empty dataframe
+                if verbose:
+                    print(f"[Main] Warning: Selenium failed for {alpha2}: {str(e)}")
+                iso3166_df = pd.DataFrame()
         
         #raise error if both bools are set to False, no data being exported
         else:
@@ -234,8 +312,9 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
         all_iso3166_updates[alpha2] = iso3166_df.to_dict(orient="records")
 
         #save the updates data export at current iteration, useful in the case where the Selenium session might timeout
+        #only export JSON during iteration, full exports happen at the end
         if (save_each_iteration):
-            export_updates(all_iso3166_updates, export_folder, export_filename, export_json, export_csv, export_xml, 
+            export_updates(all_iso3166_updates, export_folder, export_filename, True, False, False, 
                            concat_updates, alpha2, alpha_codes_range, year, year_range, year_greater_than, 
                            year_less_than, year_not_equal)    
 
@@ -266,6 +345,14 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
     if (verbose):
         print(f"Total elapsed time for executing script: {round(elapsed/60, 2)} minutes.")
 
+    #close Selenium driver if it was created
+    if (use_selenium and driver is not None):
+        try:
+            driver.quit()
+        except Exception as e:
+            if verbose:
+                print(f"[Main] Warning: Error closing Selenium driver: {str(e)}")
+
     return all_iso3166_updates
 
 if __name__ == "__main__":
@@ -284,25 +371,25 @@ if __name__ == "__main__":
         help='Folder where to store exported ISO 3166 updates files.')
     parser.add_argument('-alpha_codes_range', '--alpha_codes_range', type=str, required=False, default="", 
         help='Range of alpha codes to export from, inclusive. If only a single alpha code input then it will serve as the starting country.')
-    parser.add_argument('-export_json', '--export_json', required=False, action=argparse.BooleanOptionalAction, default=1,
+    parser.add_argument('-export_json', '--export_json', required=False, action=argparse.BooleanOptionalAction, default=True,
         help='Whether to export all found updates to json in export folder.')
-    parser.add_argument('-export_csv', '--export_csv', required=False, action=argparse.BooleanOptionalAction, default=1,
+    parser.add_argument('-export_csv', '--export_csv', required=False, action=argparse.BooleanOptionalAction, default=True,
         help='Whether to export all found updates to csv files in export folder.')
-    parser.add_argument('-export_xml', '--export_xml', required=False, action=argparse.BooleanOptionalAction, default=0,
+    parser.add_argument('-export_xml', '--export_xml', required=False, action=argparse.BooleanOptionalAction, default=False,
         help='Whether to export all found updates to xml files in export folder.')
-    parser.add_argument('-concat_updates', '--concat_updates', required=False, action=argparse.BooleanOptionalAction, default=1,
+    parser.add_argument('-concat_updates', '--concat_updates', required=False, action=argparse.BooleanOptionalAction, default=True,
         help='Whether to concatenate updates of individual countries into the same json or csv files or to individual files.')
-    parser.add_argument('-verbose', '--verbose', type=int, required=False, action=argparse.BooleanOptionalAction, default=1, 
-        help='Set to 1 to print out progress of updates function, 0 will not print progress.')
-    parser.add_argument('-use_selenium', '--use_selenium', type=int, required=False, action=argparse.BooleanOptionalAction, default=1, 
+    parser.add_argument('-verbose', '--verbose', required=False, action=argparse.BooleanOptionalAction, default=True, 
+        help='Set to True to print out progress of updates function, False will not print progress.')
+    parser.add_argument('-use_selenium', '--use_selenium', required=False, action=argparse.BooleanOptionalAction, default=True, 
         help='Gather updates from official ISO website for each country using Selenium package.')
-    parser.add_argument('-use_wiki', '--use_wiki', type=int, required=False, action=argparse.BooleanOptionalAction, default=1, 
+    parser.add_argument('-use_wiki', '--use_wiki', required=False, action=argparse.BooleanOptionalAction, default=True, 
         help='Gather updates from wiki page for each country.')
-    parser.add_argument('-include_remarks_data', '--include_remarks_data', type=int, required=False, action=argparse.BooleanOptionalAction, default=1, 
+    parser.add_argument('-include_remarks_data', '--include_remarks_data', required=False, action=argparse.BooleanOptionalAction, default=True, 
         help="Append the remarks data from the country's ISO page to each of the updates data objects.")
-    parser.add_argument('-save_each_iteration', '--save_each_iteration', type=int, required=False, action=argparse.BooleanOptionalAction, default=0, 
+    parser.add_argument('-save_each_iteration', '--save_each_iteration', required=False, action=argparse.BooleanOptionalAction, default=True, 
         help="Export the updates data per each individual country iteration, useful for if Selenium might timeout and export progress is lost.")
-    parser.add_argument('-use_proxy', '--use_proxy', type=int, required=False, action=argparse.BooleanOptionalAction, default=0, 
+    parser.add_argument('-use_proxy', '--use_proxy', required=False, action=argparse.BooleanOptionalAction, default=False, 
         help="Use a proxy IP when exporting data from the 2 data sources to avoid requests getting rejected.")
 
     #parse input args

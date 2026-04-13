@@ -1,0 +1,996 @@
+{
+    "AD": [
+        {
+            "Change": "Update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AD."
+        },
+        {
+            "Change": "Update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2014-11-03",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AD."
+        },
+        {
+            "Change": "Subdivisions added: 7 parishes.",
+            "Description of Change": "Addition of the administrative subdivisions and of their code elements.",
+            "Date Issued": "2007-04-17",
+            "Source": "Newsletter I-8 - https://web.archive.org/web/20120330105926/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf."
+        }
+    ],
+    "AE": [
+        {
+            "Change": "Change of spelling of AE-AJ, AE-RK; addition of local variation of AE-FU, AE-RK, AE-UQ; update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AE."
+        },
+        {
+            "Change": "Error correction: Spelling correction in AE-AZ.",
+            "Description of Change": "",
+            "Date Issued": "2002-08-20",
+            "Source": "Newsletter I-3 - https://web.archive.org/web/20081218103236/http://www.iso.org/iso/iso_3166-2_newsletter_i-3_en.pdf."
+        },
+        {
+            "Change": "Spelling correction in AE-RK.",
+            "Description of Change": "",
+            "Date Issued": "2002-05-21",
+            "Source": "Newsletter I-2 - https://web.archive.org/web/20081218103157/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf."
+        }
+    ],
+    "AF": [
+        {
+            "Change": "Correction of the Code Source.",
+            "Description of Change": "Correction du Code Source.",
+            "Date Issued": "2020-11-24",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AF."
+        },
+        {
+            "Change": "Correction of the romanization system label.",
+            "Description of Change": "",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AF."
+        },
+        {
+            "Change": "Correction of the local short name; change romanization system; change of spelling of categories of pus and fas; change of spelling of AF-KNR; update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AF."
+        },
+        {
+            "Change": "Codes: AF-LOW Lowgar -> AF-LOG Lōgar. AF-ORU Orūzgān -> AF-URU Uruzgān.",
+            "Description of Change": "Language corrections, administrative name corrections, alphabetical re-ordering and source list update.",
+            "Date Issued": "2011-12-13 (corrected 2011-12-15)",
+            "Source": "Newsletter II-3 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf."
+        },
+        {
+            "Change": "Subdivisions added: AF-DAY Dāykondī. AF-PAN Panjshīr.",
+            "Description of Change": "Addition of 2 provinces. Update of list source.",
+            "Date Issued": "2005-09-13",
+            "Source": "Newsletter I-7 - https://web.archive.org/web/20081218103217/http://www.iso.org/iso/iso_3166-2_newsletter_i-7_en.pdf."
+        },
+        {
+            "Change": "Subdivisions added: AF-KHO Khowst. AF-NUR Nūrestān.",
+            "Description of Change": "Addition of 2 provinces. Update of list source.",
+            "Date Issued": "2004-03-08",
+            "Source": "Newsletter I-6 - https://web.archive.org/web/20081218103224/http://www.iso.org/iso/iso_3166-2_newsletter_i-6_en.pdf."
+        }
+    ],
+    "AG": [
+        {
+            "Change": "Change spelling of AG-04.",
+            "Description of Change": "",
+            "Date Issued": "2014-10-29",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AG."
+        },
+        {
+            "Change": "Subdivisions added: AG-11 Redonda.",
+            "Description of Change": "Update of the administrative structure and of the list source.",
+            "Date Issued": "2010-06-30",
+            "Source": "Newsletter II-2 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf."
+        },
+        {
+            "Change": "Subdivisions added: 6 parishes, 1 dependency.",
+            "Description of Change": "Addition of the administrative subdivisions and of their code elements.",
+            "Date Issued": "2007-04-17",
+            "Source": "Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf."
+        }
+    ],
+    "AI": [
+        {
+            "Change": "Modification of remark part 2. (Remark part 2: No subdivisions relevant for this standard).",
+            "Description of Change": "Modification de la remarque, partie 2.",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AI."
+        }
+    ],
+    "AL": [
+        {
+            "Change": "Correction of the Code Source.",
+            "Description of Change": "Correction du Code Source.",
+            "Date Issued": "2020-11-24",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AL."
+        },
+        {
+            "Change": "Change of subdivision category from préfecture to comté in French; deletion of all districts; update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AL."
+        },
+        {
+            "Change": "Separation of the variant local short names by semi-colon.",
+            "Description of Change": "",
+            "Date Issued": "2014-04-03",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AL."
+        },
+        {
+            "Change": "Codes: format changed (leading digit 0 added).",
+            "Description of Change": "Addition of the country code prefix as the first code element.",
+            "Date Issued": "2010-02-03 (corrected 2010-02-19)",
+            "Source": "Newsletter II-1 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-1_corrected_2010-02-19.pdf."
+        },
+        {
+            "Change": "Change of generic term for administrative divisions. New list source.",
+            "Description of Change": "",
+            "Date Issued": "2004-03-08",
+            "Source": "Newsletter I-6 - https://web.archive.org/web/20081218103224/http://www.iso.org/iso/iso_3166-2_newsletter_i-6_en.pdf."
+        },
+        {
+            "Change": "Subdivisions added: 12 prefectures (now called counties). Codes: AL-LA Laç -> AL-KB Kurbin.",
+            "Description of Change": "Introduction of 12 prefectures with their code elements. One district name and its code element changed. One district name corrected. Attribution of the prefecture code element to each district.",
+            "Date Issued": "2002-05-21",
+            "Source": "Newsletter I-2 - https://web.archive.org/web/20081218103157/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf."
+        }
+    ],
+    "AM": [
+        {
+            "Change": "Correction of the romanization system label.",
+            "Description of Change": "",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AM."
+        }
+    ],
+    "AO": [
+        {
+            "Change": "Change of spelling of AO-CCU, AO-CNO, AO-CUS, AO-LNO, AO-LSU; Addition of local variation for AO-CCU, AO-CNO, AO-CUS; Update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2020-11-24",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AO."
+        },
+        {
+            "Change": "Update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AO."
+        },
+        {
+            "Change": "Correct spelling of AO-CCU.",
+            "Description of Change": "",
+            "Date Issued": "2015-02-12",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AO."
+        },
+        {
+            "Change": "Correct spelling of AO-CNO and AO-CUS.",
+            "Description of Change": "",
+            "Date Issued": "2014-12-18",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AO."
+        },
+        {
+            "Change": "Change spelling of AO-CNO, AO-CUS, and AO-CCU; update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2014-10-29",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AO."
+        },
+        {
+            "Change": "Spelling correction in AO-ZAI.",
+            "Description of Change": "",
+            "Date Issued": "2002-05-21",
+            "Source": "Newsletter I-2 - https://web.archive.org/web/20081218103157/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf."
+        }
+    ],
+    "AQ": [
+        {
+            "Change": "Modification of remark part 2. (Remark part 2: No subdivisions relevant for this standard).",
+            "Description of Change": "Modification de la remarque, partie 2.",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AQ."
+        }
+    ],
+    "AR": [
+        {
+            "Change": "Typographical correction of a name and update of the list and code sources.",
+            "Description of Change": "",
+            "Date Issued": "2010-06-30",
+            "Source": "Newsletter II-2 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf."
+        }
+    ],
+    "AS": [
+        {
+            "Change": "Modification of remark part 2. (Remark part 2: No subdivisions relevant for this standard. Included also as a subdivision of the United States (US-AS)).",
+            "Description of Change": "Modification de la remarque, partie 2.",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AS."
+        }
+    ],
+    "AT": [
+        {
+            "Change": "Change of subdivision category from federal Länder to state; update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AT."
+        },
+        {
+            "Change": "Update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2014-11-03",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AT."
+        }
+    ],
+    "AU": [
+        {
+            "Change": "Update List Source; update Code Source.",
+            "Description of Change": "",
+            "Date Issued": "2016-11-15",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AU."
+        },
+        {
+            "Change": "Update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AU."
+        },
+        {
+            "Change": "Codes: New South Wales: AU-NS -> AU-NSW. Queensland: AU-QL -> AU-QLD. Tasmania: AU-TS -> AU-TAS. Victoria: AU-VI -> AU-VIC. Australian Capital Territory: AU-CT -> AU-ACT.",
+            "Description of Change": "Change of subdivision code in accordance with Australian Standard AS 4212-1994.",
+            "Date Issued": "2004-03-08",
+            "Source": "Newsletter I-6 - https://web.archive.org/web/20081218103224/http://www.iso.org/iso/iso_3166-2_newsletter_i-6_en.pdf."
+        }
+    ],
+    "AW": [
+        {
+            "Change": "Modification of remark part 2. (Remark part 2: No subdivisions relevant for this standard. Included also as subdivision of Netherlands (NL-AW)).",
+            "Description of Change": "Modification de la remarque, partie 2.",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AW."
+        },
+        {
+            "Change": "Addition of the alpha 3 administrative language code pap.",
+            "Description of Change": "Ajout du codet  alpha 3 de la langue administrative  pap.",
+            "Date Issued": "2016-11-15",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AW."
+        },
+        {
+            "Change": "Addition of code to align ISO 3166-1 and ISO 3166-2.",
+            "Description of Change": "",
+            "Date Issued": "2011-12-13 (corrected 2011-12-15)",
+            "Source": "Newsletter II-3 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf."
+        }
+    ],
+    "AX": [
+        {
+            "Change": "Modification of remark part 2. (Remark part 2: No subdivisions relevant for this standard).",
+            "Description of Change": "Modification de la remarque, partie 2.",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AX."
+        },
+        {
+            "Change": "Correct administrative languages.",
+            "Description of Change": "Corriger les langues administratives.",
+            "Date Issued": "2011-07-14",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AX."
+        },
+        {
+            "Change": "Correct administrative languages.",
+            "Description of Change": "Corriger les langues administratives.",
+            "Date Issued": "2011-06-12",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AX."
+        }
+    ],
+    "AZ": [
+        {
+            "Change": "Deletion of the romanization system; update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:AZ."
+        },
+        {
+            "Change": "Subdivisions added: AZ-KAN Kǝngǝrli. AZ-NV Naxçıvan (municipality). Subdivisions deleted: AZ-SS Şuşa. Codes: AZ-AB Əli Bayramlı -> AZ-SR Şirvan. AZ-DAV Dəvəçi -> AZ-SBN Şabran. AZ-XAN Xanlar -> AZ-GYG Göygöl.",
+            "Description of Change": "Alphabetical re-ordering, name change of administrative places, first level prefix addition and source list update.",
+            "Date Issued": "2011-12-13 (corrected 2011-12-15)",
+            "Source": "Newsletter II-3 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf."
+        },
+        {
+            "Change": "Codes: Naxçıvan: AZ-MM -> AZ-NX.",
+            "Description of Change": "Correction of one code and four spelling errors. Notification of the rayons belonging to the autonomous republic.",
+            "Date Issued": "2002-05-21",
+            "Source": "Newsletter I-2 - https://web.archive.org/web/20081218103157/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf."
+        }
+    ],
+    "BA": [
+        {
+            "Change": "Correction of the romanization system label.",
+            "Description of Change": "Correction de l'étiquette du système de romanization.",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BA."
+        },
+        {
+            "Change": "Correction of the romanization system label.",
+            "Description of Change": "",
+            "Date Issued": "2018-11-22",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BA."
+        },
+        {
+            "Change": "Deletion of all cantons BA-01 to BA-10.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BA."
+        },
+        {
+            "Change": "Correct typographic error for the language code for Croatian.",
+            "Description of Change": "",
+            "Date Issued": "2010-12-15",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BA."
+        },
+        {
+            "Change": "Subdivisions added: BA-BRC Brčko Distrikt.",
+            "Description of Change": "Addition of the country code prefix as the first code element, addition of names in administrative languages, update of the administrative structure and of the list source.",
+            "Date Issued": "2010-06-30",
+            "Source": "Newsletter II-2 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf."
+        },
+        {
+            "Change": "Subdivisions added: 10 cantons.",
+            "Description of Change": "Second edition of ISO 3166-2 (this change was not announced in a newsletter) - 'Statoid Newsletter January 2008' - http://www.statoids.com/n0801.html.",
+            "Date Issued": "2007-12-13",
+            "Source": "ISO 3166-2:2007 - http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718."
+        }
+    ],
+    "BB": [
+        {
+            "Change": "Update List Source.",
+            "Description of Change": "Mise à jour de la Liste Source.",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BB."
+        },
+        {
+            "Change": "Update List Source.",
+            "Description of Change": "Mise à jour de la Liste Source.",
+            "Date Issued": "2014-11-03",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BB."
+        },
+        {
+            "Change": "Subdivisions added: 11 parishes.",
+            "Description of Change": "Addition of the administrative subdivisions and of their code elements.",
+            "Date Issued": "2007-04-17",
+            "Source": "Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf."
+        }
+    ],
+    "BD": [
+        {
+            "Change": "Change of spelling of BD-03, BD-06, BD-08, BD-10, BD-22, BD-A, BD-B; Addition of local variation for BD-10, BD-B; Correction of the Code Source.",
+            "Description of Change": "",
+            "Date Issued": "2020-11-24",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BD."
+        },
+        {
+            "Change": "Correction of the romanization system label.",
+            "Description of Change": "",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BD."
+        },
+        {
+            "Change": "Change of spelling of BD-24, BD-25, BD-29, BD-45; change of parent subdivision of BD-21, BD-34, BD-41, BD-55, BD-57; addition of parent subdivision BD-H; addition of an asterisk to divisions; update list source.",
+            "Description of Change": "",
+            "Date Issued": "2016-11-15",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BD."
+        },
+        {
+            "Change": "Correct local short name and align with ISO 3166-2.",
+            "Description of Change": "",
+            "Date Issued": "2012-02-15",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BD."
+        },
+        {
+            "Change": "Subdivisions added: BD-F Rangpur (division). Codes: Barisal (division): BD-1 -> BD-A Chittagong (division): BD-2 -> BD-B Dhaka (division): BD-3 -> BD-C Khulna (division): BD-4 -> BD-D Rajshahi (division): BD-5 -> BD-E Sylhet (division): BD-6 -> BD-G.",
+            "Description of Change": "Country name romanization adjustment, first level prefix addition, deletion of generic terms, addition of administrative division and source list update.",
+            "Date Issued": "2011-12-13 (corrected 2011-12-15)",
+            "Source": "Newsletter II-3 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf."
+        },
+        {
+            "Change": "Subdivisions added: BD-6 Sylhet bibhag. Subdivisions deleted: 21 regions.",
+            "Description of Change": "New list source. One division added. 31 regions cancelled. Allocation of districts to divisions instead of regions. Correction of one spelling error.",
+            "Date Issued": "2002-05-21",
+            "Source": "Newsletter I-2 - https://web.archive.org/web/20081218103157/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf."
+        }
+    ],
+    "BE": [
+        {
+            "Change": "Addition of the parent subdivisions.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BE."
+        },
+        {
+            "Change": "First level prefix addition, change of administrative languages and list source update.",
+            "Description of Change": "",
+            "Date Issued": "2011-12-13 (corrected 2011-12-15)",
+            "Source": "Newsletter II-3 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf."
+        }
+    ],
+    "BF": [
+        {
+            "Change": "Spelling change: BF-TUI Tui -> Tuy.",
+            "Description of Change": "Change of spelling of BF-TUI; update list source.",
+            "Date Issued": "2016-11-15",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BF."
+        },
+        {
+            "Change": "Correction of the short name lowercase in French.",
+            "Description of Change": "",
+            "Date Issued": "2014-04-15",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BF."
+        },
+        {
+            "Change": "Subdivisions added: 13 regions.",
+            "Description of Change": "Update of the administrative structure and of the list source.",
+            "Date Issued": "2010-06-30",
+            "Source": "Newsletter II-2 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf."
+        }
+    ],
+    "BG": [
+        {
+            "Change": "Correction of the romanization system label.",
+            "Description of Change": "",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BG."
+        },
+        {
+            "Change": "Change of subdivision category from region to district in eng and fra; update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2018-04-20",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BG."
+        },
+        {
+            "Change": "Addition of romanization system.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BG."
+        },
+        {
+            "Change": "Alignment with ISO 3166-2 of the local short name Alignment with ISO 3166-2 of the local short name.",
+            "Description of Change": "",
+            "Date Issued": "2013-02-06",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BG."
+        },
+        {
+            "Change": "Local country name romanization system adjustment and source list update.",
+            "Description of Change": "",
+            "Date Issued": "2011-12-13 (corrected 2011-12-15)",
+            "Source": "Newsletter II-3 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf."
+        },
+        {
+            "Change": "Add the second romanized local name for Bulgaria.",
+            "Description of Change": "Rajouter le deuxième nom romanisé de Bulgarie.",
+            "Date Issued": "2011-07-14",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BG."
+        },
+        {
+            "Change": "Add the second romanized local name for Bulgaria.",
+            "Description of Change": "Rajouter le deuxième nom romanisé de Bulgarie.",
+            "Date Issued": "2011-06-12",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BG."
+        },
+        {
+            "Change": "Application of the romanization system 26 October 2006.",
+            "Description of Change": "",
+            "Date Issued": "2007-11-28",
+            "Source": "Newsletter I-9 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/newsletter_i-9.pdf."
+        },
+        {
+            "Change": "Subdivision layout: 9 regions -> 28 regions.",
+            "Description of Change": "New subdivision layout: Nine regions with former names (two remaining with former code). Ten regions with new names. New references for list source, code source and romanization system.",
+            "Date Issued": "2002-05-21",
+            "Source": "Newsletter I-2 - https://web.archive.org/web/20081218103157/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf."
+        }
+    ],
+    "BH": [
+        {
+            "Change": "Change of subdivision name for BH-13; deletion of a governorate BH-16; update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BH."
+        },
+        {
+            "Change": "Subdivision layout: 12 regions -> 5 governorates.",
+            "Description of Change": "Modification of the administrative structure.",
+            "Date Issued": "2007-04-17",
+            "Source": "Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf."
+        }
+    ],
+    "BI": [
+        {
+            "Change": "Correction of the Code Source.",
+            "Description of Change": "Correction du Code Source.",
+            "Date Issued": "2020-11-24",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BI."
+        },
+        {
+            "Change": "Subdivision added: BI-RM Rumonge.",
+            "Description of Change": "Addition of one province BI-RM; update List Source.",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BI."
+        },
+        {
+            "Change": "Subdivisions added: BI-BM Bujumbura Mairie. BI-BL Bujumbura Rural. Subdivisions deleted: BI-BJ Bujumbura.",
+            "Description of Change": "Update of the administrative structure and of the list source.",
+            "Date Issued": "2010-06-30",
+            "Source": "Newsletter II-2 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf."
+        },
+        {
+            "Change": "Subdivisions added: BI-MW Mwaro.",
+            "Description of Change": "Addition of one province.",
+            "Date Issued": "2002-12-10",
+            "Source": "Newsletter I-4 - https://web.archive.org/web/20081218103210/http://www.iso.org/iso/iso_3166-2_newsletter_i-4_en.pdf."
+        }
+    ],
+    "BJ": [
+        {
+            "Change": "Correction of the Code Source.",
+            "Description of Change": "Correction du Code Source.",
+            "Date Issued": "2020-11-24",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BJ."
+        },
+        {
+            "Change": "Change of spelling of BJ-AK, BJ-KO; update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BJ."
+        },
+        {
+            "Change": "Subdivisions added: BJ-AL Alibori. BJ-CO Collines. BJ-DO Donga. BJ-KO Kouffo. BJ-LI Littoral. BJ-PL Plateau.",
+            "Description of Change": "New subdivision layout: 12 departments. Six with previous names and six with new names.",
+            "Date Issued": "2002-05-21",
+            "Source": "Newsletter I-2 - https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf."
+        }
+    ],
+    "BL": [
+        {
+            "Change": "Modification of remark part 2. (Remark part 2: No subdivisions relevant for this standard. Included also as subdivision of France (FR-BL)).",
+            "Description of Change": "Modification de la remarque, partie 2.",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BL."
+        },
+        {
+            "Change": "Correction of the OBP entry error as follows: deletion of “Saint-Barthélemy” in the\n                  French name field for Territory.",
+            "Description of Change": "Correction de l’erreur de saisie dans l’OBP comme suit : suppression de “Saint-Barthélemy”\n                  dans le champ français du Nom du territoire.",
+            "Date Issued": "2015-02-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BL."
+        },
+        {
+            "Change": "Correction to Newsletter VI-1.",
+            "Description of Change": "Correction de l’Info-Service VI-1.",
+            "Date Issued": "2008-04-08",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BL."
+        },
+        {
+            "Change": "Addition of new entry (in accordance with ISO 3166-1 Newsletter VI-1).",
+            "Description of Change": "",
+            "Date Issued": "2007-11-28",
+            "Source": "Newsletter I-9 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/newsletter_i-9.pdf."
+        },
+        {
+            "Change": "Add new entry.",
+            "Description of Change": "Ajouter une nouvelle entrée.",
+            "Date Issued": "2007-09-21",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BL."
+        }
+    ],
+    "BM": [
+        {
+            "Change": "Modification of remark part 2. (Remark part 2: No subdivisions relevant for this standard).",
+            "Description of Change": "Modification de la remarque, partie 2.",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BM."
+        }
+    ],
+    "BN": [
+        {
+            "Change": "Spelling change: BN-BM Brunei-Muara -> Brunei dan Muara (ms).",
+            "Description of Change": "Change of subdivision name of BN-BM; Update List Source.",
+            "Date Issued": "2019-11-22",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BN."
+        },
+        {
+            "Change": "Addition of subdivision category name in Malay; update List Source.",
+            "Description of Change": "Ajout du nom de la catégorie de subdivision en malais; mise à jour de la Liste Source.",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BN."
+        },
+        {
+            "Change": "Alignment of the  French short name lower case with UNTERM; update of the remarks\n                  in French.",
+            "Description of Change": "Alignement de la forme courte française en minuscules avec UNTERM; mise à jour des\n                  remarques en français.",
+            "Date Issued": "2014-12-18",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BN."
+        },
+        {
+            "Change": "Update List Source.",
+            "Description of Change": "Mise à jour de la Liste Source.",
+            "Date Issued": "2014-11-03",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BN."
+        }
+    ],
+    "BO": [
+        {
+            "Change": "Change of  short name upper case: replace the parentheses with a coma.",
+            "Description of Change": "Modification du nom court en majuscules: remplacer les parenthèses par une virgule.",
+            "Date Issued": "2024-02-29",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BO."
+        },
+        {
+            "Change": "Alignment of the English and French short names upper and lower case with UNTERM.",
+            "Description of Change": "",
+            "Date Issued": "2014-12-18",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BO."
+        },
+        {
+            "Change": "Update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2014-11-03",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BO."
+        },
+        {
+            "Change": "Change of short form country name in accordance with ISO 3166-1, NL VI-6 (2009-05-08).",
+            "Description of Change": "",
+            "Date Issued": "2010-02-03 (corrected 2010-02-19)",
+            "Source": "Newsletter II-1 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-1_corrected_2010-02-19.pdf."
+        },
+        {
+            "Change": "Change of short and full names.",
+            "Description of Change": "",
+            "Date Issued": "2009-05-08",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BO."
+        }
+    ],
+    "BQ": [
+        {
+            "Change": "Typographical correction of subdivision name of BQ-BO in pap (deleted leading space).",
+            "Description of Change": "Correction typographique du nom de la subdivision de BQ-BO en pap (suppression de\n                  l’espace devant le nom).",
+            "Date Issued": "2019-11-22",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BQ."
+        },
+        {
+            "Change": "Change in lower case the local short name.",
+            "Description of Change": "Modification en minuscules de la forme courte locale.",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BQ."
+        },
+        {
+            "Change": "Correct local short name and align with ISO 3166-2.",
+            "Description of Change": "Corriger la forme courte du nom local et aligner avec l'ISO 3166-2.",
+            "Date Issued": "2012-02-15",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BQ."
+        },
+        {
+            "Change": "Addition of code to align ISO 3166-1 and ISO 3166-2, addition of two divisions and update of the number of divisions.",
+            "Description of Change": "",
+            "Date Issued": "2011-12-13 (corrected 2011-12-15)",
+            "Source": "Newsletter II-3 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf."
+        },
+        {
+            "Change": "Correct the English name to Sint Eustatius in alignment with United Nations Terminology\n                  and Reference Section (UNTERM).",
+            "Description of Change": "Corriger le nom en anglais Sint Eustatius pour l'aligner avec UNTERM.",
+            "Date Issued": "2011-07-14",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BQ."
+        },
+        {
+            "Change": "Correct the English name to Sint Eustatius in alignment with United Nations Terminology\n                  and Reference Section (UNTERM).",
+            "Description of Change": "Corriger le nom en anglais Sint Eustatius pour l'aligner avec UNTERM.",
+            "Date Issued": "2011-06-12",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BQ."
+        },
+        {
+            "Change": "Add new entry.",
+            "Description of Change": "Ajouter une nouvelle entrée.",
+            "Date Issued": "2010-12-15",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BQ."
+        }
+    ],
+    "BR": [
+        {
+            "Change": "Correction of the Code Source.",
+            "Description of Change": "Correction du Code Source.",
+            "Date Issued": "2020-11-24",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BR."
+        },
+        {
+            "Change": "Deletion of asterisk from state BR-TO; update list source.",
+            "Description of Change": "Suppression de l’astérisque de État BR-TO; mise à jour de la Liste Source.",
+            "Date Issued": "2016-11-15",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BR."
+        }
+    ],
+    "BS": [
+        {
+            "Change": "By a letter dated 10 April 2025, the Permanent Representative of The Bahamas confirmed\n                  the name of the country, which should be styled with a capital T.",
+            "Description of Change": "Par une lettre datée du 10 avril 2025, le Représentant permanent des Bahamas a confirmé\n                  que la forme courte était \"Bahamas (Les)\".",
+            "Date Issued": "2025-07-22",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS."
+        },
+        {
+            "Change": "Subdivision added: BS-NP New Providence.",
+            "Description of Change": "Addition of island BS-NP; Addition of Remark; Update List Source.",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS."
+        },
+        {
+            "Change": "Subdivisions deleted: BS-GT Green Turtle Cay.",
+            "Description of Change": "Correction of NL II-2 for toponyms and typographical errors, one deletion and source list update.",
+            "Date Issued": "2011-12-13 (corrected 2011-12-15)",
+            "Source": "Newsletter II-3 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-3_2011-12-13.pdf."
+        },
+        {
+            "Change": "Subdivision layout: 21 districts -> 32 districts (mistakenly listed as 31 districts in newsletter).",
+            "Description of Change": "Update of the administrative structure and of the list source.",
+            "Date Issued": "2010-06-30",
+            "Source": "Newsletter II-2 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf."
+        }
+    ],
+    "BT": [
+        {
+            "Change": "Change of spelling of BT-43; Update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2020-11-24",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BT."
+        },
+        {
+            "Change": "Correction of the romanization system label.",
+            "Description of Change": "",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BT."
+        },
+        {
+            "Change": "Change of spelling of BT-13, BT-45; update list source.",
+            "Description of Change": "",
+            "Date Issued": "2016-11-15",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BT."
+        },
+        {
+            "Change": "Update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BT."
+        },
+        {
+            "Change": "Update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2014-11-03",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BT."
+        }
+    ],
+    "BV": [
+        {
+            "Change": "Modification of remark part 2. (Remark part 2: No subdivisions relevant for this standard).",
+            "Description of Change": "Modification de la remarque, partie 2.",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BV."
+        },
+        {
+            "Change": "Correct administrative language code from nbo to nob.",
+            "Description of Change": "Corriger le codet de la langue administrative, nbo par nob.",
+            "Date Issued": "2014-04-03",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BV."
+        },
+        {
+            "Change": "Add local short names.",
+            "Description of Change": "Rajouter les formes courtes locales du nom.",
+            "Date Issued": "2013-02-06",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BV."
+        }
+    ],
+    "BW": [
+        {
+            "Change": "Correction of the Code Source.",
+            "Description of Change": "Correction du Code Source.",
+            "Date Issued": "2020-11-24",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BW."
+        },
+        {
+            "Change": "Subdivisions added: BW-CH Chobe. BW-FR Francistown. BW-GA Gaborone. BW-JW Jwaneng. BW-LO Lobatse. BW-SP Selibe Phikwe. BW-ST Sowa Town. Spelling changes: BW-NE North-East -> North East. BW-NW North-West -> North West. BW-SE South-East -> South East.",
+            "Description of Change": "Add 1 district BW-CH, 2 cities BW-FR and BW-GA, 4 towns BW-JW, BW-LO, BW-SP, BW-ST; remove hyphens from BW-NE, BW-NW, and BW-SE; update List Source.",
+            "Date Issued": "2014-10-29",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BW."
+        },
+        {
+            "Change": "Subdivisions deleted: BW-CH Chobe. Codes: BW-NG Ngamiland -> BW-NW North-West.",
+            "Description of Change": "Deletion of Chobe district which is incorporated into (new) BW-NW. Change of code element of North-West District to BW-NW. Deletion of alternative names. Update of list source.",
+            "Date Issued": "2003-09-05",
+            "Source": "Newsletter I-5 - https://web.archive.org/web/20081218103244/http://www.iso.org/iso/iso_3166-2_newsletter_i-5_en.pdf."
+        }
+    ],
+    "BY": [
+        {
+            "Change": "Correction of spelling for BY-HR of BGN/PCGN 1979.",
+            "Description of Change": "",
+            "Date Issued": "2020-11-24",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BY."
+        },
+        {
+            "Change": "Correction of the romanization system label.",
+            "Description of Change": "",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BY."
+        },
+        {
+            "Change": "Change romanization system from 'GOST 1983' to 'Belarusian Lacinka' of bel; change romanization system of BY-HM* of bel and rus.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BY."
+        },
+        {
+            "Change": "Subdivisions added: BY-HM Horad Minsk.",
+            "Description of Change": "Update of the administrative structure and of the list source.",
+            "Date Issued": "2010-06-30",
+            "Source": "Newsletter II-2 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf."
+        },
+        {
+            "Change": "Correction of spelling mistakes and language code elements.",
+            "Description of Change": "",
+            "Date Issued": "2000-06-21",
+            "Source": "Newsletter I-1 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_i-1_en.pdf."
+        }
+    ],
+    "BZ": [
+        {
+            "Change": "Update List Source.",
+            "Description of Change": "Mise à jour de la Liste Source.",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BZ."
+        },
+        {
+            "Change": "Update List Source.",
+            "Description of Change": "Mise à jour de la Liste Source.",
+            "Date Issued": "2014-11-03",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BZ."
+        }
+    ],
+    "CA": [
+        {
+            "Change": "Name change: CA-YT Yukon Territory -> Yukon.",
+            "Description of Change": "Change spelling of CA-YT; update List Source.",
+            "Date Issued": "2014-10-29",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CA."
+        },
+        {
+            "Change": "Codes: CA-NF Newfoundland -> CA-NL Newfoundland and Labrador.",
+            "Description of Change": "Change of code element of Newfoundland and Labrador.",
+            "Date Issued": "2002-12-10",
+            "Source": "Newsletter I-4 - https://web.archive.org/web/20081218103210/http://www.iso.org/iso/iso_3166-2_newsletter_i-4_en.pdf."
+        },
+        {
+            "Change": "Codes: CA-NF Newfoundland -> CA-NL Newfoundland and Labrador.",
+            "Description of Change": "Correction of name form of CA-NF.",
+            "Date Issued": "2002-05-21",
+            "Source": "Newsletter I-2 - https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf."
+        },
+        {
+            "Change": "Subdivisions added: CA-NU Nunavut.",
+            "Description of Change": "Addition of 1 new territory.",
+            "Date Issued": "2000-06-21",
+            "Source": "Newsletter I-1 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_i-1_en.pdf."
+        }
+    ],
+    "CC": [
+        {
+            "Change": "Modification of remark part 2. (Remark part 2: No subdivisions relevant for this standard).",
+            "Description of Change": "Modification de la remarque, partie 2.",
+            "Date Issued": "2018-11-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CC."
+        }
+    ],
+    "CD": [
+        {
+            "Change": "Correction of the Code Source.",
+            "Description of Change": "Correction du Code Source.",
+            "Date Issued": "2020-11-24",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CD."
+        },
+        {
+            "Change": "Names changed: CD-BC, CD-KE. Subdivisions deleted: CD-BN, CD-KA, CD-KW, CD-OR. Subdivisions added: CD-BU, CD-HK, CD-HL, CD-HU, CD-IT, CD-KC, CD-KG, CD-KL, CD-KS, CD-LO, CD-LU, CD-MN, CD-MO, CD-NU, CD-SA, CD-SU, CD-TA, CD-TO, CD-TU.",
+            "Description of Change": "Change of subdivision name of CD-BC, CD-KE; deletion of provinces CD-BN, CD-KA, CD-KW, CD-OR; addition of provinces CD-BU, CD-HK, CD-HL, CD-HU, CD-IT, CD-KC, CD-KG, CD-KL, CD-KS, CD-LO, CD-LU, CD-MN, CD-MO, CD-NU, CD-SA, CD-SU, CD-TA, CD-TO, CD-TU; update List Source.",
+            "Date Issued": "2016-11-15",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CD."
+        },
+        {
+            "Change": "Codes: CD-HC Haut-Congo -> CD-OR Orientale.",
+            "Description of Change": "One subdivision name changed. Generic name of subdivisions changed. New reference in the list source.",
+            "Date Issued": "2002-05-21",
+            "Source": "Newsletter I-2 - https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf."
+        }
+    ],
+    "CF": [
+        {
+            "Change": "Correct French full name and local short name to align with ISO 3166-2.",
+            "Description of Change": "Corriger la forme longue du nom français et la forme courte locale pour les aligner\n                  avec l'ISO 3166-2.",
+            "Date Issued": "2012-02-15",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CF."
+        },
+        {
+            "Change": "Consistency between ISO 3166-1 and ISO 3166-2, addition of names in administrative languages, and update of the administrative structure and of the list source.",
+            "Description of Change": "",
+            "Date Issued": "2010-06-30",
+            "Source": "Newsletter II-2 - https://www.iso.org/files/live/sites/isoorg/files/archive/pdf/en/iso_3166-2_newsletter_ii-2_2010-06-30.pdf."
+        },
+        {
+            "Change": "Addition of administrative language Sango (sg, sag).",
+            "Description of Change": "Adjonction de la langue administrative sango (sg, sag).",
+            "Date Issued": "2009-01-07",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CF."
+        }
+    ],
+    "CG": [
+        {
+            "Change": "Correction of the OBP entry error as follows: change of the font character from a dash to a hyphen in the name for Pointe-Noire.",
+            "Description of Change": "",
+            "Date Issued": "2015-02-26",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CG."
+        },
+        {
+            "Change": "Add 1 department CG-16.",
+            "Description of Change": "",
+            "Date Issued": "2015-02-12",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CG."
+        },
+        {
+            "Change": "Alignment of the English short name lower case with UNTERM.",
+            "Description of Change": "",
+            "Date Issued": "2014-12-18",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CG."
+        },
+        {
+            "Change": "Change Subdivision category ‘region’ to ‘department’; change ‘capital’ to ‘department’; update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2014-10-29",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CG."
+        }
+    ],
+    "CH": [
+        {
+            "Change": "Deletion of canton CH-GR in fra; Update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2020-11-24",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CH."
+        },
+        {
+            "Change": "Spelling correction of CH-AI and CH-AR. New list source.",
+            "Description of Change": "",
+            "Date Issued": "2003-09-05",
+            "Source": "Newsletter I-5 - https://web.archive.org/web/20081218103244/http://www.iso.org/iso/iso_3166-2_newsletter_i-5_en.pdf."
+        }
+    ],
+    "CI": [
+        {
+            "Change": "Correction of the French full name.",
+            "Description of Change": "Correction  de la forme longue en français.",
+            "Date Issued": "2022-09-02",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CI."
+        },
+        {
+            "Change": "Update Code Source.",
+            "Description of Change": "",
+            "Date Issued": "2016-11-15",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CI."
+        },
+        {
+            "Change": "Deletion of all regions CI-01 to CI-19; addition of districts CI-BS, CI-CM, CI-DN, CI-GD, CI-LC, CI-LG, CI-MG, CI-SM, CI-SV, CI-VB, CI-WR, CI-ZZ; addition of autonomous districts CI-AB, CI-YM; update List Source.",
+            "Description of Change": "",
+            "Date Issued": "2015-11-27",
+            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CI."
+        },
+        {
+            "Change": "Subdivisions added: CI-17 Bafing. CI-18 Fromager. CI-19 Moyen-Cavally.",
+            "Description of Change": "Modification of the administrative structure.",
+            "Date Issued": "2007-04-17",
+            "Source": "Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf."
+        }
+    ]
+}

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "iso3166-updates"
-version = "1.8.5"
+version = "1.8.6"
 description = "Get the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest." 
 authors = ["AJ McKenna <amckenna41@qub.ac.uk>"]
 maintainers = ["AJ McKenna <amckenna41@qub.ac.uk>"]
@@ -15,6 +15,7 @@ classifiers = [
         "License :: OSI Approved :: MIT License",
         "License :: Free For Educational Use",
         "Natural Language :: English",
+        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",	
         "Programming Language :: Python :: 3.12",	
@@ -24,17 +25,19 @@ classifiers = [
         "Topic :: Scientific/Engineering :: Information Analysis",
         "Topic :: Software Development :: Libraries :: Python Modules"
 ]
-keywords = ["iso", "iso3166", "beautifulsoup", "python", "pypi", "countries", "country codes", "csv", "iso3166-2", "subdivisions", "iso3166-1", "alpha-2", "alpha-3", "selenium", "chromedriver"]
+keywords = ["iso", "iso3166", "python", "pypi", "countries", "country codes", "csv", "iso3166-2", "subdivisions", "iso3166-1", "alpha-2", "alpha-3"]
 packages = [{include = "iso3166_updates"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
 iso3166 = "^2.1.1"
-python-dateutil = "^2.9.0.post0"
 thefuzz = "^0.22.1"
+requests = "^2.28.1"
+pycountry = "^22.3.5"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.2"
+pytest-cov = "^5.0.0"
 
 [tool.poetry.urls]
 homepage = "https://iso3166-updates.com/api/"
