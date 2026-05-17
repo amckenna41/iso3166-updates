@@ -230,7 +230,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.compare.outputs.has_changes == 'true'
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: update iso3166-updates.json with latest ISO 3166 data"
