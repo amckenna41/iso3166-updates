@@ -8,9 +8,9 @@ from bs4 import BeautifulSoup, Tag
 import pandas as pd
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
-import openai
-from dotenv import load_dotenv
-import pprint
+# import openai
+# from dotenv import load_dotenv
+# import pprint
 
 def remove_duplicates(iso3166_updates_df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -1523,237 +1523,157 @@ def export_to_csv_xml(input_json_path: str="", export_filename: str="") -> None:
     
 #     return
 
-def anomaly_detection(json_path: str, output_csv_path: str = None, api_key: str = None) -> pd.DataFrame:
-    """
-    Detects anomalies in ISO 3166-2 update JSON using OpenAI API.
-    Validates every update entry for correctness, consistency, structure, and plausibility.
-    Outputs results to a CSV file with columns: country_code and anomaly_description.
-
-    Parameters:
-    ===========
-    :json_path: str:
-        Path to the iso3166-updates JSON file to analyze.
-    :output_csv_path: str (optional):
-        Path where the output CSV file will be saved. 
-        Defaults to 'anomalies.csv' in the current working directory.
-    :api_key: str (optional):
-        OpenAI API key. If not provided, will attempt to load from OPENAI_API_KEY 
-        environment variable via dotenv module.
-
-    Returns:
-    ========
-    :pd.DataFrame:
-        DataFrame containing anomaly results with columns: country_code, anomaly_description.
-
-    Raises:
-    =======
-    :FileNotFoundError: If the JSON file does not exist.
-    :ValueError: If OpenAI API key is not found in environment or parameters.
-    """
-    # Load environment variables from .env file
-    load_dotenv()
-
-    # Set default output path
-    if output_csv_path is None:
-        output_csv_path = "anomalies.csv"
-
-    # Validate input file exists
-    if not os.path.exists(json_path):
-        raise FileNotFoundError(f"JSON file not found: {json_path}")
-
-    # Load the JSON file
-    with open(json_path, 'r', encoding='utf-8') as f:
-        iso3166_data = json.load(f)
-
-    # Determine API key: parameter takes precedence over environment variable
-    if api_key is None:
-        api_key = os.getenv("OPENAI_API_KEY")
-    
-    if not api_key:
-        raise ValueError(
-            "OPENAI_API_KEY not found. Please provide the API key either:\n"
-            "1. Set OPENAI_API_KEY environment variable in a .env file\n"
-            "2. Pass api_key as a parameter to the function"
-        )
-
-    # Initialize OpenAI client
-    client = openai.OpenAI(api_key=api_key)
-
-    # Prepare the prompt with the JSON data
-    system_prompt = """You are a meticulous data quality auditor for a JSON dataset containing ISO 3166-2 update history ("updates.json"). You NEVER skip records and you NEVER silently ignore problems.
-
-Your job:
-
-Read ALL countries and ALL update entries in the JSON, regardless of length.
-
-Validate every update entry for correctness, consistency, structure, and plausibility.
-
-Return a structured, machine-readable report of all anomalies you find.
-
-Dataset description:
-
-The JSON maps ISO 3166-1 alpha-2 country codes (e.g. "AF", "AL", "BD") to arrays of historical update entries.
-
-Each update entry is expected to follow this schema:
-• Change: string (required, non-empty)
-• Description of Change: string (may be empty but must exist)
-• Date Issued: ISO date string (YYYY-MM-DD) with optional correction text
-• Source: string (required URL or reference), normally newsletter or OBP links
-
-Definitions:
-
-An "update entry" represents one historical ISO change event.
-
-An "anomaly" is any potential data quality issue, including schema issues, formatting inconsistencies, impossible dates, or logically contradictory changes.
-
-You MUST obey these rules:
-
-Do NOT summarise the dataset. Only report anomalies.
-
-Do NOT omit anomalies even if they seem minor.
-
-If the same anomaly occurs repeatedly, report it individually for each occurrence.
-
-If uncertain whether something is an error, flag it as a "possible_anomaly" with an explanation.
-
-Your final response MUST be valid JSON only, with no trailing commas, no commentary, and no additional text.
-
-Output format:
-Return a single JSON object with this structure:
-{
-"anomalies": [
-{
-"country_code": string,
-"index": number,
-"attribute": string,
-"value": any,
-"issue_type": string,
-"severity": "low" | "medium" | "high",
-"details": string
-}
-]
-}
-
-If there are no anomalies, return:
-{ "anomalies": [] }
-
-Validation rules:
-For every update entry of every country, detect anomalies including but not limited to:
-
-Schema and structure anomalies:
-
-Missing required fields (Change, Date Issued, Source)
-
-Wrong data types
-
-Empty objects
-
-Unexpected extra fields
-
-Content anomalies:
-
-Change is missing, blank, or only punctuation
-
-Description of Change missing (may be empty but must exist)
-
-Source missing, malformed, or non-URL where URL is expected
-
-Duplicate update entries (same Change + Date Issued + Source)
-
-Multiple countries referenced incorrectly in a single update entry
-
-Date anomalies:
-
-Invalid date syntax
-
-Incorrect format (not YYYY-MM-DD)
-
-Impossible dates (e.g. month/day out of range, year far outside plausible ISO issuance range)
-
-Malformed correction text
-
-Chronological contradictions within a country's sequence of updates
-
-Source anomalies:
-
-Non-HTTPS URLs where HTTPS is expected
-
-Malformed OBP URLs
-
-Broken newsletter URLs
-
-Archived URLs incorrectly formatted
-
-Typos in domains or URL paths
-
-Change content anomalies:
-
-Subdivision codes not matching ISO 3166-2 patterns
-
-Lowercase or malformed codes
-
-Changes referencing subdivisions that do not exist
-
-Logical contradictions (e.g. subdivision deleted then updated with no reinstatement entry)
-
-Redundant or duplicate updates
-
-Multiple unrelated changes in one entry without proper separation
-
-Severity rules:
-
-high: clearly invalid data (missing required fields, invalid dates, malformed structure)
-
-medium: suspicious or likely incorrect (damaged URLs, odd formats)
-
-low: minor inconsistencies (spacing, punctuation, stylistic issues)
-
-Do not skip any update entries. Do not output anything except the anomaly JSON object."""
-
-    user_prompt = f"""Analyze the following ISO 3166-2 updates JSON dataset for anomalies:
-
-{json.dumps(iso3166_data, indent=2)}"""
-
-    print("Sending data to OpenAI for anomaly detection analysis...")
-
-    # Call OpenAI API
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        max_tokens=4096,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt}
-        ]
-    )
-
-    # Extract response text
-    response_text = response.choices[0].message.content
-
-    # Parse the JSON response
-    try:
-        anomalies_data = json.loads(response_text)
-    except json.JSONDecodeError:
-        print(f"Warning: Could not parse OpenAI response as JSON. Raw response:\n{response_text}")
-        anomalies_data = {"anomalies": []}
-
-    # Convert anomalies to DataFrame format
-    anomalies_list = []
-    for anomaly in anomalies_data.get("anomalies", []):
-        anomalies_list.append({
-            "country_code": anomaly.get("country_code", ""),
-            "anomaly_description": f"[{anomaly.get('severity', 'unknown').upper()}] {anomaly.get('attribute', '')}: {anomaly.get('details', '')} (Issue: {anomaly.get('issue_type', '')})"
-        })
-
-    # Create DataFrame
-    anomalies_df = pd.DataFrame(anomalies_list)
-
-    # Save to CSV
-    if anomalies_df.empty:
-        print(f"No anomalies detected. Creating empty CSV at {output_csv_path}")
-    else:
-        print(f"Found {len(anomalies_df)} anomalies. Saving to {output_csv_path}")
-
-    anomalies_df.to_csv(output_csv_path, index=False, encoding='utf-8')
-    print(f"Anomaly detection complete. Results saved to: {output_csv_path}")
-
-    return anomalies_df
+# def anomaly_detection(json_path: str, output_csv_path: str = None, api_key: str = None,
+#                       batch_size: int = 20) -> pd.DataFrame:
+#     """
+#     Detects anomalies in the ISO 3166 updates JSON using the OpenAI API.
+#     The dataset is processed in batches of countries to stay within model token limits.
+#     Each update entry is validated for correctness, consistency, structure, and plausibility.
+#     Results are written to a CSV with columns: country_code, anomaly_description.
+
+#     Parameters
+#     ==========
+#     :json_path: str
+#         Path to the iso3166-updates JSON file to analyse.
+#     :output_csv_path: str (optional)
+#         Path where the output CSV file will be saved.
+#         Defaults to 'anomalies.csv' in the current working directory.
+#     :api_key: str (optional)
+#         OpenAI API key. If not provided, attempts to load from the OPENAI_API_KEY
+#         environment variable (with dotenv support).
+#     :batch_size: int (default=20)
+#         Number of country codes to send in each API request. Reducing this value
+#         lowers per-request token usage at the cost of more API calls.
+
+#     Returns
+#     =======
+#     :pd.DataFrame
+#         DataFrame with columns: country_code, anomaly_description.
+
+#     Raises
+#     ======
+#     FileNotFoundError
+#         If the JSON file does not exist.
+#     ValueError
+#         If no OpenAI API key is found.
+#     """
+#     load_dotenv()
+
+#     if output_csv_path is None:
+#         output_csv_path = "anomalies.csv"
+
+#     if not os.path.exists(json_path):
+#         raise FileNotFoundError(f"JSON file not found: {json_path}")
+
+#     with open(json_path, 'r', encoding='utf-8') as f:
+#         iso3166_data = json.load(f)
+
+#     if api_key is None:
+#         api_key = os.getenv("OPENAI_API_KEY")
+#     if not api_key:
+#         raise ValueError(
+#             "OPENAI_API_KEY not found. Set the environment variable in a .env file "
+#             "or pass api_key as a parameter."
+#         )
+
+#     client = openai.OpenAI(api_key=api_key)
+
+#     system_prompt = (
+#         "You are a data quality auditor for a JSON dataset of ISO 3166-2 update history. "
+#         "You will be given a subset of the dataset (a JSON object mapping ISO 3166-1 alpha-2 "
+#         "country codes to arrays of update entries). Examine every entry of every country in "
+#         "the input and report all anomalies.\n\n"
+
+#         "SCHEMA — each update entry must have:\n"
+#         "  • Change: non-empty string (required)\n"
+#         "  • Description of Change: string (may be empty, but key must exist)\n"
+#         "  • Date Issued: YYYY-MM-DD string, optionally followed by '(corrected YYYY-MM-DD)'\n"
+#         "  • Source: non-empty string — an OBP URL or newsletter reference (required)\n\n"
+
+#         "ANOMALY TYPES TO DETECT:\n"
+#         "  Schema: missing/extra fields, wrong types, empty objects\n"
+#         "  Content: blank Change, missing Source, duplicate entries (same Change+Date+Source)\n"
+#         "  Date: invalid format, impossible calendar values (e.g. month > 12, day > 31), "
+#         "dates before 1974 or after today, malformed correction suffix\n"
+#         "  Source: non-HTTPS URL where HTTPS is expected, malformed OBP URL "
+#         "(pattern: https://www.iso.org/obp/ui/#iso:code:3166:<alpha2>), broken archive.org URL\n"
+#         "  Change text: subdivision codes not matching ISO 3166-2 pattern (<alpha2>-<alphanum>), "
+#         "lowercase codes, logical contradictions (e.g. subdivision deleted then later modified "
+#         "with no reinstatement)\n\n"
+
+#         "SEVERITY:\n"
+#         "  high — missing required field, invalid/impossible date, malformed structure\n"
+#         "  medium — suspicious URL, unexpected format, likely incorrect value\n"
+#         "  low — minor inconsistency (spacing, punctuation, stylistic)\n\n"
+
+#         "RULES:\n"
+#         "  • Report every anomaly individually — do not group or summarise.\n"
+#         "  • Report repeated occurrences separately.\n"
+#         "  • When unsure, flag as a possible anomaly and explain.\n"
+#         "  • Output ONLY a valid JSON object — no prose, no markdown, no trailing commas.\n\n"
+
+#         "OUTPUT FORMAT:\n"
+#         '{"anomalies": [{"country_code": string, "index": number, "attribute": string, '
+#         '"value": any, "issue_type": string, "severity": "low"|"medium"|"high", "details": string}]}\n'
+#         'If no anomalies found: {"anomalies": []}'
+#     )
+
+#     country_codes = list(iso3166_data.keys())
+#     batches = [country_codes[i:i + batch_size] for i in range(0, len(country_codes), batch_size)]
+
+#     all_anomalies: list[dict] = []
+
+#     for batch_idx, batch in enumerate(batches):
+#         batch_data = {code: iso3166_data[code] for code in batch}
+#         print(f"Analysing batch {batch_idx + 1}/{len(batches)} ({len(batch)} countries): {', '.join(batch)}")
+
+#         user_prompt = (
+#             "Analyse the following ISO 3166-2 updates data for anomalies:\n\n"
+#             + json.dumps(batch_data, indent=2)
+#         )
+
+#         try:
+#             response = client.chat.completions.create(
+#                 model="gpt-4o",
+#                 response_format={"type": "json_object"},
+#                 messages=[
+#                     {"role": "system", "content": system_prompt},
+#                     {"role": "user", "content": user_prompt},
+#                 ],
+#             )
+#             response_text = response.choices[0].message.content
+#         except Exception as e:
+#             print(f"Warning: API call failed for batch {batch_idx + 1}: {e}")
+#             continue
+
+#         try:
+#             batch_result = json.loads(response_text)
+#         except json.JSONDecodeError:
+#             print(f"Warning: Could not parse API response for batch {batch_idx + 1}. Skipping.")
+#             continue
+
+#         all_anomalies.extend(batch_result.get("anomalies", []))
+
+#     anomalies_list = [
+#         {
+#             "country_code": a.get("country_code", ""),
+#             "anomaly_description": (
+#                 f"[{a.get('severity', 'unknown').upper()}] "
+#                 f"{a.get('attribute', '')}: {a.get('details', '')} "
+#                 f"(issue: {a.get('issue_type', '')})"
+#             ),
+#         }
+#         for a in all_anomalies
+#     ]
+
+#     anomalies_df = pd.DataFrame(anomalies_list) if anomalies_list else pd.DataFrame(columns=["country_code", "anomaly_description"])
+
+#     if anomalies_df.empty:
+#         print(f"No anomalies detected. Creating empty CSV at {output_csv_path}")
+#     else:
+#         print(f"Found {len(anomalies_df)} anomalies across {anomalies_df['country_code'].nunique()} countries.")
+
+#     anomalies_df.to_csv(output_csv_path, index=False, encoding='utf-8')
+#     print(f"Anomaly detection complete. Results saved to: {output_csv_path}")
+
+#     return anomalies_df

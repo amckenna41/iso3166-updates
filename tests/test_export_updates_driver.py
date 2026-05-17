@@ -1,7 +1,4 @@
-try:
-    from iso3166_updates_export.driver import create_driver
-except:
-    from ..iso3166_updates_export.driver import create_driver
+from iso3166_updates_export.driver import create_driver
 from selenium.common.exceptions import WebDriverException
 from unittest.mock import MagicMock, patch
 import unittest

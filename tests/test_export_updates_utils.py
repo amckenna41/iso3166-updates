@@ -1,7 +1,4 @@
-try:
-    from iso3166_updates_export.utils import *
-except:
-    from ..iso3166_updates_export.utils  import *
+from iso3166_updates_export.utils import *
 import json
 import re
 from datetime import datetime

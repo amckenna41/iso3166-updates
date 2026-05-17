@@ -1,8 +1,6 @@
 # try:
 from iso3166_updates_export.get_updates_data import *
 from iso3166_updates_export.driver import *
-# except:
-#     from ..iso3166_updates_export.get_updates_data import *
 from pycountry import countries
 import requests
 import pandas as pd

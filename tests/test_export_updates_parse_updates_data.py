@@ -1,7 +1,4 @@
-try:
-    from iso3166_updates_export.parse_updates_data import *
-except:
-    from ..iso3166_updates_export.parse_updates_data import *
+from iso3166_updates_export.parse_updates_data import *
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 

@@ -1,7 +1,4 @@
-try:
-    from iso3166_updates_export.main import *
-except:
-    from ..iso3166_updates_export.main import *
+from iso3166_updates_export.main import *
 import shutil
 import pandas as pd
 import os
