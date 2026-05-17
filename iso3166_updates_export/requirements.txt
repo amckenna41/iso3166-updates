@@ -3,7 +3,7 @@ iso3166
 lxml
 pandas
 requests
-selenium>=4.6.0
+selenium>=4.36.0
 tqdm
 typing-extensions
 fake_useragent
