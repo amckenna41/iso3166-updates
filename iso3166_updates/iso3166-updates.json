@@ -1851,7 +1851,7 @@
             "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:GB."
         },
         {
-            "Change": "Addition of subdivision categories country and province in eng & fra; modification of remark part 2; addition of country GB-ENG, GB-WLS, GB-SCT; addition of province GB-NIR; addition of parent subdivisions. (Remark part 2: BS 6879 gives alternative name forms in Welsh (cy) for some of the Welsh unitary authorities (together with alternative code elements). Since this part of ISO 3166 does not allow for duplicate coding of identical subdivisions, such alternative names in Welsh and code elements are shown for information purposes only in square brackets after the English name of the subdivision. BS 6879 has been superseded but remains the original source of the codes. Included for completeness: EAW England and Wales; GBN Great Britain; UKM United Kingdom).",
+            "Change": "Addition of subdivision categories country and province in eng & fra; modification of remark part 2; addition of country GB-ENG, GB-WLS, GB-SCT; addition of province GB-NIR; addition of parent subdivisions. (Remark part 2: BS 6879 gives alternative name forms in Welsh (cy) for some of the Welsh unitary authorities (together with alternative code elements). Since this part of ISO 3166 does not allow for duplicate coding of identical subdivisions, such alternative names in Welsh and code elements are shown for information purposes only in square brackets after the English name of the subdivision. BS 6879 has been superseded but remains the original source of the codes.\r Included for completeness:\r EAW England and Wales;\r GBN Great Britain;\r UKM United Kingdom).",
             "Description of Change": "",
             "Date Issued": "2021-11-25",
             "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:GB."
@@ -1863,7 +1863,7 @@
             "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:GB."
         },
         {
-            "Change": "Change of subdivision name of GB-ABC, GB-DRS; modification of remark part 2; update list source. (Remark part 2: BS 6879 gives alternative name forms in Welsh (cy) for some of the Welsh unitary authorities (together with alternative code elements). Since this part of ISO 3166 does not allow for duplicate coding of identical subdivisions, such alternative names in Welsh and code elements are shown for information purposes only in square brackets after the English name of the subdivision. BS 6879 has been superseded but remains the original source of the codes. Included for completeness: EAW England and Wales; GBN Great Britain; UKM United Kingdom).",
+            "Change": "Change of subdivision name of GB-ABC, GB-DRS; modification of remark part 2; update list source. (Remark part 2: BS 6879 gives alternative name forms in Welsh (cy) for some of the Welsh unitary authorities (together with alternative code elements). Since this part of ISO 3166 does not allow for duplicate coding of identical subdivisions, such alternative names in Welsh and code elements are shown for information purposes only in square brackets after the English name of the subdivision. BS 6879 has been superseded but remains the original source of the codes.\r Included for completeness:\r EAW England and Wales;\r GBN Great Britain;\r UKM United Kingdom).",
             "Description of Change": "",
             "Date Issued": "2019-11-22",
             "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:GB."
@@ -1908,13 +1908,13 @@
             "Change": "Subdivisions deleted: GB-CHA – Channel Islands. GB-IOM – Isle of Man (see ISO 3166-2:IM). GB-GSY – Guernsey (see ISO 3166-2:GG). GB-JSY – Jersey (see ISO 3166-2:JE).",
             "Description of Change": "Modification of the administrative structure.",
             "Date Issued": "2007-04-17",
-            "Source": "Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.ISO.org/iso/iso_3166-2_newsletter_i-8_en.pdf."
+            "Source": "Newsletter I-8 - https://web.archive.org/web/20081218103230/http://www.iso.org/iso/iso_3166-2_newsletter_i-8_en.pdf."
         },
         {
             "Change": "Various corrections of name forms, i.e., deletion of name adjuncts.",
             "Description of Change": "",
             "Date Issued": "2002-05-21",
-            "Source": "Newsletter I-2 - https://web.archive.org/web/20120131102127/http://www.ISO.org/iso/iso_3166-2_newsletter_i-2_en.pdf."
+            "Source": "Newsletter I-2 - https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf."
         }
     ],
     "GD": [
@@ -2858,7 +2858,7 @@
         },
         {
             "Change": "Codes: Western: KE-900 -> KE-800.",
-            "Description of Change": "Second edition of ISO 3166-2 (this change was not announced in a newsletter) - 'Statoid Newsletter January 2008' - http://www.statoids.com/n0801.html.",
+            "Description of Change": "Second edition of ISO 3166-2 (this change was not announced in a newsletter) - 'Statoid Newsletter January 2008' - https://www.statoids.com/n0801.html.",
             "Date Issued": "2007-12-13",
             "Source": "ISO 3166-2:2007 - http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718."
         }

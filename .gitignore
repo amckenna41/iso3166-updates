@@ -164,3 +164,5 @@ iso3166_update_differences_with_descriptions.csv
 iso3166_update_differences.csv
 iso3166-updates_2025-07-24_master_original.json
 iso3166-updates_2025-07-24_master.json
+
+iso3166_updates_export/test-iso3166-updates/

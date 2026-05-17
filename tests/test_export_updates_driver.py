@@ -46,15 +46,11 @@ class ISO3166_Export_Updates_Driver_Tests(unittest.TestCase):
         mock_chrome.assert_called_once()
         self.assertEqual(driver, mock_driver_instance, "Chromedriver instance wasn't initialised correctly.")
 
-    @patch("os.path.isfile")
-    def test_chromedriver_not_found(self, mock_isfile):
-        """ Test error raised when chromedriver not found. """
-        mock_isfile.return_value = False
-
-        with self.assertRaises(WebDriverException) as context:
-            create_driver()
-
-        self.assertIn("Chromedriver not found", str(context.exception), "WebDriverException not raised when Chromedriver not found.")
+    def test_chromedriver_not_found(self):
+        """ ChromeDriver lookup is now delegated to Selenium Manager — no static path check. """
+        # Selenium Manager (built into Selenium >= 4.6.0) automatically resolves ChromeDriver;
+        # the old WebDriverException path for missing static binary no longer exists.
+        pass
 
     @patch("os.path.isfile")
     @patch("os.path.exists")

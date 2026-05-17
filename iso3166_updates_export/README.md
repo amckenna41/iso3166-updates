@@ -10,6 +10,7 @@ This directory has all the associated scripts and functionality for exporting al
 * `parse_updates_data.py` - functionality to parse and validate the data exported from the get_updates_data module.
 * `utils.py` - several utility functions used throughout the exporting pipeline.
 * `requirements.txt` - list of packages required for export functionality. 
+* `iso3166-3.json` - ISO 3166-3 dataset (codes for country names which have been deleted from ISO 3166-1 since its first publication in 1974) (https://en.wikipedia.org/wiki/ISO_3166-3).
 
 Requirements
 ------------

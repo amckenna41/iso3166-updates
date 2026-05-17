@@ -595,7 +595,8 @@ def table_to_array(table_tag: Tag, soup: BeautifulSoup) -> tuple:
             link_texts = []
             for link in links:
                 href = link['href']
-                if not href.startswith('/wiki/'):  #ignore internal wiki links
+                #ignore internal wiki links (/wiki/...) and protocol-relative wikipedia article links (//en.wikipedia.org/wiki/...)
+                if not href.startswith('/wiki/') and '//en.wikipedia.org/wiki/' not in href:
                     link_texts.append(href)
 
             #remove citation brackets from text, if applicable

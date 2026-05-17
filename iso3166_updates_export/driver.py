@@ -1,8 +1,6 @@
 import os
 from fake_useragent import UserAgent
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.common.exceptions import WebDriverException
 
 def create_driver(proxy: str=None) -> webdriver.Chrome:
     """
@@ -36,17 +34,12 @@ def create_driver(proxy: str=None) -> webdriver.Chrome:
 
     Notes
     =====
-    - If Chrome Binary and Chromedriver versions are incompatible, remove chromedriver and reinstall: 
-        find / -name chromedriver 2>/dev/null (find chromedriver)
-        sudo rm /usr/local/bin/chromedriver (remove)
-        chromedriver --version (verify uninstall, will show error)
-        brew install chromedriver (reinstall)
-        chromedriver --version (verify install)
+    - ChromeDriver is managed automatically via Selenium Manager (built into Selenium >= 4.6.0),
+        which downloads the driver version matching the installed Chrome browser. No manual chromedriver
+        installation, PATH configuration, or third-party driver manager is required.
     - If there is a Runtime Error in the function that is calling create_driver(), the error might be in this
         function. For example syntax errors in this function might not be highlighted if a Runtime Error is thrown
         from the calling function.
-    - If there is a runtime error with initialising the instance, double check the version of chromedriver & update:
-        brew install chromedriver
     - Find where chromedriver is installed:
         which chromedriver
     - If a TimeoutException error occurs during extraction process, double check XPATH and element waiting for actually
@@ -56,35 +49,11 @@ def create_driver(proxy: str=None) -> webdriver.Chrome:
     
     Raises
     ======
-    WebDriverException:
-        Chromedriver not found at list of paths.
     FileNotFoundError:
         Chrome binary not found at list of possible locations.
     RuntimeError:
         Issue initialising the Chromedriver instance. 
     """
-    #list of paths chromedriver might be stored in
-    chromedriver_executable_paths = [
-        '/usr/local/bin/chromedriver', 
-        '/usr/bin/chromedriver', 
-        '/usr/lib/chromedriver'
-        ]
-    chromedriver_executable_path = ""
-    chromedriver_path_found = False
-
-    #iterate over potential likely paths for chromedriver executable 
-    for path in chromedriver_executable_paths:
-        if (os.path.isfile(path)):
-            chromedriver_path_found = True
-            chromedriver_executable_path = path
-
-    #verify Chromedriver is found on one of the paths, raise exception if not
-    if not (chromedriver_path_found):
-      raise WebDriverException(f"Chromedriver not found, verify it's installed in one of the paths: {', '.join(chromedriver_executable_paths)}")
-
-    #create instance of Service class and get executable path of chromedriver
-    service = Service(executable_path=chromedriver_executable_path)
-
     #create instance of Options class, add below options to Chromedriver instance
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--headless")
@@ -139,8 +108,9 @@ def create_driver(proxy: str=None) -> webdriver.Chrome:
     driver = None
 
     try:
-        #create webdriver instance
-        driver = webdriver.Chrome(service=service, options=chrome_options)
+        #create webdriver instance — no Service passed; Selenium Manager (built into
+        #Selenium >= 4.6.0) automatically resolves and downloads the matching ChromeDriver
+        driver = webdriver.Chrome(options=chrome_options)
 
         #set object to undefined, helps avoid bot detection
         # driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})") 

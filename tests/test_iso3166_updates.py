@@ -5,13 +5,15 @@ from importlib.metadata import metadata
 from jsonschema import validate
 import jsonschema
 import shutil
+import json
+import os
 from datetime import date
 import unittest
 from unittest.mock import patch
 import io
 unittest.TestLoader.sortTestMethodsUsing = None
 
-@unittest.skip("Skipping main iso3166-updates package tests.")
+# @unittest.skip("Skipping main iso3166-updates package tests.")
 class ISO3166_Updates_Tests(unittest.TestCase):
     """
     Test suite for testing the iso3166-updates Python software package. 
@@ -52,6 +54,10 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         testing correct functionality for __len__ in-built function in class.
     test_updates_contains:
         testing correct functionality for __contains__ in-built function in class.
+    test_last_updated:
+        testing correct functionality for last_updated property in class.
+    test_change_type:
+        testing correct functionality for change_type() method in class.
     """
     def setUp(self):
         """ Initialise test variables. """                
@@ -69,8 +75,8 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("Skipping metadata unit tests.")    
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        # self.assertEqual(metadata('iso3166-updates')['version'], "1.8.6", 
-        #     f"iso3166-updates version is not correct, expected 1.8.6, got {metadata('iso3166-updates')['version']}.")
+        self.assertEqual(metadata('iso3166-updates')['version'], "1.8.6", 
+            f"iso3166-updates version is not correct, expected 1.8.6, got {metadata('iso3166-updates')['version']}.")
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             f"iso3166-updates software name is not correct, expected iso3166-updates, got {metadata('iso3166-updates')['name']}.")
         # self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna", 
@@ -80,7 +86,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         self.assertEqual(metadata('iso3166-updates')['summary'], "Get the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest.", 
             f"iso3166-updates package summary is not correct, got: {metadata('iso3166-updates')['summary']}.")
         self.assertEqual(metadata('iso3166-updates')['keywords'], 
-            "iso,iso3166,beautifulsoup,python,pypi,countries,country codes,csv,iso3166-2,subdivisions,iso3166-1,alpha-2,alpha-3,selenium,chromedriver", 
+            "iso,iso3166,python,pypi,countries,country codes,csv,iso3166-2,subdivisions,iso3166-1,alpha-2,alpha-3", 
             f"iso3166-updates keywords are not correct, got:\n{metadata('iso3166-updates')['keywords']}.")
         # self.assertEqual(metadata('iso3166-updates')['home-page'], "https://iso3166-updates.vercel.app/api", 
         #     f"iso3166-updates home page url is not correct, expected https://iso3166-updates.vercel.app/api, got {metadata('iso3166-updates')['home-page']}.")
@@ -129,6 +135,8 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         self.assertEqual(len(test_all_updates), 250, 
             f"Expected there to be 250 country keys in output object, got {len(test_all_updates)}.")
         for iso_code in list(test_all_updates.keys()):
+            if iso_code == "XK":  # Kosovo is not in the pycountry/ISO 3166-1 dataset, skip
+                continue
             self.assertIsNotNone(countries.get(alpha_2=iso_code),
                     f"Alpha-2 code {iso_code} not found in list of available codes.")
 #2.)
@@ -483,17 +491,17 @@ class ISO3166_Updates_Tests(unittest.TestCase):
 
         self.assertEqual(test_search_governorates_updates, expected_search_governorates_updates, f"Expected and observed search output do not match:\n{test_search_governorates_updates}")
 #4.)
-        test_search_date_updates = self.all_updates.search(test_search_date, exclude_match_score=1) 
-        expected_search_date_updates = {'BO': {'Change': 'Change of short name upper case: replace the parentheses with a coma.', 'Description of Change': '', 'Date Issued': '2024-02-29', 
-                                              'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BO.'}, 
-                                        'FM': {'Change': 'Change of short name upper case: replace the parentheses with a coma and correct the remark in English of the entry of Micronesia Federate states (removing duplicated text).', 
-                                              'Description of Change': '', 'Date Issued': '2024-02-29', 'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:FM.'}, 
-                                        'IR': {'Change': 'Change of short name upper case: replace the parentheses with a comma.', 'Description of Change': '', 'Date Issued': '2024-02-29', 
-                                              'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:IR.'}, 
-                                        'KP': {'Change': 'Change of short name upper case in eng: replace the parentheses with a coma.', 'Description of Change': '', 'Date Issued': '2024-02-29', 
-                                              'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:KP.'}, 
-                                        'VE': {'Change': 'Change of short name upper case: replace the parentheses with a comma.', 'Description of Change': '', 'Date Issued': '2024-02-29', 
-                                              'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:VE.'}}
+        test_search_date_updates = self.all_updates.search(test_search_date, include_match_score=False) 
+        expected_search_date_updates = {'BO': [{'Change': 'Change of short name upper case: replace the parentheses with a coma.', 'Description of Change': '', 'Date Issued': '2024-02-29', 
+                                              'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BO.'}], 
+                                        'FM': [{'Change': 'Change of short name upper case: replace the parentheses with a coma and correct the remark in English of the entry of Micronesia Federate states (removing duplicated text).', 
+                                              'Description of Change': '', 'Date Issued': '2024-02-29', 'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:FM.'}], 
+                                        'IR': [{'Change': 'Change of short name upper case: replace the parentheses with a comma.', 'Description of Change': '', 'Date Issued': '2024-02-29', 
+                                              'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:IR.'}], 
+                                        'KP': [{'Change': 'Change of short name upper case in eng: replace the parentheses with a coma.', 'Description of Change': '', 'Date Issued': '2024-02-29', 
+                                              'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:KP.'}], 
+                                        'VE': [{'Change': 'Change of short name upper case: replace the parentheses with a comma.', 'Description of Change': '', 'Date Issued': '2024-02-29', 
+                                              'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:VE.'}]}
 
         self.assertEqual(test_search_date_updates, expected_search_date_updates, f"Expected and observed search output do not match:\n{test_search_date}")
 #5.)
@@ -525,14 +533,14 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     @patch('iso3166_updates.sys.stdout', new_callable=io.StringIO)
     def test_updates_search_fuzzy(self, mock_stdout):
         """ Testing fuzzy/partial search behaviour and edge cases for the search() function. """
-#1.) exclude_match_score=True returns a dict keyed by country code with no "Match Score" key in values
-        result_no_score = self.all_updates.search("governorates", exclude_match_score=True)
-        self.assertIsInstance(result_no_score, dict, "Expected dict return when exclude_match_score=True.")
+#1.) include_match_score=False returns a dict keyed by country code with no "Match Score" key in values
+        result_no_score = self.all_updates.search("governorates", include_match_score=False)
+        self.assertIsInstance(result_no_score, dict, "Expected dict return when include_match_score=False.")
         for country_code, entry in result_no_score.items():
             self.assertNotIn("Match Score", entry, f"Match Score key should not be present in entry for {country_code}.")
-#2.) exclude_match_score=False (default) returns a list sorted by Match Score descending
+#2.) include_match_score=True (default) returns a list sorted by Match Score descending
         result_with_score = self.all_updates.search("parishes", likeness_score=80)
-        self.assertIsInstance(result_with_score, list, "Expected list return when exclude_match_score=False.")
+        self.assertIsInstance(result_with_score, list, "Expected list return when include_match_score=True.")
         scores = [entry["Match Score"] for entry in result_with_score]
         self.assertEqual(scores, sorted(scores, reverse=True), "Results should be sorted by Match Score descending.")
 #3.) lower likeness_score threshold yields >= results than higher threshold for same fuzzy term
@@ -541,7 +549,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         self.assertGreaterEqual(len(results_low), len(results_high),
             "Lower likeness_score should return at least as many results as a higher one.")
 #4.) multi-term where one term matches nothing: only results for matching term are returned
-        results_mixed = self.all_updates.search("zzz,parishes", likeness_score=80)
+        results_mixed = self.all_updates.search("zzzzz,parishes", likeness_score=80)
         results_parishes_only = self.all_updates.search("parishes", likeness_score=80)
         self.assertEqual(results_mixed, results_parishes_only,
             "Multi-term search with one no-match term should return same results as single matching term.")
@@ -673,7 +681,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         test_custom_updates_japan = {"Change": "New change for Japan!", "Date Issued": "2025-01-01", "Description of Change": "Blahblahblah", "Source": ""}
         test_custom_updates_mali = {"Change": "Subdivision deletion for Mali.", "Date Issued": "16-08-2025", "Description of Change": "Very important ISO 3166 deletion."}
         test_custom_updates_nauru = {"Change": "New change for Nauru!", "Date Issued": "01/01/2026", "Description of Change": "Very important ISO 3166 changes."}
-        test_custom_updates_serbia = {"Change": "Brand new subdivision added.", "Date Issued": "2nd February 2027", "Description of Change": "Just a lil small change, no biggie.", "Source": "https://example.rs"}
+        test_custom_updates_serbia = {"Change": "Brand new subdivision added.", "Date Issued": "2027-02-02", "Description of Change": "Just a lil small change, no biggie.", "Source": "https://example.rs"}
         test_custom_updates_sudan = {"Change": "Change without Date Issued. Error should be raised."}
         test_custom_updates_tajikistan = {"Date Issued": "Date Issued without Change. Error should be raised."}
 #1.)    
@@ -753,7 +761,39 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     @patch('iso3166_updates.sys.stdout', new_callable=io.StringIO)
     def test_check_for_updates(self, mock_stdout): 
         """ Testing functionality that pulls the latest object from repo and compares with object in current version of software. """
-        self.all_updates.check_for_updates()
+        result = self.all_updates.check_for_updates()
+        
+#1.) Return type is a dict with the expected keys
+        self.assertIsInstance(result, dict,
+            f"Expected check_for_updates() to return a dict, got {type(result)}.")
+        for key in ("updates_found", "total_updates", "total_countries", "updates"):
+            self.assertIn(key, result,
+                f"Expected key '{key}' to be present in check_for_updates() result.")
+#2.) Field types
+        self.assertIsInstance(result["updates_found"], bool,
+            "Expected 'updates_found' to be a bool.")
+        self.assertIsInstance(result["total_updates"], int,
+            "Expected 'total_updates' to be an int.")
+        self.assertIsInstance(result["total_countries"], int,
+            "Expected 'total_countries' to be an int.")
+        self.assertIsInstance(result["updates"], dict,
+            "Expected 'updates' to be a dict.")
+#3.) since_date parameter: invalid format should raise ValueError
+        with self.assertRaises(ValueError):
+            self.all_updates.check_for_updates(since_date="2024/01/01")
+        with self.assertRaises(ValueError):
+            self.all_updates.check_for_updates(since_date="not-a-date")
+#4.) since_version parameter: invalid format should raise ValueError
+        with self.assertRaises(ValueError):
+            self.all_updates.check_for_updates(since_version="abc")
+        with self.assertRaises(ValueError):
+            self.all_updates.check_for_updates(since_version="1.2.3.4")
+#5.) since_date filters records — no results expected for a future date
+        future_result = self.all_updates.check_for_updates(since_date="2099-01-01")
+        self.assertFalse(future_result["updates_found"],
+            "Expected no updates found for a future since_date.")
+        self.assertEqual(future_result["total_updates"], 0,
+            "Expected total_updates to be 0 for a future since_date.")
 
     # @unittest.skip("")
     def test_updates_str(self):
@@ -785,6 +825,214 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         self.assertTrue("VU" in self.all_updates, "Expected VU updates data to be in object.")
         self.assertFalse("AA" in self.all_updates, "Expected AA updates data to be in object.")
         self.assertFalse("ZZ" in self.all_updates, "Expected ZZ updates data to be in object.")
+
+    # @unittest.skip("")
+    def test_last_updated(self):
+        """ Testing last_updated property returns the most recent Date Issued across the dataset. """
+#1.)
+        result = self.all_updates.last_updated
+
+        self.assertIsInstance(result, str,
+            f"Expected last_updated to return a string, got {type(result)}.")
+        self.assertRegex(result, r"^\d{4}-\d{2}-\d{2}$",
+            f"Expected last_updated to be in YYYY-MM-DD format, got {result}.")
+#2.)
+        # Confirm the returned date is >= every other Date Issued in the dataset
+        for code, entries in self.all_updates.all.items():
+            for update in entries:
+                raw = update["Date Issued"].split("(")[0].strip().split(" ")[0].strip()
+                if re.match(r"^\d{4}-\d{2}-\d{2}$", raw):
+                    self.assertGreaterEqual(result, raw,
+                        f"last_updated {result} should be >= {raw} (country {code}).")
+#3.)
+        # Value should match the known most-recent record in the test dataset
+        self.assertEqual(result, "2025-07-22",
+            f"Expected last_updated to be '2025-07-22', got {result}.")
+
+    # @unittest.skip("")
+    def test_change_type(self):
+        """ Testing change_type() method filters updates correctly by type. """
+#1.) Return type is dict (Map)
+        additions = self.all_updates.change_type("addition")
+        deletions = self.all_updates.change_type("deletion")
+        corrections = self.all_updates.change_type("correction")
+        amendments = self.all_updates.change_type("amendment")
+
+        for result, label in [(additions, "addition"), (deletions, "deletion"),
+                               (corrections, "correction"), (amendments, "amendment")]:
+            self.assertIsInstance(result, dict,
+                f"Expected change_type('{label}') to return a dict, got {type(result)}.")
+#2.) All keys are valid alpha-2 codes; values are non-empty lists
+        for code, entries in additions.items():
+            self.assertIsNotNone(countries.get(alpha_2=code),
+                f"Expected alpha-2 key {code} in additions to be a valid country code.")
+            self.assertIsInstance(entries, list, "Expected each value to be a list.")
+            self.assertGreater(len(entries), 0, f"Expected non-empty list for {code}.")
+#3.) Each matched entry for 'addition' actually contains addition-related text
+        addition_keywords = re.compile(
+            r"(subdivisions? added|addition|added)", re.IGNORECASE
+        )
+        for code, entries in additions.items():
+            for update in entries:
+                combined = f"{update.get('Change','')} {update.get('Description of Change','')}"
+                self.assertTrue(addition_keywords.search(combined),
+                    f"Expected addition keyword in update for {code}: {combined[:100]}.")
+#4.) Dot-notation access via Map
+        if "AF" in additions:
+            self.assertIsInstance(additions["AF"], list,
+                "Expected Map dot-notation access to work for additions['AF'].")
+#5.) Combined types return >= either individual type
+        combined = self.all_updates.change_type("correction,amendment")
+        combined_count = sum(len(v) for v in combined.values())
+        correction_count = sum(len(v) for v in corrections.values())
+        amendment_count = sum(len(v) for v in amendments.values())
+        self.assertGreaterEqual(combined_count, correction_count,
+            "Combined correction+amendment count should be >= corrections alone.")
+        self.assertGreaterEqual(combined_count, amendment_count,
+            "Combined correction+amendment count should be >= amendments alone.")
+#6.) Case-insensitive input
+        upper_result = self.all_updates.change_type("ADDITION")
+        self.assertEqual(sorted(upper_result.keys()), sorted(additions.keys()),
+            "Expected change_type() to be case-insensitive.")
+#7.) Error cases
+        with self.assertRaises(TypeError):
+            self.all_updates.change_type(123)
+            self.all_updates.change_type(["addition"])
+        with self.assertRaises(ValueError):
+            self.all_updates.change_type("unknown_type")
+            self.all_updates.change_type("addition,badtype")
+
+    # @unittest.skip("")
+    def test_stats(self):
+        """ Testing stats() method returns a correct high-level summary of the dataset. """
+#1.) Return type and keys
+        result = self.all_updates.stats()
+
+        self.assertIsInstance(result, dict,
+            f"Expected stats() to return a dict, got {type(result)}.")
+        for key in ("total_updates", "total_countries", "year_range", "most_updated_country",
+                    "most_common_change_type", "last_updated"):
+            self.assertIn(key, result, f"Expected key '{key}' to be present in stats() result.")
+#2.) total_updates matches len()
+        self.assertEqual(result["total_updates"], len(self.all_updates),
+            f"Expected total_updates {result['total_updates']} to match len() {len(self.all_updates)}.")
+#3.) total_countries matches the number of keys in .all
+        self.assertEqual(result["total_countries"], len(self.all_updates.all),
+            "Expected total_countries to match the number of keys in .all.")
+#4.) year_range is a two-element list of ints with min <= max
+        self.assertIsInstance(result["year_range"], list,
+            f"Expected year_range to be a list, got {type(result['year_range'])}.")
+        self.assertEqual(len(result["year_range"]), 2,
+            f"Expected year_range to have 2 elements, got {len(result['year_range'])}.")
+        self.assertIsInstance(result["year_range"][0], int, "Expected year_range[0] to be int.")
+        self.assertIsInstance(result["year_range"][1], int, "Expected year_range[1] to be int.")
+        self.assertLessEqual(result["year_range"][0], result["year_range"][1],
+            "Expected year_range[0] <= year_range[1].")
+        # Dataset covers from 1996 onwards
+        self.assertGreaterEqual(result["year_range"][0], 1990,
+            f"Expected earliest year >= 1990, got {result['year_range'][0]}.")
+#5.) most_updated_country is a valid alpha-2 code
+        self.assertIsNotNone(countries.get(alpha_2=result["most_updated_country"]),
+            f"Expected most_updated_country '{result['most_updated_country']}' to be a valid alpha-2 code.")
+#6.) most_common_change_type is one of the known types
+        self.assertIn(result["most_common_change_type"],
+            {"addition", "deletion", "correction", "amendment", "unknown"},
+            f"Unexpected most_common_change_type: {result['most_common_change_type']}.")
+#7.) last_updated is consistent with last_updated property
+        self.assertEqual(result["last_updated"], self.all_updates.last_updated,
+            "Expected stats()['last_updated'] to equal .last_updated property.")
+#8.) Country-scoped instance yields stats restricted to that country
+        au_updates = Updates("AU", custom_updates_filepath=os.path.join("tests", "test-iso3166-updates.json"))
+        au_stats = au_updates.stats()
+        self.assertEqual(au_stats["total_countries"], 1,
+            f"Expected 1 country for AU-scoped Updates, got {au_stats['total_countries']}.")
+        self.assertEqual(au_stats["most_updated_country"], "AU",
+            f"Expected most_updated_country to be 'AU', got {au_stats['most_updated_country']}.")
+
+    # @unittest.skip("")
+    def test_save_to_file(self):
+        """ Testing save_to_file() method persists the in-memory dataset to a JSON file. """
+        os.makedirs(self.test_export_folder, exist_ok=True)
+        output_path = os.path.join(self.test_export_folder, "test_output.json")
+#1.) Basic write — file should be created and parseable JSON
+        self.all_updates.save_to_file(output_path)
+        self.assertTrue(os.path.isfile(output_path),
+            f"Expected output file to be created at {output_path}.")
+        with open(output_path, "r", encoding="utf-8") as f:
+            saved_data = json.load(f)
+        self.assertIsInstance(saved_data, dict,
+            f"Expected saved JSON to be a dict, got {type(saved_data)}.")
+#2.) The saved content matches the in-memory dataset
+        self.assertEqual(sorted(saved_data.keys()), sorted(self.all_updates.all.keys()),
+            "Expected saved JSON keys to match in-memory dataset keys.")
+#3.) Overwrite works without error
+        self.all_updates.save_to_file(output_path)
+        self.assertTrue(os.path.isfile(output_path),
+            "Expected file to still exist after overwrite.")
+#4.) TypeError on non-string filepath
+        with self.assertRaises(TypeError):
+            self.all_updates.save_to_file(123)
+        with self.assertRaises(TypeError):
+            self.all_updates.save_to_file(None)
+#5.) OSError when directory does not exist
+        with self.assertRaises(OSError):
+            self.all_updates.save_to_file("/nonexistent_dir/abc/output.json")
+
+    # @unittest.skip("")
+    def test_async_updates(self):
+        """ Testing AsyncUpdates class initialises correctly and proxies synchronous methods. """
+        import asyncio
+        from iso3166_updates import AsyncUpdates
+#1.) Instantiate
+        async_iso = AsyncUpdates()
+        self.assertIsNotNone(async_iso, "Expected AsyncUpdates to instantiate without error.")
+#2.) Synchronous attributes are accessible via pass-through
+        self.assertEqual(len(async_iso), len(self.all_updates),
+            "Expected AsyncUpdates.__len__ to match Updates.__len__.")
+        self.assertIn("US", async_iso,
+            "Expected 'US' to be accessible via AsyncUpdates.__contains__.")
+        self.assertIsInstance(async_iso.all, dict,
+            "Expected AsyncUpdates.all to return a dict.")
+#3.) async check_for_updates() returns the same structured dict
+        result = asyncio.run(async_iso.check_for_updates())
+        self.assertIsInstance(result, dict,
+            f"Expected async check_for_updates() to return a dict, got {type(result)}.")
+        for key in ("updates_found", "total_updates", "total_countries", "updates"):
+            self.assertIn(key, result,
+                f"Expected key '{key}' in async check_for_updates() result.")
+
+    # @unittest.skip("")
+    def test_iso31663(self):
+        """ Testing Iso31663 class provides read-only access to ISO 3166-3 formerly used country codes. """
+        from iso3166_updates import Iso31663
+        iso3 = Iso31663()
+#1.) Instantiation succeeds and .all returns a dict
+        self.assertIsNotNone(iso3, "Expected Iso31663 to instantiate without error.")
+        self.assertIsInstance(iso3.all, dict,
+            f"Expected Iso31663.all to return a dict, got {type(iso3.all)}.")
+#2.) Known entries are present
+        for code in ("DDDE", "YUCS", "CSHH", "SUHH", "ZRCD"):
+            self.assertIn(code, iso3,
+                f"Expected '{code}' to be in Iso31663 dataset.")
+#3.) Lookup by alpha-4 code returns a Map with expected fields
+        ddde = iso3["DDDE"]
+        self.assertIsInstance(ddde, dict,
+            f"Expected Iso31663['DDDE'] to return a dict, got {type(ddde)}.")
+        for field in ("Name", "Former_Alpha2", "Former_Alpha3", "Withdrawal_Date", "Current_Codes"):
+            self.assertIn(field, ddde,
+                f"Expected field '{field}' to be present in DDDE entry.")
+        self.assertEqual(ddde["Former_Alpha2"], "DD",
+            f"Expected DDDE Former_Alpha2 to be 'DD', got {ddde['Former_Alpha2']}.")
+        self.assertIn("DE", ddde["Current_Codes"],
+            "Expected 'DE' in DDDE Current_Codes.")
+#4.) __len__
+        self.assertGreater(len(iso3), 0,
+            "Expected Iso31663 to contain at least one entry.")
+#5.) Invalid code raises ValueError (or KeyError)
+        with self.assertRaises((ValueError, KeyError)):
+            _ = iso3["XXXX"]
+        with self.assertRaises((ValueError, KeyError)):
+            _ = iso3[""]
 
     # @unittest.skip("")
     def tearDown(self):

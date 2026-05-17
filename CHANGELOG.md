@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.6] - 2026-05-11
+
+### Added
+- Added `last_updated` property to the `Updates` class — returns the most recent `Date Issued` value across the entire dataset as a `YYYY-MM-DD` string, removing the need to manually maintain "last updated" dates in documentation
+- Added `change_type(change_type)` method to the `Updates` class — filters the dataset by the structural type of change using keyword matching on the `Change` and `Description of Change` fields; supported types are `addition`, `deletion`, `correction`, and `amendment`; a comma-separated list of multiple types is also accepted (e.g. `"correction,amendment"`)
+- Added `save_to_file(filepath)` method to the `Updates` class — writes the current in-memory dataset (including any `custom_update` changes) to a JSON file at the specified path, enabling persistence of custom updates across Python sessions; raises `TypeError` on a non-string path and `OSError` when the target directory does not exist
+- Added `since_date` and `since_version` optional parameters to `check_for_updates()` — `since_date` (ISO 8601 `YYYY-MM-DD`) filters the diff to records published on or after that date; `since_version` (e.g. `"1.8.0"`) fetches the versioned JSON from the GitHub releases baseline and diffs against it; both raise `ValueError` on an invalid format
+- Changed `check_for_updates()` return type from `None` to a structured `dict` with keys `updates_found` (bool), `total_updates` (int), `total_countries` (int), and `updates` (dict of new/changed records keyed by alpha-2 code)
+- Added `AsyncUpdates` class — async-compatible wrapper around `Updates`; all synchronous properties and dunder methods are transparently proxied; `check_for_updates()` is an `async def` that executes the underlying blocking call in a thread-pool executor via `asyncio.get_event_loop().run_in_executor()`
+- Added `Iso31663` class — read-only access to ISO 3166-3 formerly used country codes; loads the bundled `iso3166-3.json` data file on first use (cached); supports `__getitem__` by alpha-4 code (e.g. `iso3["DDDE"]`), `__contains__`, `__len__`, and an `.all` property; raises `ValueError` for unknown codes
+- Added bundled `iso3166-3.json` data file to the `iso3166_updates/` package — 33 entries covering formerly used codes such as `DDDE` (German Democratic Republic), `YUCS` (Yugoslavia), `SUHH` (USSR), `CSHH` (Czechoslovakia), and `ZRCD` (Zaire), each with `Name`, `Former_Alpha2`, `Former_Alpha3`, `Withdrawal_Date`, `Current_Codes`, and `Remarks` fields
+- Added `stats()` method to the `Updates` class (and `AsyncUpdates` proxy) — returns a high-level summary `dict` of the dataset with keys `total_updates` (int), `total_countries` (int), `year_range` (list), `most_updated_country` (str alpha-2), `most_common_change_type` (str), and `last_updated` (str); useful for data quality checks and dashboard widgets
+- Added `asyncio` import to support the new `AsyncUpdates` class
+
+### Fixed
+- Fixed README "Staying up to date" section date being stale (`May 2025`) — now consistent with the "Last Updated" header (`August 2025`); the date is auto-populated programmatically via `iso.last_updated`
+- Fixed ReadTheDocs version mismatch — `docs/conf.py` `release` was set to `1.8.2`; updated to `1.8.7` so the published documentation version reflects the current package release
+- Fixed README `### Attributes` section header mislabelling `sortBy`, `likeness`, and `excludeMatchScore` as data attributes — these are query string parameters and are now listed only under the `### Query String Parameters` section; the `### Attributes` section now correctly describes the four data fields (`Change`, `Description of Change`, `Date Issued`, `Source`) only, and the stale `Date Issue` typo is corrected to `Date Issued`
+- Fixed fragile URL encoding for the `<>` year exclusion syntax — `README.md` and `docs/api.rst` now document that `<` and `>` must be percent-encoded as `%3C` and `%3E` in HTTP clients that perform automatic URL encoding (e.g. `/api/year/%3C%3E2020`), and show the recommended approach of passing the value as a query string parameter
+
+### Changed
+- Renamed `search()` parameter `exclude_match_score` (default `False`) to `include_match_score` (default `True`) — positive-verb naming makes boolean logic clearer; old `exclude_match_score=True` is equivalent to new `include_match_score=False`; behaviour is identical: default returns a list sorted by descending match score, `False` returns a dict sorted alphabetically by country code
+- Documented the HTTP retry/backoff policy in `iso3166_updates_export/get_updates_data.py` `get_session_with_retries()` — the docstring now states the policy explicitly: up to 5 total attempts with a backoff factor of 2 s (waits: 2 s, 4 s, 8 s, 16 s) on status codes 429, 500, 502, 503, 504; after the 5th failure the last exception is re-raised
+
+### Removed
+- Removed `rss(n=50)` method from the `Updates` class and its `AsyncUpdates` proxy — along with the `email.utils.format_datetime` and `xml.etree.ElementTree` imports that were introduced solely to support it
+
+## [1.8.2] - 2026-05-16
+
+### Added
+- Added four new test cases to `tests/test_export_updates_parse_updates_data.py`: `test_parse_updates_table_tbd_swap` (verifies `(TBD).` Change rows are swapped with `Description of Change`), `test_parse_updates_table_source_normalization` (verifies empty source fields are replaced with the OBP URL for the given alpha code), `test_parse_updates_table_missing_optional_columns` (verifies missing `Change`, `Description of Change`, and `Source` columns are added with empty values), and `test_parse_remarks_table_partial_remarks` (verifies only the populated remark parts are set when fewer than four are present)
+
+### Fixed
+- Fixed `utils.py` `table_to_array()` link filter — previously only excluded internal wiki-relative links (`/wiki/...`); now also excludes protocol-relative Wikipedia article links (`//en.wikipedia.org/wiki/...`) which were being incorrectly appended to `Change` field values
+- Fixed `get_updates_df_selenium()` in `get_updates_data.py` — double-quote characters (`"`) in scraped `Change` field values are now normalised to single quotes (`'`), consistent with the existing behaviour in the wiki scraping path in `utils.py`
+- Fixed 76 entries in `iso3166-updates.json` where `Change` or `Description of Change` values contained trailing Wikipedia article links (`- //en.wikipedia.org/wiki/...`) that were included by the previous unpatched link filter
+
+### Changed
+- Lowercased all attribute names in `iso3166_updates_export/iso3166-3.json` — `Name` → `name`, `Former_Alpha2` → `former_alpha2`, `Former_Alpha3` → `former_alpha3`, `Withdrawal_Date` → `withdrawal_date`, `Current_Codes` → `current_codes`, `Remarks` → `remarks`
+- `search()` with `include_match_score=False` now returns a dict where each country code maps to a **list** of matching update objects; previously a single dict object was returned per country, which silently discarded all but one result when a country had multiple matches for the search term
+
 ## [1.8.6] - 2026-03-25
 
 ### Added

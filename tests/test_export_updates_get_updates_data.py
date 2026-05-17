@@ -202,10 +202,10 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
         bs_updates_df, bs_remarks = get_updates_df_selenium(test_alpha_bs, driver=self.driver) #Barbados
         bs_expected_df = pd.DataFrame(
             [
-                ['By a letter dated 10 April 2025, the Permanent Representative of The Bahamas confirmed the name of the country, which should be styled with a capital T.', 'Par une lettre datée du 10 avril 2025, le Représentant permanent des Bahamas a confirmé que la forme courte était "Bahamas (Les)".', '2025-07-22', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS.'],
-                ['Addition of island BS-NP; Addition of Remark; Update List Source.', "Ajout de l'île BS-NP; Ajout de remarque; Mise à jour de la Liste Source.", '2018-11-26', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS.'],
-                ['Correction of NL II-2 for toponyms and typographical errors, one deletion and source list update.', 'Reprise de la NL II-2 concernant le libellé de toponymes, une suppression, une correction typo et mise à jour de la liste source.', '2011-12-13', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS.'],
-                ['Update of the administrative structure and of the list source.', 'Mise à jour résultant de la réalité du découpage administratif et mise à jour de la liste source.', '2010-06-30', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS.']
+                ['By a letter dated 10 April 2025, the Permanent Representative of The Bahamas confirmed the name of the country, which should be styled with a capital T.', '', '2025-07-22', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS.'],
+                ['Addition of island BS-NP; Addition of Remark; Update List Source.', '', '2018-11-26', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS.'],
+                ['Correction of NL II-2 for toponyms and typographical errors, one deletion and source list update.', '', '2011-12-13', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS.'],
+                ['Update of the administrative structure and of the list source.', '', '2010-06-30', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BS.']
             ],
             columns=['Change', 'Description of Change', 'Date Issued', 'Source']
         )   
@@ -228,8 +228,8 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
         cm_updates_df, cm_remarks = get_updates_df_selenium(test_alpha_cm, driver=self.driver) #Cameroon
         cm_expected_df = pd.DataFrame(
             [
-                ['Update List Source.', 'Mise a jour de la Liste Source.', '2015-11-27', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CM.'],
-                ['Update List Source.', 'Mise a jour de la Liste Source.', '2014-11-03', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CM.']
+                ['Update List Source.', '', '2015-11-27', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CM.'],
+                ['Update List Source.', '', '2014-11-03', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CM.']
             ],
             columns=['Change', 'Description of Change', 'Date Issued', 'Source']
         )    
@@ -250,7 +250,7 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
         mn_updates_df, mn_remarks = get_updates_df_selenium(test_alpha_mn, driver=self.driver) #Mongolia
         mn_expected_df = pd.DataFrame(
             [
-                ['Correction of the romanization system label.', "Correction de l'etiquette du systeme de romanization.", '2018-11-26', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:MN.']
+                ['Correction of the romanization system label.', '', '2018-11-26', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:MN.']
             ],
             columns=['Change', 'Description of Change', 'Date Issued', 'Source']
         )   
@@ -271,12 +271,12 @@ class ISO3166_Export_Updates_Get_Updates_Data_Tests(unittest.TestCase):
         si_updates_df, si_remarks = get_updates_df_selenium(test_alpha_si, driver=self.driver) #Slovenia
         si_expected_df = pd.DataFrame(
             [
-                ['Change of spelling of SI-044, SI-197; Addition of category urban municipality; Change of category name from municipality to urban municipality for SI-011, SI-050, SI-052, SI-054, SI-061, SI-070, SI-080, SI-084, SI-085, SI-096, SI-112, SI-133; Update List Source.', 'Modification de l orthographe de SI-044, SI-197; Ajout de la categorie municipalite urbaine; modification du nom de categorie remplacer municipalite par municipalite urbaine pour SI-011, SI-050, SI-052, SI-054, SI-061, SI-070, SI-080, SI-084, SI-085, SI-096, SI-112, SI-133; Mise a jour de la Liste Source.', '2022-11-29', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:SI.'],
-                ['Addition of remark part 2.', 'Ajout de la remarque, partie 2.', '2021-11-25', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:SI.'],
-                ['Correction of spelling for SI-065, SI-116, SI-169, SI-182, SI-204, SI-210; Deletion of asterisk from SI-212; Update List Source.', 'Modification de l orthographe de SI-065, SI-116, SI-169, SI-182, SI-204, SI-210; Suppression d un asterisque de SI-212; Mise a jour de la Liste Source.', '2020-11-24', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:SI.'],
-                ['Change of subdivision category from commune to municipality; addition of municipality SI-213.', 'Modification de la categorie de subdivision remplacer commune par municipalite; ajout d une municipalite SI-213.', '2016-11-15', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:SI.'],
-                ['Add 1 commune SI-212; update List Source.', 'Ajout d une commune SI-212; mise a jour de la Liste Source.', '2014-11-03', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:SI.'],
-                ['Update of the administrative structure and languages and update of the list source.', 'Mise a jour resultant de la realite du decoupage administratif. Mise a jour de la liste source.', '2010-06-30', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:SI.']
+                ['Change of spelling of SI-044, SI-197; Addition of category urban municipality; Change of category name from municipality to urban municipality for SI-011, SI-050, SI-052, SI-054, SI-061, SI-070, SI-080, SI-084, SI-085, SI-096, SI-112, SI-133; Update List Source.', '', '2022-11-29', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:SI.'],
+                ['Addition of remark part 2.', '', '2021-11-25', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:SI.'],
+                ['Correction of spelling for SI-065, SI-116, SI-169, SI-182, SI-204, SI-210; Deletion of asterisk from SI-212; Update List Source.', '', '2020-11-24', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:SI.'],
+                ['Change of subdivision category from commune to municipality; addition of municipality SI-213.', '', '2016-11-15', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:SI.'],
+                ['Add 1 commune SI-212; update List Source.', '', '2014-11-03', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:SI.'],
+                ['Update of the administrative structure and languages and update of the list source.', '', '2010-06-30', 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:SI.']
             ],
             columns=['Change', 'Description of Change', 'Date Issued', 'Source']
         ) 

@@ -188,8 +188,8 @@ Return all the ISO 3166 updates data who's changes/description of change attribu
 function within an object instance of the ``Updates`` class, passing in the required search terms as parameters. The function also accepts
 the ``likeness_score`` parameter which sets a % of likeness that the input search term can be to the matching updates, by default a likeness 
 of 100 (an exact match) is used. If a date is explicitly input to the search function, the Date Issued column will additionally be added to 
-the search space. The outputs from the search are ordered by ``match_score``, highest match first. This score can be excluded from the output 
-by setting the ``exclude_match_score`` to 1, meaning the outputs will be ordered alphabetically by country code.
+the search space. The outputs from the search are ordered by ``match_score``, highest match first. The match score can be
+stripped from the output by setting ``include_match_score=False``, which causes results to be ordered alphabetically by country code instead.
 
 For example, Paris, RU-PSK or addition/deletion:
 
@@ -209,8 +209,28 @@ For example, Paris, RU-PSK or addition/deletion:
    #search for any update objects that have addition or deletion in them, reduce % likeness score to 80
    iso.search("addition, deletion", likeness_score=80)
 
-   #search for any update objects that have the date 2023-11-23, exclude the % match score from output
-   iso.search("2023-11-23", exclude_match_score=1)
+   #search for any update objects that have the date 2023-11-23, strip the % match score from output
+   iso.search("2023-11-23", include_match_score=False)
+
+
+Get a high-level summary of the dataset
+-----------------------------------------
+Return a concise dict of dataset statistics using the ``stats()`` method — useful for data quality checks, dashboard widgets, or a quick sanity check after loading a custom dataset:
+
+.. code-block:: python
+
+   from iso3166_updates import *
+
+   iso = Updates()
+   iso.stats()
+   # {
+   #   'total_updates': 911,
+   #   'total_countries': 250,
+   #   'year_range': [1996, 2025],
+   #   'most_updated_country': 'FR',
+   #   'most_common_change_type': 'addition',
+   #   'last_updated': '2025-07-22'
+   # }
 
 
 Add custom ISO 3166 updates
@@ -314,6 +334,55 @@ are any changes, it's recommended to upgrade to the latest version of the softwa
 
    #compares local dataset with the latest version in the repository
    iso.check_for_updates()
+
+
+Get the most recent publication date in the dataset
+---------------------------------------------------
+Return the most recently published ``Date Issued`` value across the entire dataset as a ``YYYY-MM-DD``
+string, using the ``last_updated`` property on an ``Updates`` class instance. This is useful for
+auto-populating documentation, dashboards, or any code that needs to know when the dataset was
+last updated without manually maintaining the date.
+
+.. code-block:: python
+
+   from iso3166_updates import *
+
+   #create instance of Updates class
+   iso = Updates()
+
+   #get most recent Date Issued across all updates (YYYY-MM-DD)
+   iso.last_updated
+
+
+Filter updates by change type
+-----------------------------
+Filter the dataset by the structural *type* of change using the ``change_type()`` method on an
+``Updates`` class instance. The method classifies each update via keyword matching on the ``Change``
+and ``Description of Change`` fields into one of four categories: ``addition``, ``deletion``,
+``correction``, or ``amendment``. A comma-separated list of multiple types is also accepted. The
+result is a :class:`Map` dict keyed by ISO 3166-1 alpha-2 code, accessible via dot notation.
+
+.. code-block:: python
+
+   from iso3166_updates import *
+
+   #create instance of Updates class
+   iso = Updates()
+
+   #get all updates where new subdivisions or codes were added
+   iso.change_type("addition")
+
+   #get all updates where existing subdivisions or codes were removed
+   iso.change_type("deletion")
+
+   #get all updates that represent spelling or error corrections
+   iso.change_type("correction")
+
+   #get all updates that represent renames, merges, or re-categorisations
+   iso.change_type("amendment")
+
+   #combine multiple types in a single call
+   iso.change_type("correction,amendment")
 
 
 .. note::

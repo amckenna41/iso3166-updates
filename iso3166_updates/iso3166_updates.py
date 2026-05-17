@@ -3,8 +3,9 @@ import sys
 import json
 import re
 import copy
+import asyncio
 from functools import lru_cache
-from datetime import datetime
+from datetime import datetime, timezone
 from importlib.metadata import version as _pkg_version
 from pycountry import countries
 import requests
@@ -59,11 +60,15 @@ class Updates():
     date_range(input_date_range, sort_by_date=""):
         get all listed updates/changes in the updates json that were published within the input date
         range, inclusive. If only one date input then get all updates from this date, inclusive.
-    search(search_term, likeness_score=100, exclude_match_score=0):
+    search(search_term, likeness_score=100, include_match_score=True):
         get all listed updates/changes in the updates JSON object for an input search keyword/item. For
         example searching for a specific subdivision/country name. The function can also accept a list 
         of keywords. A likeness score is used to allow you to ge the percentage of likeness for search 
         results.
+    stats():
+        return a high-level summary dict of the dataset: total updates, number of countries with
+        updates, year range covered, most-updated country, most common change type, and the most
+        recent Date Issued.
     check_for_updates():
         pulling the latest updates object from the repo and comparing it with the current version
         of the object, outlining any changes that need to be implemented.
@@ -528,7 +533,7 @@ class Updates():
 
         return date_filtered_data
 
-    def search(self, search_term: str, likeness_score: int=100, exclude_match_score: bool=False) -> dict|list:
+    def search(self, search_term: str, likeness_score: int=100, include_match_score: bool=True) -> dict|list:
         """
         Get all listed updates/changes in the updates json object that have the inputted search
         terms. It can accept 1 or more search terms and return the data for each. The 'likeness_score' 
@@ -543,8 +548,8 @@ class Updates():
         to the search space, alongside the Change and Description of Change attributes. 
 
         The attribute Match Score is appended to each output object, indicating the % match the input 
-        search terms are to the returned updates objects. Setting the exclude_match_score parameter to
-        True removes this attribute, returning an object of updates, sorted by their country code. 
+        search terms are to the returned updates objects. Setting include_match_score to False removes
+        this attribute, returning a dict of updates sorted alphabetically by country code.
 
         Parameters
         ========== 
@@ -554,19 +559,18 @@ class Updates():
             likeness score between 1 and 100 that sets the percentage of likeness the input 
             search term is to the updates data in the dataset. The default value of 100 will 
             look for exact matches to the input search terms.
-        :exclude_match_score: bool (default=False) 
-            set to True to exclude the % match the returned updates objects are to the input
-            search keywords. If this attribute is excluded from the output, a dict of outputs
-            will be returned, sorted alphabetically by country code, otherwise a list will be 
-            returned, sorted by match score.
+        :include_match_score: bool (default=True) 
+            set to False to strip the % match score from the returned update objects. When False,
+            a dict sorted alphabetically by country code is returned. When True (the default), a
+            list sorted by descending match score is returned.
 
         Returns
         =======
         :search_results: dict/list
             output list of sought ISO 3166 updates that match the inputted search keyword(s). By 
-            default a list of results is returned, sorted by % match score, otherwise a dict of 
-            results, sorted by country code alpbetically is returned. If no matches found an empty 
-            list or dict will be returned.
+            default (include_match_score=True) a list of results is returned, sorted by % match
+            score descending. When include_match_score=False a dict sorted by country code is
+            returned. If no matches found an empty list or dict will be returned.
         
         Raises
         ======
@@ -641,8 +645,8 @@ class Updates():
             print(f"No matching updates found with the given search term(s): {search_terms}")
             return search_results
         
-        #if excludeMatchScore parameter set then remove from update objects, convert object to dict and sort by country code
-        if (exclude_match_score):
+        #if include_match_score=False, strip scores and return dict sorted by country code
+        if not (include_match_score):
             [item.pop("Match Score", None) for item in search_results]
 
             #group results by country code, preserving all matches per country
@@ -874,37 +878,70 @@ class Updates():
             #invalidate cache so future instantiations reload the updated file
             _load_updates_json.cache_clear()
 
-    def check_for_updates(self) -> None:
+    def check_for_updates(self, since_date: str="", since_version: str="") -> dict:
         """ 
         Pull the latest version of the object from the repo, comparing it with the current 
         version of the object installed in the software. If new updates/changes are found,
         they are listed and a message encouraging the user to download the latest version 
-        is output.
+        is output. Returns a structured dict describing any new or changed records so
+        callers can act programmatically (e.g. fail a CI build when the dataset is stale).
+
+        The optional ``since_date`` parameter restricts the comparison to only records
+        whose ``Date Issued`` is >= the supplied date, making it easy to audit "what
+        changed since our last deployment."  The optional ``since_version`` parameter
+        fetches the JSON at that tagged release from GitHub and uses it as the baseline
+        instead of the locally-installed copy.
 
         Parameters
         ==========
-        None
+        :since_date: str (default="")
+            ISO 8601 date string (YYYY-MM-DD).  When set, only records published on or
+            after this date are included in the diff.  Accepts any format recognised by
+            ``convert_date_format``.
+        :since_version: str (default="")
+            A version tag (e.g. ``"1.8.0"``) that is used to fetch the historic JSON
+            from GitHub as the baseline for the comparison, instead of the local copy.
 
         Returns
         =======
-        None
+        :result: dict
+            A structured dict with keys:
+            - ``"updates_found"`` (bool): True when at least one new record was found.
+            - ``"total_updates"`` (int): total count of new records across all countries.
+            - ``"total_countries"`` (int): number of countries that have new records.
+            - ``"updates"`` (dict): mapping of alpha-2 code to list of new update dicts.
 
         Raises
         ====== 
+        ValueError:
+            Invalid ``since_date`` or ``since_version`` format.
         RequestException:
             Error retrieving the updates JSON from main GitHub repo. 
         """
-        #current updates object URL
-        updates_url = "https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166_updates/iso3166-updates.json"
+        #validate and parse since_date if provided
+        since_date_dt = None
+        if since_date:
+            since_date_dt = self.convert_date_format(since_date)
+            if since_date_dt is None:
+                raise ValueError(f"Invalid since_date format, got: {since_date!r}. Expected YYYY-MM-DD or another recognised date format.")
 
-        #pull latest data object from repo
+        #determine the baseline JSON URL — either a tagged release or the latest main branch
+        if since_version:
+            #validate version string
+            if not re.match(r'^\d+\.\d+(\.\d+)?$', since_version.strip()):
+                raise ValueError(f"Invalid since_version format, expected e.g. '1.8.0', got: {since_version!r}.")
+            updates_url = f"https://raw.githubusercontent.com/amckenna41/iso3166-updates/v{since_version.strip()}/iso3166_updates/iso3166-updates.json"
+        else:
+            updates_url = "https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166_updates/iso3166-updates.json"
+
+        #pull latest (or versioned) data object from repo
         try:
             response = requests.get(updates_url, timeout=15)
             response.raise_for_status()
             latest_iso3166_updates_json = response.json()
         except requests.exceptions.RequestException as e:
             print(f"Failed to fetch the latest Updates data from repo: {e}.")
-            return None
+            return {"updates_found": False, "total_updates": 0, "total_countries": 0, "updates": {}}
 
         #separate object that holds individual data objects that were found on the object in the repo that weren't in the software object
         new_iso3166_updates = {}
@@ -912,14 +949,42 @@ class Updates():
         #bool to track if any new updates found
         updates_found = False
 
-        #iterate over all ISO 3166 updates data in latest object on repo, if update/row not found in current json in software version, append to new updated_json object 
-        for alpha_code, entries in latest_iso3166_updates_json.items():
-            current_entries = self.all.get(alpha_code, {})
+        #baseline is either the versioned repo JSON (since_version path) or the local installed copy
+        baseline_json = latest_iso3166_updates_json if since_version else self.all
+
+        #when since_version is set, compare *latest main* against the *versioned baseline*
+        #when not set, compare *latest main* against the *local installed copy*
+        compare_against = self.all if not since_version else {}
+        if since_version:
+            #re-fetch latest main to compare against the versioned baseline
+            try:
+                main_response = requests.get(
+                    "https://raw.githubusercontent.com/amckenna41/iso3166-updates/main/iso3166_updates/iso3166-updates.json",
+                    timeout=15
+                )
+                main_response.raise_for_status()
+                compare_against = main_response.json()
+            except requests.exceptions.RequestException as e:
+                print(f"Failed to fetch the latest Updates data from repo: {e}.")
+                return {"updates_found": False, "total_updates": 0, "total_countries": 0, "updates": {}}
+
+        #iterate over all ISO 3166 updates data in the compare_against object
+        for alpha_code, entries in compare_against.items():
+            baseline_entries = baseline_json.get(alpha_code, [])
             new_iso3166_updates[alpha_code] = []
 
-            #iterate over individual updates entries, add to object if not in existing software updates object
+            #iterate over individual updates entries, add to object if not in baseline
             for update in entries:
-                if update not in current_entries:
+                if update not in baseline_entries:
+                    #apply since_date filter if set
+                    if since_date_dt:
+                        raw_date_str = update.get("Date Issued", "").split("(")[0].strip().split(" ")[0].strip()
+                        try:
+                            update_dt = datetime.strptime(raw_date_str, "%Y-%m-%d")
+                        except ValueError:
+                            continue
+                        if update_dt < since_date_dt:
+                            continue
                     updates_found = True
                     new_iso3166_updates[alpha_code].append(update)
 
@@ -952,7 +1017,229 @@ class Updates():
         else:
             print("No new updates found for iso3166-updates.")
         
-        return
+        #return structured diff for programmatic use
+        return {
+            "updates_found": updates_found,
+            "total_updates": sum(len(v) for v in new_iso3166_updates.values()),
+            "total_countries": len(new_iso3166_updates),
+            "updates": new_iso3166_updates,
+        }
+
+    @property
+    def last_updated(self) -> str:
+        """
+        Return the most recent ``Date Issued`` value found anywhere in the dataset
+        as a ``YYYY-MM-DD`` string.  Useful for auto-populating documentation without
+        maintaining a separate "last updated" date field manually.
+
+        Returns
+        =======
+        :str
+            Most recent publication date across the entire updates dataset in
+            ``YYYY-MM-DD`` format, or an empty string if no parseable dates are found.
+        """
+        latest = None
+        for entries in self.all.values():
+            for update in entries:
+                raw = update.get("Date Issued", "").split("(")[0].strip().split(" ")[0].strip()
+                try:
+                    dt = datetime.strptime(raw, "%Y-%m-%d")
+                except ValueError:
+                    continue
+                if latest is None or dt > latest:
+                    latest = dt
+        return latest.strftime("%Y-%m-%d") if latest else ""
+
+    def change_type(self, change_type: str) -> dict:
+        """
+        Filter the dataset by the structural type of ISO 3166 change using keyword
+        matching on the ``Change`` and ``Description of Change`` fields.
+
+        Supported types (case-insensitive):
+        * ``addition``  — records that add new subdivisions or codes.
+        * ``deletion``  — records that remove subdivisions or codes.
+        * ``correction`` — records that correct existing entries (spelling, codes, etc.).
+        * ``amendment`` — records that amend or modify existing entries.
+
+        A comma-separated string of multiple types is also accepted, e.g.
+        ``"correction,amendment"``.
+
+        Parameters
+        ==========
+        :change_type: str
+            One or more change types, comma-separated.
+
+        Returns
+        =======
+        :result: Map (dict)
+            Filtered updates object keyed by alpha-2 code, containing only those
+            update records that match the requested change type(s).
+
+        Raises
+        ======
+        TypeError:
+            ``change_type`` is not a string.
+        ValueError:
+            An unrecognised change type was supplied.
+        """
+        if not isinstance(change_type, str):
+            raise TypeError(f"change_type must be a string, got {type(change_type)}.")
+
+        _valid_types = {"addition", "deletion", "correction", "amendment"}
+
+        #keywords for each type used in the text matching pass
+        _keywords = {
+            "addition":   re.compile(r"(subdivisions?\s+added|addition|added)", re.IGNORECASE),
+            "deletion":   re.compile(r"(subdivisions?\s+deleted|deletion|deleted|removed)", re.IGNORECASE),
+            "correction": re.compile(r"(correction|corrected|correct)", re.IGNORECASE),
+            "amendment":  re.compile(r"(amendment|amended|amend|modification|modified|modify|change|changed|update|updated)", re.IGNORECASE),
+        }
+
+        requested_types = [t.strip().lower() for t in change_type.split(",") if t.strip()]
+        for t in requested_types:
+            if t not in _valid_types:
+                raise ValueError(
+                    f"Unrecognised change_type {t!r}. Valid types are: {sorted(_valid_types)}."
+                )
+
+        #build combined regex from all requested types
+        combined_pattern = re.compile(
+            "|".join(_keywords[t].pattern for t in requested_types),
+            re.IGNORECASE,
+        )
+
+        result = {}
+        for code, entries in self.all.items():
+            matched = []
+            for update in entries:
+                combined_text = f"{update.get('Change', '')} {update.get('Description of Change', '')}"
+                if combined_pattern.search(combined_text):
+                    matched.append(update)
+            if matched:
+                result[code] = matched
+
+        return Map(result)
+
+    def stats(self) -> dict:
+        """
+        Return a high-level summary of the dataset as a plain dict.
+
+        Returns
+        =======
+        :dict with the following keys:
+            - ``total_updates`` (int): total number of update records across all countries.
+            - ``total_countries`` (int): number of countries that have at least one update.
+            - ``year_range`` (list[int]): two-element list [earliest_year, latest_year] derived
+              from ``Date Issued`` values that contain a recognisable four-digit year.
+            - ``most_updated_country`` (str): alpha-2 code of the country with the highest
+              number of update records (ties broken alphabetically).
+            - ``most_common_change_type`` (str): one of ``"addition"``, ``"deletion"``,
+              ``"correction"``, ``"amendment"``, or ``"unknown"`` — whichever keyword appears
+              most often across all ``Change`` and ``Description of Change`` field values.
+            - ``last_updated`` (str): most recent ``Date Issued`` value in ``YYYY-MM-DD`` format.
+
+        Usage
+        =====
+        from iso3166_updates import *
+
+        iso = Updates()
+        iso.stats()
+        # {
+        #   'total_updates': 911,
+        #   'total_countries': 250,
+        #   'year_range': [1996, 2025],
+        #   'most_updated_country': 'FR',
+        #   'most_common_change_type': 'addition',
+        #   'last_updated': '2025-07-22'
+        # }
+        """
+        total_updates = 0
+        years = []
+        updates_per_country = {}
+        change_type_counts = {"addition": 0, "deletion": 0, "correction": 0, "amendment": 0}
+        change_type_patterns = {
+            "addition": re.compile(r"addition|subdivisions? added|added", re.IGNORECASE),
+            "deletion": re.compile(r"deletion|deleted|removed", re.IGNORECASE),
+            "correction": re.compile(r"correction|corrected", re.IGNORECASE),
+            "amendment": re.compile(r"amendment|amended", re.IGNORECASE),
+        }
+
+        for code, entries in self.all.items():
+            count = len(entries)
+            total_updates += count
+            updates_per_country[code] = updates_per_country.get(code, 0) + count
+            for update in entries:
+                # collect year from Date Issued
+                raw_date = update.get("Date Issued", "").split("(")[0].strip()
+                year_match = re.search(r"\b(\d{4})\b", raw_date)
+                if year_match:
+                    years.append(int(year_match.group(1)))
+                # classify change type
+                combined = f"{update.get('Change', '')} {update.get('Description of Change', '')}"
+                for ctype, pattern in change_type_patterns.items():
+                    if pattern.search(combined):
+                        change_type_counts[ctype] += 1
+
+        most_updated_country = min(
+            (code for code in updates_per_country if updates_per_country[code] == max(updates_per_country.values())),
+        ) if updates_per_country else ""
+
+        if change_type_counts and max(change_type_counts.values()) > 0:
+            most_common = max(change_type_counts, key=lambda k: (change_type_counts[k], k))
+        else:
+            most_common = "unknown"
+
+        return {
+            "total_updates": total_updates,
+            "total_countries": len(self.all),
+            "year_range": [min(years), max(years)] if years else [],
+            "most_updated_country": most_updated_country,
+            "most_common_change_type": most_common,
+            "last_updated": self.last_updated,
+        }
+
+    def save_to_file(self, filepath: str) -> None:
+        """
+        Persist the current in-memory updates dataset to a JSON file at the given
+        path.  This is the companion method to ``custom_update()`` — use it to make
+        custom changes durable across Python sessions without overwriting the
+        package's own ``iso3166-updates.json``.
+
+        Parameters
+        ==========
+        :filepath: str
+            Destination path for the exported JSON file (e.g.
+            ``"my_custom_updates.json"``). The file will be created or overwritten.
+
+        Returns
+        =======
+        None
+
+        Raises
+        ======
+        TypeError:
+            ``filepath`` is not a string.
+        OSError:
+            The destination directory does not exist or is not writable.
+
+        Usage
+        =====
+        from iso3166_updates import *
+
+        iso = Updates()
+        iso.custom_update("LI", change="Brand new LI subdivision", date_issued="2025-01-01",
+                          description_of_change="Short description here.")
+
+        # Persist the modified dataset so the custom entry survives the next session
+        iso.save_to_file("my_custom_iso3166_updates.json")
+        """
+        if not isinstance(filepath, str):
+            raise TypeError(f"filepath must be a string, got {type(filepath)}.")
+        dest_dir = os.path.dirname(os.path.abspath(filepath))
+        if not os.path.isdir(dest_dir):
+            raise OSError(f"Destination directory does not exist: {dest_dir!r}.")
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(self.all, f, ensure_ascii=False, indent=4)
 
     @staticmethod
     def _parse_year_filter(input_year: list) -> tuple:
@@ -1220,3 +1507,230 @@ class Map(dict):
     def __delitem__(self, key):
         super(Map, self).__delitem__(key)
         del self.__dict__[key]
+
+
+class AsyncUpdates:
+    """
+    Async-compatible wrapper around the synchronous :class:`Updates` class.
+
+    All data-access methods (``all``, ``year``, ``date_range``, ``search``,
+    ``change_type``, ``last_updated``) delegate synchronously because
+    they operate entirely in-memory.  The ``check_for_updates`` method is
+    genuinely async — it performs an HTTP fetch using ``asyncio`` with the
+    standard library's ``asyncio.get_event_loop().run_in_executor`` pattern so it
+    does not block the calling event loop, making it safe to use inside FastAPI,
+    aiohttp, and similar frameworks.
+
+    Parameters
+    ==========
+    :country_code: str (default="")
+        Forwarded to the underlying :class:`Updates` constructor.
+    :custom_updates_filepath: str (default="")
+        Forwarded to the underlying :class:`Updates` constructor.
+
+    Usage
+    =====
+    import asyncio
+    from iso3166_updates import AsyncUpdates
+
+    async def main():
+        iso = AsyncUpdates()
+        diff = await iso.check_for_updates()
+        print(diff)
+
+    asyncio.run(main())
+    """
+
+    def __init__(self, country_code: str = "", custom_updates_filepath: str = "") -> None:
+        self._updates = Updates(country_code=country_code, custom_updates_filepath=custom_updates_filepath)
+
+    # ------------------------------------------------------------------ #
+    #  Synchronous pass-throughs (no I/O, safe to call directly)          #
+    # ------------------------------------------------------------------ #
+
+    @property
+    def all(self) -> dict:
+        """ Proxy to the underlying Updates.all attribute. """
+        return self._updates.all
+
+    @property
+    def last_updated(self) -> str:
+        """ Proxy to the underlying Updates.last_updated property. """
+        return self._updates.last_updated
+
+    def __getitem__(self, alpha_code: str) -> dict:
+        return self._updates[alpha_code]
+
+    def year(self, input_year) -> dict:
+        return self._updates.year(input_year)
+
+    def date_range(self, date, sort_by_date: str = "") -> dict:
+        return self._updates.date_range(date, sort_by_date=sort_by_date)
+
+    def search(self, search_term: str, likeness_score: int = 100, include_match_score: bool = True):
+        return self._updates.search(search_term, likeness_score=likeness_score, include_match_score=include_match_score)
+
+    def stats(self) -> dict:
+        return self._updates.stats()
+
+    def change_type(self, change_type: str) -> dict:
+        return self._updates.change_type(change_type)
+
+    def custom_update(self, *args, **kwargs) -> None:
+        return self._updates.custom_update(*args, **kwargs)
+
+    def save_to_file(self, filepath: str) -> None:
+        return self._updates.save_to_file(filepath)
+
+    # ------------------------------------------------------------------ #
+    #  Async methods                                                       #
+    # ------------------------------------------------------------------ #
+
+    async def check_for_updates(self, since_date: str = "", since_version: str = "") -> dict:
+        """
+        Async version of :meth:`Updates.check_for_updates`.  Runs the synchronous
+        implementation in a thread-pool executor so it does not block the event loop.
+
+        Parameters
+        ==========
+        :since_date: str (default="")
+            Forwarded to :meth:`Updates.check_for_updates`.
+        :since_version: str (default="")
+            Forwarded to :meth:`Updates.check_for_updates`.
+
+        Returns
+        =======
+        :dict
+            Structured diff dict — same shape as :meth:`Updates.check_for_updates`.
+        """
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(
+            None,
+            lambda: self._updates.check_for_updates(since_date=since_date, since_version=since_version),
+        )
+
+    def __len__(self) -> int:
+        return len(self._updates)
+
+    def __contains__(self, country_code: str) -> bool:
+        return country_code in self._updates
+
+    def __str__(self) -> str:
+        return f"AsyncUpdates wrapping: {self._updates}"
+
+    def __repr__(self) -> str:
+        return f"<AsyncUpdates({self._updates!r})>"
+
+
+@lru_cache(maxsize=None)
+def _load_iso3166_3_json(filepath: str) -> dict:
+    """Load and cache the ISO 3166-3 JSON, keyed by filepath to avoid repeated disk I/O."""
+    with open(filepath, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+class Iso31663:
+    """
+    Read-only access to the ISO 3166-3 dataset of formerly used country codes.
+
+    ISO 3166-3 defines alpha-4 codes for countries and territories that were once
+    listed in ISO 3166-1 but have since been deleted (e.g. ``DDDE`` for the German
+    Democratic Republic, ``YUCS`` for the former Yugoslavia).  As of April 2024
+    there are **73** codes defined in the standard.
+
+    The dataset is bundled with the package as ``iso3166-3.json`` and is loaded
+    lazily on first access.
+
+    Parameters
+    ==========
+    :alpha4_code: str (default="")
+        One or more comma-separated ISO 3166-3 alpha-4 codes to filter on
+        (e.g. ``"DDDE"``, ``"DDDE,YUCS"``).  If empty, all 73 entries are loaded.
+
+    Attributes
+    ==========
+    :all: dict
+        The full (or filtered) ISO 3166-3 dataset, keyed by alpha-4 code.
+
+    Usage
+    =====
+    from iso3166_updates import Iso31663
+
+    # load all formerly used codes
+    iso3 = Iso31663()
+    iso3.all
+
+    # access a single entry
+    iso3["DDDE"]   # German Democratic Republic
+    iso3["YUCS"]   # Socialist Federal Republic of Yugoslavia
+
+    # access via dot notation
+    iso3["DDDE"].Name
+    iso3["DDDE"].Withdrawal_Date
+    iso3["DDDE"].Current_Codes
+    """
+
+    def __init__(self, alpha4_code: str = "") -> None:
+        self.iso3166_3_json_filename = "iso3166-3.json"
+        self.iso3166_3_path = os.path.join(
+            os.path.dirname(os.path.abspath(sys.modules[__name__].__file__)),
+            self.iso3166_3_json_filename,
+        )
+
+        if not os.path.isfile(self.iso3166_3_path):
+            raise OSError(f"ISO 3166-3 data file not found: {self.iso3166_3_path!r}.")
+
+        try:
+            self.all = copy.deepcopy(_load_iso3166_3_json(self.iso3166_3_path))
+        except json.JSONDecodeError:
+            raise ValueError("Error: The ISO 3166-3 data file contains invalid JSON.")
+
+        self.alpha4_code = alpha4_code
+        if self.alpha4_code:
+            requested = [c.strip().upper() for c in self.alpha4_code.split(",") if c.strip()]
+            filtered = {}
+            for code in requested:
+                if code not in self.all:
+                    raise ValueError(f"Invalid or unknown ISO 3166-3 alpha-4 code: {code!r}.")
+                filtered[code] = self.all[code]
+            self.all = filtered
+
+    def __getitem__(self, alpha4_code: str) -> dict:
+        """
+        Return the ISO 3166-3 entry for the given alpha-4 code (case-insensitive).
+
+        Parameters
+        ==========
+        :alpha4_code: str
+            ISO 3166-3 alpha-4 code, e.g. ``"DDDE"``.
+
+        Returns
+        =======
+        :Map
+            Entry dict wrapped in :class:`Map` for dot-notation access.
+
+        Raises
+        ======
+        TypeError:
+            Input is not a string.
+        ValueError:
+            Unknown alpha-4 code.
+        """
+        if not isinstance(alpha4_code, str):
+            raise TypeError(f"Expected a string, got {type(alpha4_code)}.")
+        key = alpha4_code.strip().upper()
+        if key not in self.all:
+            raise ValueError(f"Unknown ISO 3166-3 alpha-4 code: {key!r}.")
+        return Map(self.all[key])
+
+    def __len__(self) -> int:
+        return len(self.all)
+
+    def __contains__(self, alpha4_code: str) -> bool:
+        return alpha4_code.strip().upper() in self.all
+
+    def __str__(self) -> str:
+        return f"ISO 3166-3 dataset: {len(self.all)} formerly used country codes."
+
+    def __repr__(self) -> str:
+        return f"<Iso31663(loaded={len(self.all)}, source_file={os.path.basename(self.iso3166_3_path)!r})>"

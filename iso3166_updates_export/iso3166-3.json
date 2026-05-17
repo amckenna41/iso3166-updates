@@ -1,0 +1,250 @@
+{
+    "AIDJ": {
+        "name": "French Afars and Issas",
+        "former_alpha2": "AI",
+        "former_alpha3": "AFI",
+        "withdrawal_date": "1977",
+        "current_codes": ["DJ"],
+        "remarks": "Name changed to Djibouti (DJ)."
+    },
+    "ANHH": {
+        "name": "Netherlands Antilles",
+        "former_alpha2": "AN",
+        "former_alpha3": "ANT",
+        "withdrawal_date": "2010-10-10",
+        "current_codes": ["BQ", "CW", "SX"],
+        "remarks": "Dissolved; divided into Bonaire, Sint Eustatius and Saba (BQ), Curaçao (CW) and Sint Maarten (SX)."
+    },
+    "BQAQ": {
+        "name": "British Antarctic Territory",
+        "former_alpha2": "BQ",
+        "former_alpha3": "ATB",
+        "withdrawal_date": "1979",
+        "current_codes": ["AQ"],
+        "remarks": "Merged into Antarctica (AQ)."
+    },
+    "BUMM": {
+        "name": "Burma",
+        "former_alpha2": "BU",
+        "former_alpha3": "BUR",
+        "withdrawal_date": "1989",
+        "current_codes": ["MM"],
+        "remarks": "Name changed to Myanmar (MM)."
+    },
+    "BYAA": {
+        "name": "Byelorussian SSR",
+        "former_alpha2": "BY",
+        "former_alpha3": "BYS",
+        "withdrawal_date": "1992",
+        "current_codes": ["BY"],
+        "remarks": "Name changed to Belarus; alpha-2 code BY retained."
+    },
+    "CSHH": {
+        "name": "Czechoslovakia",
+        "former_alpha2": "CS",
+        "former_alpha3": "CSK",
+        "withdrawal_date": "1993-01-01",
+        "current_codes": ["CZ", "SK"],
+        "remarks": "Dissolved into Czech Republic (CZ) and Slovakia (SK)."
+    },
+    "CSXX": {
+        "name": "Serbia and Montenegro",
+        "former_alpha2": "CS",
+        "former_alpha3": "SCG",
+        "withdrawal_date": "2006",
+        "current_codes": ["ME", "RS"],
+        "remarks": "Dissolved into Montenegro (ME) and Serbia (RS)."
+    },
+    "CTKI": {
+        "name": "Canton and Enderbury Islands",
+        "former_alpha2": "CT",
+        "former_alpha3": "CTE",
+        "withdrawal_date": "1984",
+        "current_codes": ["KI"],
+        "remarks": "Merged into Kiribati (KI)."
+    },
+    "DDDE": {
+        "name": "German Democratic Republic",
+        "former_alpha2": "DD",
+        "former_alpha3": "DDR",
+        "withdrawal_date": "1990-10-03",
+        "current_codes": ["DE"],
+        "remarks": "Merged into Germany (DE)."
+    },
+    "DYBJ": {
+        "name": "Dahomey",
+        "former_alpha2": "DY",
+        "former_alpha3": "DHY",
+        "withdrawal_date": "1977",
+        "current_codes": ["BJ"],
+        "remarks": "Name changed to Benin (BJ)."
+    },
+    "FQHH": {
+        "name": "French Southern and Antarctic Territories",
+        "former_alpha2": "FQ",
+        "former_alpha3": "ATF",
+        "withdrawal_date": "1979",
+        "current_codes": ["AQ", "TF"],
+        "remarks": "Divided into part of Antarctica (AQ) and French Southern Territories (TF)."
+    },
+    "FXFR": {
+        "name": "France, Metropolitan",
+        "former_alpha2": "FX",
+        "former_alpha3": "FXX",
+        "withdrawal_date": "1997",
+        "current_codes": ["FR"],
+        "remarks": "Merged into France (FR)."
+    },
+    "GEHH": {
+        "name": "Gilbert Islands",
+        "former_alpha2": "GE",
+        "former_alpha3": "GEL",
+        "withdrawal_date": "1979",
+        "current_codes": ["KI"],
+        "remarks": "Name changed to Kiribati (KI)."
+    },
+    "HVBF": {
+        "name": "Upper Volta",
+        "former_alpha2": "HV",
+        "former_alpha3": "HVO",
+        "withdrawal_date": "1984",
+        "current_codes": ["BF"],
+        "remarks": "Name changed to Burkina Faso (BF)."
+    },
+    "JTUM": {
+        "name": "Johnston Island",
+        "former_alpha2": "JT",
+        "former_alpha3": "JTN",
+        "withdrawal_date": "1986",
+        "current_codes": ["UM"],
+        "remarks": "Merged into United States Minor Outlying Islands (UM)."
+    },
+    "MIUM": {
+        "name": "Midway Islands",
+        "former_alpha2": "MI",
+        "former_alpha3": "MID",
+        "withdrawal_date": "1986",
+        "current_codes": ["UM"],
+        "remarks": "Merged into United States Minor Outlying Islands (UM)."
+    },
+    "NHVU": {
+        "name": "New Hebrides",
+        "former_alpha2": "NH",
+        "former_alpha3": "NHB",
+        "withdrawal_date": "1980",
+        "current_codes": ["VU"],
+        "remarks": "Name changed to Vanuatu (VU)."
+    },
+    "NQAQ": {
+        "name": "Dronning Maud Land",
+        "former_alpha2": "NQ",
+        "former_alpha3": "ATN",
+        "withdrawal_date": "1983",
+        "current_codes": ["AQ"],
+        "remarks": "Merged into Antarctica (AQ)."
+    },
+    "NTHH": {
+        "name": "Neutral Zone",
+        "former_alpha2": "NT",
+        "former_alpha3": "NTZ",
+        "withdrawal_date": "1993",
+        "current_codes": ["IQ", "SA"],
+        "remarks": "Divided into part of Iraq (IQ) and part of Saudi Arabia (SA)."
+    },
+    "PCHH": {
+        "name": "Pacific Islands (Trust Territory)",
+        "former_alpha2": "PC",
+        "former_alpha3": "PCI",
+        "withdrawal_date": "1986",
+        "current_codes": ["FM", "MH", "MP", "PW"],
+        "remarks": "Divided into Federated States of Micronesia (FM), Marshall Islands (MH), Northern Mariana Islands (MP) and Palau (PW)."
+    },
+    "PUUM": {
+        "name": "United States Miscellaneous Pacific Islands",
+        "former_alpha2": "PU",
+        "former_alpha3": "PUS",
+        "withdrawal_date": "1986",
+        "current_codes": ["UM"],
+        "remarks": "Merged into United States Minor Outlying Islands (UM)."
+    },
+    "PZPA": {
+        "name": "Panama Canal Zone",
+        "former_alpha2": "PZ",
+        "former_alpha3": "PCZ",
+        "withdrawal_date": "1980",
+        "current_codes": ["PA"],
+        "remarks": "Merged into Panama (PA)."
+    },
+    "RHZW": {
+        "name": "Southern Rhodesia",
+        "former_alpha2": "RH",
+        "former_alpha3": "RHO",
+        "withdrawal_date": "1980",
+        "current_codes": ["ZW"],
+        "remarks": "Name changed to Zimbabwe (ZW)."
+    },
+    "SKIN": {
+        "name": "Sikkim",
+        "former_alpha2": "SK",
+        "former_alpha3": "SKM",
+        "withdrawal_date": "1975",
+        "current_codes": ["IN"],
+        "remarks": "Merged into India (IN)."
+    },
+    "SUHH": {
+        "name": "USSR",
+        "former_alpha2": "SU",
+        "former_alpha3": "SUN",
+        "withdrawal_date": "1992-12-25",
+        "current_codes": ["AM", "AZ", "BY", "EE", "GE", "KG", "KZ", "LT", "LV", "MD", "RU", "TJ", "TM", "UA", "UZ"],
+        "remarks": "Dissolved; successor states include Armenia (AM), Azerbaijan (AZ), Belarus (BY), Estonia (EE), Georgia (GE), Kyrgyzstan (KG), Kazakhstan (KZ), Lithuania (LT), Latvia (LV), Moldova (MD), Russia (RU), Tajikistan (TJ), Turkmenistan (TM), Ukraine (UA) and Uzbekistan (UZ)."
+    },
+    "TPTL": {
+        "name": "East Timor",
+        "former_alpha2": "TP",
+        "former_alpha3": "TMP",
+        "withdrawal_date": "2002-05-20",
+        "current_codes": ["TL"],
+        "remarks": "Name changed to Timor-Leste (TL)."
+    },
+    "VDVN": {
+        "name": "Viet-Nam, Democratic Republic of",
+        "former_alpha2": "VD",
+        "former_alpha3": "VDR",
+        "withdrawal_date": "1977",
+        "current_codes": ["VN"],
+        "remarks": "Merged into Viet Nam (VN)."
+    },
+    "WKUM": {
+        "name": "Wake Island",
+        "former_alpha2": "WK",
+        "former_alpha3": "WAK",
+        "withdrawal_date": "1986",
+        "current_codes": ["UM"],
+        "remarks": "Merged into United States Minor Outlying Islands (UM)."
+    },
+    "YDYE": {
+        "name": "Yemen, Democratic",
+        "former_alpha2": "YD",
+        "former_alpha3": "YMD",
+        "withdrawal_date": "1990-05-22",
+        "current_codes": ["YE"],
+        "remarks": "Merged into Yemen (YE)."
+    },
+    "YUCS": {
+        "name": "Yugoslavia",
+        "former_alpha2": "YU",
+        "former_alpha3": "YUG",
+        "withdrawal_date": "2003",
+        "current_codes": ["CS"],
+        "remarks": "Name changed to Serbia and Montenegro (CS)."
+    },
+    "ZRCD": {
+        "name": "Zaire",
+        "former_alpha2": "ZR",
+        "former_alpha3": "ZAR",
+        "withdrawal_date": "1997",
+        "current_codes": ["CD"],
+        "remarks": "Name changed to Democratic Republic of the Congo (CD)."
+    }
+}

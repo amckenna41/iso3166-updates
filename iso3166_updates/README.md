@@ -23,7 +23,7 @@ Below are some examples of using the custom-built `iso3166-updates` Python packa
 
 **Import package:**
 ```python
-from iso3166_updates import *
+from iso3166_updates import Updates
 ```
 
 **Create instance of Updates() class:**
@@ -50,7 +50,7 @@ iso["AD"]
 
 **Get all listed ISO 3166 changes/updates for BA, DE, FRA, HUN, PY (600):**
 ```python
-iso["BA","DE","FRA","HUN","600"]
+iso["BA,DE,FRA,HUN,600"]
 ```
 
 **Get all listed ISO 3166 changes/updates for all countries, for years 2002, 2005 and 2009:**

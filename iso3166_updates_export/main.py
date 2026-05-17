@@ -179,9 +179,12 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
 
     #set random proxy IP if using it
     if (use_proxy):
-        #create instance of Free Proxy class & get random proxy
-        from fp.fp import FreeProxy
-        proxy = FreeProxy().get()
+        #create instance of Free Proxy class & get random proxy; fall back to no proxy if unavailable
+        try:
+            from fp.fp import FreeProxy
+            proxy = FreeProxy().get()
+        except Exception:
+            proxy = None
 
     #create webdriver instance if using Selenium, pass in proxy IP, if applicable
     if (use_selenium):
@@ -217,26 +220,17 @@ def get_iso3166_updates(alpha_codes: str="", year: str="", export_filename: str=
         #initialize remarks_data to empty dict (will be populated if Selenium is used successfully)
         remarks_data = {}
 
-        print("alpha2", alpha2)
-        print("use_selenium", use_selenium)
         #pull wiki and ISO data depending on respective parameter bools
         if (use_wiki and use_selenium):
 
             #web scrape country's wiki data, convert html table/2D array to dataframe
             iso3166_df_wiki = get_updates_df_wiki(alpha2, verbose=verbose)
 
-            print("iso3166_df_wiki")
-            print(iso3166_df_wiki)
             #use Selenium Chromedriver to parse country's updates data from official ISO website
             if verbose:
                 print(f"[Main] Calling get_updates_df_selenium for {alpha2}...")
             try:
                 iso_website_df, remarks_data = get_updates_df_selenium(alpha2, driver, include_remarks_data, verbose=verbose)
-
-                print("iso_website_df")
-                print(iso_website_df)
-                
-
                 if verbose:
                     print(f"[Main] get_updates_df_selenium returned DataFrame with shape {iso_website_df.shape}")
                 #concatenate two updates dataframes

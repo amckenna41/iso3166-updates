@@ -232,6 +232,13 @@ Return all ISO 3166 updates that exclude the input publication year or list of y
 
 For example, <>2020, <>2004
 
+.. note::
+
+   The ``<`` and ``>`` characters in the exclusion syntax (e.g. ``<>2020``) are likely to be
+   percent-encoded to ``%3C`` and ``%3E`` by many HTTP clients that perform automatic URL
+   encoding. Use ``/api/year/%3C%3E2020`` in the URL path, or pass the value as a query
+   parameter to avoid encoding issues.
+
 .. code-block:: python
 
     import requests
@@ -248,8 +255,8 @@ For example, <>2020, <>2004
 
 curl::
 
-    $ curl -i https://iso3166-updates.vercel.app/api/alpha/year/<>2020
-    $ curl -i https://iso3166-updates.vercel.app/api/alpha/year/<>2004
+    $ curl -i 'https://iso3166-updates.vercel.app/api/year/%3C%3E2020'
+    $ curl -i 'https://iso3166-updates.vercel.app/api/year/%3C%3E2004'
 
 
 Get all ISO 3166 updates for a country and year

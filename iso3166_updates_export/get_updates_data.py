@@ -50,7 +50,12 @@ def get_updates_df_wiki(alpha_code: str, proxy: str=None, verbose: bool=False) -
 
     def get_session_with_retries():
         """ Auxiliary function for creating retry/backoff factor for HTTP requests to Wiki
-            in the case of 429 errors. """
+            in the case of 429 errors.
+            
+            Retry policy: up to 5 total attempts (1 initial + 4 retries) with an
+            exponential backoff factor of 2 seconds (waits: 2 s, 4 s, 8 s, 16 s).
+            Retries are triggered on HTTP status codes 429, 500, 502, 503 and 504.
+            After the 5th failure the last exception is re-raised to the caller. """
         #crete instance of retry strategy
         retry_strategy = Retry(
             total=5,
@@ -173,7 +178,7 @@ def get_updates_df_wiki(alpha_code: str, proxy: str=None, verbose: bool=False) -
 
     return iso3166_df_wiki
 
-def get_updates_df_selenium(alpha_code: str, driver: webdriver=None, verbose: bool=False) -> tuple:
+def get_updates_df_selenium(alpha_code: str, driver: webdriver=None, include_remarks_data: bool=True, verbose: bool=False) -> tuple:
     """
     Parse the ISO table from the official ISO.org website for a given country code.
     
@@ -329,7 +334,19 @@ def get_updates_df_selenium(alpha_code: str, driver: webdriver=None, verbose: bo
             print(f"[ISO] Extracting table data...")
         
         rows = changes_table.find_all("tr")
-        
+
+        # Determine column indices from the header row so we only extract the
+        # English description column and ignore the French one.
+        date_col_idx = 0
+        change_col_idx = 1  # default: second column
+        if rows:
+            header_cells = rows[0].find_all(["th", "td"])
+            for idx, cell in enumerate(header_cells):
+                header_text = cell.get_text(strip=True).lower()
+                if "(en)" in header_text or header_text in ("short description of change", "description of change"):
+                    change_col_idx = idx
+                    break
+
         # Skip header row and process data rows
         for row in rows[1:]:
             cols = row.find_all("td")
@@ -337,15 +354,14 @@ def get_updates_df_selenium(alpha_code: str, driver: webdriver=None, verbose: bo
             # Each row should have at least 2 columns (date and description)
             if len(cols) >= 2:
                 # Extract effective date (first column)
-                date_raw = cols[0].get_text(strip=True)
+                date_raw = cols[date_col_idx].get_text(strip=True)
                 
-                # Extract English description (second column)
-                change_text = cols[1].get_text(strip=True)
+                # Extract English description only; Description of Change is left
+                # empty for ISO OBP source (the third column is the French translation).
+                change_text = ' '.join(cols[change_col_idx].get_text(strip=True).split()) if change_col_idx < len(cols) else ""
+                change_text = change_text.replace('"', "'")
                 
-                # Extract Description of Change (third column) if it exists
                 description_of_change = ""
-                if len(cols) >= 3:
-                    description_of_change = cols[2].get_text(strip=True)
                 
                 # Skip rows where we couldn't extract essential data
                 if not date_raw or not change_text:
@@ -364,10 +380,6 @@ def get_updates_df_selenium(alpha_code: str, driver: webdriver=None, verbose: bo
                 # Ensure Change text ends with a period if it doesn't already
                 if change_text and not change_text.endswith('.'):
                     change_text = change_text + "."
-                
-                # Ensure Description of Change ends with a period if populated
-                if description_of_change and not description_of_change.endswith('.'):
-                    description_of_change = description_of_change + "."
                 
                 # Create entry in required format
                 entry = {

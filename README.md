@@ -49,7 +49,7 @@ Introduction
 ------------
 `iso3166-updates` is a software and accompanying API that consists of a series of scripts that check for any updates/changes to the ISO 3166 country codes and subdivision naming conventions, as per the ISO 3166 newsletter (https://www.iso.org/iso-3166-country-codes.html) and Online Browsing Platform (OBP) (https://www.iso.org/obp/ui).
 
-The ISO 3166 standard by the ISO (International Organization for Standardisation) defines codes for the names of countries, dependent territories, special areas of geographical interest, consolidated into the ISO 3166-1 standard [[1]](#references), and their principal subdivisions (e.g., provinces, states, departments, regions etc), which comprise the ISO 3166-2 standard [[2]](#references). Additionally, the ISO 3166-3 part of the standard represents codes formerly used for countries/territories etc which have been removed from the ISO 3166-1. The ISO 3166-1 was first published in 1974 and currently comprises 249 countries, 193 of which are sovereign states that are members of the United Nations 🇺🇳 [[1]](#references). The ISO 3166-2 was first published in 1998 and as of November 2023 there are **5,039** codes defined in it [[2]](#references). The ISO 3166-3 was first published in 1974 and as of April 2024 there are **73** codes defined in it [[1]]. In the software, <i>only</i> the ISO 3166-1 and ISO 3166-2 are used. 
+The ISO 3166 standard by the ISO (International Organization for Standardisation) defines codes for the names of countries, dependent territories, special areas of geographical interest, consolidated into the ISO 3166-1 standard [[1]](#references), and their principal subdivisions (e.g., provinces, states, departments, regions etc), which comprise the ISO 3166-2 standard [[2]](#references). Additionally, the ISO 3166-3 part of the standard represents codes formerly used for countries/territories etc which have been removed from the ISO 3166-1. The ISO 3166-1 was first published in 1974 and currently comprises 249 countries, 193 of which are sovereign states that are members of the United Nations 🇺🇳 [[1]](#references). The ISO 3166-2 was first published in 1998 and as of November 2023 there are **5,039** codes defined in it [[2]](#references). The ISO 3166-3 was first published in 1974 and as of April 2024 there are **73** codes defined in it [[1]]. The software supports read-only access to all three parts of the ISO 3166 standard — ISO 3166-1, ISO 3166-2 and ISO 3166-3 (formerly used country codes such as `DDDE` for the German Democratic Republic and `YUCS` for the former Yugoslavia) — via the bundled `Iso31663` class. 
 
 ### Problem Statement:
 
@@ -142,7 +142,7 @@ exact match. By default the match score is returned for each object, e.g ``/api/
 
 Staying up to date
 ------------------
-The list of ISO 3166 updates was last updated on <strong>May 2025</strong>.
+The list of ISO 3166 updates was last updated on <strong>August 2025</strong> (latest date: `iso.last_updated`).
 
 The object storing all updates - iso3166-updates.json - for the software package is consistently checked for the latest updates using a Google Cloud Run microservice ([iso3166-check-for-updates](https://github.com/amckenna41/iso3166-updates/tree/main/iso3166-check-for-updates)). The application is built using a custom Docker container that uses the `iso3166-updates` Python software to pull all the latest updates/changes from the various data sources, to check for the latest updates within a certain period e.g. the past 6-12 months (this month range is used as the ISO usually publishes their updates at the end of the year with occasional mid-year updates). The app compares the generated output with that of the updates JSON currently in the software package and will replace this json to integrate the latest updates found, such that the API will have the most **up-to-date** and **accurate** data. A Cloud Scheduler is used to call the application on the aforementioned schedule. 
 
@@ -156,7 +156,7 @@ Below are some examples of using the custom-built `iso3166-updates` Python packa
 
 **Import package:**
 ```python
-from iso3166_updates import *
+from iso3166_updates import Updates
 ```
 
 **Create instance of Updates() class:**
@@ -183,7 +183,7 @@ iso["AD"]
 
 **Get all listed ISO 3166 changes/updates for BA, DE, FRA, HUN, PY (600):**
 ```python
-iso["BA","DE","FRA","HUN","600"]
+iso["BA,DE,FRA,HUN,600"]
 ```
 
 **Get all listed ISO 3166 changes/updates for all countries, for years 2002, 2005 and 2009:**
@@ -221,6 +221,24 @@ iso.search("London, Edinburgh")
 iso.search("addition, deletion", likeness_score=0.8)
 ```
 
+**Search and return results as a dict sorted alphabetically by country code (no match score):**
+```python
+iso.search("correction", include_match_score=False)
+```
+
+**Get a high-level summary/statistics of the dataset:**
+```python
+iso.stats()
+# {
+#   'total_updates': 911,
+#   'total_countries': 250,
+#   'year_range': [1996, 2025],
+#   'most_updated_country': 'FR',
+#   'most_common_change_type': 'addition',
+#   'last_updated': '2025-07-22'
+# }
+```
+
 **Get any listed ISO 3166 changes/updates published within the date range 2012-03-12 to 2015-06-25, inclusive:**
 ```python
 iso.date_range("2012-03-12,2015-06-25")
@@ -253,10 +271,55 @@ len(iso)
 iso.__sizeof__()
 ```
 
+**Get the most recently published ISO 3166 update date across the entire dataset:**
+```python
+iso.last_updated   # returns e.g. "2025-07-22"
+```
+
+**Filter updates by change type (addition, deletion, correction, amendment):**
+```python
+iso.change_type("addition")            # only records that add subdivisions/codes
+iso.change_type("correction,amendment")  # records that correct or amend entries
+```
+
 **Check for the latest updates data from the repository:**
 ```python
-iso.check_for_updates()  #compares local dataset with the latest version in the repository
+result = iso.check_for_updates()           # compares local dataset with the latest version in the repository
+result = iso.check_for_updates(since_date="2024-01-01")     # only records published on/after this date
+result = iso.check_for_updates(since_version="1.8.0")       # diff against version 1.8.0 as baseline
+# result is a structured dict: {"updates_found": bool, "total_updates": int, "total_countries": int, "updates": {...}}
 ```
+
+**Persist custom changes to a file (so they survive the next Python session):**
+```python
+iso.custom_update("LI", change="Brand new LI subdivision", date_issued="2025-01-01",
+                  description_of_change="Short description here.")
+iso.save_to_file("my_custom_iso3166_updates.json")
+```
+
+**Use the async-compatible wrapper in an async event loop (FastAPI, aiohttp, etc.):**
+```python
+import asyncio
+from iso3166_updates import AsyncUpdates
+
+async def main():
+    iso = AsyncUpdates()
+    diff = await iso.check_for_updates()
+    print(diff)
+
+asyncio.run(main())
+```
+
+**Access ISO 3166-3 formerly used country codes:**
+```python
+from iso3166_updates import Iso31663
+
+iso3 = Iso31663()
+iso3.all                   # all 33 bundled formerly-used country codes
+iso3["DDDE"]               # German Democratic Republic entry
+iso3["YUCS"].Current_Codes # ['BA', 'HR', 'ME', 'MK', 'RS', 'SI']
+```
+
 <!-- 
 Usage (iso3166_updates_export scripts)
 -----------------------------------------
