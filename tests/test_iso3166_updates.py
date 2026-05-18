@@ -75,8 +75,8 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("Skipping metadata unit tests.")    
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        self.assertEqual(metadata('iso3166-updates')['version'], "1.8.6", 
-            f"iso3166-updates version is not correct, expected 1.8.6, got {metadata('iso3166-updates')['version']}.")
+        self.assertEqual(metadata('iso3166-updates')['version'], "1.8.7", 
+            f"iso3166-updates version is not correct, expected 1.8.7, got {metadata('iso3166-updates')['version']}.")
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             f"iso3166-updates software name is not correct, expected iso3166-updates, got {metadata('iso3166-updates')['name']}.")
         # self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna", 
@@ -804,7 +804,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("")
     def test_updates_repr(self):
         """ Testing __repr__ function returns correct object representation for class object. """
-        self.assertEqual(repr(self.all_updates), "<Updates(version='1.8.6', countries_loaded=250, total_updates=911, source_file='test-iso3166-updates.json')>",
+        self.assertEqual(repr(self.all_updates), "<Updates(version='1.8.7', countries_loaded=250, total_updates=911, source_file='test-iso3166-updates.json')>",
                 f"Expected and observed object representation for class instance do not match:\n{repr(self.all_updates)}.")
 
     # @unittest.skip("")

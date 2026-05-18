@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "iso3166-updates"
-version = "1.8.6"
+version = "1.8.7"
 description = "Get the latest updates & changes to all ISO 3166 listed countries, dependent territories, and special areas of geographical interest." 
 authors = ["AJ McKenna <amckenna41@qub.ac.uk>"]
 maintainers = ["AJ McKenna <amckenna41@qub.ac.uk>"]
@@ -33,7 +33,7 @@ python = "^3.9"
 iso3166 = "^2.1.1"
 thefuzz = "^0.22.1"
 requests = "^2.28.1"
-pycountry = ">=22.3.5,<25.0.0"
+pycountry = "^24.6.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.2"

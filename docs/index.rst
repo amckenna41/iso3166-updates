@@ -84,7 +84,7 @@ The Python software and accompanying API are solely developed and maintained by 
 
 .. |version_link| raw:: html
 
-   <a href="https://pypi.org/project/iso3166-updates/" target="_blank">v1.8.6</a>
+   <a href="https://pypi.org/project/iso3166-updates/" target="_blank">v1.8.7</a>
 
 .. |updates_md_location_link| raw:: html
 
