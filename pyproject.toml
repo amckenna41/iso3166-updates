@@ -37,7 +37,7 @@ pycountry = "^24.6.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.2"
-pytest-cov = "^5.0.0"
+pytest-cov = ">=5,<8"
 
 [tool.poetry.urls]
 homepage = "https://iso3166-updates.com/api/"
