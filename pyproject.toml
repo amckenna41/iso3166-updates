@@ -33,7 +33,7 @@ packages = [{include = "iso3166_updates"}]
 python = "^3.9"
 thefuzz = "^0.22.1"
 requests = "^2.33.0"
-pycountry = "^26.2.16"
+pycountry = "^24.6.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0.3"
