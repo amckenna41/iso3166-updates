@@ -2,16 +2,38 @@ import unittest
 import requests
 import re
 import os
+import sys
+import time
+import threading
+import socket
 from jsonschema import validate, ValidationError
 from datetime import datetime,date
-from fake_useragent import UserAgent
-from iso3166_updates import * 
-from pycountry import countries
-from bs4 import BeautifulSoup
 from importlib.metadata import metadata
 unittest.TestLoader.sortTestMethodsUsing = None
 
-@unittest.skip("Skipping prior to new published release of iso3166-updates.")
+#guard: only load API dependencies when index.py (the Flask app entry point) is present
+_API_ROOT = os.path.join(os.path.dirname(__file__), '..')
+_API_TESTS_AVAILABLE = False
+if os.path.isfile(os.path.join(_API_ROOT, 'index.py')):
+    try:
+        import iso3166
+        from fake_useragent import UserAgent
+        from iso3166_updates import *
+        from bs4 import BeautifulSoup
+        sys.path.insert(0, _API_ROOT)
+        from index import app as flask_app
+        _API_TESTS_AVAILABLE = True
+    except ImportError:
+        pass
+
+def _find_free_port() -> int:
+    """ Return an ephemeral port that is currently unused on localhost. """
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(('127.0.0.1', 0))
+        return s.getsockname()[1]
+
+# @unittest.skip("Skipping prior to new published release of iso3166-updates.")
+@unittest.skipUnless(_API_TESTS_AVAILABLE, "Skipping API tests: index.py or dependencies (iso3166, fake_useragent, bs4) not available.")
 class Updates_Api_Tests(unittest.TestCase):
     """
     Test suite for testing ISO 3166 Updates API created to accompany the iso3166-updates 
@@ -55,36 +77,88 @@ class Updates_Api_Tests(unittest.TestCase):
     test_date_range_alpha_endpoint:
         testing /date_range/alpha endpoint, validating correct data and output object returned, using a variety of date 
         ranges and alpha country codes. 
+    test_version:
+        testing the correct and up-to-date version of the iso3166-2 software is being used by the API.
+    test_cors_headers:
+        testing that CORS headers are present on all data endpoints so browser-based clients can consume the API.
+    test_sort_ascending:
+        testing sortBy=dateAsc on the /all endpoint, verifying the flat list is in oldest-first order.
+    test_year_endpoint_list:
+        testing /year with a comma-separated list of years (e.g. 2010,2015), exercising the list branch of validate_year.
+    test_all_endpoint_invalid_pagination:
+        testing that negative or non-integer limit/offset parameters return a 400 error.
+    test_404_endpoint:
+        testing that requesting an unknown path returns a 404 status code.
+    test_fields_parameter_other_endpoints:
+        testing the ?fields query parameter on the /alpha and /search endpoints.
+    test_metadata_generated_format:
+        testing that the 'generated' timestamp in the metadata envelope is a valid ISO 8601 UTC string.
+    test_country_name_aliases:
+        testing that common country name aliases from the names_converted mapping resolve correctly.
     """     
-    def setUp(self):
-        """ Initialise test variables including base urls for API. """
-        self.base_url = "https://iso3166-updates.vercel.app/api"
+    @classmethod
+    def setUpClass(cls):
+        """ One-time class-level setup: build URLs, load the iso3166-updates object and
+        fetch /api/all once so every test method reuses the same response rather than
+        making a redundant network call on every setUp invocation.
 
-        #get version and random user-agent
-        self.__version__ = metadata('iso3166_updates')['version']
-        user_agent = UserAgent()
-        self.user_agent_header = {"User-Agent": user_agent.random, 'Accept': 'application/json'}
+        When BASE_URL is not set the local Flask app is started automatically in a
+        background daemon thread so the suite is self-contained. """
+        explicit_url = os.environ.get("BASE_URL", "")
+        if explicit_url:
+            cls.base_url = explicit_url
+        else:
+            #find a free port and start the Flask app in a background daemon thread
+            port = _find_free_port()
+            flask_thread = threading.Thread(
+                target=lambda: flask_app.run(
+                    host='127.0.0.1', port=port, use_reloader=False, debug=False
+                ),
+                daemon=True
+            )
+            flask_thread.start()
+            #poll until the server accepts connections (up to 15 seconds)
+            deadline = time.time() + 15
+            while time.time() < deadline:
+                try:
+                    requests.get(f"http://127.0.0.1:{port}/api", timeout=1)
+                    break
+                except requests.exceptions.ConnectionError:
+                    time.sleep(0.3)
+            cls.base_url = f"http://127.0.0.1:{port}/api"
+
+        #package version used to verify the API /version endpoint
+        cls.__version__ = metadata('iso3166_updates')['version']
 
         #base endpoint urls
-        self.alpha_base_url = self.base_url + "/alpha/"
-        self.year_base_url = self.base_url + '/year/'
-        self.all_base_url = self.base_url + '/all'
-        self.country_name_base_url = self.base_url + '/country_name/'
-        self.date_range_url = self.base_url + '/date_range/'
-        self.search_url = self.base_url + '/search/'
+        cls.alpha_base_url = cls.base_url + "/alpha/"
+        cls.year_base_url = cls.base_url + '/year/'
+        cls.all_base_url = cls.base_url + '/all'
+        cls.country_name_base_url = cls.base_url + '/country_name/'
+        cls.date_range_url = cls.base_url + '/date_range/'
+        cls.search_url = cls.base_url + '/search/'
+        cls.version_base_url = cls.base_url + '/version'
 
         #correct column/key names for dict returned from api
-        self.expected_output_columns = ["Change", "Date Issued", "Description of Change", "Source"]
+        cls.expected_output_columns = ["Change", "Date Issued", "Description of Change", "Source"]
 
         #turn off tqdm progress bar functionality when running tests
         os.environ["TQDM_DISABLE"] = "1"
 
-        #object of updates from iso3166-updates software
-        all_iso3166_updates_obj = Updates()
-        self.all_iso3166_updates = all_iso3166_updates_obj.all
+        #build iso3166-updates object once — avoids re-loading the dataset per test
+        cls.all_iso3166_updates = Updates().all
 
-        #call /api/all endpoint to get all data from API
-        self.test_request_all = requests.get(self.all_base_url, headers=self.user_agent_header)
+        #fetch /api/all once — this is the most expensive network call in the suite
+        _ua = UserAgent()
+        cls.test_request_all = requests.get(
+            cls.all_base_url,
+            headers={"User-Agent": _ua.random, 'Accept': 'application/json'}
+        )
+
+    def setUp(self):
+        """ Per-test setup: generate a fresh random User-Agent header. """
+        user_agent = UserAgent()
+        self.user_agent_header = {"User-Agent": user_agent.random, 'Accept': 'application/json'}
 
 #     @unittest.skip("")
     def test_homepage_endpoint(self):
@@ -96,7 +170,7 @@ class Updates_Api_Tests(unittest.TestCase):
         # last_updated = soup.find(id='last-updated').text.split(': ')[1]
         author = soup.find(id='author').text.split(': ')[1]
 
-        # self.assertEqual(version, "1.8.3", f"Expected API version to be 1.8.3, got {version}.")
+        # self.assertEqual(version, "1.8.4", f"Expected API version to be 1.8.4, got {version}.")
         # self.assertEqual(last_updated, "May 2025", f"Expected last updated date to be May 2025, got {last_updated}.")
         self.assertEqual(author, "AJ", f"Expected author to be AJ, got {author}.")
 #2.)
@@ -109,21 +183,29 @@ class Updates_Api_Tests(unittest.TestCase):
     def test_all_endpoint(self):
         """ Testing '/api/all' endpoint that returns all updates data for all countries. """
 #1.)    
-        self.assertIsInstance(self.test_request_all.json(), dict, f"Expected output object of API to be of type dict, got {type(self.test_request_all.json())}.")
-        self.assertEqual(len(self.test_request_all.json()), 250, f"Expected there to be 250 elements in output object, got {len(self.test_request_all.json())}.")
+        all_resp = self.test_request_all.json()
+        self.assertIn("data", all_resp, "Expected response envelope to contain 'data' key.")
+        self.assertIn("metadata", all_resp, "Expected response envelope to contain 'metadata' key.")
+        self.assertIsInstance(all_resp["data"], dict, f"Expected output object of API to be of type dict, got {type(all_resp['data'])}.")
+        self.assertEqual(len(all_resp["data"]), 250, f"Expected there to be 250 elements in output object, got {len(all_resp['data'])}.")
         self.assertEqual(self.test_request_all.status_code, 200, f"Expected 200 status code from request, got {self.test_request_all.status_code}.")
         self.assertEqual(self.test_request_all.headers["content-type"], "application/json", f"Expected Content type to be application/json, got {self.test_request_all.headers['content-type']}.")
+        self.assertIsInstance(all_resp["metadata"]["count"], int, "Expected metadata.count to be an integer.")
+        self.assertIn("generated", all_resp["metadata"], "Expected metadata to contain 'generated' timestamp.")
+        self.assertIn("X-RateLimit-Limit", self.test_request_all.headers, "Expected X-RateLimit-Limit header to be present.")
+        self.assertIn("X-RateLimit-Policy", self.test_request_all.headers, "Expected X-RateLimit-Policy header to be present.")
 
         total_updates = sum(len(changes) for changes in self.all_iso3166_updates.values())
-        self.assertEqual(total_updates, 909, f"Expected and observed total updates do not match, got {total_updates}.")
+        self.assertEqual(total_updates, 911, f"Expected and observed total updates do not match, got {total_updates}.")
 #2.)
-        for alpha2 in list(self.test_request_all.json().keys()):
-            self.assertIsNotNone(countries.get(alpha_2=alpha2), f"Alpha-2 code {alpha2} not found in list of available country codes.")
+        for alpha2 in list(all_resp["data"].keys()):
+            self.assertIn(alpha2, iso3166.countries_by_alpha2, f"Alpha-2 code {alpha2} not found in list of available country codes.")
 #3.)
         test_request_all_sort_by_date = requests.get(self.all_base_url, headers=self.user_agent_header, params={"sortby": "dateDesc"})
+        sorted_resp = test_request_all_sort_by_date.json()
 
-        self.assertIsInstance(test_request_all_sort_by_date.json(), list, f"Expected output object of API to be of type list, got {type(test_request_all_sort_by_date.json())}.")
-        self.assertEqual(len(test_request_all_sort_by_date.json()), 911, f"Expected there to be 911 elements in output object, got {len(test_request_all_sort_by_date.json())}.")
+        self.assertIsInstance(sorted_resp["data"], list, f"Expected output object of API to be of type list, got {type(sorted_resp['data'])}.")
+        self.assertEqual(len(sorted_resp["data"]), 911, f"Expected there to be 911 elements in output object, got {len(sorted_resp['data'])}.")
         self.assertEqual(test_request_all_sort_by_date.status_code, 200, f"Expected 200 status code from request, got {test_request_all_sort_by_date.status_code}.")
         self.assertEqual(test_request_all_sort_by_date.headers["content-type"], "application/json", f"Expected Content type to be application/json, got {test_request_all_sort_by_date.headers['content-type']}.")
 
@@ -131,7 +213,7 @@ class Updates_Api_Tests(unittest.TestCase):
         date_list = []
 
         #iterate over all updates, parse date and append to array
-        for item in test_request_all_sort_by_date.json():
+        for item in sorted_resp["data"]:
                 match = re.search(r"\d{4}-\d{2}-\d{2}", item.get("Date Issued", ""))
                 parsed_date = datetime.strptime(match.group(), "%Y-%m-%d") 
                 date_list.append(parsed_date)
@@ -141,6 +223,25 @@ class Updates_Api_Tests(unittest.TestCase):
         #validate there are no dates in the future
         for date_issued in date_list:
                 self.assertLessEqual(date_issued.date(), date.today(), f"Expected there to be no publication dates in the future: {date_issued}.")
+#4.)
+        test_request_all_paginated = requests.get(self.all_base_url, headers=self.user_agent_header, params={"limit": 10, "offset": 5})
+        paginated_resp = test_request_all_paginated.json()
+        self.assertIn("data", paginated_resp, "Expected paginated response to contain 'data' key.")
+        self.assertIn("metadata", paginated_resp, "Expected paginated response to contain 'metadata' key.")
+        self.assertEqual(len(paginated_resp["data"]), 10, f"Expected 10 countries in paginated response, got {len(paginated_resp['data'])}.")
+        self.assertEqual(paginated_resp["metadata"]["offset"], 5, f"Expected metadata.offset to be 5, got {paginated_resp['metadata']['offset']}.")
+        self.assertEqual(paginated_resp["metadata"]["limit"], 10, f"Expected metadata.limit to be 10, got {paginated_resp['metadata']['limit']}.")
+        self.assertIn("total", paginated_resp["metadata"], "Expected metadata to contain 'total' for paginated response.")
+#5.)
+        test_request_fields = requests.get(self.all_base_url, headers=self.user_agent_header, params={"fields": "Change,Date Issued"})
+        fields_resp = test_request_fields.json()
+        self.assertIn("data", fields_resp, "Expected fields-filtered response to contain 'data' key.")
+        for alpha2, updates in list(fields_resp["data"].items())[:5]:
+            for update in updates:
+                self.assertIn("Change", update, "Expected 'Change' field in fields-filtered response.")
+                self.assertIn("Date Issued", update, "Expected 'Date Issued' field in fields-filtered response.")
+                self.assertNotIn("Description of Change", update, "Expected 'Description of Change' to be excluded from fields-filtered response.")
+                self.assertNotIn("Source", update, "Expected 'Source' to be excluded from fields-filtered response.")
         
 #     @unittest.skip("")
     def test_json_schema_all_endpoint(self):
@@ -170,7 +271,7 @@ class Updates_Api_Tests(unittest.TestCase):
         }
 #1.)
         try:
-                validate(instance=self.test_request_all.json(), schema=schema)
+                validate(instance=self.test_request_all.json()["data"], schema=schema)
         except ValidationError as e:
                 self.fail(f"JSON schema for /all endpoint output validation failed: {e.message}.")
 
@@ -178,7 +279,7 @@ class Updates_Api_Tests(unittest.TestCase):
     def test_all_endpoint_duplicates(self):
         """ Testing '/api/all' endpoint has no duplicate updates objects. """
 #1.)
-        for country_code, updates in self.test_request_all.json().items():
+        for country_code, updates in self.test_request_all.json()["data"].items():
             unique_updates = {frozenset(update.items()) for update in updates}
             self.assertEqual(len(unique_updates), len(updates), f"Duplicates found in updates for country {country_code}:\n{updates}")
  
@@ -216,7 +317,7 @@ class Updates_Api_Tests(unittest.TestCase):
                                 'WS': 3, 'YE': 7, 'YT': 2, 'ZA': 4, 'ZM': 3, 'ZW': 1}
 #1.)
         for code, expected_count in expected_counts.items():
-            actual_count = len(self.test_request_all.json().get(code, []))
+            actual_count = len(self.test_request_all.json()["data"].get(code, []))
             self.assertEqual(actual_count, expected_count, 
                 f"Incorrect updates total for code {code}. Expected {expected_count}, got {actual_count}.")
 
@@ -231,7 +332,7 @@ class Updates_Api_Tests(unittest.TestCase):
         error_test_alpha_2 = "42"
         error_test_alpha_3 = "XYZ" #invalid alpha-3 code
 #1.)
-        test_request_ad = requests.get(self.alpha_base_url + test_alpha_ad, headers=self.user_agent_header).json() #AD
+        test_request_ad = requests.get(self.alpha_base_url + test_alpha_ad, headers=self.user_agent_header).json()["data"] #AD
         test_alpha_ad_expected = {"AD": [{
                 "Change": "Update List Source.",
                 "Date Issued": "2015-11-27",
@@ -253,7 +354,7 @@ class Updates_Api_Tests(unittest.TestCase):
         
         self.assertEqual(test_request_ad, test_alpha_ad_expected, f"Expected and observed outputs do not match:\n{test_request_ad}.")
 #2.)
-        test_request_bo = requests.get(self.alpha_base_url + test_alpha_bo, headers=self.user_agent_header).json() #BOL        
+        test_request_bo = requests.get(self.alpha_base_url + test_alpha_bo, headers=self.user_agent_header).json()["data"] #BOL        
         test_alpha_bo_expected = {"BO": [{
                 "Change": "Change of short name upper case: replace the parentheses with a coma.",
                 "Date Issued": "2024-02-29",
@@ -287,7 +388,7 @@ class Updates_Api_Tests(unittest.TestCase):
 
         self.assertEqual(test_request_bo, test_alpha_bo_expected, f"Expected and observed outputs do not match:\n{test_request_bo['BO']}")
 #3.)
-        test_request_bf = requests.get(self.alpha_base_url + test_alpha_bf, headers=self.user_agent_header).json() #854        
+        test_request_bf = requests.get(self.alpha_base_url + test_alpha_bf, headers=self.user_agent_header).json()["data"] #854        
         test_alpha_bf_expected = {"BF": [{
                 "Change": "Spelling change: BF-TUI Tui -> Tuy.",
                 "Date Issued": "2016-11-15",
@@ -309,7 +410,7 @@ class Updates_Api_Tests(unittest.TestCase):
 
         self.assertEqual(test_request_bf, test_alpha_bf_expected, f"Expected and observed outputs do not match:\n{test_request_bf['BF'][0]}")
 #4.)
-        test_request_bn_cu_dm = requests.get(self.alpha_base_url + test_alpha_bn_cu_dm, headers=self.user_agent_header).json() #BN, CUB, 262
+        test_request_bn_cu_dm = requests.get(self.alpha_base_url + test_alpha_bn_cu_dm, headers=self.user_agent_header).json()["data"] #BN, CUB, 262
         test_bn_cu_dm_alpha_list = ['BN', 'CU', 'DJ']          
         test_alpha_bn_expected = {
                 "Change": "Spelling change: BN-BM Brunei-Muara -> Brunei dan Muara (ms).",
@@ -367,7 +468,7 @@ class Updates_Api_Tests(unittest.TestCase):
         test_year_abc = "abc"
         test_year_12345 = "12345"
 #1.)
-        test_request_year_2016 = requests.get(self.year_base_url + test_year_2016, headers=self.user_agent_header).json() #2016
+        test_request_year_2016 = requests.get(self.year_base_url + test_year_2016, headers=self.user_agent_header).json()["data"] #2016
         test_au_expected = {
                 "Change": "Update List Source; update Code Source.",
                 "Date Issued": "2016-11-15",
@@ -411,7 +512,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_2016['MV'][0], test_mv_expected, f"Expected and observed outputs do not match:\n{test_request_year_2016['MV'][0]}.")
         self.assertEqual(test_request_year_2016['PW'][0], test_pw_expected, f"Expected and observed outputs do not match:\n{test_request_year_2016['PW'][0]}.")
 #2.)
-        test_request_year_2007 = requests.get(self.year_base_url + test_year_2007, headers=self.user_agent_header).json() #2007
+        test_request_year_2007 = requests.get(self.year_base_url + test_year_2007, headers=self.user_agent_header).json()["data"] #2007
         test_ag_expected = {
                 "Change": "Subdivisions added: 6 parishes, 1 dependency.",
                 "Date Issued": "2007-04-17",
@@ -455,7 +556,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_2007['GD'][0], test_gd_expected, f"Expected and observed outputs do not match:\n{test_request_year_2007['GD'][0]}.")
         self.assertEqual(test_request_year_2007['SM'][0], test_sm_expected, f"Expected and observed outputs do not match:\n{test_request_year_2007['SM'][0]}.")
 #3.)
-        test_request_year_2004_2009 = requests.get(self.year_base_url + test_year_2004_2009, headers=self.user_agent_header).json() #2004-2009
+        test_request_year_2004_2009 = requests.get(self.year_base_url + test_year_2004_2009, headers=self.user_agent_header).json()["data"] #2004-2009
         test_af_expected = {
                 "Change": "Subdivisions added: AF-DAY Dāykondī. AF-PAN Panjshīr.",
                 "Date Issued": "2005-09-13",
@@ -501,7 +602,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_2004_2009['KP'][0], test_kp_expected, f"Expected and observed outputs do not match:\n{test_request_year_2004_2009['KP'][0]}.")
         self.assertEqual(test_request_year_2004_2009['ZA'][0], test_za_expected, f"Expected and observed outputs do not match:\n{test_request_year_2004_2009['ZA'][0]}.")
 #4.)    
-        test_request_year_gt_2017 = requests.get(self.year_base_url + test_year_gt_2017, headers=self.user_agent_header).json() #>2017
+        test_request_year_gt_2017 = requests.get(self.year_base_url + test_year_gt_2017, headers=self.user_agent_header).json()["data"] #>2017
         test_cl_expected = {
                 "Change": "Subdivisions added: CL-NB Ñuble.",
                 "Date Issued": "2018-11-26",
@@ -552,7 +653,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_gt_2017['SA'][0], test_sa_expected, "Expected and observed outputs do not match.")
         self.assertEqual(test_request_year_gt_2017['VE'][0], test_ve_expected, "Expected and observed outputs do not match.")
 #5.)    
-        test_request_year_lt_2002 = requests.get(self.year_base_url + test_year_lt_2002, headers=self.user_agent_header).json() #<2002
+        test_request_year_lt_2002 = requests.get(self.year_base_url + test_year_lt_2002, headers=self.user_agent_header).json()["data"] #<2002
         test_ca_expected = {
                 "Change": "Subdivisions added: CA-NU Nunavut.",
                 "Date Issued": "2000-06-21",
@@ -594,7 +695,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(test_request_year_lt_2002['RO'][0], test_ro_expected, f"Expected and observed outputs do not match:\n{test_request_year_lt_2002['RO'][0]}.")
         self.assertEqual(test_request_year_lt_2002['TR'][0], test_tr_expected, f"Expected and observed outputs do not match:\n{test_request_year_lt_2002['TR'][0]}.")
 #6.)    
-        test_request_year_not_equal_2011_2020 = requests.get(self.year_base_url + test_year_not_equal_2011_2020, headers=self.user_agent_header).json() #<>2011,2020
+        test_request_year_not_equal_2011_2020 = requests.get(self.year_base_url + test_year_not_equal_2011_2020, headers=self.user_agent_header).json()["data"] #<>2011,2020
         test_year_lt_2002_keys = ['AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AW', 'AX', 'AZ', 'BA', 'BB', 'BD', 'BE', 'BF', 'BG', 
                                   'BH', 'BI', 'BJ', 'BL', 'BM', 'BN', 'BO', 'BQ', 'BR', 'BS', 'BT', 'BV', 'BW', 'BY', 'BZ', 'CA', 'CC', 'CD', 'CF', 'CG', 'CH', 'CI', 
                                   'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ', 'DE', 'DJ', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'EH', 'ER', 
@@ -625,6 +726,12 @@ class Updates_Api_Tests(unittest.TestCase):
         test_request_year_12345 = requests.get(self.year_base_url + test_year_12345, headers=self.user_agent_header).json() #1234
         test_request_year_12345_expected = {"message": f"Invalid year input, must be a valid year >= 1996, got {test_year_12345}.", "path": self.year_base_url + test_year_12345, "status": 400}
         self.assertEqual(test_request_year_12345, test_request_year_12345_expected, f"Expected and observed output error object do not match:\n{test_request_year_12345}")
+#9.) Test ?exclude=YEAR query param as URL-safe alternative to <> syntax
+        test_request_exclude_2016 = requests.get(self.base_url + "/year", headers=self.user_agent_header, params={"exclude": "2016"}).json()
+        test_request_explicit_not_equal = requests.get(self.year_base_url + "<>2016", headers=self.user_agent_header).json()
+        self.assertIn("data", test_request_exclude_2016, "Expected ?exclude=YEAR response to include 'data' key.")
+        self.assertEqual(test_request_exclude_2016["data"], test_request_explicit_not_equal["data"],
+            "Expected ?exclude=2016 and <>2016 to return the same data.")
 
 #     @unittest.skip("")
     def test_alpha_year_endpoint(self):
@@ -638,7 +745,7 @@ class Updates_Api_Tests(unittest.TestCase):
         test_abc_2000 = ("abc", "2000") 
         test_de_12345 = ("DE", "12345") 
 #1.)
-        test_ad_2015_request = requests.get(f"{self.alpha_base_url}{test_ad_2015[0]}/year/{test_ad_2015[1]}", headers=self.user_agent_header).json() #Andorra - 2015
+        test_ad_2015_request = requests.get(f"{self.alpha_base_url}{test_ad_2015[0]}/year/{test_ad_2015[1]}", headers=self.user_agent_header).json()["data"] #Andorra - 2015
         test_ad_2015_expected = {"AD": [{
                 "Change": "Update List Source.",
                 "Date Issued": "2015-11-27",
@@ -648,7 +755,7 @@ class Updates_Api_Tests(unittest.TestCase):
         
         self.assertEqual(test_ad_2015_expected, test_ad_2015_request, f"Observed and expected outputs of API do not match:\n{test_ad_2015_request}")
 #2.) 
-        test_es_2002_request = requests.get(f"{self.alpha_base_url}{test_es_2002[0]}/year/{test_es_2002[1]}", headers=self.user_agent_header).json() #Spain - 2002
+        test_es_2002_request = requests.get(f"{self.alpha_base_url}{test_es_2002[0]}/year/{test_es_2002[1]}", headers=self.user_agent_header).json()["data"] #Spain - 2002
         test_es_2002_expected = {
                 "ES": [{
                         "Change": "Error correction: Regional subdivision indicator corrected in ES-PM.",
@@ -666,7 +773,7 @@ class Updates_Api_Tests(unittest.TestCase):
         
         self.assertEqual(test_es_2002_expected, test_es_2002_request, f"Observed and expected outputs of API do not match:\n{test_es_2002_request}")
 #3.) 
-        test_tr_gt_2020_request = requests.get(f"{self.alpha_base_url}{test_tr_2002[0]}/year/{test_tr_2002[1]}", headers=self.user_agent_header).json() #Turkey - >2020
+        test_tr_gt_2020_request = requests.get(f"{self.alpha_base_url}{test_tr_2002[0]}/year/{test_tr_2002[1]}", headers=self.user_agent_header).json()["data"] #Turkey - >2020
         test_tr_gt_2020_expected = {"TR": [
                 {
                 "Change": "Change of the short and full name.",
@@ -684,7 +791,7 @@ class Updates_Api_Tests(unittest.TestCase):
 
         self.assertEqual(test_tr_gt_2020_request, test_tr_gt_2020_expected, f"Observed and expected outputs of API do not match:\n{test_tr_gt_2020_request}")
 #4.)
-        test_ma_mh_nr_lt_2011_request = requests.get(f"{self.alpha_base_url}{test_ma_mh_nr_lt_2011[0]}/year/{test_ma_mh_nr_lt_2011[1]}", headers=self.user_agent_header).json() #Morocco, Marshall Islands, Nauru - <2011
+        test_ma_mh_nr_lt_2011_request = requests.get(f"{self.alpha_base_url}{test_ma_mh_nr_lt_2011[0]}/year/{test_ma_mh_nr_lt_2011[1]}", headers=self.user_agent_header).json()["data"] #Morocco, Marshall Islands, Nauru - <2011
         test_ma_mh_nr_lt_2011_expected = {
               "MA": [
                 {
@@ -725,7 +832,7 @@ class Updates_Api_Tests(unittest.TestCase):
 
         self.assertEqual(test_ma_mh_nr_lt_2011_request, test_ma_mh_nr_lt_2011_expected, f"Observed and expected outputs of API do not match:\n{test_ma_mh_nr_lt_2011_request}") 
 #5.) 
-        test_pe_pr_ne_2014_request = requests.get(f"{self.alpha_base_url}{test_pe_pr_ne_2014[0]}/year/{test_pe_pr_ne_2014[1]}", headers=self.user_agent_header).json() #Peru, Puerto Rico - <>2014
+        test_pe_pr_ne_2014_request = requests.get(f"{self.alpha_base_url}{test_pe_pr_ne_2014[0]}/year/{test_pe_pr_ne_2014[1]}", headers=self.user_agent_header).json()["data"] #Peru, Puerto Rico - <>2014
         test_pe_pr_ne_2014_expected = {
               "PE": [
                 {
@@ -752,7 +859,7 @@ class Updates_Api_Tests(unittest.TestCase):
 
         self.assertEqual(test_pe_pr_ne_2014_request, test_pe_pr_ne_2014_expected, f"Observed and expected outputs of API do not match:\n{test_pe_pr_ne_2014_request}")
 #6.)
-        test_ve_2004_2008_request = requests.get(f"{self.alpha_base_url}{test_ve_2004_2008[0]}/year/{test_ve_2004_2008[1]}", headers=self.user_agent_header).json() #Venezuela - 2004-2008
+        test_ve_2004_2008_request = requests.get(f"{self.alpha_base_url}{test_ve_2004_2008[0]}/year/{test_ve_2004_2008[1]}", headers=self.user_agent_header).json()["data"] #Venezuela - 2004-2008
         self.assertEqual(test_ve_2004_2008_request, {}, f"Expected output of API to be an empty dict, got:\n{test_ve_2004_2008_request}")
 #7.) 
         test_abc_2000_request = requests.get(f"{self.alpha_base_url}{test_abc_2000[0]}/year/{test_abc_2000[1]}", headers=self.user_agent_header).json() #abc - 2000
@@ -773,7 +880,7 @@ class Updates_Api_Tests(unittest.TestCase):
         test_name_error1 = "ABCDEF"
         test_name_error2 = "12345"
 #1.)
-        test_request_bj = requests.get(self.country_name_base_url + test_name_benin, headers=self.user_agent_header).json() #Benin
+        test_request_bj = requests.get(self.country_name_base_url + test_name_benin, headers=self.user_agent_header).json()["data"] #Benin
         test_name_bj_expected = {"BJ": [
                 {
                 "Change": "Correction of the Code Source.",
@@ -798,7 +905,7 @@ class Updates_Api_Tests(unittest.TestCase):
 
         self.assertEqual(test_request_bj, test_name_bj_expected, "Expected and observed outputs do not match.")
 #3.)
-        test_request_tj = requests.get(self.country_name_base_url + test_name_tajikistan, headers=self.user_agent_header, params={"likeness": "80"}).json() #Tajikistan
+        test_request_tj = requests.get(self.country_name_base_url + test_name_tajikistan, headers=self.user_agent_header, params={"likeness": "80"}).json()["data"] #Tajikistan
         test_name_tj_expected = [{
                 "Change": "Correction of the Code Source.",
                 "Date Issued": "2020-11-24",
@@ -822,7 +929,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(len(test_request_tj["TJ"]), 7, f"Expected there to be 7 elements in output object, got {len(test_request_tj['TJ'])}.")
         self.assertEqual(test_request_tj["TJ"][0:3], test_name_tj_expected, f"Expected and observed outputs do not match:\n{test_request_tj['TJ'][0:3]}")
 #4.)
-        test_request_mc = requests.get(self.country_name_base_url + test_name_monaco, headers=self.user_agent_header).json() #Monaco
+        test_request_mc = requests.get(self.country_name_base_url + test_name_monaco, headers=self.user_agent_header).json()["data"] #Monaco
         test_name_mc_expected = {"MC": [
                 {
                 "Change": "Correction of the Code Source.",
@@ -841,7 +948,7 @@ class Updates_Api_Tests(unittest.TestCase):
 
         self.assertEqual(test_request_mc, test_name_mc_expected, "Expected and observed outputs do not match.")
 #5.)
-        test_request_ml_ni = requests.get(self.country_name_base_url + test_name_mali_nicaragua, headers=self.user_agent_header, params={"sortby": "datedesc"}).json() #Mali, Nicaragua 
+        test_request_ml_ni = requests.get(self.country_name_base_url + test_name_mali_nicaragua, headers=self.user_agent_header, params={"sortby": "datedesc"}).json()["data"] #Mali, Nicaragua 
         test_name_ml_ni_expected = [
                 {
                 "Change": "Correction of the Code Source.",
@@ -892,7 +999,7 @@ class Updates_Api_Tests(unittest.TestCase):
         test_name_year_error1 = ("Germany", "99999")
         test_name_year_error2 = ("ABCDEF", "2018")
 #1.)
-        test_request_name_panama_2017 = requests.get(f'{self.country_name_base_url}{test_name_panama_2017[0]}/year/{test_name_panama_2017[1]}' , headers=self.user_agent_header).json() #Panama - 2017
+        test_request_name_panama_2017 = requests.get(f'{self.country_name_base_url}{test_name_panama_2017[0]}/year/{test_name_panama_2017[1]}' , headers=self.user_agent_header).json()["data"] #Panama - 2017
         test_name_year_panama_expected = {"PA": [
                 {
                 "Change": "Change of subdivision name of PA-KY; addition of local variation of PA-KY, update List Source.",
@@ -905,7 +1012,7 @@ class Updates_Api_Tests(unittest.TestCase):
 
         self.assertEqual(test_request_name_panama_2017, test_name_year_panama_expected, "Expected and observed outputs do not match.")
 #2.)
-        test_request_name_seychelles_2010_2013 = requests.get(f'{self.country_name_base_url}{test_name_seychelles_2010_2013[0]}/year/{test_name_seychelles_2010_2013[1]}' , headers=self.user_agent_header).json() #Seychelles - 2010-2013
+        test_request_name_seychelles_2010_2013 = requests.get(f'{self.country_name_base_url}{test_name_seychelles_2010_2013[0]}/year/{test_name_seychelles_2010_2013[1]}' , headers=self.user_agent_header).json()["data"] #Seychelles - 2010-2013
         test_name_year_seychelles_expected = {"SC": [
                 {
                 "Change": "Correct the local language code for the local short name.",
@@ -923,7 +1030,7 @@ class Updates_Api_Tests(unittest.TestCase):
 
         self.assertEqual(test_request_name_seychelles_2010_2013, test_name_year_seychelles_expected, "Expected and observed outputs do not match.")
 #3.)
-        test_request_name_zambia_zimbabwe_gt_2015 = requests.get(f'{self.country_name_base_url}{test_name_zambia_zimbabwe_gt_2015[0]}/year/{test_name_zambia_zimbabwe_gt_2015[1]}' , headers=self.user_agent_header).json() #Zambia, Zimbabwe - >2015
+        test_request_name_zambia_zimbabwe_gt_2015 = requests.get(f'{self.country_name_base_url}{test_name_zambia_zimbabwe_gt_2015[0]}/year/{test_name_zambia_zimbabwe_gt_2015[1]}' , headers=self.user_agent_header).json()["data"] #Zambia, Zimbabwe - >2015
         test_name_year_zambia_zimbabwe_expected = {"ZM": [
                 {
                 "Change": "Addition of an asterisk to ZM-01 to ZM-10; Correction du Code Source.",
@@ -966,7 +1073,7 @@ class Updates_Api_Tests(unittest.TestCase):
         test_date_range_error3 = "2019"
         test_date_range_error4 = "abcdef"
 #1.)
-        test_request_date_range1 = requests.get(self.date_range_url + test_date_range1, headers=self.user_agent_header).json() #2014-04-07,2016-10-16
+        test_request_date_range1 = requests.get(self.date_range_url + test_date_range1, headers=self.user_agent_header).json()["data"] #2014-04-07,2016-10-16
         test_request_date_range1_expected = ['AD', 'AE', 'AF', 'AG', 'AL', 'AO', 'AT', 'AU', 'AZ', 'BA', 'BB', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BL', 
                                              'BN', 'BO', 'BQ', 'BT', 'BW', 'BY', 'BZ', 'CA', 'CG', 'CI', 'CL', 'CM', 'CR', 'CU', 'CY', 'CZ', 'DJ', 'DM', 
                                              'DO', 'DZ', 'EE', 'EG', 'ER', 'ES', 'ET', 'FJ', 'FM', 'GA', 'GB', 'GD', 'GH', 'GM', 'GN', 'GR', 'GT', 'GY', 
@@ -985,7 +1092,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(list(test_request_date_range1), test_request_date_range1_expected, 
             f"Expected and observed country code objects do not match:\n{list(test_request_date_range1)}.")
 #2.)
-        test_request_date_range2 = requests.get(self.date_range_url + test_date_range2, headers=self.user_agent_header).json() #2009-08-17,2011-11-12
+        test_request_date_range2 = requests.get(self.date_range_url + test_date_range2, headers=self.user_agent_header).json()["data"] #2009-08-17,2011-11-12
         test_request_date_range2_expected = ['AG', 'AL', 'AR', 'AX', 'BA', 'BF', 'BG', 'BI', 'BO', 'BQ', 'BS', 'BY', 'CF', 'CL', 'CV', 'CW', 'CZ', 'EC', 
                                              'EG', 'ES', 'FJ', 'FR', 'GB', 'GL', 'GN', 'GR', 'GW', 'HR', 'HU', 'ID', 'IE', 'IT', 'KE', 'KM', 'KN', 'KP', 
                                              'LK', 'LY', 'MA', 'MD', 'MH', 'MM', 'MW', 'NG', 'NL', 'NP', 'NU', 'NZ', 'OM', 'PA', 'PE', 'PH', 'RS', 'RU', 
@@ -1000,9 +1107,9 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(list(test_request_date_range2), test_request_date_range2_expected, 
             f"Expected and observed country code objects do not match:\n{list(test_request_date_range2)}.")
 #3.)
-        test_request_date_range3 = requests.get(self.date_range_url + test_date_range3, headers=self.user_agent_header).json() #2022-01-01
-        test_request_date_range3_expected = ['BO', 'BS', 'CI', 'DZ', 'ET', 'FI', 'FM', 'GB', 'GF', 'GP', 'ID', 'IN', 'IQ', 'IR', 'IS', 'KP', 'KR', 'KZ', 
-                                             'ME', 'MQ', 'MX', 'NL', 'NP', 'NZ', 'PA', 'PH', 'PL', 'RE', 'SI', 'TR', 'VE', 'YT']
+        test_request_date_range3 = requests.get(self.date_range_url + test_date_range3, headers=self.user_agent_header).json()["data"] #2022-01-01
+        test_request_date_range3_expected = ['BO', 'BS', 'CI', 'DZ', 'ET', 'FI', 'FM', 'GB', 'GF', 'GP', 'ID', 'IN', 'IQ', 'IR', 'IS', 'KP', 'KR', 
+                                             'KZ', 'ME', 'MQ', 'MX', 'NL', 'NP', 'NZ', 'PA', 'PH', 'PL', 'RE', 'SI', 'TR', 'VE', 'YT']
 
         for country_code, updates in test_request_date_range3.items():
             for update in updates:
@@ -1013,7 +1120,7 @@ class Updates_Api_Tests(unittest.TestCase):
         self.assertEqual(list(test_request_date_range3), test_request_date_range3_expected, 
             f"Expected and observed country code objects do not match:\n{list(test_request_date_range3)}.")
 #4.)
-        test_request_date_range4 = requests.get(self.date_range_url + test_date_range4, headers=self.user_agent_header).json() #2002-12-14,2000-08-09
+        test_request_date_range4 = requests.get(self.date_range_url + test_date_range4, headers=self.user_agent_header).json()["data"] #2002-12-14,2000-08-09
         test_request_date_range4_expected = ['AE', 'AL', 'AO', 'AZ', 'BD', 'BG', 'BI', 'BJ', 'BY', 'CA', 'CD', 'CN', 'CV', 'CZ', 'DO', 'EC', 'ER', 'ES', 
                                              'ET', 'FR', 'GB', 'GE', 'GN', 'GT', 'HR', 'ID', 'IN', 'IR', 'IT', 'KG', 'KH', 'KP', 'KR', 'KZ', 'LA', 'MA', 
                                              'MD', 'MO', 'MU', 'MW', 'NG', 'NI', 'PH', 'PL', 'PS', 'RO', 'RU', 'SI', 'TJ', 'TL', 'TM', 'TR', 'TW', 'UG', 
@@ -1054,7 +1161,7 @@ class Updates_Api_Tests(unittest.TestCase):
         test_date_range_alpha_error2 = ("20022-123-4", "HU")
         test_date_range_alpha_error3 = ("2021-01-024", "abcdef")
 #1.)
-        test_date_range_alpha1_request = requests.get(f"{self.date_range_url}{test_date_range_alpha1[0]}/alpha/{test_date_range_alpha1[1]}", headers=self.user_agent_header).json() #2019-04-09,2021-01-01 - NO
+        test_date_range_alpha1_request = requests.get(f"{self.date_range_url}{test_date_range_alpha1[0]}/alpha/{test_date_range_alpha1[1]}", headers=self.user_agent_header).json()["data"] #2019-04-09,2021-01-01 - NO
         test_date_range_alpha1_expected = {
                 "NO": [
                 {
@@ -1072,7 +1179,7 @@ class Updates_Api_Tests(unittest.TestCase):
 
         self.assertEqual(test_date_range_alpha1_request, test_date_range_alpha1_expected, f"Observed and expected outputs of API do not match:\n{test_date_range_alpha1_request}")
 #2.)
-        test_date_range_alpha2_request = requests.get(f"{self.date_range_url}{test_date_range_alpha2[0]}/alpha/{test_date_range_alpha2[1]}", headers=self.user_agent_header).json() #2007-01-01,2016-05-07 - PW,QA
+        test_date_range_alpha2_request = requests.get(f"{self.date_range_url}{test_date_range_alpha2[0]}/alpha/{test_date_range_alpha2[1]}", headers=self.user_agent_header).json()["data"] #2007-01-01,2016-05-07 - PW,QA
         test_date_range_alpha2_expected = {
                 "PW": [
                 {
@@ -1092,7 +1199,7 @@ class Updates_Api_Tests(unittest.TestCase):
 
         self.assertEqual(test_date_range_alpha2_request, test_date_range_alpha2_expected, f"Observed and expected outputs of API do not match:\n{test_date_range_alpha2_request}")
 #3.)
-        test_date_range_alpha3_request = requests.get(f"{self.date_range_url}{test_date_range_alpha3[0]}/alpha/{test_date_range_alpha3[1]}", headers=self.user_agent_header).json() #2014-02-02 - SO
+        test_date_range_alpha3_request = requests.get(f"{self.date_range_url}{test_date_range_alpha3[0]}/alpha/{test_date_range_alpha3[1]}", headers=self.user_agent_header).json()["data"] #2014-02-02 - SO
         test_date_range_alpha3_expected = {
                 "SO": [
                 {
@@ -1127,7 +1234,7 @@ class Updates_Api_Tests(unittest.TestCase):
         test_search6 = "123"
         test_search7 = ""
 #1.)    
-        test_request_search1 = requests.get(self.search_url + test_search1, headers=self.user_agent_header).json() #parishes
+        test_request_search1 = requests.get(self.search_url + test_search1, headers=self.user_agent_header).json()["data"] #parishes
         test_search1_expected = [{
                 "Country Code": "AD",
                 "Match Score": 100,
@@ -1155,15 +1262,18 @@ class Updates_Api_Tests(unittest.TestCase):
         
         self.assertEqual(test_request_search1[0:3], test_search1_expected, f"Expected and observed output objects do not match:\n{test_request_search1[0:3]}")
 #2.)
-        test_request_search2 = requests.get(self.search_url + test_search2, headers=self.user_agent_header, params={"likeness": 90, "excludeMatchScore": 1}).json() #cantons - exclude match attribute, likeness=0.9
-        test_search2_expected = {'BA': {'Change': 'Subdivisions added: 10 cantons.', 'Date Issued': '2007-12-13', 
-                'Description of Change': "Second edition of ISO 3166-2 (this change was not announced in a newsletter) - 'Statoid Newsletter January 2008' - http://www.statoids.com/n0801.html.", 'Source': 'ISO 3166-2:2007 - http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718.'}, 
-                'CH': {'Change': 'Deletion of canton CH-GR in fra; Update List Source.', 'Date Issued': '2020-11-24', 'Description of Change': '', 'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CH.'}, 
-                'LU': {'Change': 'Addition of cantons LU-CA, LU-CL, LU-DI, LU-EC, LU-ES, LU-GR, LU-LU, LU-ME, LU-RD, LU-RM, LU-VD, LU-WI; update List Source.', 'Date Issued': '2015-11-27', 'Description of Change': '', 'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:LU.'}}
+        test_request_search2 = requests.get(self.search_url + test_search2, headers=self.user_agent_header, params={"likeness": 90, "excludeMatchScore": 1}).json()["data"] #cantons - exclude match attribute, likeness=0.9
+        test_search2_expected = {
+                'BA': [
+                    {'Change': 'Deletion of all cantons BA-01 to BA-10.', 'Date Issued': '2015-11-27', 'Description of Change': '', 'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:BA.'},
+                    {'Change': 'Subdivisions added: 10 cantons.', 'Date Issued': '2007-12-13', 'Description of Change': "Second edition of ISO 3166-2 (this change was not announced in a newsletter) - 'Statoid Newsletter January 2008' - http://www.statoids.com/n0801.html.", 'Source': 'ISO 3166-2:2007 - http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39718.'}
+                ],
+                'CH': [{'Change': 'Deletion of canton CH-GR in fra; Update List Source.', 'Date Issued': '2020-11-24', 'Description of Change': '', 'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:CH.'}],
+                'LU': [{'Change': 'Addition of cantons LU-CA, LU-CL, LU-DI, LU-EC, LU-ES, LU-GR, LU-LU, LU-ME, LU-RD, LU-RM, LU-VD, LU-WI; update List Source.', 'Date Issued': '2015-11-27', 'Description of Change': '', 'Source': 'Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:LU.'}]}
         
         self.assertEqual(test_request_search2, test_search2_expected, f"Expected and observed output objects do not match:\n{test_request_search2}")
 #3.)
-        test_request_search3 = requests.get(self.search_url + test_search3, headers=self.user_agent_header).json() #remark part 2
+        test_request_search3 = requests.get(self.search_url + test_search3, headers=self.user_agent_header).json()["data"] #remark part 2
         test_search3_expected = [{
                 "Country Code": "AI",
                 "Match Score": 100,
@@ -1191,7 +1301,7 @@ class Updates_Api_Tests(unittest.TestCase):
         
         self.assertEqual(test_request_search3[0:3], test_search3_expected, f"Expected and observed output objects do not match:\n{test_request_search3[0:3]}")
 #4.)
-        test_request_search4 = requests.get(self.search_url + test_search4, headers=self.user_agent_header).json() #2017-11-23
+        test_request_search4 = requests.get(self.search_url + test_search4, headers=self.user_agent_header).json()["data"] #2017-11-23
         test_search4_expected = [{
                 "Country Code": "CN",
                 "Match Score": 100,
@@ -1219,26 +1329,199 @@ class Updates_Api_Tests(unittest.TestCase):
         
         self.assertEqual(test_request_search4[0:3], test_search4_expected, f"Expected and observed output objects do not match:\n{test_request_search4[0:3]}")
 #5.)
-        test_request_search5 = requests.get(self.search_url + test_search5, headers=self.user_agent_header).json() #abcdefg
+        test_request_search5 = requests.get(self.search_url + test_search5, headers=self.user_agent_header).json()["data"] #abcdefg
         test_search5_expected = {"Message": f"No matching updates found with the given search term(s): {test_search5}. Try using the query string parameter '?likeness' and reduce the likeness score to expand the search space, '?likeness=30' will return subdivision data that have a 30% match to the input name. The current likeness score is set to 100."}
         self.assertEqual(test_request_search5, test_search5_expected, f"Expected and observed output objects do not match:\n{test_request_search5}")
 #6.)
-        test_request_search6 = requests.get(self.search_url + test_search6, headers=self.user_agent_header).json() #123
+        test_request_search6 = requests.get(self.search_url + test_search6, headers=self.user_agent_header).json()["data"] #123
         test_search6_expected = {"Message": f"No matching updates found with the given search term(s): {test_search6}. Try using the query string parameter '?likeness' and reduce the likeness score to expand the search space, '?likeness=30' will return subdivision data that have a 30% match to the input name. The current likeness score is set to 100."}
         self.assertEqual(test_request_search6, test_search6_expected, f"Expected and observed output objects do not match:\n{test_request_search6}")
 #7.)
         test_request_search7 = requests.get(self.search_url + test_search7, headers=self.user_agent_header).json() #""
-        test_request_search7_expected = {"message": "The search input parameter cannot be empty.", "path": "https://iso3166-updates.vercel.app/api/search/", "status": 400}
+        test_request_search7_expected = {"message": "The search input parameter cannot be empty.", "path": self.search_url + test_search7, "status": 400}
         self.assertEqual(test_request_search7, test_request_search7_expected, f"Expected and observed output error objects do not match:\n{test_request_search7}")
 #8.)
         test_request_search8 = requests.get(self.search_url + test_search1, headers=self.user_agent_header, params={"likeness": "200"}).json()  #likeness=200
 
-        test_request_search8_expected = {"message": "Likeness query string parameter value must be between 0 and 100.", "path": "https://iso3166-updates.vercel.app/api/search/parishes?likeness=200", "status": 400}
+        test_request_search8_expected = {"message": "Likeness query string parameter value must be between 0 and 100.", "path": self.search_url + test_search1 + "?likeness=200", "status": 400}
         self.assertEqual(test_request_search8, test_request_search8_expected, f"Expected and observed output error objects do not match:\n{test_request_search8}")
 #9.)
         test_request_search9 = requests.get(self.search_url + test_search1, headers=self.user_agent_header, params={"likeness": "-100"}).json() #likeness=-100
-        test_request_search9_expected = {"message": "Likeness query string parameter value must be between 0 and 100.", "path": "https://iso3166-updates.vercel.app/api/search/parishes?likeness=-100", "status": 400}
+        test_request_search9_expected = {"message": "Likeness query string parameter value must be between 0 and 100.", "path": self.search_url + test_search1 + "?likeness=-100", "status": 400}
         self.assertEqual(test_request_search9, test_request_search9_expected, f"Expected and observed output error objects do not match:\n{test_request_search9}")
+
+#     @unittest.skip("")
+    def test_cors_headers(self):
+        """ Testing that CORS headers are present on data endpoints. """
+#1.) /all should include Access-Control-Allow-Origin
+        resp_all = requests.get(self.all_base_url, headers=self.user_agent_header)
+        self.assertIn("Access-Control-Allow-Origin", resp_all.headers,
+            "Expected Access-Control-Allow-Origin header on /all endpoint.")
+#2.) /alpha should include Access-Control-Allow-Origin
+        resp_alpha = requests.get(self.alpha_base_url + "GB", headers=self.user_agent_header)
+        self.assertIn("Access-Control-Allow-Origin", resp_alpha.headers,
+            "Expected Access-Control-Allow-Origin header on /alpha endpoint.")
+#3.) /search should include Access-Control-Allow-Origin
+        resp_search = requests.get(self.search_url + "parishes", headers=self.user_agent_header)
+        self.assertIn("Access-Control-Allow-Origin", resp_search.headers,
+            "Expected Access-Control-Allow-Origin header on /search endpoint.")
+
+#     @unittest.skip("")
+    def test_sort_ascending(self):
+        """ Testing sortBy=dateAsc on the /all endpoint returns a flat list in oldest-first order. """
+#1.) response should be a list when sortBy is set
+        resp = requests.get(self.all_base_url, headers=self.user_agent_header, params={"sortBy": "dateAsc"})
+        self.assertEqual(resp.status_code, 200, f"Expected 200, got {resp.status_code}.")
+        data = resp.json()["data"]
+        self.assertIsInstance(data, list, f"Expected list when sortBy=dateAsc, got {type(data)}.")
+        self.assertEqual(len(data), 911, f"Expected 911 records, got {len(data)}.")
+#2.) list must be in ascending date order
+        date_list = []
+        for item in data:
+            match = re.search(r"\d{4}-\d{2}-\d{2}", item.get("Date Issued", ""))
+            date_list.append(datetime.strptime(match.group(), "%Y-%m-%d"))
+        self.assertEqual(date_list, sorted(date_list), "Expected updates to be sorted by date ascending.")
+#3.) ascending and descending lists should be reverses of each other
+        resp_desc = requests.get(self.all_base_url, headers=self.user_agent_header, params={"sortBy": "dateDesc"})
+        date_list_desc = []
+        for item in resp_desc.json()["data"]:
+            match = re.search(r"\d{4}-\d{2}-\d{2}", item.get("Date Issued", ""))
+            date_list_desc.append(datetime.strptime(match.group(), "%Y-%m-%d"))
+        self.assertEqual(date_list, list(reversed(date_list_desc)),
+            "Expected dateAsc list to be the reverse of dateDesc list.")
+
+#     @unittest.skip("")
+    def test_year_endpoint_list(self):
+        """ Testing /year with a comma-separated list of years (e.g. 2010,2015). """
+        test_year_list = "2010,2015"
+#1.) both years should appear in the results
+        resp = requests.get(self.year_base_url + test_year_list, headers=self.user_agent_header)
+        self.assertEqual(resp.status_code, 200, f"Expected 200, got {resp.status_code}.")
+        data = resp.json()["data"]
+        self.assertIsInstance(data, dict, f"Expected dict output, got {type(data)}.")
+        self.assertGreater(len(data), 0, "Expected at least one country in response.")
+#2.) every returned record's year must be 2010 or 2015
+        for alpha2, updates in data.items():
+            for row in updates:
+                year_issued = extract_date(row["Date Issued"]).year
+                self.assertIn(year_issued, (2010, 2015),
+                    f"Expected year 2010 or 2015 for {alpha2}, got {year_issued}.")
+#3.) known country from 2010 newsletter should be present
+        self.assertIn("MA", data, "Expected Morocco (MA) to have updates in 2010.")
+#4.) known country from 2015 newsletter should be present
+        self.assertIn("AD", data, "Expected Andorra (AD) to have updates in 2015.")
+
+#     @unittest.skip("")
+    def test_all_endpoint_invalid_pagination(self):
+        """ Testing that negative or non-integer limit/offset values return a 400 error. """
+#1.) negative limit
+        resp_neg_limit = requests.get(self.all_base_url, headers=self.user_agent_header,
+            params={"limit": -1}).json()
+        self.assertEqual(resp_neg_limit["status"], 400,
+            f"Expected 400 for negative limit, got {resp_neg_limit['status']}.")
+        self.assertIn("message", resp_neg_limit, "Expected error message for negative limit.")
+#2.) negative offset
+        resp_neg_offset = requests.get(self.all_base_url, headers=self.user_agent_header,
+            params={"offset": -5}).json()
+        self.assertEqual(resp_neg_offset["status"], 400,
+            f"Expected 400 for negative offset, got {resp_neg_offset['status']}.")
+#3.) non-integer limit
+        resp_str_limit = requests.get(self.all_base_url, headers=self.user_agent_header,
+            params={"limit": "abc"}).json()
+        self.assertEqual(resp_str_limit["status"], 400,
+            f"Expected 400 for non-integer limit, got {resp_str_limit['status']}.")
+
+#     @unittest.skip("")
+    def test_404_endpoint(self):
+        """ Testing that an unknown path returns a 404 status code. """
+#1.) completely unknown path
+        resp = requests.get(self.base_url + "/nonexistent/path/xyz", headers=self.user_agent_header)
+        self.assertEqual(resp.status_code, 404,
+            f"Expected 404 for unknown path, got {resp.status_code}.")
+#2.) known prefix with unknown suffix
+        resp2 = requests.get(self.base_url + "/alpha/AD/unknown", headers=self.user_agent_header)
+        self.assertEqual(resp2.status_code, 404,
+            f"Expected 404 for unknown sub-path, got {resp2.status_code}.")
+
+#     @unittest.skip("")
+    def test_fields_parameter_other_endpoints(self):
+        """ Testing the ?fields query parameter on /alpha and /search endpoints. """
+#1.) /alpha with fields=Change,Date Issued
+        resp_alpha = requests.get(self.alpha_base_url + "FR", headers=self.user_agent_header,
+            params={"fields": "Change,Date Issued"}).json()
+        self.assertIn("data", resp_alpha, "Expected 'data' key in /alpha fields response.")
+        for row in resp_alpha["data"]["FR"]:
+            self.assertIn("Change", row, "Expected 'Change' in /alpha fields response.")
+            self.assertIn("Date Issued", row, "Expected 'Date Issued' in /alpha fields response.")
+            self.assertNotIn("Source", row, "Expected 'Source' excluded from /alpha fields response.")
+            self.assertNotIn("Description of Change", row,
+                "Expected 'Description of Change' excluded from /alpha fields response.")
+#2.) /search with fields=Change,Country Code
+        resp_search = requests.get(self.search_url + "parishes", headers=self.user_agent_header,
+            params={"fields": "Change,Country Code"}).json()
+        self.assertIn("data", resp_search, "Expected 'data' key in /search fields response.")
+        for row in resp_search["data"][:5]:
+            self.assertIn("Change", row, "Expected 'Change' in /search fields response.")
+            self.assertIn("Country Code", row, "Expected 'Country Code' in /search fields response.")
+            self.assertNotIn("Source", row, "Expected 'Source' excluded from /search fields response.")
+            self.assertNotIn("Date Issued", row, "Expected 'Date Issued' excluded from /search fields response.")
+
+#     @unittest.skip("")
+    def test_metadata_generated_format(self):
+        """ Testing that the 'generated' field in the metadata envelope is a valid ISO 8601 UTC timestamp. """
+        iso8601_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+        endpoints = [
+            (self.all_base_url, {}),
+            (self.alpha_base_url + "DE", {}),
+            (self.year_base_url + "2020", {}),
+            (self.search_url + "parishes", {}),
+            (self.date_range_url + "2020-01-01,2020-12-31", {}),
+        ]
+        for url, params in endpoints:
+            resp = requests.get(url, headers=self.user_agent_header, params=params).json()
+            self.assertIn("metadata", resp, f"Expected 'metadata' key in response from {url}.")
+            generated = resp["metadata"].get("generated", "")
+            self.assertTrue(iso8601_pattern.match(generated),
+                f"Expected 'generated' to match ISO 8601 UTC format YYYY-MM-DDTHH:MM:SSZ at {url}, got '{generated}'.")
+            parsed = datetime.strptime(generated, "%Y-%m-%dT%H:%M:%SZ")
+            self.assertLessEqual(parsed.date(), date.today(),
+                f"Expected 'generated' timestamp to not be in the future, got {generated}.")
+
+#     @unittest.skip("")
+    def test_country_name_aliases(self):
+        """ Testing that common country name aliases from the names_converted mapping resolve correctly. """
+#1.) Russia -> Russian Federation (RU)
+        resp_russia = requests.get(self.country_name_base_url + "Russia",
+            headers=self.user_agent_header).json()["data"]
+        self.assertIn("RU", resp_russia,
+            f"Expected 'RU' in response for alias 'Russia', got {list(resp_russia.keys())}.")
+#2.) United Kingdom -> United Kingdom of Great Britain and Northern Ireland (GB)
+        resp_uk = requests.get(self.country_name_base_url + "United Kingdom",
+            headers=self.user_agent_header).json()["data"]
+        self.assertIn("GB", resp_uk,
+            f"Expected 'GB' in response for alias 'United Kingdom', got {list(resp_uk.keys())}.")
+#3.) Iran -> Iran, Islamic Republic of (IR)
+        resp_iran = requests.get(self.country_name_base_url + "Iran",
+            headers=self.user_agent_header).json()["data"]
+        self.assertIn("IR", resp_iran,
+            f"Expected 'IR' in response for alias 'Iran', got {list(resp_iran.keys())}.")
+#4.) Turkey -> Türkiye (TR)
+        resp_turkey = requests.get(self.country_name_base_url + "Turkey",
+            headers=self.user_agent_header).json()["data"]
+        self.assertIn("TR", resp_turkey,
+            f"Expected 'TR' in response for alias 'Turkey', got {list(resp_turkey.keys())}.")
+#5.) South Korea -> Korea, Republic of (KR)
+        resp_south_korea = requests.get(self.country_name_base_url + "South Korea",
+            headers=self.user_agent_header).json()["data"]
+        self.assertIn("KR", resp_south_korea,
+            f"Expected 'KR' in response for alias 'South Korea', got {list(resp_south_korea.keys())}.")
+
+    # @unittest.skip("")
+    def test_version(self):
+        """ Testing the correct version of the iso3166-updates software is being used by the API. """
+#1.)
+        iso3166_updates_api_version = requests.get(self.version_base_url, headers=self.user_agent_header).content.decode("utf-8")
+        self.assertEqual(iso3166_updates_api_version, self.__version__, f"Expected and observed version of the iso3166-updates software do not match {iso3166_updates_api_version}.")
 
 def extract_date(date_str: str) -> datetime.date:
     """

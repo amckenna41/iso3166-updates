@@ -285,15 +285,19 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         self.assertEqual(test_alpha_fj_gh_gn_updates["FJ"][0], test_alpha_fj_gh_gn_updates_expected_1, "Expected and observed outputs do not match.")
         self.assertEqual(test_alpha_fj_gh_gn_updates["GH"][0], test_alpha_fj_gh_gn_updates_expected_2, "Expected and observed outputs do not match.")
         self.assertEqual(test_alpha_fj_gh_gn_updates["GN"][0], test_alpha_fj_gh_gn_updates_expected_3, "Expected and observed outputs do not match.")
-#6.)     
+#6.)
         with self.assertRaises(ValueError):
-            self.all_updates[test_alpha_error_1] 
-            self.all_updates[test_alpha_error_2] 
-            self.all_updates[test_alpha_error_3] 
+            self.all_updates[test_alpha_error_1]
+        with self.assertRaises(ValueError):
+            self.all_updates[test_alpha_error_2]
+        with self.assertRaises(ValueError):
+            self.all_updates[test_alpha_error_3]
 #7.)
         with self.assertRaises(TypeError):
-            self.all_updates[test_alpha_error_4] 
+            self.all_updates[test_alpha_error_4]
+        with self.assertRaises(TypeError):
             self.all_updates[test_alpha_error_5]
+        with self.assertRaises(TypeError):
             self.all_updates[test_alpha_error_6]
 
     # @unittest.skip("")
@@ -427,12 +431,16 @@ class ISO3166_Updates_Tests(unittest.TestCase):
 #9.)
         with self.assertRaises(ValueError):
             self.all_updates.year(test_year_error1) #1234
+        with self.assertRaises(ValueError):
             self.all_updates.year(test_year_error2) #abcdef
+        with self.assertRaises(ValueError):
             self.all_updates.year(test_year_error3) #>2009<>
-#10.)    
+#10.)
         with self.assertRaises(TypeError):
             self.all_updates.year(test_year_error4) #8.99
+        with self.assertRaises(TypeError):
             self.all_updates.year(test_year_error5) #12345
+        with self.assertRaises(TypeError):
             self.all_updates.year(test_year_error6) #True
 
     # @unittest.skip("")
@@ -519,14 +527,17 @@ class ISO3166_Updates_Tests(unittest.TestCase):
 #9.)
         test_search_blah_updates = self.all_updates.search(test_search_blahblah)
         self.assertEqual(test_search_blah_updates, [], f"Expected no search outputs, got {test_search_blah_updates}")
-#10.)    
+#10.)
         with self.assertRaises(TypeError):
             self.all_updates.search(test_search_error1) #["Belfast,Dublin,Donegal"]
+        with self.assertRaises(TypeError):
             self.all_updates.search(test_search_error2) #12345
+        with self.assertRaises(TypeError):
             self.all_updates.search(test_search_error3) #True
 #11.)
         with self.assertRaises(ValueError):
             self.all_updates.search(test_search_australia, likeness_score=150) #likeness_score=150
+        with self.assertRaises(ValueError):
             self.all_updates.search(test_search_australia, likeness_score=0) #likeness_score=0
 
     # @unittest.skip("")
@@ -536,8 +547,9 @@ class ISO3166_Updates_Tests(unittest.TestCase):
 #1.) include_match_score=False returns a dict keyed by country code with no "Match Score" key in values
         result_no_score = self.all_updates.search("governorates", include_match_score=False)
         self.assertIsInstance(result_no_score, dict, "Expected dict return when include_match_score=False.")
-        for country_code, entry in result_no_score.items():
-            self.assertNotIn("Match Score", entry, f"Match Score key should not be present in entry for {country_code}.")
+        for country_code, entries in result_no_score.items():
+            for entry in entries:
+                self.assertNotIn("Match Score", entry, f"Match Score key should not be present in entry for {country_code}.")
 #2.) include_match_score=True (default) returns a list sorted by Match Score descending
         result_with_score = self.all_updates.search("parishes", likeness_score=80)
         self.assertIsInstance(result_with_score, list, "Expected list return when include_match_score=True.")
@@ -664,15 +676,19 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                     f"Expected update of object to be between the dates 1996-04-03 and 1996-05-03, got date {current_updates_date}.")   
         self.assertEqual(list(test_date_range5_updates), test_date_range5_updates_expected, 
             f"Expected and observed country code objects do not match:\n{list(test_date_range5_updates)}.")
-#6.)
+#6.) test_error_date_range1 and test_error_date_range2 are NOT errors — single date and DD-MM-YYYY are valid
+        test_date_range_single = self.all_updates.date_range(test_error_date_range1)
+        self.assertIsInstance(test_date_range_single, dict, "Expected single date input to return a dict of results.")
+        test_date_range_ddmmyyyy = self.all_updates.date_range(test_error_date_range2)
+        self.assertIsInstance(test_date_range_ddmmyyyy, dict, "Expected DD-MM-YYYY date input to return a dict of results.")
         with self.assertRaises(ValueError):
-            self.all_updates.date_range(test_error_date_range1)
-            self.all_updates.date_range(test_error_date_range2)
             self.all_updates.date_range(test_error_date_range3)
 #7.)
         with self.assertRaises(TypeError):
             self.all_updates.date_range(False)
+        with self.assertRaises(TypeError):
             self.all_updates.date_range(10.5)
+        with self.assertRaises(TypeError):
             self.all_updates.date_range(2390)
 
     # @unittest.skip("")
@@ -703,18 +719,26 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         self.all_updates.custom_update("NRU", custom_update_object=test_custom_updates_nauru, delete=1, save_new=True, save_new_filename=self.custom_updates_filepath)
         self.all_updates.custom_update("688", custom_update_object=test_custom_updates_serbia, delete=1, save_new=True, save_new_filename=self.custom_updates_filepath)
 #6.)
-        with self.assertRaises(ValueError): 
+        with self.assertRaises(ValueError):
             self.all_updates.custom_update("AA")
-            self.all_updates.custom_update(123)
-            self.all_updates.custom_update("SD", change=test_custom_updates_sudan)
+        with self.assertRaises(ValueError):
             self.all_updates.custom_update("TV", change="Brand new change", date_issued="2025-2025-2025")
+        with self.assertRaises(ValueError):
             self.all_updates.custom_update("SD", custom_update_object=test_custom_updates_sudan, save_new=True, save_new_filename=self.custom_updates_filepath)
+        with self.assertRaises(ValueError):
             self.all_updates.custom_update("TJ", custom_update_object=test_custom_updates_tajikistan, save_new=True, save_new_filename=self.custom_updates_filepath)
+        with self.assertRaises((ValueError, TypeError)):
+            self.all_updates.custom_update(123)
 #7.)
         with self.assertRaises(TypeError):
+            self.all_updates.custom_update("SD", change=test_custom_updates_sudan)
+        with self.assertRaises(TypeError):
             self.all_updates.custom_update("BE", change=123)
+        with self.assertRaises(TypeError):
             self.all_updates.custom_update("BE", change="Valid change", date_issued=False)
+        with self.assertRaises(TypeError):
             self.all_updates.custom_update("BE", change="Valid change", date_issued="Valid date", description_of_change=9.02)
+        with self.assertRaises(TypeError):
             self.all_updates.custom_update("BE", change="Valid change", date_issued="Valid date", description_of_change="Valid desc", source=100)
 
     # @unittest.skip("")
@@ -758,9 +782,17 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                     self.assertLessEqual(datetime.strptime(corrected_date, "%Y-%m-%d").date(), date.today(), f"Expected no future publication dates, got: {corrected_date}.")
 
     # @unittest.skip("")
+    @patch('iso3166_updates.iso3166_updates.requests.get')
     @patch('iso3166_updates.sys.stdout', new_callable=io.StringIO)
-    def test_check_for_updates(self, mock_stdout): 
+    def test_check_for_updates(self, mock_stdout, mock_get): 
         """ Testing functionality that pulls the latest object from repo and compares with object in current version of software. """
+        #build a minimal fake response that matches the shape expected by check_for_updates()
+        fake_json = {code: entries for code, entries in self.all_updates.all.items()}
+        mock_response = unittest.mock.MagicMock()
+        mock_response.json.return_value = fake_json
+        mock_response.raise_for_status.return_value = None
+        mock_get.return_value = mock_response
+
         result = self.all_updates.check_for_updates()
         
 #1.) Return type is a dict with the expected keys
@@ -897,9 +929,11 @@ class ISO3166_Updates_Tests(unittest.TestCase):
 #7.) Error cases
         with self.assertRaises(TypeError):
             self.all_updates.change_type(123)
+        with self.assertRaises(TypeError):
             self.all_updates.change_type(["addition"])
         with self.assertRaises(ValueError):
             self.all_updates.change_type("unknown_type")
+        with self.assertRaises(ValueError):
             self.all_updates.change_type("addition,badtype")
 
     # @unittest.skip("")

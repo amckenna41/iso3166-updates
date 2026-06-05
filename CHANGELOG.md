@@ -7,8 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.8.7] - 2026-05-18
 
+### Added
+- Added `_parse_date_issued(date_str)` private static method to the `Updates` class — centralises the parsing of raw `Date Issued` values (including the optional `(corrected YYYY-MM-DD)` parenthetical suffix) into a `datetime`; replaces duplicated inline `strptime` logic previously scattered across `year()` and other methods
+- Added Python 3.13 trove classifier to `pyproject.toml`
+- Expanded CI `build_test` Python version matrix from `["3.10", "3.11"]` to `["3.9", "3.10", "3.11", "3.12"]` to match the declared support range
+
 ### Fixed
+- Fixed `custom_update()` — `elif` chain for adding default values to optional fields (`Description of Change`, `Source`) in a `custom_update_object` meant that if both were absent only `Description of Change` was populated, causing a `KeyError` on `Source` when building the final record; changed both `elif` to `if` so each field is checked and defaulted independently
+- Fixed `custom_update()` — when adding an update to a country that currently has zero existing entries, the `for` loop never executed so `new_update_object` was never set to `True` and the new record was silently dropped; the update record is now pre-built and flagged for insertion before the loop, with the loop used solely for duplicate detection
+- Fixed `custom_update()` — loop-scoped `new_update_object` and `delete_object_found` flags were re-initialised on every iteration; both are now initialised once before the loop
+- Fixed `_parse_year_filter()` — regex `^1[0-9]{3}$|^2[0-9]{3}$` accepted any year from 1000–2999; added `int(y) < 1996` check after the regex so years before 1996 raise `ValueError`, consistent with the docstring and test assertions
+- Fixed `search()` — `likeness_score=0` was accepted by the guard `not (0 <= likeness_score <= 100)` but documented and tested as invalid (range is 1–100); changed bound to `not (1 <= likeness_score <= 100)`
+- Fixed `search()` — list comprehension `[item.pop("Match Score", None) for item in search_results]` used for its side effects; replaced with a plain `for` loop
+- Fixed `custom_update()` — calling `iso.custom_update("FR")` with no `custom_update_object` and no `change`/`date_issued` would silently add an empty record; added an upfront `ValueError` when `delete=False` and neither source of update data is provided
+- Fixed `convert_to_alpha2()` docstring — `Returns` section referenced the removed `iso3166` package (`iso3166.countries_by_alpha3[alpha3_code].alpha2`); updated to reference `pycountry`
+- Fixed `date_range()` — removed dead commented-out line `# if (start_date <= corrected_date.strftime("%Y-%m-%d") <= end_date):`
+- Fixed `AsyncUpdates.check_for_updates()` — replaced deprecated `asyncio.get_event_loop().run_in_executor()` with `asyncio.to_thread()`; updated class docstring to match
+- Fixed `Updates` class docstring — stale counts ("249 country's", "911 individual published updates") updated to reflect current dataset; stale entry removed
+- Fixed `stats()` docstring — hardcoded example values (`'total_updates': 911`, `'last_updated': '2025-07-22'`) replaced with approximate placeholders to avoid staleness
+- Fixed `test_updates_search_fuzzy` test #1 — `assertNotIn("Match Score", entry)` where `entry` was a `list` always passed vacuously; now correctly iterates into each update dict in the list
+- Fixed `test_check_for_updates` — test made one or two live HTTP requests on every run; `requests.get` is now patched with `unittest.mock.MagicMock` so the test is fast, deterministic, and network-independent
+- Fixed `test_updates_alpha`, `test_updates_year`, `test_updates_search`, `test_updates_date_range`, `test_custom_updates`, `test_change_type` — multiple calls inside single `with self.assertRaises()` blocks meant only the first call was ever exercised; each case now has its own `assertRaises` context
+- Fixed `test_updates_date_range` — `test_error_date_range1` (`"2019-08-16"`) and `test_error_date_range2` (`"05-10-2008"`) were incorrectly asserted as `ValueError` cases; single-date and DD-MM-YYYY inputs are valid per the implementation and are now tested as such
 - Corrected the version of `pycountry` used as a dependency
+- Security issue with current version of requests library, version bumped to `2.33.0`
+- Removed the legacy `iso3166` package from `pyproject.toml`; superseded by `pycountry`
+
 
 ## [1.8.6] - 2026-05-11
 

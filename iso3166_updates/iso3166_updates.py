@@ -5,7 +5,7 @@ import re
 import copy
 import asyncio
 from functools import lru_cache
-from datetime import datetime, timezone
+from datetime import datetime
 from importlib.metadata import version as _pkg_version
 from pycountry import countries
 import requests
@@ -35,8 +35,8 @@ class Updates():
     to import and use a secondary updates object, this can be done via the custom_updates_filepath
     input parameter.
 
-    Currently there are 249 country's listed in the updates json with updates dating from 1996 up
-    to the present year, with 911 individual published updates.
+    Currently there are 250 country's listed in the updates json with updates dating from 1996 up
+    to the present year.
 
     Parameters
     ==========
@@ -350,15 +350,10 @@ class Updates():
                 for update in self.all[code]:
 
                     #extract integer year from Date Issued, stripping corrected date parenthetical if applicable
-                    try:
-                        if ("corrected" in update["Date Issued"]):
-                            current_updates_year = int(datetime.strptime(re.sub("[(].*[)]", "", update["Date Issued"]).replace(' ', "").
-                                                            replace(".", '').replace('\n', ''), '%Y-%m-%d').year)
-                        else:
-                            current_updates_year = int(datetime.strptime(update["Date Issued"].replace('\n', ''), '%Y-%m-%d').year)
-                    except ValueError:
-                        #skip entry if Date Issued value cannot be parsed into expected format
+                    parsed = Updates._parse_date_issued(update["Date Issued"])
+                    if parsed is None:
                         continue
+                    current_updates_year = parsed.year
 
                     #exclude rows matching the input year/years
                     if (year_not_equal):
@@ -486,7 +481,6 @@ class Updates():
 
                 #check if the corrected date falls within the input range
                 if (corrected_date):
-                    # if (start_date <= corrected_date.strftime("%Y-%m-%d") <= end_date):
                     if (start_date <= corrected_date <= end_date):
                         if not (update_added):
                             filtered_changes.append(update)
@@ -589,7 +583,7 @@ class Updates():
             raise TypeError(f"Input search term should be of type str, got {type(search_term)}.")
 
         #raise error if invalid (1-100) likeness score input
-        if not (0 <= likeness_score <= 100):
+        if not (1 <= likeness_score <= 100):
             raise ValueError(f"Likeness score must be between 1 and 100, got {likeness_score}.")
 
         #split search terms into comma separated list 
@@ -647,7 +641,8 @@ class Updates():
         
         #if include_match_score=False, strip scores and return dict sorted by country code
         if not (include_match_score):
-            [item.pop("Match Score", None) for item in search_results]
+            for item in search_results:
+                item.pop("Match Score", None)
 
             #group results by country code, preserving all matches per country
             temp_search_results = {}
@@ -801,23 +796,34 @@ class Updates():
         if (custom_update_object):
             if not all(element in custom_update_object for element in ["Change", "Date Issued"]):
                 raise ValueError("If inputting a custom updates object, the Change and Date Issued attributes are required.")
-            elif not ("Description of Change" in custom_update_object):
+            if not ("Description of Change" in custom_update_object):
                 custom_update_object["Description of Change"] = ""
-            elif not ("Source" in custom_update_object):
+            if not ("Source" in custom_update_object):
                 custom_update_object["Source"] = ""
+
+        #raise error if not deleting and neither custom_update_object nor change+date_issued are provided
+        if not delete and not custom_update_object and not (change and date_issued):
+            raise ValueError("When adding a custom update, either 'custom_update_object' or both 'change' and 'date_issued' parameters must be provided.")
 
         #get all updates data for current country updates
         all_updates_data = self.all[alpha_code]
 
-        #store parsed and validated custom updates
-        custom_updates_data = {}
+        #pre-build the new update record and mark as ready-to-add; the loop below will
+        #clear this flag if a duplicate is detected or set delete_object_found on success
+        if not delete:
+            if custom_update_object:
+                custom_updates_data = {key: custom_update_object[key] for key in ['Change', 'Description of Change', 'Date Issued', 'Source']}
+            else:
+                custom_updates_data = {"Change": change, "Date Issued": date_issued, "Description of Change": description_of_change, "Source": source}
+            new_update_object = True
+        else:
+            custom_updates_data = {}
+            new_update_object = False
+
+        delete_object_found = False
 
         #iterate over all current updates for country code
         for i, entry_data in enumerate(all_updates_data):
-            
-            #bool to track if custom updates are valid and should be added to the existing object
-            new_update_object = False
-            delete_object_found = False
 
             #delete update if delete parameter set, iterate over each update for country code and delete matching, raise error if no match found
             if (delete):
@@ -837,27 +843,15 @@ class Updates():
                         break
             else:
                 if (custom_update_object):
-                    #if existing update found in object raise error 
+                    #if existing update found in object raise error
                     if (entry_data['Change'].strip().lower() == custom_update_object['Change'].strip().lower() and
                         entry_data['Date Issued'].strip() == custom_update_object['Date Issued'].strip()):
                         raise ValueError(f"Custom updates object should be unique and not already present an existing update: {custom_update_object}.")
-
-                    #create object of new data to be added, reorder attributes
-                    custom_updates_data = {key: custom_update_object[key] for key in ['Change', 'Description of Change', 'Date Issued', 'Source']}
-
-                    #new object valid and can be added to updates object
-                    new_update_object = True
                 else:
-                    #if existing update found in object raise error 
+                    #if existing update found in object raise error
                     if (entry_data['Change'].strip().lower() == change.strip().lower() and
                         entry_data['Date Issued'].strip() == date_issued.strip()):
                         raise ValueError(f"Custom updates object should be unique and not already present an existing code: {change}.")
-
-                    #create object of new data to be added from input parameters, reorder attributes
-                    custom_updates_data = {"Change": change, "Date Issued": date_issued, "Description of Change": description_of_change, "Source": source}  
-
-                    #new object valid and can be added to updates object
-                    new_update_object = True
 
         #add new object to main class object
         if (new_update_object):
@@ -1145,12 +1139,12 @@ class Updates():
         iso = Updates()
         iso.stats()
         # {
-        #   'total_updates': 911,
-        #   'total_countries': 250,
-        #   'year_range': [1996, 2025],
+        #   'total_updates': <n>,          # approximate — grows over time
+        #   'total_countries': <n>,
+        #   'year_range': [1996, <current_year>],
         #   'most_updated_country': 'FR',
         #   'most_common_change_type': 'addition',
-        #   'last_updated': '2025-07-22'
+        #   'last_updated': '<YYYY-MM-DD>'   # approximate — updated with new data
         # }
         """
         total_updates = 0
@@ -1242,6 +1236,22 @@ class Updates():
             json.dump(self.all, f, ensure_ascii=False, indent=4)
 
     @staticmethod
+    def _parse_date_issued(date_str: str):
+        """
+        Parse a raw ``Date Issued`` field value into a datetime, handling the optional
+        ``(corrected YYYY-MM-DD)`` parenthetical suffix.  Returns None if the value
+        cannot be parsed.
+        """
+        try:
+            if "corrected" in date_str:
+                cleaned = re.sub(r"[(].*[)]", "", date_str).replace(" ", "").replace(".", "").replace("\n", "")
+            else:
+                cleaned = date_str.replace("\n", "")
+            return datetime.strptime(cleaned, "%Y-%m-%d")
+        except ValueError:
+            return None
+
+    @staticmethod
     def _parse_year_filter(input_year: list) -> tuple:
         """
         Parse year filter input and return the processed year list with mode flags.
@@ -1269,6 +1279,8 @@ class Updates():
                 if not y:
                     continue
                 if not re.match(r"^1[0-9]{3}$|^2[0-9]{3}$", y):
+                    raise ValueError(f"Invalid year input, must be a valid year >= 1996, got {year_}.")
+                elif int(y) < 1996:
                     raise ValueError(f"Invalid year input, must be a valid year >= 1996, got {year_}.")
 
         #a '-' separating 2 years implies a year range
@@ -1322,9 +1334,9 @@ class Updates():
         
         Returns
         =======
-        :iso3166.countries_by_alpha3[alpha3_code].alpha2: str | None
-            2 letter ISO 3166 alpha-2 country code. None returned
-            if input cannot be converted.
+        :alpha2_code: str | None
+            2 letter ISO 3166 alpha-2 country code, looked up via pycountry.
+            None returned if input cannot be converted.
         
         Raises
         ======
@@ -1517,9 +1529,9 @@ class AsyncUpdates:
     ``change_type``, ``last_updated``) delegate synchronously because
     they operate entirely in-memory.  The ``check_for_updates`` method is
     genuinely async — it performs an HTTP fetch using ``asyncio`` with the
-    standard library's ``asyncio.get_event_loop().run_in_executor`` pattern so it
-    does not block the calling event loop, making it safe to use inside FastAPI,
-    aiohttp, and similar frameworks.
+    standard library's ``asyncio.to_thread`` helper so it does not block the
+    calling event loop, making it safe to use inside FastAPI, aiohttp, and
+    similar frameworks.
 
     Parameters
     ==========
@@ -1603,10 +1615,8 @@ class AsyncUpdates:
         :dict
             Structured diff dict — same shape as :meth:`Updates.check_for_updates`.
         """
-        loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(
-            None,
-            lambda: self._updates.check_for_updates(since_date=since_date, since_version=since_version),
+        return await asyncio.to_thread(
+            self._updates.check_for_updates, since_date=since_date, since_version=since_version
         )
 
     def __len__(self) -> int:

@@ -555,6 +555,6 @@ Support
 [selenium]: https://selenium-python.readthedocs.io/index.html
 [webdriver-manager]: https://pypi.org/project/webdriver-manager/
 [lxml]: https://lxml.de/
-[updates_md]: https://github.com/amckenna41/iso3166-updates/blob/main/UPDATES.md
+[updates_md]: https://github.com/amckenna41/iso3166-updates/blob/main/UPDATES.MD
 [PyPi]: https://pypi.org/project/iso3166-updates/
 [Issues]: https://github.com/amckenna41/iso3166-updates/issues
