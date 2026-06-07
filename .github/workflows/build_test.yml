@@ -43,7 +43,7 @@ jobs:
       uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }} #install python version
-    - uses: nanasess/setup-chromedriver@v2
+    - uses: nanasess/setup-chromedriver@v3
 
     #install all required modules and dependencies using pip and requirements.txt file
     - name: Install dependencies
