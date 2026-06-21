@@ -31,7 +31,7 @@ jobs:
             os: [ubuntu-latest, macos-latest]
             python-version: ["3.9", "3.10", "3.11", "3.12"]   #testing on multiple python versions
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Cache pip dependencies
       uses: actions/cache@v5
       with:
@@ -87,7 +87,7 @@ jobs:
             os: [ubuntu-latest]
             python-version: ["3.10"]   #testing on multiple python versions
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Cache pip dependencies
       uses: actions/cache@v5
       with:
@@ -141,7 +141,7 @@ jobs:
     steps:
       #checkout repo
       - name: Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       #install all required modules and dependencies using pip installation
       - name: Install dependencies
@@ -181,7 +181,7 @@ jobs:
     steps:
       #Checkout repo
       - name: Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       #Install dependencies
       - name: Install dependencies
@@ -207,7 +207,7 @@ jobs:
 
       #Upload coverage report to Codecov
       - name: Upload Coverage to Codecov
-        # uses: actions/checkout@v6
+        # uses: actions/checkout@v7
         uses: codecov/codecov-action@v7
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
