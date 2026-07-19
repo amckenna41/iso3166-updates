@@ -1975,20 +1975,7 @@
             "Source": "Newsletter I-2 - https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf."
         }
     ],
-    "GF": [
-        {
-            "Change": "Modification of remark part 2. (Remark part 2: No subdivisions relevant for this standard. Included also as subdivision of France (FR-973)).",
-            "Description of Change": "",
-            "Date Issued": "2022-11-29",
-            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:GF."
-        },
-        {
-            "Change": "Modification of remark part 2. (Remark part 2: No subdivisions relevant for this standard. Included also as subdivision of France (FR-973)).",
-            "Description of Change": "",
-            "Date Issued": "2018-11-26",
-            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:GF."
-        }
-    ],
+    "GF": [],
     "GG": [
         {
             "Change": "Modification of remark part 2. (Remark part 2: No subdivisions relevant for this standard).",
@@ -3020,12 +3007,6 @@
             "Change": "Update List Source.",
             "Description of Change": "",
             "Date Issued": "2014-11-03",
-            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:KN."
-        },
-        {
-            "Change": "",
-            "Description of Change": "",
-            "Date Issued": "2013-08-22",
             "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:KN."
         },
         {
@@ -5847,7 +5828,6 @@
             "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:WS."
         }
     ],
-    "XK": [],
     "YE": [
         {
             "Change": "Correction of the Code Source.",
