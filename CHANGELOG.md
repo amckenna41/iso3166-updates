@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.8] - 2026-07-20
+
+### Fixed
+- Fixed `iso3166_check_for_updates/requirements.txt` — the line `emoji-country-flag>=2.1.0,<3.0.0selenium` was missing a newline, making it an invalid version specifier that caused `pip install -r` to fail and silently dropped `selenium` as a dependency; split into two separate requirements
+- Fixed `check_for_updates()` (Cloud Run entry point) — `latest_commit_date` could be referenced while unbound (`NameError`) when the GitHub commit lookup returned no commits; the lookup path was also incorrect (`iso3166-updates.json` rather than `iso3166_updates/iso3166-updates.json`), which is what caused the empty result. Corrected the path and added a `None` guard/default with an informative message
+- Fixed `check_for_updates.py` — added a missing `import re`; `re` was previously only available by accident via a leaked `from iso3166_updates import *` star-import
+- Fixed `Updates.date_range()` — a single record with an unparseable `Date Issued` value would raise an uncaught `ValueError` and abort the entire call; both the filter and the sort paths now skip malformed dates, consistent with `year()`, `last_updated` and `stats()`
+- Fixed the `Iso31663` class docstring and `README.md` — the ISO 3166-3 code count was stated as **73**, but the bundled `iso3166-3.json` contains **31** formerly used codes; corrected both to 31
+- Fixed `MANIFEST.in` — added `iso3166_updates/iso3166-3.json` and `iso3166_updates/py.typed`, which were not listed (only `iso3166-updates.json` was)
+
+### Changed
+- Added `__all__ = ["Updates", "AsyncUpdates", "Iso31663", "Map"]` to `iso3166_updates.py` so `from iso3166_updates import *` (as documented in the README) exports only the public classes and no longer leaks internal imports (`os`, `sys`, `re`, `json`, `copy`, `asyncio`, `requests`, `datetime`, `fuzz`, `countries`, `lru_cache`) into the caller's namespace
+- Changed `Updates.stats()` — `most_updated_country` now computes `max(updates_per_country.values())` once instead of recomputing it for every country in a generator (O(n²) → O(n))
+
+### Tests
+- Added `import re` to `tests/test_iso3166_updates.py` (previously relied on the leaked star-import name)
+- Updated mock patch targets in `tests/test_iso3166_updates.py` from `iso3166_updates.sys.stdout` to `iso3166_updates.iso3166_updates.sys.stdout` to reflect the new `__all__` (the package namespace no longer re-exports `sys`)
+- Added `test_package_exports` — asserts `__all__` lists only the public classes and that internal imports are not leaked
+- Added `test_date_range_malformed_date` — asserts `date_range()` skips records with an unparseable `Date Issued` (across both the unsorted and sorted code paths) instead of raising
+- Strengthened `test_iso31663` — now asserts the bundled dataset contains exactly 31 entries rather than merely being non-empty
+
 ## [1.8.7] - 2026-05-18
 
 ### Added

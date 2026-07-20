@@ -166,6 +166,9 @@ iso3166-updates_2025-07-24_master_original.json
 iso3166-updates_2025-07-24_master.json
 
 iso3166_updates_export/test-iso3166-updates/
+test-iso3166-updates/
 
 test-iso3166-updates.csv
 test-iso3166-updates.xml
+
+.claude/

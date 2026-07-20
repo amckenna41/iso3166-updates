@@ -295,7 +295,7 @@ class Updates_Api_Tests(unittest.TestCase):
                                 'CL': 4, 'CM': 2, 'CN': 6, 'CO': 2, 'CR': 2, 'CU': 2, 'CV': 6, 'CW': 3, 'CX': 1, 
                                 'CY': 5, 'CZ': 10, 'DE': 4, 'DJ': 6, 'DK': 1, 'DM': 3, 'DO': 6, 'DZ': 4, 'EC': 3, 
                                 'EE': 3, 'EG': 4, 'EH': 1, 'ER': 7, 'ES': 9, 'ET': 7, 'FI': 3, 'FJ': 6, 'FK': 1, 
-                                'FM': 4, 'FO': 1, 'FR': 11, 'GA': 2, 'GB': 13, 'GD': 4, 'GE': 5, 'GF': 2, 'GG': 4, 
+                                'FM': 4, 'FO': 1, 'FR': 11, 'GA': 2, 'GB': 13, 'GD': 4, 'GE': 5, 'GF': 0, 'GG': 4, 
                                 'GH': 4, 'GI': 1, 'GL': 3, 'GM': 5, 'GN': 5, 'GP': 3, 'GQ': 3, 'GR': 8, 'GS': 1, 
                                 'GT': 4, 'GU': 1, 'GW': 2, 'GY': 3, 'HK': 2, 'HM': 1, 'HN': 1, 'HR': 3, 'HT': 3, 
                                 'HU': 4, 'ID': 13, 'IE': 4, 'IL': 5, 'IM': 2, 'IN': 9, 'IO': 1, 'IQ': 5, 'IR': 8, 
@@ -630,7 +630,7 @@ class Updates_Api_Tests(unittest.TestCase):
         #expected key outputs
         test_year_gt_2017_keys = ['AF', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AS', 'AW', 'AX', 'BA', 'BD', 'BG', 'BI', 'BJ', 'BL', 'BM', 'BN', 'BO', 
                                   'BQ', 'BR', 'BS', 'BT', 'BV', 'BW', 'BY', 'CC', 'CD', 'CH', 'CI', 'CK', 'CL', 'CN', 'CV', 'CW', 'CX', 'CY', 
-                                  'CZ', 'DE', 'DJ', 'DZ', 'EC', 'EE', 'EH', 'ER', 'ES', 'ET', 'FI', 'FK', 'FM', 'FO', 'FR', 'GB', 'GE', 'GF', 
+                                  'CZ', 'DE', 'DJ', 'DZ', 'EC', 'EE', 'EH', 'ER', 'ES', 'ET', 'FI', 'FK', 'FM', 'FO', 'FR', 'GB', 'GE', 
                                   'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GW', 'GY', 'HK', 'HM', 'HU', 'ID', 
                                   'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT', 'JE', 'JP', 'KG', 'KH', 'KM', 'KP', 'KR', 'KY', 'KZ', 'LA', 
                                   'LB', 'LK', 'LS', 'LT', 'LV', 'LY', 'MA', 'MC', 'MD', 'ME', 'MF', 'MH', 'MK', 'ML', 'MM', 'MN', 'MO', 'MP', 
@@ -699,7 +699,7 @@ class Updates_Api_Tests(unittest.TestCase):
         test_year_lt_2002_keys = ['AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AW', 'AX', 'AZ', 'BA', 'BB', 'BD', 'BE', 'BF', 'BG', 
                                   'BH', 'BI', 'BJ', 'BL', 'BM', 'BN', 'BO', 'BQ', 'BR', 'BS', 'BT', 'BV', 'BW', 'BY', 'BZ', 'CA', 'CC', 'CD', 'CF', 'CG', 'CH', 'CI', 
                                   'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ', 'DE', 'DJ', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'EH', 'ER', 
-                                  'ES', 'ET', 'FI', 'FJ', 'FK', 'FM', 'FO', 'FR', 'GA', 'GB', 'GD', 'GE', 'GF', 'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 
+                                  'ES', 'ET', 'FI', 'FJ', 'FK', 'FM', 'FO', 'FR', 'GA', 'GB', 'GD', 'GE', 'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 
                                   'GS', 'GT', 'GU', 'GW', 'GY', 'HK', 'HM', 'HR', 'HT', 'HU', 'ID', 'IE', 'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT', 'JE', 'JM', 
                                   'JO', 'JP', 'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 'KP', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB', 'LC', 'LI', 'LK', 'LR', 'LT', 'LU', 'LV', 
                                   'LY', 'MA', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK', 'ML', 'MM', 'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 
@@ -1108,7 +1108,7 @@ class Updates_Api_Tests(unittest.TestCase):
             f"Expected and observed country code objects do not match:\n{list(test_request_date_range2)}.")
 #3.)
         test_request_date_range3 = requests.get(self.date_range_url + test_date_range3, headers=self.user_agent_header).json()["data"] #2022-01-01
-        test_request_date_range3_expected = ['BO', 'BS', 'CI', 'DZ', 'ET', 'FI', 'FM', 'GB', 'GF', 'GP', 'ID', 'IN', 'IQ', 'IR', 'IS', 'KP', 'KR', 
+        test_request_date_range3_expected = ['BO', 'BS', 'CI', 'DZ', 'ET', 'FI', 'FM', 'GB', 'GP', 'ID', 'IN', 'IQ', 'IR', 'IS', 'KP', 'KR', 
                                              'KZ', 'ME', 'MQ', 'MX', 'NL', 'NP', 'NZ', 'PA', 'PH', 'PL', 'RE', 'SI', 'TR', 'VE', 'YT']
 
         for country_code, updates in test_request_date_range3.items():

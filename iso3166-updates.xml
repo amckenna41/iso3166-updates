@@ -1976,20 +1976,6 @@
       <Source>Newsletter I-2 - https://web.archive.org/web/20120131102127/http://www.iso.org/iso/iso_3166-2_newsletter_i-2_en.pdf.</Source>
     </Update>
   </Country>
-  <Country code="GF">
-    <Update>
-      <Change>Modification of remark part 2. (Remark part 2: No subdivisions relevant for this standard. Included also as subdivision of France (FR-973)).</Change>
-      <Description_of_Change/>
-      <Date_Issued>2022-11-29</Date_Issued>
-      <Source>Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:GF.</Source>
-    </Update>
-    <Update>
-      <Change>Modification of remark part 2. (Remark part 2: No subdivisions relevant for this standard. Included also as subdivision of France (FR-973)).</Change>
-      <Description_of_Change/>
-      <Date_Issued>2018-11-26</Date_Issued>
-      <Source>Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:GF.</Source>
-    </Update>
-  </Country>
   <Country code="GG">
     <Update>
       <Change>Modification of remark part 2. (Remark part 2: No subdivisions relevant for this standard).</Change>

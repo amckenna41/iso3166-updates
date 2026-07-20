@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 import iso3166
 import os
+import re
 import json
 import flag
 from datetime import datetime
@@ -87,21 +88,26 @@ def check_for_updates_main() -> tuple[dict, int]:
     #parse 8 of the main env vars required for normal app execution, validating them & assigning default values if they aren't set
     month_range, export_json, export_csv, export_xml, bucket_name, blob_name, create_issue, use_proxy = parse_env_vars()
 
-    #get last date that iso3166-updates.json object was updated on the repo, using github client and library 
+    #get last date that iso3166-updates.json object was updated on the repo, using github client and library
     github_client = Github()
     repo = github_client.get_repo("amckenna41/iso3166-updates")
-    commits = repo.get_commits(path='iso3166-updates.json')
+    #the data file lives at iso3166_updates/iso3166-updates.json in the repo
+    commits = repo.get_commits(path='iso3166_updates/iso3166-updates.json')
+    latest_commit_date = None
     if (commits.totalCount):
         latest_commit_date = datetime.strptime(commits[0].commit.committer.date.strftime('%Y-%m-%d'), "%Y-%m-%d")
-    
+
     #date difference between current date and date object was last updated, print out difference in months
-    date_diff = relativedelta(current_datetime, latest_commit_date)
-    if (date_diff.months < 1):
-        print(f"The iso3166-updates.json object was last updated less than a month ago on: {latest_commit_date.strftime('%Y-%m-%d')}.")
-    elif (date_diff.months == 1):
-        print(f"The iso3166-updates.json object was last updated {date_diff.months} month ago on: {latest_commit_date.strftime('%Y-%m-%d')}.")
+    if (latest_commit_date is None):
+        print("Could not determine when the iso3166-updates.json object was last updated on the repo.")
     else:
-        print(f"The iso3166-updates.json object was last updated {date_diff.months} months ago on: {latest_commit_date.strftime('%Y-%m-%d')}.")
+        date_diff = relativedelta(current_datetime, latest_commit_date)
+        if (date_diff.months < 1):
+            print(f"The iso3166-updates.json object was last updated less than a month ago on: {latest_commit_date.strftime('%Y-%m-%d')}.")
+        elif (date_diff.months == 1):
+            print(f"The iso3166-updates.json object was last updated {date_diff.months} month ago on: {latest_commit_date.strftime('%Y-%m-%d')}.")
+        else:
+            print(f"The iso3166-updates.json object was last updated {date_diff.months} months ago on: {latest_commit_date.strftime('%Y-%m-%d')}.")
 
     #call get_updates function to scrape all the latest country updates from data sources
     latest_iso3166_updates = get_iso3166_updates(export_json=export_json, export_csv=export_csv, export_xml=export_xml, use_proxy=use_proxy)

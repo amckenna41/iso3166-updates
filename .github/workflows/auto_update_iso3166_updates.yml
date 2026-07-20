@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v6
@@ -51,8 +51,8 @@ jobs:
             --export_folder /tmp/iso3166-updates-output \
             --export_filename iso3166-updates \
             --export_json \
-            --no-export_csv \
-            --no-export_xml \
+            --export_csv \
+            --export_xml \
             --save_each_iteration \
             --verbose
 
@@ -128,11 +128,25 @@ jobs:
           total_removed = sum(len(v) for v in removed_entries.values())
           today = date.today().isoformat()
 
+          # Determine current package version from pyproject.toml and bump the patch component by one
+          import re
+          with open("pyproject.toml", "r", encoding="utf-8") as f:
+              pyproject_text = f.read()
+          version_match = re.search(r'^version\s*=\s*"(\d+)\.(\d+)\.(\d+)"', pyproject_text, re.MULTILINE)
+          if not version_match:
+              print("ERROR: Could not find version in pyproject.toml")
+              sys.exit(1)
+          major, minor, patch = version_match.group(1), version_match.group(2), version_match.group(3)
+          old_version = f"{major}.{minor}.{patch}"
+          new_version = f"{major}.{minor}.{int(patch) + 1}"
+
           # Build markdown PR body
           lines = []
           lines.append("## ISO 3166 Updates — Automated Data Refresh")
           lines.append("")
           lines.append(f"**Date generated:** {today}")
+          lines.append("")
+          lines.append(f"**Version bump:** `{old_version}` → `{new_version}`")
           lines.append("")
           lines.append("This pull request was automatically created by the [Auto Update ISO 3166 Data]"
                        "(.github/workflows/auto_update_iso3166_updates.yml) workflow. The newly exported "
@@ -215,11 +229,43 @@ jobs:
           with open("/tmp/pr_body.md", "w", encoding="utf-8") as f:
               f.write(pr_body)
 
+          # Build a CHANGELOG.md entry summarising the relevant changes found
+          cl = []
+          cl.append(f"## [{new_version}] - {today}")
+          cl.append("")
+          cl.append("### Data")
+          cl.append(f"- Automated refresh of `iso3166-updates.json`: "
+                    f"{total_added} new entry(ies) across {len(added_entries)} country(ies), "
+                    f"{total_removed} removed entry(ies) across {len(removed_entries)} country(ies)")
+          if new_countries:
+              cl.append(f"- New country codes: {', '.join(new_countries)}")
+          if removed_countries:
+              cl.append(f"- Removed country codes: {', '.join(removed_countries)}")
+
+          def summarise(entries):
+              dates = [e.get("Date Issued", "").strip() for e in entries if e.get("Date Issued", "").strip()]
+              return f" ({', '.join(dates)})" if dates else ""
+
+          for code in sorted(set(added_entries) | set(removed_entries)):
+              parts = []
+              if code in added_entries:
+                  parts.append(f"{len(added_entries[code])} added{summarise(added_entries[code])}")
+              if code in removed_entries:
+                  parts.append(f"{len(removed_entries[code])} removed{summarise(removed_entries[code])}")
+              cl.append(f"- **{code}**: {'; '.join(parts)}")
+          cl.append("")
+          cl.append("")
+
+          with open("/tmp/changelog_entry.md", "w", encoding="utf-8") as f:
+              f.write("\n".join(cl))
+
           # Write GitHub Actions output
           with open(os.environ["GITHUB_OUTPUT"], "a") as gh_out:
               gh_out.write("has_changes=true\n")
+              gh_out.write(f"old_version={old_version}\n")
+              gh_out.write(f"new_version={new_version}\n")
               # Create a short one-line title
-              gh_out.write(f"pr_title=chore: automated ISO 3166 data update ({today})\n")
+              gh_out.write(f"pr_title=chore: automated ISO 3166 data update, bump to v{new_version} ({today})\n")
           PYEOF
 
       - name: Copy updated JSON files into repository
@@ -227,13 +273,71 @@ jobs:
         run: |
           cp /tmp/iso3166-updates-output/iso3166-updates.json iso3166_updates/iso3166-updates.json
           cp /tmp/iso3166-updates-output/iso3166-updates.json tests/test-iso3166-updates.json
+          cp /tmp/iso3166-updates-output/iso3166-updates.csv iso3166-updates.csv
+          cp /tmp/iso3166-updates-output/iso3166-updates.xml iso3166-updates.xml
+
+      - name: Prepend changelog entry
+        if: steps.compare.outputs.has_changes == 'true'
+        run: |
+          python3 - <<'PYEOF'
+          with open("/tmp/changelog_entry.md", encoding="utf-8") as f:
+              entry = f.read()
+
+          with open("CHANGELOG.md", encoding="utf-8") as f:
+              content = f.read()
+
+          # Insert the new entry above the first existing versioned entry
+          marker = content.find("\n## [")
+          if marker == -1:
+              new_content = content.rstrip() + "\n\n" + entry
+          else:
+              new_content = content[:marker + 1] + entry + content[marker + 1:]
+
+          with open("CHANGELOG.md", "w", encoding="utf-8") as f:
+              f.write(new_content)
+          PYEOF
+
+      - name: Bump version number across repository
+        if: steps.compare.outputs.has_changes == 'true'
+        env:
+          OLD_VERSION: ${{ steps.compare.outputs.old_version }}
+          NEW_VERSION: ${{ steps.compare.outputs.new_version }}
+        run: |
+          python3 - <<'PYEOF'
+          import os
+
+          old_version = os.environ["OLD_VERSION"]
+          new_version = os.environ["NEW_VERSION"]
+
+          # Files where the current package version is referenced and must be kept in sync.
+          # CHANGELOG.md is intentionally excluded - it holds historical version headings.
+          version_files = [
+              "pyproject.toml",
+              "docs/conf.py",
+              "docs/index.rst",
+              "tests/test_iso3166_updates.py",
+          ]
+
+          for path in version_files:
+              if not os.path.exists(path):
+                  print(f"WARNING: {path} not found, skipping")
+                  continue
+              with open(path, "r", encoding="utf-8") as f:
+                  content = f.read()
+              if old_version not in content:
+                  print(f"WARNING: version {old_version} not found in {path}, skipping")
+                  continue
+              with open(path, "w", encoding="utf-8") as f:
+                  f.write(content.replace(old_version, new_version))
+              print(f"Bumped {path}: {old_version} -> {new_version}")
+          PYEOF
 
       - name: Create Pull Request
         if: steps.compare.outputs.has_changes == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: update iso3166-updates.json with latest ISO 3166 data"
+          commit-message: "chore: update iso3166-updates.json and bump to v${{ steps.compare.outputs.new_version }}"
           branch: auto-update/iso3166-updates-${{ github.run_id }}
           delete-branch: true
           title: ${{ steps.compare.outputs.pr_title }}

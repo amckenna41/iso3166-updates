@@ -12,6 +12,10 @@ from pycountry import countries
 import requests
 from thefuzz import fuzz
 
+#public API of the package; prevents `from iso3166_updates import *` from leaking
+#internal imports (os, sys, re, json, requests, etc.) into the caller's namespace
+__all__ = ["Updates", "AsyncUpdates", "Iso31663", "Map"]
+
 @lru_cache(maxsize=None)
 def _load_updates_json(filepath: str) -> dict:
     """Load and cache the ISO 3166 updates JSON, keyed by filepath to avoid repeated disk I/O."""
@@ -464,9 +468,12 @@ class Updates():
             filtered_changes = []
             for update in updates:
 
-                #parse the original publication date from attribute
-                original_date_str = update["Date Issued"].split(" ")[0]  
-                original_date = datetime.strptime(original_date_str, "%Y-%m-%d")
+                #parse the original publication date from attribute, skip row if it can't be parsed
+                original_date_str = update["Date Issued"].split(" ")[0]
+                try:
+                    original_date = datetime.strptime(original_date_str, "%Y-%m-%d")
+                except ValueError:
+                    continue
 
                 #extract corrected date from parenthetical in Date Issued, if present
                 corrected_date_match = re.search(r"\(.*?(\d{4}-\d{2}-\d{2}).*?\)", update["Date Issued"])
@@ -504,11 +511,14 @@ class Updates():
                     #temp var of updates object, append Country Code
                     update_with_code = {"Country Code": country_code, **update_with_code}
 
-                    #parse the original publication date from attribute
-                    original_date_str = update["Date Issued"].split(" ")[0]  
-                    original_date = datetime.strptime(original_date_str, "%Y-%m-%d")
+                    #parse the original publication date from attribute, skip row if it can't be parsed
+                    original_date_str = update["Date Issued"].split(" ")[0]
+                    try:
+                        original_date = datetime.strptime(original_date_str, "%Y-%m-%d")
+                    except ValueError:
+                        continue
 
-                    #create new parsed date attribute for sorting 
+                    #create new parsed date attribute for sorting
                     update_with_code["sortable_date"] = original_date
                     
                     #append object to list
@@ -1175,9 +1185,12 @@ class Updates():
                     if pattern.search(combined):
                         change_type_counts[ctype] += 1
 
-        most_updated_country = min(
-            (code for code in updates_per_country if updates_per_country[code] == max(updates_per_country.values())),
-        ) if updates_per_country else ""
+        #alpha-2 code with the most updates, ties broken alphabetically (max computed once)
+        if updates_per_country:
+            max_updates = max(updates_per_country.values())
+            most_updated_country = min(code for code in updates_per_country if updates_per_country[code] == max_updates)
+        else:
+            most_updated_country = ""
 
         if change_type_counts and max(change_type_counts.values()) > 0:
             most_common = max(change_type_counts, key=lambda k: (change_type_counts[k], k))
@@ -1646,8 +1659,8 @@ class Iso31663:
 
     ISO 3166-3 defines alpha-4 codes for countries and territories that were once
     listed in ISO 3166-1 but have since been deleted (e.g. ``DDDE`` for the German
-    Democratic Republic, ``YUCS`` for the former Yugoslavia).  As of April 2024
-    there are **73** codes defined in the standard.
+    Democratic Republic, ``YUCS`` for the former Yugoslavia).  The bundled dataset
+    contains **31** formerly used alpha-4 codes.
 
     The dataset is bundled with the package as ``iso3166-3.json`` and is loaded
     lazily on first access.
@@ -1656,7 +1669,7 @@ class Iso31663:
     ==========
     :alpha4_code: str (default="")
         One or more comma-separated ISO 3166-3 alpha-4 codes to filter on
-        (e.g. ``"DDDE"``, ``"DDDE,YUCS"``).  If empty, all 73 entries are loaded.
+        (e.g. ``"DDDE"``, ``"DDDE,YUCS"``).  If empty, all 31 entries are loaded.
 
     Attributes
     ==========

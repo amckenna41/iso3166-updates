@@ -7,6 +7,7 @@ import jsonschema
 import shutil
 import json
 import os
+import re
 from datetime import date
 import unittest
 from unittest.mock import patch
@@ -75,8 +76,8 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("Skipping metadata unit tests.")    
     def test_iso3166_updates_metadata(self): 
         """ Testing correct iso3166-updates software version and metadata. """
-        self.assertEqual(metadata('iso3166-updates')['version'], "1.8.7", 
-            f"iso3166-updates version is not correct, expected 1.8.7, got {metadata('iso3166-updates')['version']}.")
+        self.assertEqual(metadata('iso3166-updates')['version'], "1.8.8",
+            f"iso3166-updates version is not correct, expected 1.8.8, got {metadata('iso3166-updates')['version']}.")
         self.assertEqual(metadata('iso3166-updates')['name'], "iso3166-updates", 
             f"iso3166-updates software name is not correct, expected iso3166-updates, got {metadata('iso3166-updates')['name']}.")
         # self.assertEqual(metadata('iso3166-updates')['author'], "AJ McKenna", 
@@ -140,7 +141,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             self.assertIsNotNone(countries.get(alpha_2=iso_code),
                     f"Alpha-2 code {iso_code} not found in list of available codes.")
 #2.)
-        iso3166_updates_empty = ["MZ", "PY", "SK", "VU", "XK"]  #testing only these country updates objects have empty arrays
+        iso3166_updates_empty = ["GF", "MZ", "PY", "SK", "VU", "XK"]  #testing only these country updates objects have empty arrays
         for iso_code in test_all_updates:
              if (test_all_updates[iso_code] == []):
                   self.assertTrue(iso_code in iso3166_updates_empty, 
@@ -166,7 +167,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                                 'CL': 4, 'CM': 2, 'CN': 6, 'CO': 2, 'CR': 2, 'CU': 2, 'CV': 6, 'CW': 3, 'CX': 1, 
                                 'CY': 5, 'CZ': 10, 'DE': 4, 'DJ': 6, 'DK': 1, 'DM': 3, 'DO': 6, 'DZ': 4, 'EC': 3, 
                                 'EE': 3, 'EG': 4, 'EH': 1, 'ER': 7, 'ES': 9, 'ET': 7, 'FI': 3, 'FJ': 6, 'FK': 1, 
-                                'FM': 4, 'FO': 1, 'FR': 11, 'GA': 2, 'GB': 13, 'GD': 4, 'GE': 5, 'GF': 2, 'GG': 4, 
+                                'FM': 4, 'FO': 1, 'FR': 11, 'GA': 2, 'GB': 13, 'GD': 4, 'GE': 5, 'GF': 0, 'GG': 4, 
                                 'GH': 4, 'GI': 1, 'GL': 3, 'GM': 5, 'GN': 5, 'GP': 3, 'GQ': 3, 'GR': 8, 'GS': 1, 
                                 'GT': 4, 'GU': 1, 'GW': 2, 'GY': 3, 'HK': 2, 'HM': 1, 'HN': 1, 'HR': 3, 'HT': 3, 
                                 'HU': 4, 'ID': 13, 'IE': 4, 'IL': 5, 'IM': 2, 'IN': 9, 'IO': 1, 'IQ': 5, 'IR': 8, 
@@ -360,11 +361,11 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                     f"Expected year of updates output to be either 2000, 2001 or 2002, got {test_year_2000_2001_2002_updates[update][row]['Date Issued']}.")    
 #4.)
         test_year_gt_2021_updates = self.all_updates.year(test_year_gt_2021)
-        test_year_gt_2021_expected_keys = ['BO', 'BS', 'CI', 'CN', 'DZ', 'ET', 'FI', 'FM', 'FR', 'GB', 'GF', 'GP', 'GT', 'HU', 'ID', 'IN', 'IQ', 'IR', 'IS', 'KH', 
+        test_year_gt_2021_expected_keys = ['BO', 'BS', 'CI', 'CN', 'DZ', 'ET', 'FI', 'FM', 'FR', 'GB', 'GP', 'GT', 'HU', 'ID', 'IN', 'IQ', 'IR', 'IS', 'KH', 
                                            'KP', 'KR', 'KZ', 'LT', 'LV', 'ME', 'MQ', 'MX', 'NL', 'NP', 'NZ', 'PA', 'PH', 'PL', 'RE', 'RU', 'SI', 'SS', 'TR', 'VE', 'YT']
 
-        self.assertEqual(len(test_year_gt_2021_updates), 41, 
-            f"Expected 41 updates in output object, got {len(test_year_gt_2021_updates)}.")
+        self.assertEqual(len(test_year_gt_2021_updates), 40, 
+            f"Expected 40 updates in output object, got {len(test_year_gt_2021_updates)}.")
         self.assertEqual(list(test_year_gt_2021_updates), test_year_gt_2021_expected_keys, 
             f"Expected and observed list of country codes do not match:\n{list(test_year_gt_2021_updates)}.")
         for update in test_year_gt_2021_updates:
@@ -415,7 +416,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                 test_year_not_equal_2019_updates_total+=1
                 self.assertTrue(current_updates_year != 2019, f"Expected year of updates output to not equal 2019, got {test_year_not_equal_2019_updates[update][row]['Date Issued']}.")
         
-        self.assertEqual(test_year_not_equal_2019_updates_total, 886, f"Expected 886 updates in output object, got {test_year_not_equal_2019_updates_total}.")
+        self.assertEqual(test_year_not_equal_2019_updates_total, 884, f"Expected 884 updates in output object, got {test_year_not_equal_2019_updates_total}.")
 #8.)
         test_year_not_equal_2005_2009_updates = self.all_updates.year(test_year_not_equal_2005_2009)
         test_year_not_equal_2005_2009_updates_total = 0
@@ -427,7 +428,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
                 test_year_not_equal_2005_2009_updates_total+=1
                 self.assertTrue(current_updates_year != 2005 and current_updates_year != 2009, f"Expected year of updates output to not equal 2005 or 2009, got {test_year_not_equal_2005_2009_updates[update][row]['Date Issued']}.")
 
-        self.assertEqual(test_year_not_equal_2005_2009_updates_total, 897, f"Expected 897 updates in output object, got {test_year_not_equal_2005_2009_updates_total}.")
+        self.assertEqual(test_year_not_equal_2005_2009_updates_total, 895, f"Expected 895 updates in output object, got {test_year_not_equal_2005_2009_updates_total}.")
 #9.)
         with self.assertRaises(ValueError):
             self.all_updates.year(test_year_error1) #1234
@@ -444,7 +445,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             self.all_updates.year(test_year_error6) #True
 
     # @unittest.skip("")
-    @patch('iso3166_updates.sys.stdout', new_callable=io.StringIO)
+    @patch('iso3166_updates.iso3166_updates.sys.stdout', new_callable=io.StringIO)
     def test_updates_search(self, mock_stdout):
         """ Testing the search function that returns the updates per input search terms. """
         test_search_australia = "AU-NSW"
@@ -520,7 +521,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         self.assertEqual(len(test_search_addition_deletion_updates), 318, f"Expected 318 search outputs, got {len(test_search_addition_deletion_updates)}")
 #7.)
         test_search_subdivision_region_updates = self.all_updates.search(test_search_subdivision)
-        self.assertEqual(len(test_search_subdivision_region_updates), 241, f"Expected 241 search outputs, got {len(test_search_subdivision_region_updates)}")
+        self.assertEqual(len(test_search_subdivision_region_updates), 239, f"Expected 239 search outputs, got {len(test_search_subdivision_region_updates)}")
 #8.)
         test_search_zzz_updates = self.all_updates.search(test_search_zzz)
         self.assertEqual(test_search_zzz_updates, [], f"Expected no search outputs, got {test_search_zzz_updates}")
@@ -541,7 +542,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             self.all_updates.search(test_search_australia, likeness_score=0) #likeness_score=0
 
     # @unittest.skip("")
-    @patch('iso3166_updates.sys.stdout', new_callable=io.StringIO)
+    @patch('iso3166_updates.iso3166_updates.sys.stdout', new_callable=io.StringIO)
     def test_updates_search_fuzzy(self, mock_stdout):
         """ Testing fuzzy/partial search behaviour and edge cases for the search() function. """
 #1.) include_match_score=False returns a dict keyed by country code with no "Match Score" key in values
@@ -618,7 +619,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         test_date_range3_updates_expected = ['AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AS', 'AT', 'AU', 'AW', 'AX', 'AZ', 'BA', 'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 
                                              'BJ', 'BL', 'BM', 'BN', 'BO', 'BQ', 'BR', 'BS', 'BT', 'BV', 'BW', 'BY', 'BZ', 'CA', 'CC', 'CD', 'CG', 'CH', 'CI', 'CK', 'CL', 'CM', 'CN', 
                                              'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ', 'DE', 'DJ', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'EH', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FK', 
-                                             'FM', 'FO', 'FR', 'GA', 'GB', 'GD', 'GE', 'GF', 'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GW', 'GY', 'HK', 
+                                             'FM', 'FO', 'FR', 'GA', 'GB', 'GD', 'GE', 'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GW', 'GY', 'HK', 
                                              'HM', 'HT', 'HU', 'ID', 'IE', 'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT', 'JE', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 
                                              'KP', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB', 'LC', 'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 
                                              'MK', 'ML', 'MM', 'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'NA', 'NC', 'NE', 'NF', 'NG', 'NI', 'NL', 'NO', 'NP', 
@@ -783,7 +784,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
 
     # @unittest.skip("")
     @patch('iso3166_updates.iso3166_updates.requests.get')
-    @patch('iso3166_updates.sys.stdout', new_callable=io.StringIO)
+    @patch('iso3166_updates.iso3166_updates.sys.stdout', new_callable=io.StringIO)
     def test_check_for_updates(self, mock_stdout, mock_get): 
         """ Testing functionality that pulls the latest object from repo and compares with object in current version of software. """
         #build a minimal fake response that matches the shape expected by check_for_updates()
@@ -836,18 +837,18 @@ class ISO3166_Updates_Tests(unittest.TestCase):
     # @unittest.skip("")
     def test_updates_repr(self):
         """ Testing __repr__ function returns correct object representation for class object. """
-        self.assertEqual(repr(self.all_updates), "<Updates(version='1.8.7', countries_loaded=250, total_updates=911, source_file='test-iso3166-updates.json')>",
+        self.assertEqual(repr(self.all_updates), "<Updates(version='1.8.8', countries_loaded=250, total_updates=909, source_file='test-iso3166-updates.json')>",
                 f"Expected and observed object representation for class instance do not match:\n{repr(self.all_updates)}.")
 
     # @unittest.skip("")
     def test_updates_sizeof(self):
         """ Testing __sizeof__ function returns correct output for class object. """
-        self.assertEqual(self.all_updates.__sizeof__(), 0.329, f"Expected and observed output for sizeof function do not match:\n{self.all_updates.__sizeof__()}.")
+        self.assertEqual(self.all_updates.__sizeof__(), 0.328, f"Expected and observed output for sizeof function do not match:\n{self.all_updates.__sizeof__()}.")
         
     # @unittest.skip("")
     def test_updates_len(self):
         """ Testing __len__ function returns the correct length for the updates object. """
-        self.assertEqual(len(self.all_updates), 911, f"Expected the length of updates object to be 911, got {len(self.all_updates)}.")
+        self.assertEqual(len(self.all_updates), 909, f"Expected the length of updates object to be 909, got {len(self.all_updates)}.")
 
     # @unittest.skip("")
     def test_updates_contains(self):
@@ -1059,14 +1060,54 @@ class ISO3166_Updates_Tests(unittest.TestCase):
             f"Expected DDDE Former_Alpha2 to be 'DD', got {ddde['Former_Alpha2']}.")
         self.assertIn("DE", ddde["Current_Codes"],
             "Expected 'DE' in DDDE Current_Codes.")
-#4.) __len__
-        self.assertGreater(len(iso3), 0,
-            "Expected Iso31663 to contain at least one entry.")
+#4.) __len__ - bundled dataset contains exactly 31 formerly used codes
+        self.assertEqual(len(iso3), 31,
+            f"Expected Iso31663 to contain 31 entries, got {len(iso3)}.")
 #5.) Invalid code raises ValueError (or KeyError)
         with self.assertRaises((ValueError, KeyError)):
             _ = iso3["XXXX"]
         with self.assertRaises((ValueError, KeyError)):
             _ = iso3[""]
+
+    def test_package_exports(self):
+        """ Testing `from iso3166_updates import *` only exports the public API and does not leak internal imports. """
+        import iso3166_updates
+#1.) __all__ is defined with exactly the public classes
+        self.assertEqual(sorted(iso3166_updates.iso3166_updates.__all__),
+            ["AsyncUpdates", "Iso31663", "Map", "Updates"],
+            "Expected __all__ to list only the public classes.")
+#2.) internal imports must NOT be leaked into the package namespace by star import
+        for leaked in ("os", "sys", "re", "json", "copy", "asyncio", "requests", "fuzz", "lru_cache"):
+            self.assertNotIn(leaked, iso3166_updates.__dict__.get("__all__", []),
+                f"Internal name '{leaked}' should not be part of the public API.")
+
+    def test_date_range_malformed_date(self):
+        """ Testing date_range() skips records with an unparseable Date Issued instead of raising. """
+        iso = Updates(custom_updates_filepath=os.path.join("tests", "test-iso3166-updates.json"))
+        #inject records with a malformed Date Issued alongside valid ones, across two countries
+        #(two countries ensures the sort branch, which only runs for >1 country, is exercised)
+        iso.all = {
+            "FR": [
+                {"Change": "bad date row", "Description of Change": "", "Date Issued": "not-a-date", "Source": ""},
+                {"Change": "valid row FR", "Description of Change": "", "Date Issued": "2020-06-15", "Source": ""},
+            ],
+            "DE": [
+                {"Change": "valid row DE", "Description of Change": "", "Date Issued": "2020-03-01", "Source": ""},
+            ],
+        }
+#1.) unsorted call should not raise and should return only the valid, in-range records
+        result = iso.date_range("2020-01-01,2020-12-31")
+        self.assertIn("FR", result, "Expected FR to be present in date_range output.")
+        self.assertEqual(len(result["FR"]), 1,
+            "Expected only the valid-dated FR record to be returned.")
+        self.assertEqual(result["FR"][0]["Change"], "valid row FR",
+            "Expected the malformed-date record to be skipped.")
+#2.) the sort branch (triggered with >1 country) should also tolerate the malformed record without raising
+        sorted_result = iso.date_range("2020-01-01,2020-12-31", sort_by_date="dateDesc")
+        self.assertIsInstance(sorted_result, list,
+            "Expected a sorted list when sort_by_date is set with multiple countries.")
+        self.assertTrue(all(r["Change"] != "bad date row" for r in sorted_result),
+            "Expected the malformed-date record to be excluded from the sorted output.")
 
     # @unittest.skip("")
     def tearDown(self):
