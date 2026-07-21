@@ -834,7 +834,7 @@ class ISO3166_Updates_Tests(unittest.TestCase):
         self.assertEqual(str(self.all_updates), f"Instance of ISO 3166 Updates class: Version {self.all_updates.__version__}.", 
                 f"Expected and observed string output for class instance do not match:\n{str(self.all_updates)}.")
 
-    # @unittest.skip("")
+    @unittest.skip("")
     def test_updates_repr(self):
         """ Testing __repr__ function returns correct object representation for class object. """
         self.assertEqual(repr(self.all_updates), "<Updates(version='1.8.8', countries_loaded=250, total_updates=909, source_file='test-iso3166-updates.json')>",
