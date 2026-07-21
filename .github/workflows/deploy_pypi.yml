@@ -30,7 +30,6 @@ jobs:
       uses: JRubics/poetry-publish@v2.1
       with:
         pypi_token: ${{ secrets.PYPI_TOKEN }}
-        poetry_install_options: "--without dev"  # publishing doesn't need dev deps (pytest etc.); avoids resolving them across the full 3.9+ range
 
      #sleep for 30 seconds to ensure that distribution package has successfully been uploaded to PyPI
     - name: Wait / Sleep
