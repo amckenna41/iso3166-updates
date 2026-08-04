@@ -3010,12 +3010,6 @@
             "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:KN."
         },
         {
-            "Change": "",
-            "Description of Change": "",
-            "Date Issued": "2013-08-22",
-            "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:KN."
-        },
-        {
             "Change": "Addition of the country code prefix as the first code element.",
             "Description of Change": "",
             "Date Issued": "2010-02-03 (corrected 2010-02-19)",
@@ -5834,7 +5828,6 @@
             "Source": "Online Browsing Platform (OBP) - https://www.iso.org/obp/ui/#iso:code:3166:WS."
         }
     ],
-    "XK": [],
     "YE": [
         {
             "Change": "Correction of the Code Source.",
